@@ -1,2 +1,4 @@
-LightsHUD.lock
-scripts/settings.js
+node_modules
+.idea
+/dist
+/package
