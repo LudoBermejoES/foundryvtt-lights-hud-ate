@@ -12,9 +12,10 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
-import { canvas, game, registerSettings } from './scripts/settings';
-import CONSTANTS from './scripts/constants';
-import { initHooks, readyHooks, setupHooks } from './scripts/spellbook-master';
+import CONSTANTS from './module/constants';
+import { initHooks, readyHooks, setupHooks } from './module/module.ts';
+import { registerSettings } from './module/settings';
+import { canvas, game } from './module/settings';
 
 /* ------------------------------------ */
 /* Initialize module					*/

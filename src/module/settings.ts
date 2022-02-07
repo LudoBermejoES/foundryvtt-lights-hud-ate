@@ -1,5 +1,5 @@
 import CONSTANTS from './constants';
-import { i18n } from './lib';
+import { i18n } from './lib/lib';
 
 export const game = getGame();
 export const canvas = getCanvas();
@@ -37,20 +37,73 @@ function getGame(): Game {
 }
 
 export const registerSettings = function (): void {
-  game.settings.register(CONSTANTS.MODULE_NAME, 'restrictOnlyGM', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.restrictOnlyGM.title`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.restrictOnlyGM.hint`),
-    scope: 'world',
-    config: true,
+
+  // game.settings.registerMenu(CONSTANTS.MODULE_NAME, 'tokenHUDSettings', {
+  //   name: game.i18n.localize('LightsHUD.settings.token-hud.Name'),
+  //   hint: game.i18n.localize('LightsHUD.settings.token-hud.Hint'),
+  //   scope: 'client',
+  //   icon: 'fas fa-exchange-alt',
+  //   type: TokenHUDSettings,
+  //   restricted: false,
+  // });
+
+  // Deprecated
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'enableTokenHUD', {
+  //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.enableTokenHUD.name`),
+  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.enableTokenHUD.hint`),
+  //   scope: 'client',
+  //   config: false,
+  //   type: Boolean,
+  //   default: true,
+  // });
+
+  // Deprecated
+  game.settings.register(CONSTANTS.MODULE_NAME, 'alwaysShowHUD', {
+    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.token-hud.Name`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.token-hud.Hint`),
+    scope: 'client',
+    config: false,
+    type: Boolean,
+    default: false,
+  });
+
+  // Deprecated
+  game.settings.register(CONSTANTS.MODULE_NAME, 'HUDDisplayImage', {
+    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.HUDDisplayImage.Name`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.HUDDisplayImage.Hint`),
+    scope: 'client',
+    config: false,
     type: Boolean,
     default: true,
   });
-  game.settings.register(CONSTANTS.MODULE_NAME, 'removeLabelSheetHeader', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.removeLabelSheetHeader.title`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.removeLabelSheetHeader.hint`),
-    scope: 'world',
-    config: true,
-    type: Boolean,
-    default: true,
+
+  // Deprecated
+  game.settings.register(CONSTANTS.MODULE_NAME, 'HUDImageOpacity', {
+    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.HUDImageOpacity.Name`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.HUDImageOpacity.Hint`),
+    scope: 'client',
+    config: false,
+    //@ts-ignore
+    range: {
+      min: 0,
+      max: 100,
+      step: 1,
+    },
+    type: Number,
+    default: 50,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'hudSettings', {
+    scope: 'client',
+    config: false,
+    type: Object,
+    default: {
+      enableSideMenu: game.settings.get(CONSTANTS.MODULE_NAME, 'enableTokenHUD'),
+      displayAsImage: game.settings.get(CONSTANTS.MODULE_NAME, 'HUDDisplayImage'),
+      imageOpacity: game.settings.get(CONSTANTS.MODULE_NAME, 'HUDImageOpacity'),
+      alwaysShowButton: game.settings.get(CONSTANTS.MODULE_NAME, 'alwaysShowHUD'),
+      updateActorImage: false,
+      includeWildcard: true
+    },
   });
 };

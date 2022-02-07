@@ -1,7 +1,8 @@
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
 import { ActorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
-import CONSTANTS from './constants';
-import { canvas, game } from './settings';
+import API from '../api.js';
+import CONSTANTS from '../constants';
+import { canvas, game } from '../settings';
 
 // =============================
 // Module Generic function
@@ -78,70 +79,10 @@ export function dialogWarning(message, icon = 'fas fa-exclamation-triangle') {
 }
 
 // =============================
-// Module Specific function
+// Module specific function
 // =============================
 
 export function registerHUD() {
-  game.settings.registerMenu('LightsHUD', 'tokenHUDSettings', {
-    name: game.i18n.localize('LightsHUD.settings.token-hud.Name'),
-    hint: game.i18n.localize('LightsHUD.settings.token-hud.Hint'),
-    scope: 'client',
-    icon: 'fas fa-exchange-alt',
-    type: TokenHUDSettings,
-    restricted: false,
-  });
-
-  // Deprecated
-  game.settings.register('LightsHUD', 'enableTokenHUD', {
-    scope: 'client',
-    config: false,
-    type: Boolean,
-    default: true,
-  });
-
-  // Deprecated
-  game.settings.register('LightsHUD', 'alwaysShowHUD', {
-    scope: 'client',
-    config: false,
-    type: Boolean,
-    default: false,
-  });
-
-  // Deprecated
-  game.settings.register('LightsHUD', 'HUDDisplayImage', {
-    scope: 'client',
-    config: false,
-    type: Boolean,
-    default: true,
-  });
-
-  // Deprecated
-  game.settings.register('LightsHUD', 'HUDImageOpacity', {
-    scope: 'client',
-    config: false,
-    range: {
-      min: 0,
-      max: 100,
-      step: 1,
-    },
-    type: Number,
-    default: 50,
-  });
-
-  game.settings.register('LightsHUD', 'hudSettings', {
-    scope: 'client',
-    config: false,
-    type: Object,
-    default: {
-      enableSideMenu: game.settings.get('LightsHUD', 'enableTokenHUD'),
-      displayAsImage: game.settings.get('LightsHUD', 'HUDDisplayImage'),
-      imageOpacity: game.settings.get('LightsHUD', 'HUDImageOpacity'),
-      alwaysShowButton: game.settings.get('LightsHUD', 'alwaysShowHUD'),
-      updateActorImage: false,
-      includeWildcard: true
-    },
-  });
-
   async function renderHudButton(hud, html, token) {
     renderHud(
       hud,

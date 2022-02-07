@@ -1,9 +1,9 @@
 {
   "private": true,
-  "name": "chat-portrait",
-  "title": "Generate token bases based on token disposition or actor folder color.",
-  "description": "Generate token bases based on token disposition or actor folder color.",
-  "version": "0.6.0",
+  "name": "lights-hud",
+  "title": "LightsHUD",
+  "description": "Lights HUD Control",
+  "version": "0.10.5",
   "scripts": {
     "package": "gulp package",
     "build": "gulp build && gulp link",

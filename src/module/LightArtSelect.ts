@@ -1,4 +1,4 @@
-import TokenCustomConfig from './tokenCustomConfig.js';
+// import TokenCustomConfig from './tokenCustomConfig.js';
 
 function getStartingWidth(allImages) {
   let maxLength = 0;

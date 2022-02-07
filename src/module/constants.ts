@@ -1,6 +1,6 @@
 const CONSTANTS = {
-  MODULE_NAME: 'spellbook-master',
-  PATH: `modules/spellbook-master/`,
+  MODULE_NAME: 'lights-hud',
+  PATH: `modules/lights-hud/`,
 };
 
 CONSTANTS.PATH = `modules/${CONSTANTS.MODULE_NAME}/`;
