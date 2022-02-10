@@ -20,6 +20,10 @@ export default class Effect {
   tokenMagicChanges: any[] = [];
   nestedEffects: Effect[] = [];
   transfer = false;
+  // ADDED FROM 4535992
+  origin = '';
+  overlay = false;
+  // END ADDED FROM 4535992
 
   constructor({
     customId = '',
@@ -76,12 +80,12 @@ export default class Effect {
       flags: foundry.utils.mergeObject(this.flags, {
         core: {
           statusId: this._id,
-          overlay,
+          overlay: overlay ? overlay : this.overlay ? this.overlay : false, // MOD 4535992
         },
         isConvenient: true,
         convenientDescription: this.description,
       }),
-      origin: origin ?? '',
+      origin: origin ? origin : this.origin ? this.origin : '', // MOD 4535992
       transfer: this.transfer ?? false,
       changes: this.changes,
     };

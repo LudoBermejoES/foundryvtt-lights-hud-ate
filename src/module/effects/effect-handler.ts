@@ -2,6 +2,8 @@ import { error, i18n, log } from '../lib/lib';
 import FoundryHelpers from '../lib/foundry-helpers';
 import { canvas, game } from '../settings';
 import Effect from './effect';
+import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
+import { ActorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 export default class EffectHandler {
   _customEffects: Effect[];
@@ -23,41 +25,22 @@ export default class EffectHandler {
     this._foundryHelpers = new FoundryHelpers();
   }
 
-  // /**
-  //  * Searches through the list of available effects and returns one matching the
-  //  * effect name. Prioritizes finding custom effects first.
-  //  *
-  //  * @param {string} effectName - the effect name to search for
-  //  * @returns {Effect} the found effect
-  //  */
-  // findEffectByName(effectName) {
-  //   // const effect = this._customEffectsHandler
-  //   //   .getCustomEffects()
-  //   //   .find((effect) => effect.name == effectName);
-
-  //   // if (effect) return effect;
-
-  //   // return game.dfreds.effects.all.find((effect) => effect.name == effectName);
-  //   const effect = <Effect>this._customEffects.find((effect: Effect) => effect.name == effectName);
-  //   return effect;
-  // }
-
   /**
    * Toggles an effect on or off by name on an actor by UUID
    *
-   * @param {Effect} effect - name of the effect to toggle
+   * @param {string} effectName - name of the effect to toggle
    * @param {object} params - the effect parameters
    * @param {string} params.overlay - name of the effect to toggle
    * @param {string[]} params.uuids - UUIDS of the actors to toggle the effect on
    */
-  async toggleEffect(effect, { overlay, uuids }) {
+  async toggleEffect(effectName, { overlay, uuids }) {
     for (const uuid of uuids) {
-      if (await this.hasEffectApplied(effect.name, uuid)) {
-        await this.removeEffect({ effect, uuid });
+      if (await this.hasEffectApplied(effectName, uuid)) {
+        await this.removeEffect({ effectName, uuid });
       } else {
         const actor = <Actor>await this._foundryHelpers.getActorByUuid(uuid);
         const origin = `Actor.${actor.data._id}`;
-        await this.addEffect({ effect, uuid, origin, overlay });
+        await this.addEffect({ effectName, effectData: null, uuid, origin, overlay });
       }
     }
   }
@@ -117,20 +100,20 @@ export default class EffectHandler {
    * provided UUID
    *
    * @param {object} params - the effect parameters
-   * @param {string} params.effect - the name of the effect to remove
+   * @param {string} params.effectName - the name of the effect to remove
    * @param {string} params.uuid - the uuid of the actor to remove the effect from
    */
-  async removeEffect({ effect, uuid }) {
+  async removeEffect({ effectName, uuid }) {
     const actor = await this._foundryHelpers.getActorByUuid(uuid);
     const effectToRemove = actor.data.effects.find(
-      //(activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && activeEffect?.data?.label == effect.name,
-      (activeEffect) => activeEffect?.data?.label == effect.name,
+      //(activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && activeEffect?.data?.label == effectName,
+      (activeEffect) => activeEffect?.data?.label == effectName,
     );
 
     if (!effectToRemove) return;
 
     await actor.deleteEmbeddedDocuments('ActiveEffect', [<string>effectToRemove.id]);
-    log(`Removed effect ${effect.name} from ${actor.name} - ${actor.id}`);
+    log(`Removed effect ${effectName} from ${actor.name} - ${actor.id}`);
   }
 
   /**
@@ -153,17 +136,33 @@ export default class EffectHandler {
    * UUID
    *
    * @param {object} params - the effect parameters
-   * @param {Effect} params.effect - the name of the effect to add
+   * @param {string} params.effectName - the name of the effect to add
+   * @param {object} params.effectData - the effect data to add if effectName is not provided
    * @param {string} params.uuid - the uuid of the actor to add the effect to
    * @param {string} params.origin - the origin of the effect
    * @param {boolean} params.overlay - if the effect is an overlay or not
    */
-  async addEffect({ effect, uuid, origin, overlay }) {
+  async addEffect({ effectName, effectData, uuid, origin, overlay }) {
     const actor = await this._foundryHelpers.getActorByUuid(uuid);
+    let effect = <Effect>this._findEffectByName(effectName, actor);
+
+    if (!effect && effectData) {
+      effect = new Effect(effectData);
+    }
 
     if (!origin) {
       origin = `Actor.${actor.data._id}`;
     }
+    effect.origin = origin;
+    effect.overlay = overlay;
+
+    // let effect = game.dfreds.effectInterface.findEffectByName(effectName);
+
+    // if (!effect && effectData) {
+    //   effect = new Effect(effectData);
+    // }
+
+    // const actor = await this._foundryHelpers.getActorByUuid(uuid);
 
     // if (effect.name.startsWith('Exhaustion')) {
     //   await this._removeAllExhaustionEffects(uuid);
@@ -232,6 +231,44 @@ export default class EffectHandler {
   // Additional feature for retrocompatibility
   // ============================================================
 
+  /**
+   * Searches through the list of available effects and returns one matching the
+   * effect name. Prioritizes finding custom effects first.
+   *
+   * @param {string} effectName - the effect name to search for
+   * @returns {Effect} the found effect
+   */
+  _findEffectByName(effectName: string, actor: Actor) {
+    if (!effectName) {
+      return null;
+    }
+    // const effect = this._customEffectsHandler
+    //   .getCustomEffects()
+    //   .find((effect) => effect.name == effectName);
+
+    // if (effect) return effect;
+
+    // return game.dfreds.effects.all.find((effect) => effect.name == effectName);
+    let effect = <Effect>this._customEffects.find((effect: Effect) => effect.name == effectName);
+    if (!effect) {
+      const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>actor?.data.effects;
+      // regex expression to match all non-alphanumeric characters in string
+      const regex = /[^A-Za-z0-9]/g;
+      for (const effectEntity of actorEffects) {
+        const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
+        if (!effectNameToSet) {
+          continue;
+        }
+        // use replace() method to match and remove all the non-alphanumeric characters
+        const effectNameToCheckOnActor = effectNameToSet.replace(regex, '');
+        if (effectNameToCheckOnActor.toLowerCase().startsWith(effectName.toLowerCase())) {
+          effect = this.convertToEffectClass(effectEntity);
+        }
+      }
+    }
+    return effect;
+  }
+
   convertToEffectClass(effect: ActiveEffect): Effect {
     const atlChanges = effect.data.changes.filter((changes) => changes.key.startsWith('ATL'));
     const tokenMagicChanges = effect.data.changes.filter((changes) => changes.key === 'macro.tokenMagic');
@@ -262,14 +299,34 @@ export default class EffectHandler {
    * @param {string} effectName - the effect name to search for
    * @returns {Effect} the found effect
    */
-  async findEffectByNameOnActor(effectName, uuid): Promise<ActiveEffect> {
+  async findEffectByNameOnActor(effectName, uuid): Promise<Effect | null> {
     if (effectName) {
       effectName = i18n(effectName);
     }
     const actor = <Actor>await this._foundryHelpers.getActorByUuid(uuid);
-    return await (<ActiveEffect>(
-      actor?.data?.effects?.find((activeEffect) => <string>activeEffect?.data?.label == effectName)
-    ));
+    // return await (<ActiveEffect>(
+    //   actor?.data?.effects?.find((activeEffect) => <string>activeEffect?.data?.label == effectName)
+    // ));
+    let effect: Effect | null = null;
+    if (!effectName) {
+      return effect;
+    }
+    const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>actor?.data.effects;
+    // regex expression to match all non-alphanumeric characters in string
+    const regex = /[^A-Za-z0-9]/g;
+    for (const effectEntity of actorEffects) {
+      const effectNameToSet = effectEntity.name ? effectEntity.name : effectEntity.data.label;
+      if (!effectNameToSet) {
+        continue;
+      }
+      // use replace() method to match and remove all the non-alphanumeric characters
+      const effectNameToCheckOnActor = effectNameToSet.replace(regex, '');
+      if (effectNameToCheckOnActor.toLowerCase().startsWith(effectName.toLowerCase())) {
+        effect = this.convertToEffectClass(effectEntity);
+        break;
+      }
+    }
+    return effect;
   }
 
   /**
@@ -279,7 +336,7 @@ export default class EffectHandler {
    * @param {string} effectName - the effect name to search for
    * @returns {Effect} the found effect
    */
-  async findEffectByNameOnActorArr(...inAttributes: any[]): Promise<ActiveEffect> {
+  async findEffectByNameOnActorArr(...inAttributes: any[]): Promise<Effect | null> {
     if (!Array.isArray(inAttributes)) {
       throw error('findEffectByNameOnActorArr | inAttributes must be of type array');
     }

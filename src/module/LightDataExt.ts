@@ -1,28 +1,29 @@
-import CONSTANTS from "./constants";
+import { LightHUDPreset, LightHUDPresetType } from './lights-hud-models';
+import CONSTANTS from './constants';
 
-export class LightDataExt extends foundry.data.LightData {
+export class LightDataExt extends foundry.data.AmbientLightData {
   name;
   tokenID;
   type;
   state;
 
-  constructor(name, type, state, app) {
+  constructor(name:LightHUDPreset, type: LightHUDPresetType, state:boolean, app) {
     super();
-    this.name = name ?? "SampleName";
-    this.type = type ?? "LightType";
-    this.state = state ?? "false";
-    this.tokenID = app.object.id;
-    this._initFlag(app);
-  };
+    this.name = name ?? 'SampleName';
+    this.type = type ?? 'LightType';
+    this.state = state ?? 'false';
+    this.tokenID = app.object.id ?? '';
+    // this._initFlag(app);
+  }
 
-  async _initFlag(app){
-    this.state = app.object.document.getFlag(CONSTANTS.MODULE_NAME, this._getFlagName()) ?? false;
-    await app.object.document.setFlag(CONSTANTS.MODULE_NAME,this._getFlagName(),this.state);
-  };
+  // async _initFlag(app) {
+  //   this.state = app.object.document.getFlag(CONSTANTS.MODULE_NAME, this._getFlagName()) ?? false;
+  //   await app.object.document.setFlag(CONSTANTS.MODULE_NAME, this._getFlagName(), this.state);
+  // }
 
-  _getFlagName(){
-    return this.name + this.type + "state";
-  };
+  // _getFlagName() {
+  //   return this.name + this.type + 'state';
+  // }
 
   // async turnOff() {
   //   this.state = false;
@@ -43,5 +44,3 @@ export class LightDataExt extends foundry.data.LightData {
   //   );
   // }
 }
-
-

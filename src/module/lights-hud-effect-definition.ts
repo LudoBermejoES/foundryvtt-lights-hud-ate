@@ -1,8 +1,10 @@
+import { LightDataExt } from './LightDataExt';
+import { LightHUDElement, LightHUDPreset } from './lights-hud-models';
+import API from './api';
 import CONSTANTS from './constants';
 import Effect, { Constants } from './effects/effect';
-import { getElevationToken, i18n, i18nFormat } from './lib/lib';
-import { StatusEffectSightFlags } from './sensewalls-models';
-import { canvas } from './settings';
+import { i18n, i18nFormat, warn } from './lib/lib';
+import { canvas, game } from './settings';
 
 /**
  * Defines all of the effect definitions
@@ -10,55 +12,29 @@ import { canvas } from './settings';
 export class EffectDefinitions {
   constructor() {}
 
+  // regex expression to match all non-alphanumeric characters in string
+  private static regex = /[^A-Za-z0-9]/g;
+
   /**
    * Get all effects
    *
    * @returns {Effect[]} all the effects
    */
-  static all(distance = 0): Effect[] {
-    return [
-      EffectDefinitions.blinded(distance),
-      EffectDefinitions.blindsigth(distance),
-      EffectDefinitions.darkvision(distance),
-      EffectDefinitions.devilssight(distance),
-      EffectDefinitions.lowlightvision(distance),
-      // EffectDefinitions.seeinvisible(distance),
-      // EffectDefinitions.shadowEffect(distance),
-      EffectDefinitions.tremorsense(distance),
-      EffectDefinitions.truesight(distance),
-    ];
+  static all(lightData: LightDataExt): Effect[] {
+    const effects: Effect[] = [];
+    const blinded = EffectDefinitions.torch(lightData);
+    if (blinded) {
+      effects.push(blinded);
+    }
+    return effects;
   }
 
-  static effect(name: string, distance = 0): Effect | undefined {
-    const effect = <Effect>EffectDefinitions.all(distance).find((effect: Effect) => {
+  static effect(name: string, lightData: LightDataExt): Effect | undefined {
+    const effect = <Effect>EffectDefinitions.all(lightData).find((effect: Effect) => {
       return effect.name.toLowerCase() === name.toLowerCase();
     });
-    if (effect?.customId == StatusEffectSightFlags.BLINDED) {
-      return EffectDefinitions.blinded(distance);
-    }
-    if (effect?.customId == StatusEffectSightFlags.BLIND_SIGHT) {
-      return EffectDefinitions.blindsigth(distance);
-    }
-    if (effect?.customId == StatusEffectSightFlags.DARKVISION) {
-      return EffectDefinitions.darkvision(distance);
-    }
-    if (effect?.customId == StatusEffectSightFlags.DEVILS_SIGHT) {
-      return EffectDefinitions.devilssight(distance);
-    }
-    if (effect?.customId == StatusEffectSightFlags.GREATER_DARKVISION) {
-      return EffectDefinitions.darkvision(120);
-    }
-    if (effect?.customId == StatusEffectSightFlags.LOW_LIGHT_VISION) {
-      return EffectDefinitions.lowlightvision(distance);
-    }
-    if (effect?.customId == StatusEffectSightFlags.SEE_INVISIBLE) {
-      return EffectDefinitions.seeinvisible(distance);
-    }
-    if (effect?.customId == StatusEffectSightFlags.TREMOR_SENSE) {
-      return EffectDefinitions.tremorsense(distance);
-    }
-    if (effect?.customId == StatusEffectSightFlags.TRUE_SIGHT) {
-      return EffectDefinitions.truesight(distance);
+    if (effect?.customId == LightHUDPreset.TORCH) {
+      return EffectDefinitions.torch(lightData);
     }
     return undefined;
   }
@@ -85,243 +61,69 @@ export class EffectDefinitions {
   //   });
   // }
 
-  static darkvision(number: number) {
+  static torch(lightData: LightDataExt) {
+    const effectSight = API.LIGHTS.find((a: LightHUDElement) => {
+      // use replace() method to match and remove all the non-alphanumeric characters
+      return a.id
+        .replace(EffectDefinitions.regex, '')
+        .toLowerCase()
+        .startsWith(LightHUDPreset.TORCH.replace(EffectDefinitions.regex, '').toLowerCase());
+    });
+    if (!effectSight) {
+      warn(`Cannot find for system '${game.system.id}' the active effect with id '${LightHUDPreset.TORCH}'`);
+      return;
+    }
     return new Effect({
-      customId: StatusEffectSightFlags.DARKVISION,
+      customId: LightHUDPreset.TORCH,
       name:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.darkvision.name2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.darkvision.name`),
+        lightData?.dim > 0
+          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.torch.name2`, { number: lightData.dim })
+          : i18n(`${CONSTANTS.MODULE_NAME}.effects.torch.name`),
       description:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.darkvision.description2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.darkvision.description`),
-      icon: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/evil-eye-red-1.jpg`,
+        lightData?.dim > 0
+          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.torch.description2`, { number: lightData?.dim })
+          : i18n(`${CONSTANTS.MODULE_NAME}.effects.torch.description`),
+      icon: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/torch.jpg`,
       // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
       transfer: true,
-      changes: [
-        {
-          key: 'data.attributes.senses.darkvision',
-          mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
-          value: number && number > 0 ? `${number}` : `@data.attributes.senses.darkvision`,
-          priority: 5,
-        },
-      ],
+      seconds: Constants.SECONDS.IN_ONE_HOUR,
       atlChanges: [
         {
-          key: EffectDefinitions._createAtlEffectKey('ATL.light.dim'),
-          mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
-          value: `${number}`,
-          priority: 5,
-        },
-      ],
-    });
-  }
-
-  static blindsigth(number: number) {
-    return new Effect({
-      customId: StatusEffectSightFlags.BLIND_SIGHT,
-      name:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.blindsigth.name2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.blindsigth.name`),
-      description:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.blindsigth.description2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.blindsigth.description`),
-      icon: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/affliction_24.jpg`,
-      // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
-      transfer: true,
-      changes: [
-        {
-          key: 'data.attributes.senses.blindsight',
-          mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
-          value: number && number > 0 ? `${number}` : `@data.attributes.senses.blindsight`,
-          priority: 5,
-        },
-      ],
-    });
-  }
-
-  static tremorsense(number: number) {
-    return new Effect({
-      customId: StatusEffectSightFlags.TREMOR_SENSE,
-      name:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.tremorsense.name2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.tremorsense.name`),
-      description:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.tremorsense.description2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.tremorsense.description`),
-      icon: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/ice_15.jpg`,
-      // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
-      transfer: true,
-      changes: [
-        {
-          key: 'data.attributes.senses.tremorsense',
-          mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
-          value: number && number > 0 ? `${number}` : `@data.attributes.senses.tremorsense`,
-          priority: 5,
-        },
-      ],
-    });
-  }
-
-  static truesight(number) {
-    return new Effect({
-      customId: StatusEffectSightFlags.TRUE_SIGHT,
-      name:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.truesight.name2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.truesight.name`),
-      description:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.truesight.description2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.truesight.description`),
-      icon: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/emerald_11.jpg`,
-      // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
-      transfer: true,
-      changes: [
-        {
-          key: 'data.attributes.senses.truesight',
-          mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
-          value: number && number > 0 ? `${number}` : `@data.attributes.senses.truesight`,
-          priority: 5,
-        },
-      ],
-    });
-  }
-
-  static seeinvisible(number) {
-    return new Effect({
-      customId: StatusEffectSightFlags.SEE_INVISIBLE,
-      name:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.seeinvisible.name2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.seeinvisible.name`),
-      description:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.seeinvisible.description2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.seeinvisible.description`),
-      icon: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/shadow_11.jpg`,
-      // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
-      transfer: true,
-      changes: [
-        {
-          key: 'data.attributes.senses.seeinvisible',
-          mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
-          value: number && number > 0 ? `${number}` : `@data.attributes.senses.seeinvisible`,
-          priority: 5,
-        },
-      ],
-    });
-  }
-
-  static devilssight(number) {
-    return new Effect({
-      customId: StatusEffectSightFlags.DEVILS_SIGHT,
-      name:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.devilssight.name2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.devilssight.name`),
-      description:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.devilssight.description2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.devilssight.description`),
-      icon: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/blue_17.jpg`,
-      // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
-      transfer: true,
-      changes: [
-        {
-          key: 'data.attributes.senses.devilssight',
-          mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
-          value: number && number > 0 ? `${number}` : `@data.attributes.senses.devilssight`,
-          priority: 5,
-        },
-      ],
-    });
-  }
-
-  static lowlightvision(number) {
-    return new Effect({
-      customId: StatusEffectSightFlags.LOW_LIGHT_VISION,
-      name:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.lowlightvision.name2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.lowlightvision.name`),
-      description:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.lowlightvision.description2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.lowlightvision.description`),
-      icon: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/violet_09.jpg`,
-      // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
-      transfer: true,
-      changes: [
-        {
-          key: 'data.attributes.senses.lowlightvision',
-          mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
-          value: number && number > 0 ? `${number}` : `@data.attributes.senses.lowlightvision`,
-          priority: 5,
-        },
-      ],
-      atlChanges: [
-        // {
-        //   key: EffectDefinitions._createAtlEffectKey('ATL.light.dim'),
-        //   mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
-        //   value: `data.token.dimSight`,
-        //   priority: 5,
-        // },
-        {
-          key: EffectDefinitions._createAtlEffectKey('ATL.light.bright'),
-          mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
-          value: `data.token.dimSight`,
-          priority: 5,
-        },
-      ],
-    });
-  }
-
-  static blinded(number) {
-    return new Effect({
-      customId: StatusEffectSightFlags.BLINDED,
-      name:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.blinded.name2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.blinded.name`),
-      description:
-        number && number > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.blinded.description2`, { number: number })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.blinded.description`),
-      icon: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/light_01.jpg`,
-      // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
-      transfer: true,
-      changes: [],
-      atlChanges: [
-        {
-          key: EffectDefinitions._createAtlEffectKey('ATL.light.dim'),
+          key: this._createAtlEffectKey('ATL.dimLight'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: `0`,
-          priority: 5,
+          value: lightData?.dim > 0 ? String(lightData?.dim) : '40',
         },
         {
-          key: EffectDefinitions._createAtlEffectKey('ATL.light.bright'),
+          key: this._createAtlEffectKey('ATL.brightLight'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: `0`,
-          priority: 5,
+          value: lightData?.dim && lightData?.dim > 0 ? String(lightData?.dim / 2) : '20',
         },
         {
-          key: EffectDefinitions._createAtlEffectKey('ATL.light.animation'),
+          key: this._createAtlEffectKey('ATL.lightColor'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: '{ "type":"none"}',
-          priority: 5,
+          value: lightData.tintColor ? lightData.tintColor : Constants.COLORS.FIRE,
+        },
+        {
+          key: this._createAtlEffectKey('ATL.lightAlpha'),
+          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+          value: lightData.tintAlpha ? lightData.tintAlpha : 0.4,
+        },
+        {
+          key: this._createAtlEffectKey('ATL.lightAnimation'),
+          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+          value:
+            lightData.lightAnimation.type &&
+            lightData.lightAnimation.speed > 0 &&
+            lightData.lightAnimation.intensity > 0
+              ? `{"type": "${lightData.lightAnimation.type}","speed": ${lightData.lightAnimation.speed},"intensity": ${lightData.lightAnimation.intensity}}`
+              : '{"type": "torch","speed": 1,"intensity": 1}',
         },
       ],
     });
   }
 
   // ===========================================
-  // The target effect
+  // Utility Effect
   // =============================================
 
   static _createAtlEffectKey(key) {

@@ -31,7 +31,7 @@ export default class LightArtSelect extends FormApplication {
         width: getStartingWidth(allImages),
         height: getStartingHeight(allImages),
         title: title,
-      }
+      },
     );
     this.search = search;
     this.allImages = allImages;
@@ -71,20 +71,13 @@ export default class LightArtSelect extends FormApplication {
       boxes[box].addEventListener('click', async function (event) {
         let shiftKeyDown;
         if (isNewerVersion(game.version ?? game.data.version, '0.8.9')) {
-          shiftKeyDown =
-            game.keyboard.downKeys.has('ShiftLeft') ||
-            game.keyboard.downKeys.has('ShiftRight');
+          shiftKeyDown = game.keyboard.downKeys.has('ShiftLeft') || game.keyboard.downKeys.has('ShiftRight');
         } else {
           shiftKeyDown = keyboard.isDown('Shift');
         }
         if (shiftKeyDown) {
           if (object)
-            new TokenCustomConfig(
-              object,
-              {},
-              event.target.dataset.name,
-              event.target.dataset.filename
-            ).render(true);
+            new TokenCustomConfig(object, {}, event.target.dataset.name, event.target.dataset.filename).render(true);
         } else {
           await close();
           if (callback) {

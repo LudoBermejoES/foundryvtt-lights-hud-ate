@@ -1,13 +1,14 @@
+import { LightDataExt } from './LightDataExt';
 import CONSTANTS from './constants';
-import { senseWallsSocket, SOCKET_HANDLERS } from './socket';
+import { lightsHUDSocket, SOCKET_HANDLERS } from './socket';
 import { canvas, game } from './settings';
 import { dialogWarning, error, i18n, warn } from './lib/lib';
 import EffectInterface from './effects/effect-interface';
 import EffectHandler from './effects/effect-handler';
 import Effect from './effects/effect';
-import { LightElement } from './lights-hud-models';
 import HOOKS from './hooks';
 import { EffectDefinitions } from './lights-hud-effect-definition';
+import { LightHUDElement } from './lights-hud-models';
 
 export default class API {
   // static get effectInterface(): EffectInterface {
@@ -21,7 +22,7 @@ export default class API {
    *
    * @returns {array}
    */
-  static get LIGHTS(): LightElement[] {
+  static get LIGHTS(): LightHUDElement[] {
     return <any[]>game.settings.get(CONSTANTS.MODULE_NAME, 'lights');
   }
 
@@ -52,22 +53,18 @@ export default class API {
     return game.settings.set(CONSTANTS.MODULE_NAME, 'lights', inAttributes);
   }
 
-  static addEffect(actorNameOrId: string, effectName: string, distance: number) {
+  static addEffect(actorNameOrId: string, effectName: string, lightData: LightDataExt) {
     const actor = <Actor>game.actors?.get(actorNameOrId) || <Actor>game.actors?.getName(actorNameOrId);
 
     if (!actor) {
       warn(`No actor found with reference '${actorNameOrId}'`, true);
     }
 
-    if (!distance) {
-      distance = 0;
-    }
-
     let effect: Effect | undefined = undefined;
-    const lightsOrderByName = <LightElement[]>API.LIGHTS.sort((a, b) => a.name.localeCompare(b.name));
-    lightsOrderByName.forEach((a: LightElement) => {
+    const lightsOrderByName = <LightHUDElement[]>API.LIGHTS.sort((a, b) => a.name.localeCompare(b.name));
+    lightsOrderByName.forEach((a: LightHUDElement) => {
       if (a.id == effectName || i18n(a.name) == effectName) {
-        effect = <Effect>EffectDefinitions.all(distance).find((e: Effect) => {
+        effect = <Effect>EffectDefinitions.all(lightData).find((e: Effect) => {
           return e.customId == a.id;
         });
       }

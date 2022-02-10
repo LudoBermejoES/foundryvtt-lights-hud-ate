@@ -82,17 +82,20 @@ export function dialogWarning(message, icon = 'fas fa-exclamation-triangle') {
 // Module specific function
 // =============================
 
+/*
+ * Returns the first GM id.
+ */
+export function firstGM() {
+  const gmId = Array.from(<Users>game.users).find((user) => user.isGM && user.active)?.id;
+  if (!gmId) {
+    ui.notifications?.error('No GM available for Dancing Lights!');
+  }
+  return gmId;
+}
+
 export function registerHUD() {
   async function renderHudButton(hud, html, token) {
-    renderHud(
-      hud,
-      html,
-      token,
-      '',
-      doImageSearch,
-      updateTokenImage,
-      updateActorImage
-    );
+    renderHud(hud, html, token, '', doImageSearch, updateTokenImage, updateActorImage);
   }
 
   // Incorporating 'FVTT-TokenHUDWildcard' token hud button

@@ -1,9 +1,11 @@
-import CONSTANTS from "./constants";
-import EffectInterface from "./effects/effect-interface";
-import { registerHUD } from "./lib";
+import CONSTANTS from './constants';
+import EffectInterface from './effects/effect-interface';
+import { registerHUD } from './lib';
 import { canvas, game } from './settings';
 
 export const initHooks = async (): Promise<void> => {
+  // LightsHUD.debug();
+  // LightsHUD.clBanner();
   // registerSettings();
 
   // registerLibwrappers();
@@ -56,5 +58,27 @@ export const readyHooks = async (): Promise<void> => {
   // LightHUDPlaceableConfig.registerHooks();
 
   // Add any additional hooks if necessary
+
+  Hooks.on('ready', () => {
+    Hooks.on('renderTokenHUD', (app, html, data) => {
+      LightsHUD.addLightsHUDButtons(app, html, data);
+    });
+    Hooks.on('renderControlsReference', (app, html, data) => {
+      html
+        .find('div')
+        .first()
+        .append(
+          '<h3>LightsHUD</h3><ol class="hotkey-list"><li><h4>' +
+            game.i18n.localize('LightsHUD.turnOffAllLights') +
+            '</h4><div class="keys">' +
+            game.i18n.localize('LightsHUD.holdCtrlOnClick') +
+            '</div></li></ol>',
+        );
+    });
+    game.socket.on('module.torch', (request) => {
+      LightsHUD.handleSocketRequest(request);
+    });
+  });
+
   registerHUD();
 };

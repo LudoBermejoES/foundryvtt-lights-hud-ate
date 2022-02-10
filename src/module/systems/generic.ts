@@ -1,4 +1,4 @@
-import { LightElement } from './../lights-hud-models';
+import { LightHUDElement } from './../lights-hud-models';
 export default {
-  LIGHTS: <LightElement[]>[],
+  LIGHTS: <LightHUDElement[]>[],
 };
