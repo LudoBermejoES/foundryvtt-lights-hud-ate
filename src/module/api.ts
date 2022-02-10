@@ -1,4 +1,3 @@
-import { LightDataExt } from './LightDataExt';
 import CONSTANTS from './constants';
 import { lightsHUDSocket, SOCKET_HANDLERS } from './socket';
 import { canvas, game } from './settings';
@@ -8,7 +7,7 @@ import EffectHandler from './effects/effect-handler';
 import Effect from './effects/effect';
 import HOOKS from './hooks';
 import { EffectDefinitions } from './lights-hud-effect-definition';
-import { LightHUDElement } from './lights-hud-models';
+import { LightDataExt, LightHUDElement } from './lights-hud-models';
 
 export default class API {
   // static get effectInterface(): EffectInterface {
@@ -78,5 +77,43 @@ export default class API {
       //@ts-ignore
       (<EffectInterface>LightsHUD.API.effectInterface).addEffectOnActor(effectName, <string>actor.id, effect);
     }
+  }
+
+  static async hasEffectAppliedFromIdOnActor(actorNameOrId: string, effectId: string) {
+    const actor = <Actor>game.actors?.get(actorNameOrId) || <Actor>game.actors?.getName(actorNameOrId);
+
+    if (!actor) {
+      warn(`No actor found with reference '${actorNameOrId}'`, true);
+    }
+
+    let founded = false;
+
+    if (actor && effectId) {
+      //@ts-ignore
+      founded = await (<EffectInterface>LightsHUD.API.effectInterface).hasEffectAppliedFromIdOnActor(
+        effectId,
+        <string>actor.id,
+      );
+    }
+    return founded;
+  }
+
+  static async hasEffectAppliedFromIdOnActor(actorNameOrId: string, effectId: string) {
+    const actor = <Actor>game.actors?.get(actorNameOrId) || <Actor>game.actors?.getName(actorNameOrId);
+
+    if (!actor) {
+      warn(`No actor found with reference '${actorNameOrId}'`, true);
+    }
+
+    let founded = false;
+
+    if (actor && effectId) {
+      //@ts-ignore
+      founded = await (<EffectInterface>LightsHUD.API.effectInterface).toggleEffect()(
+        effectId,
+        <string>actor.id,
+      );
+    }
+    return founded;
   }
 }

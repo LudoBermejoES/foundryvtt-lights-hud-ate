@@ -13,7 +13,7 @@
 
 // Import TypeScript modules
 import CONSTANTS from './module/constants';
-import { initHooks, readyHooks, setupHooks } from './module/module.ts';
+import { initHooks, readyHooks, setupHooks } from './module/module';
 import { registerSettings } from './module/settings';
 import { canvas, game } from './module/settings';
 

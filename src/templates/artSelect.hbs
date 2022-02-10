@@ -1,0 +1,31 @@
+<div class="control-icon" data-action="lights-hud-selector" >
+    <img src="modules/lights-hud/assets/token-icon.svg" width="36" height="36" title="{{localize 'lights-hud.windows.art-select.title' }}" />
+    {{#if imagesParsed}}
+    <div class="lights-hud-selector-wrap {{#unless imageDisplay}}list{{/unless}}">
+        {{#each imagesParsed as |image|}}
+            {{#if image.type}}
+                <button class="lights-hud-button-select control-icon {{#unless ../imageDisplay}}list{{/unless}} {{#if image.used}}lights-hud-button-disabled active{{/if}}" >
+                    {{#if ../imageDisplay}}
+                        {{#if image.img}}
+                            <img class="lights-hud-button-image" src="{{image.route}}" alt="{{image.name}}" data-name="{{image.route}}" data-item-id="{{image.id}}" style="opacity:{{../imageOpacity}};"/>
+                        {{/if}}
+                        {{#if image.vid}}
+                            <video class="lights-hud-button-image" src="{{image.route}}" alt="{{image.name}}" data-name="{{image.route}}" data-item-id="{{image.id}}" style="opacity:{{../imageOpacity}};" autoplay loop/>
+                        {{/if}}
+                        {{#unless image.type}}
+                            <span class="lights-hud-button-image" data-item-id="{{image.id}}" alt="{{image.label}}">{{image.path}}</span>
+                        {{/unless}}
+                    {{else}}
+                        <span data-name="{{image.route}}">{{image.name}}</span>
+                    {{/if}}
+                </button>
+            {{/if}}
+        {{/each}}
+    </div>
+    {{else}}
+    <div>
+        <p>{{localize "lights-hud.windows.art-select.no-art-found"}}</p>
+    </div>
+    {{/if}}
+</div>
+

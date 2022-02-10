@@ -32,7 +32,7 @@
       "path": "./lang/ja.json"
     }
   ],
-  "esmodules": ["/scripts/LightsHUD.js", "/scripts/LightDataExt.js", "/scripts/tokenInformations.js"],
+  "esmodules": ["./main.js"],
   "socket": true,
   "styles": ["/styles/LightsHUD.css"],
   "packs": [],

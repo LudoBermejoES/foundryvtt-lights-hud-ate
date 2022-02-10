@@ -1,22 +1,6 @@
 {
   "I18N.MAINTAINERS": ["PhilippeKr"],
 
-  "lights-hud.position.name": "Token Position",
-  "lights-hud.position.hint": "Which side of the token should the icons appear on?",
-  "lights-hud.position.left": "Left",
-  "lights-hud.position.right": "Right",
-  "lights-hud.position.top": "Top",
-  "lights-hud.position.bottom": "Bottom",
-
-  "lights-hud.playerActivation.name": "Player Activation",
-  "lights-hud.playerActivation.hint": "Allow players to toggle their own torches and lights.",
-  "lights-hud.checkAvailability.name": "Check Availability",
-  "lights-hud.checkAvailability.hint": "Perform a check to see if the character has torches in his inventory or can cast light spells.",
-  "lights-hud.consumeItem.name": "Consume Item",
-  "lights-hud.consumeItem.hint": "Actually removes one item from the inventory when the light is lit.",
-  "lights-hud.dmAsPlayer.name": "DM Checks/Uses as Player",
-  "lights-hud.dmAsPlayer.hint": "If set, the DM checks the availability of light sources for the selected player and uses his/her inventory.",
-
   "lights-hud.animationType.none": "None",
   "lights-hud.animationType.torch": "Torch",
   "lights-hud.animationType.pulse": "Pulse",
@@ -133,5 +117,19 @@
   "lights-hud.settings.HUDDisplayImage.name": "Opacity of token preview",
   "lights-hud.settings.HUDDisplayImage.hint": "The opacity of the token previews in the HUD before hovering over them.",
   "lights-hud.settings.HUDImageOpacity.name": "Opacity of token preview",
-  "lights-hud.settings.HUDImageOpacitye.hint": "The opacity of the token previews in the HUD before hovering over them."
+  "lights-hud.settings.HUDImageOpacity.hint": "The opacity of the token previews in the HUD before hovering over them.",
+
+  "lights-hud.settings.position.name": "Token Position",
+  "lights-hud.settings.position.hint": "Which side of the token should the icons appear on?",
+  "lights-hud.settings.position.choice.left": "Left",
+  "lights-hud.settings.position.choice.right": "Right",
+  "lights-hud.settings.position.choice.top": "Top",
+  "lights-hud.settings.position.choice.bottom": "Bottom",
+  "lights-hud.settings.imageDisplay.name": "Display as Image?",
+  "lights-hud.settings.imageDisplay.hint": "Disable to display wildcard options as a list of their filenames in the HUD.",
+  "lights-hud.settings.opacity.name": "Opacity of token preview",
+  "lights-hud.settings.opacity.hint": "Configure the opacity of the token previews in the HUD before hovering on them.",
+
+  "lights-hud.windows.art-select.title": "Select Art",
+  "lights-hud.windows.art-select.no-art-found": "No art found"
 }

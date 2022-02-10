@@ -1,7 +1,11 @@
+import API from './api';
 import CONSTANTS from './constants';
 import EffectInterface from './effects/effect-interface';
-import { registerHUD } from './lib';
+import HOOKS from './hooks';
+import { debug } from './lib/lib';
+import { addLightsHUDButtons } from './lights-hud-config';
 import { canvas, game } from './settings';
+import { registerSocket } from './socket';
 
 export const initHooks = async (): Promise<void> => {
   // LightsHUD.debug();
@@ -9,8 +13,8 @@ export const initHooks = async (): Promise<void> => {
   // registerSettings();
 
   // registerLibwrappers();
-  // TODO impplement socketLib
-  // Hooks.once('socketlib.ready', registerSocket);
+
+  Hooks.once('socketlib.ready', registerSocket);
 
   if (game.settings.get(CONSTANTS.MODULE_NAME, 'debugHooks')) {
     for (const hook of Object.values(HOOKS)) {
@@ -59,26 +63,8 @@ export const readyHooks = async (): Promise<void> => {
 
   // Add any additional hooks if necessary
 
-  Hooks.on('ready', () => {
-    Hooks.on('renderTokenHUD', (app, html, data) => {
-      LightsHUD.addLightsHUDButtons(app, html, data);
-    });
-    Hooks.on('renderControlsReference', (app, html, data) => {
-      html
-        .find('div')
-        .first()
-        .append(
-          '<h3>LightsHUD</h3><ol class="hotkey-list"><li><h4>' +
-            game.i18n.localize('LightsHUD.turnOffAllLights') +
-            '</h4><div class="keys">' +
-            game.i18n.localize('LightsHUD.holdCtrlOnClick') +
-            '</div></li></ol>',
-        );
-    });
-    game.socket.on('module.torch', (request) => {
-      LightsHUD.handleSocketRequest(request);
-    });
+  // registerHUD();
+  Hooks.on('renderTokenHUD', (app, html, data) => {
+    addLightsHUDButtons(app, html, data);
   });
-
-  registerHUD();
 };
