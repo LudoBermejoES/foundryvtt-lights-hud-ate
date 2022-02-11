@@ -97,23 +97,4 @@ export default class API {
     }
     return founded;
   }
-
-  static async hasEffectAppliedFromIdOnActor(actorNameOrId: string, effectId: string) {
-    const actor = <Actor>game.actors?.get(actorNameOrId) || <Actor>game.actors?.getName(actorNameOrId);
-
-    if (!actor) {
-      warn(`No actor found with reference '${actorNameOrId}'`, true);
-    }
-
-    let founded = false;
-
-    if (actor && effectId) {
-      //@ts-ignore
-      founded = await (<EffectInterface>LightsHUD.API.effectInterface).toggleEffect()(
-        effectId,
-        <string>actor.id,
-      );
-    }
-    return founded;
-  }
 }

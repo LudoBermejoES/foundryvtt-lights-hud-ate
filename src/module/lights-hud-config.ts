@@ -4,6 +4,9 @@ import EffectInterface from './effects/effect-interface';
 import { canvas, game } from './settings';
 
 export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
+  // const atlChanges = effect.data.changes.filter((changes) =>
+  //     changes.key.startsWith('ATL')
+  // );
   const atlEffects =
     item.effects.filter((entity) => !!entity.data.changes.find((effect) => effect.key.includes('ATL'))) ?? [];
   return atlEffects;
@@ -38,14 +41,19 @@ export async function addLightsHUDButtons(app, html, data) {
   const imageDisplay = <boolean>game.settings.get(CONSTANTS.MODULE_NAME, 'imageDisplay');
   const imageOpacity = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'imageOpacity') / 100;
 
-  const imagesParsed = lightItems.map((item: Item) => {
+  const imagesParsed = lightItems.map(async (item: Item) => {
     const im = <string>item.img;
     const split = im.split('/');
     const extensions = im.split('.');
     const extension = extensions[extensions.length - 1];
     const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
     const vid = ['webm', 'mp4', 'm4v'].includes(extension);
-    const applied = API.hasEffectAppliedFromIdOnActor(<string>actor.id, <string>getATLEffectsFromItem(item)[0].id);
+    // TODO for now we check if at least one active effect has the atl/ate changes on him
+    const aeAtl = <ActiveEffect>getATLEffectsFromItem(item)[0];
+    let applied = false;
+    if(aeAtl){
+      applied = await API.hasEffectAppliedFromIdOnActor(<string>actor.id, <string>aeAtl.id);
+    }
     return {
       route: im,
       name: item.name,
@@ -64,18 +72,18 @@ export async function addLightsHUDButtons(app, html, data) {
   });
 
   // Define all three buttons
-  // const tbuttonItemLight = $(
-  //   `<div class="control-icon ${CONSTANTS.MODULE_NAME} lightItem" title="Light Item"><i class="fas fa-lightbulb"></i></div>`,
-  // );
-  const tbuttonLight = $(
-    `<div class="control-icon ${CONSTANTS.MODULE_NAME} lightEffect" title="Light Effect"><i class="fas fa-sun"></i></div>`,
-  );
-  const tbuttonLantern = $(
+  const tbuttonItemLight = $(
     `<div class="control-icon ${CONSTANTS.MODULE_NAME} lightItem" title="Light Item"><i class="fas fa-lightbulb"></i></div>`,
   );
-  const tbuttonTorch = $(
-    `<div class="control-icon ${CONSTANTS.MODULE_NAME} lightMacro" title="Light Macro"><i class="fas fa-fire"></i></div>`,
-  );
+  // const tbuttonLight = $(
+  //   `<div class="control-icon ${CONSTANTS.MODULE_NAME} lightEffect" title="Light Effect"><i class="fas fa-sun"></i></div>`,
+  // );
+  // const tbuttonLantern = $(
+  //   `<div class="control-icon ${CONSTANTS.MODULE_NAME} lightItem" title="Light Item"><i class="fas fa-lightbulb"></i></div>`,
+  // );
+  // const tbuttonTorch = $(
+  //   `<div class="control-icon ${CONSTANTS.MODULE_NAME} lightMacro" title="Light Macro"><i class="fas fa-fire"></i></div>`,
+  // );
 
   // Get the position of the column
   const position = game.settings.get(CONSTANTS.MODULE_NAME, 'position');
@@ -89,6 +97,17 @@ export async function addLightsHUDButtons(app, html, data) {
 
   // Add the column
   html.find(`.${CONSTANTS.MODULE_NAME}-container`).prepend(buttonsdiv);
+
+  tbuttonItemLight.addClass('active');
+  // tbuttonLight.addClass('active');
+  // tbuttonLantern.addClass('active');
+  // tbuttonTorch.addClass('active');
+
+  // Finally insert the buttons in the column
+  html.find(".col.lights-hud-column-" + position).prepend(tbuttonItemLight);
+  // html.find(".col.lights-hud-column-" + position).prepend(tbuttonTorch);
+  // html.find(".col.lights-hud-column-" + position).prepend(tbuttonLantern);
+  // html.find(".col.lights-hud-column-" + position).prepend(tbuttonLight);
 
   const is080 = !isNewerVersion("0.8.0", game.data.version)
 
@@ -132,92 +151,8 @@ export async function addLightsHUDButtons(app, html, data) {
           //const dimensions = getTokenDimensions(updateTarget, event.target.dataset.name)
           //let updateInfo = { img: event.target.dataset.name, ...dimensions }
           //updateTarget.update(updateInfo)
-          API.addEffect();
+          // TODO GESTIRE GLI ACITVE EFFECT
       })
   });
 
-  // Get the status of the three types of lights
-
-  // let spellLight = new LightDataExt('light', 'spell', false, app);
-  // let itemLight = new LightDataExt('lantern', 'consumable', false, app);
-  // let macroLight = new LightDataExt('torch', 'consumable', false, app);
-
-  // Initial button state when the HUD comes up
-  // if (spellLight.state) tbuttonLight.addClass('active');
-  // if (itemLight.state) tbuttonLantern.addClass('active');
-  // if (macroLight.state) tbuttonTorch.addClass('active');
-  // Check the permissions to manage the lights
-
-  // if (!data.isGM && !game.settings.get(CONSTANTS.MODULE_NAME, 'playerActivation')) {
-  //   // disableLightsHUDButton(tbuttonLight);
-  //   // disableLightsHUDButton(tbuttonLantern);
-  //   // disableLightsHUDButton(tbuttonTorch);
-  //   disableLightsHUDButton(tbuttonItemLight);
-  //   return;
-  // } else {
-  //   // If the a specific light is on, enable only that light otherwise enable all three of them
-  //   // if (spellLight.state) {
-  //   //   enableLightsHUDButton(tbuttonLight);
-  //   //   disableLightsHUDButton(tbuttonLantern);
-  //   //   disableLightsHUDButton(tbuttonTorch);
-  //   // } else if (itemLight.state) {
-  //   //   disableLightsHUDButton(tbuttonLight);
-  //   //   enableLightsHUDButton(tbuttonLantern);
-  //   //   disableLightsHUDButton(tbuttonTorch);
-  //   // } else if (macroLight.state) {
-  //   //   disableLightsHUDButton(tbuttonLight);
-  //   //   disableLightsHUDButton(tbuttonLantern);
-  //   //   enableLightsHUDButton(tbuttonTorch);
-  //   // } else {
-  //   //   disableLightsHUDButton(tbuttonLight);
-  //   //   disableLightsHUDButton(tbuttonLantern);
-  //   //   disableLightsHUDButton(tbuttonTorch);
-  //   // }
-  //   enableLightsHUDButton(tbuttonItemLight);
-  // }
 }
-
-// // Returns true if the character can use the Light spell
-// // This also returns true if the game system is not D&D 5e...
-// function canCastLight() {
-//   let actor = game.actors?.get(data.actorId);
-//   if (actor === undefined) return false;
-//   let hasLight = false;
-//   actor.data.items.forEach((item) => {
-//     if (item.type === "spell") {
-//       if (item.name === "Light") hasLight = true;
-//     }
-//   });
-//   return hasLight;
-// }
-
-// function enableLightsHUDButton(tbutton) {
-//   // Remove the disabled status, if any
-//   tbutton.find('i').removeClass('fa-disabled');
-//   tbutton.addClass('active');
-//   // Install a click handler if one is not already bound
-//   if (!tbutton.hasClass('clickBound')) {
-//     tbutton.click(async (ev) => onButtonClick(ev, tbutton));
-//     tbutton.addClass('clickBound');
-//   }
-// }
-
-// // Visually and functionally disable a LightsHUD button
-// function disableLightsHUDButton(tbutton) {
-//   tbutton.find('i').addClass('fa-disabled');
-//   tbutton.off('click');
-//   tbutton.removeClass('clickBound');
-//   tbutton.removeClass('active');
-// }
-
-// async function onButtonClick(ev, tbutton) {
-//   ev.preventDefault();
-//   ev.stopPropagation();
-
-//   // Are we dealing with the Light Button
-//   if (tbutton.hasClass('lightSpell')) {
-//     //
-//   } else {
-//     //
-//   }
-// }
