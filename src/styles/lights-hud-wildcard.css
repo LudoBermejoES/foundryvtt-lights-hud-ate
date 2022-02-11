@@ -30,8 +30,8 @@
   line-height: 0 !important;
 }
 
-#token-hud .lights-hud-button-select:hover .lights-hud-button-image{
-  opacity: 1!important;
+#token-hud .lights-hud-button-select:hover .lights-hud-button-image {
+  opacity: 1 !important;
 }
 
 #token-hud .lights-hud-button-select.list {
@@ -48,13 +48,17 @@
   object-fit: contain;
 }
 
-#token-hud .lights-hud-button-disabled span, #token-hud .lights-hud-button-disabled img, #token-hud .lights-hud-button-disabled video {
+#token-hud .lights-hud-button-disabled span,
+#token-hud .lights-hud-button-disabled img,
+#token-hud .lights-hud-button-disabled video {
   opacity: 1 !important;
   filter: grayscale(100%);
 }
-#token-hud .lights-hud-button-disabled span, #token-hud .lights-hud-button-disabled:hover img, #token-hud .lights-hud-button-disabled:hover video {
+#token-hud .lights-hud-button-disabled span,
+#token-hud .lights-hud-button-disabled:hover img,
+#token-hud .lights-hud-button-disabled:hover video {
   /* opacity: 0.7 !important; */
-  color: #CCC;
+  color: #ccc;
 }
 
 .token-sheet .lights-hud-default {

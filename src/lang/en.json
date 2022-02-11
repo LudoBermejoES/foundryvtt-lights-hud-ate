@@ -110,15 +110,6 @@
   "lights-hud.torchType.nameConsumableTorch.name": "Consumable Item for Torch",
   "lights-hud.torchType.nameConsumableTorch.hint": "Name of the inventory item to check and potentially consume when a torch is lit.",
 
-  "lights-hud.settings.enableTokenHUD.name": "Enable Token HUD Button",
-  "lights-hud.settings.enableTokenHUD.hint": "Enable extra Token HUD button for selecting light source.",
-  "lights-hud.settings.alwaysShowHUD.name": "Enable Token HUD Button",
-  "lights-hud.settings.alwaysShowHUD.hint": "Enable extra Token HUD button for selecting light source.",
-  "lights-hud.settings.HUDDisplayImage.name": "Opacity of token preview",
-  "lights-hud.settings.HUDDisplayImage.hint": "The opacity of the token previews in the HUD before hovering over them.",
-  "lights-hud.settings.HUDImageOpacity.name": "Opacity of token preview",
-  "lights-hud.settings.HUDImageOpacity.hint": "The opacity of the token previews in the HUD before hovering over them.",
-
   "lights-hud.settings.position.name": "Token Position",
   "lights-hud.settings.position.hint": "Which side of the token should the icons appear on?",
   "lights-hud.settings.position.choice.left": "Left",
@@ -129,6 +120,8 @@
   "lights-hud.settings.imageDisplay.hint": "Disable to display wildcard options as a list of their filenames in the HUD.",
   "lights-hud.settings.opacity.name": "Opacity of token preview",
   "lights-hud.settings.opacity.hint": "Configure the opacity of the token previews in the HUD before hovering on them.",
+  "lights-hud.settings.toggleDelete.name": "Always delete the active effect instead of disable",
+  "lights-hud.settings.toggleDelete.hint": "Instead of disabling some effects and deleting others, always delete a temporary effect toggled from the hud.",
 
   "lights-hud.windows.art-select.title": "Select Art",
   "lights-hud.windows.art-select.no-art-found": "No art found"

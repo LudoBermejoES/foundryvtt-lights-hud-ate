@@ -93,11 +93,52 @@ export function firstGM() {
   return gmId;
 }
 
-export function registerHUD() {
-  async function renderHudButton(hud, html, token) {
-    renderHud(hud, html, token, '', doImageSearch, updateTokenImage, updateActorImage);
+// export function registerHUD() {
+//   async function renderHudButton(hud, html, token) {
+//     renderHud(hud, html, token, '', doImageSearch, updateTokenImage, updateActorImage);
+//   }
+
+//   // Incorporating 'FVTT-TokenHUDWildcard' token hud button
+//   Hooks.on('renderTokenHUD', renderHudButton);
+// }
+
+/**
+* @href https://github.com/ElfFriend-DnD/foundryvtt-temp-effects-as-statuses/blob/main/scripts/temp-effects-as-statuses.js
+*/
+export async function toggleEffectByUuid(effectUuid) {
+  const effect = <ActiveEffect>await fromUuid(effectUuid);
+  const alwaysDelete = game.settings.get(CONSTANTS.MODULE_NAME, 'toggleDelete');
+
+  // nuke it if it has a statusId
+  // brittle assumption
+  // provides an option to always do this
+  if (effect.getFlag('core', 'statusId') || alwaysDelete) {
+    const deleted = await effect.delete();
+    return !!deleted;
   }
 
-  // Incorporating 'FVTT-TokenHUDWildcard' token hud button
-  Hooks.on('renderTokenHUD', renderHudButton);
+  // otherwise toggle its disabled status
+  const updated = await effect.update({
+    disabled: !effect.data.disabled,
+  });
+
+  return !!updated;
+}
+
+/**
+* @href https://github.com/itamarcu/roll-from-compendium/blob/master/scripts/roll-from-compendium.js
+*/
+export async function rollDependingOnSystem(item) {
+  // if (game.system.id === 'pf2e') {
+  //   if (item.type === 'spell') {
+  //     return pf2eCastSpell(item, actor, dummyActor)
+  //   } else {
+  //     return pf2eItemToMessage(item)
+  //   }
+  // }
+  // if (game.system.id === 'dnd5e') {
+  //   const actorHasItem = !!actor.items.get(item.id)
+  //   return dnd5eRollItem(item, actor, actorHasItem)
+  // }
+  return item.roll()
 }

@@ -1,6 +1,7 @@
 import API from './api';
 import CONSTANTS from './constants';
 import EffectInterface from './effects/effect-interface';
+import { toggleEffectByUuid } from './lib/lib';
 import { canvas, game } from './settings';
 
 export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
@@ -142,10 +143,21 @@ export async function addLightsHUDButtons(app, html, data) {
           event.preventDefault()
           event.stopPropagation()
           // TODO Verificare recupero id dell'item
+          const uuid = '';
           const controlled = <Token[]>canvas.tokens?.controlled;
           const index = controlled.findIndex(x => x.data._id === tokenD.id)
           const tokenToChange = controlled[index];
           const actorToChange = tokenToChange.actor?.id;
+
+          const obj = <any>fromUuid(uuid);
+          if(obj instanceof Item){
+            //@ts-ignore
+            rollDependingOnSystem(obj);
+          }else if(obj instanceof ActiveEffect){
+            toggleEffectByUuid(uuid);
+          }else{
+            // DO NOTHING
+          }
 
           //const updateTarget = tokenToChange.document ? tokenToChange.document : tokenToChange
           //const dimensions = getTokenDimensions(updateTarget, event.target.dataset.name)
