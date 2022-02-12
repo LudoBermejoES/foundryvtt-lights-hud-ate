@@ -21,17 +21,17 @@ export const SOCKET_HANDLERS = {
    */
 };
 
-export let lightsHUDSocket;
+export let lightsHudAteSocket;
 
 export function registerSocket() {
   debug('Registered lightsHUDSocket');
   //@ts-ignore
-  lightsHUDSocket = socketlib.registerModule(CONSTANTS.MODULE_NAME);
+  lightsHudAteSocket = socketlib.registerModule(CONSTANTS.MODULE_NAME);
 
   /**
    * Generic socket
    */
-  lightsHUDSocket.register(SOCKET_HANDLERS.CALL_HOOK, (hook, ...args) => callHook(hook, ...args));
+  lightsHudAteSocket.register(SOCKET_HANDLERS.CALL_HOOK, (hook, ...args) => callHook(hook, ...args));
 
   /**
    * Sense walls sockets
@@ -48,22 +48,25 @@ export function registerSocket() {
   /**
    * Effects
    */
-  lightsHUDSocket.register('toggleEffect', (...args) => API.effectInterface._effectHandler.toggleEffectArr(...args));
-  lightsHUDSocket.register('addEffect', (...args) => API.effectInterface._effectHandler.addEffectArr(...args));
-  lightsHUDSocket.register('removeEffect', (...args) => API.effectInterface._effectHandler.removeEffectArr(...args));
+  lightsHudAteSocket.register('toggleEffect', (...args) => API.effectInterface._effectHandler.toggleEffectArr(...args));
+  lightsHudAteSocket.register('addEffect', (...args) => API.effectInterface._effectHandler.addEffectArr(...args));
+  lightsHudAteSocket.register('removeEffect', (...args) => API.effectInterface._effectHandler.removeEffectArr(...args));
   // senseWallsSocket.register('addActorDataChanges', (...args) => API._actorUpdater.addActorDataChanges(...args));
   // senseWallsSocket.register('removeActorDataChanges', (...args) => API._actorUpdater.removeActorDataChanges(...args));
-  lightsHUDSocket.register('addEffectOnActor', (...args) =>
+  lightsHudAteSocket.register('addEffectOnActor', (...args) =>
     API.effectInterface._effectHandler.addEffectOnActorArr(...args),
   );
-  lightsHUDSocket.register('removeEffectOnActor', (...args) =>
+  lightsHudAteSocket.register('removeEffectOnActor', (...args) =>
     API.effectInterface._effectHandler.removeEffectOnActorArr(...args),
   );
-  lightsHUDSocket.register('removeEffectFromIdOnActor', (...args) =>
+  lightsHudAteSocket.register('removeEffectFromIdOnActor', (...args) =>
     API.effectInterface._effectHandler.removeEffectFromIdOnActorArr(...args),
   );
+  lightsHudAteSocket.register('toggleEffectByUuid', (...args) =>
+    API.effectInterface._effectHandler.toggleEffectByUuidArr(...args),
+  );
 
-  return lightsHUDSocket;
+  return lightsHudAteSocket;
 }
 
 async function callHook(inHookName, ...args) {

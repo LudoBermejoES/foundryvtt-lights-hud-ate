@@ -535,4 +535,33 @@ export default class EffectHandler {
     const [effectName, uuid, origin, overlay, effect] = inAttributes;
     return this.addEffectOnActor(effectName, uuid, origin, overlay, effect);
   }
+
+  /**
+   * @href https://github.com/ElfFriend-DnD/foundryvtt-temp-effects-as-statuses/blob/main/scripts/temp-effects-as-statuses.js
+   */
+  async toggleEffectByUuid(uuid: string, alwaysDelete = false) {
+    const effect = <ActiveEffect>await fromUuid(uuid);
+    // nuke it if it has a statusId
+    // brittle assumption
+    // provides an option to always do this
+    if (effect.getFlag('core', 'statusId') || alwaysDelete) {
+      const deleted = await effect.delete();
+      return !!deleted;
+    }
+
+    // otherwise toggle its disabled status
+    const updated = await effect.update({
+      disabled: !effect.data.disabled,
+    });
+
+    return !!updated;
+  }
+
+  async toggleEffectByUuidArr(...inAttributes) {
+    if (!Array.isArray(inAttributes)) {
+      throw error('addEffectOnActorArr | inAttributes must be of type array');
+    }
+    const [uuid, alwaysDelete] = inAttributes;
+    return this.toggleEffectByUuid(uuid, alwaysDelete);
+  }
 }

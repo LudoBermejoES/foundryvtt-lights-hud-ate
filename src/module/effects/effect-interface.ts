@@ -360,6 +360,22 @@ export default class EffectInterface {
     return this._socket.executeAsGM('addEffectOnActor', effect.name, uuid, undefined, false, effect);
   }
 
+  async toggleEffectByUuid(effectId: string, alwaysDelete = false) {
+    if (effectId.length == 0) {
+      ui.notifications?.error(`Please select or target a active effect to toggle ${effectId}`);
+      return;
+    }
+
+    const effect = <ActiveEffect>await fromUuid(effectId);
+
+    if (!effect) {
+      ui.notifications?.error(`Effect ${effectId} was not found`);
+      return;
+    }
+
+    return this._socket.executeAsGM('toggleEffectByUuid', effect.id, alwaysDelete);
+  }
+
   /**
    * Toggles the effect on the provided actor UUIDS as the GM via sockets
    *

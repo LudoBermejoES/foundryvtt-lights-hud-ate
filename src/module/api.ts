@@ -1,5 +1,5 @@
 import CONSTANTS from './constants';
-import { lightsHUDSocket, SOCKET_HANDLERS } from './socket';
+import { lightsHudAteSocket, SOCKET_HANDLERS } from './socket';
 import { canvas, game } from './settings';
 import { dialogWarning, error, i18n, warn } from './lib/lib';
 import EffectInterface from './effects/effect-interface';
