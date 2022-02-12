@@ -1,8 +1,8 @@
 {
   "private": true,
-  "name": "lights-hud",
-  "title": "LightsHUD",
-  "description": "Lights HUD Control",
+  "name": "foundryvtt-lights-hud-ate",
+  "title": "LightsHUD+ATE",
+  "description": "Lights HUD Control + Active Token Effect",
   "version": "0.10.5",
   "scripts": {
     "package": "gulp package",

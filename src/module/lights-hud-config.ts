@@ -52,7 +52,7 @@ export async function addLightsHUDButtons(app, html, data) {
     // TODO for now we check if at least one active effect has the atl/ate changes on him
     const aeAtl = <ActiveEffect>getATLEffectsFromItem(item)[0];
     let applied = false;
-    if(aeAtl){
+    if (aeAtl) {
       applied = await API.hasEffectAppliedFromIdOnActor(<string>actor.id, <string>aeAtl.id);
     }
     return {
@@ -105,66 +105,66 @@ export async function addLightsHUDButtons(app, html, data) {
   // tbuttonTorch.addClass('active');
 
   // Finally insert the buttons in the column
-  html.find(".col.lights-hud-column-" + position).prepend(tbuttonItemLight);
+  html.find('.col.lights-hud-column-' + position).prepend(tbuttonItemLight);
   // html.find(".col.lights-hud-column-" + position).prepend(tbuttonTorch);
   // html.find(".col.lights-hud-column-" + position).prepend(tbuttonLantern);
   // html.find(".col.lights-hud-column-" + position).prepend(tbuttonLight);
 
-  const is080 = !isNewerVersion("0.8.0", game.data.version)
+  const is080 = !isNewerVersion('0.8.0', game.data.version);
 
-  html.find('div.right')
-      .append(wildcardDisplay)
-      .click((event) => {
-          let activeButton, clickedButton, tokenButton;
-          for ( const button of html.find('div.control-icon') ) {
-              if (button.classList.contains('active')) activeButton = button
-              if (button === event.target.parentElement) clickedButton = button
-              if (button.dataset.action === 'lights-hud-selector') tokenButton = button
-          }
+  html
+    .find('div.right')
+    .append(wildcardDisplay)
+    .click((event) => {
+      let activeButton, clickedButton, tokenButton;
+      for (const button of html.find('div.control-icon')) {
+        if (button.classList.contains('active')) activeButton = button;
+        if (button === event.target.parentElement) clickedButton = button;
+        if (button.dataset.action === 'lights-hud-selector') tokenButton = button;
+      }
 
-          if (clickedButton === tokenButton && activeButton !== tokenButton) {
-              tokenButton.classList.add('active')
+      if (clickedButton === tokenButton && activeButton !== tokenButton) {
+        tokenButton.classList.add('active');
 
-              html.find('.lights-hud-selector-wrap')[0].classList.add('active')
-              const effectSelector = is080 ? '[data-action="effects"]' : '.effects'
-              html.find(`.control-icon${effectSelector}`)[0].classList.remove('active')
-              html.find('.status-effects')[0].classList.remove('active')
-          } else {
-              tokenButton.classList.remove('active')
+        html.find('.lights-hud-selector-wrap')[0].classList.add('active');
+        const effectSelector = is080 ? '[data-action="effects"]' : '.effects';
+        html.find(`.control-icon${effectSelector}`)[0].classList.remove('active');
+        html.find('.status-effects')[0].classList.remove('active');
+      } else {
+        tokenButton.classList.remove('active');
 
-              html.find('.lights-hud-selector-wrap')[0].classList.remove('active')
-          }
-      })
+        html.find('.lights-hud-selector-wrap')[0].classList.remove('active');
+      }
+    });
 
-  const buttons = html.find('.lights-hud-button-select')
+  const buttons = html.find('.lights-hud-button-select');
 
   buttons.map((button) => {
-      buttons[button].addEventListener('click', function (event) {
-          event.preventDefault()
-          event.stopPropagation()
-          // TODO Verificare recupero id dell'item
-          const uuid = '';
-          const controlled = <Token[]>canvas.tokens?.controlled;
-          const index = controlled.findIndex(x => x.data._id === tokenD.id)
-          const tokenToChange = controlled[index];
-          const actorToChange = tokenToChange.actor?.id;
+    buttons[button].addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      // TODO Verificare recupero id dell'item
+      const uuid = '';
+      const controlled = <Token[]>canvas.tokens?.controlled;
+      const index = controlled.findIndex((x) => x.data._id === tokenD.id);
+      const tokenToChange = controlled[index];
+      const actorToChange = tokenToChange.actor?.id;
 
-          const obj = <any>fromUuid(uuid);
-          if(obj instanceof Item){
-            //@ts-ignore
-            rollDependingOnSystem(obj);
-          }else if(obj instanceof ActiveEffect){
-            toggleEffectByUuid(uuid);
-          }else{
-            // DO NOTHING
-          }
+      const obj = <any>fromUuid(uuid);
+      if (obj instanceof Item) {
+        //@ts-ignore
+        rollDependingOnSystem(obj);
+      } else if (obj instanceof ActiveEffect) {
+        toggleEffectByUuid(uuid);
+      } else {
+        // DO NOTHING
+      }
 
-          //const updateTarget = tokenToChange.document ? tokenToChange.document : tokenToChange
-          //const dimensions = getTokenDimensions(updateTarget, event.target.dataset.name)
-          //let updateInfo = { img: event.target.dataset.name, ...dimensions }
-          //updateTarget.update(updateInfo)
-          // TODO GESTIRE GLI ACITVE EFFECT
-      })
+      //const updateTarget = tokenToChange.document ? tokenToChange.document : tokenToChange
+      //const dimensions = getTokenDimensions(updateTarget, event.target.dataset.name)
+      //let updateInfo = { img: event.target.dataset.name, ...dimensions }
+      //updateTarget.update(updateInfo)
+      // TODO GESTIRE GLI ACITVE EFFECT
+    });
   });
-
 }

@@ -103,8 +103,8 @@ export function firstGM() {
 // }
 
 /**
-* @href https://github.com/ElfFriend-DnD/foundryvtt-temp-effects-as-statuses/blob/main/scripts/temp-effects-as-statuses.js
-*/
+ * @href https://github.com/ElfFriend-DnD/foundryvtt-temp-effects-as-statuses/blob/main/scripts/temp-effects-as-statuses.js
+ */
 export async function toggleEffectByUuid(effectUuid) {
   const effect = <ActiveEffect>await fromUuid(effectUuid);
   const alwaysDelete = game.settings.get(CONSTANTS.MODULE_NAME, 'toggleDelete');
@@ -126,8 +126,8 @@ export async function toggleEffectByUuid(effectUuid) {
 }
 
 /**
-* @href https://github.com/itamarcu/roll-from-compendium/blob/master/scripts/roll-from-compendium.js
-*/
+ * @href https://github.com/itamarcu/roll-from-compendium/blob/master/scripts/roll-from-compendium.js
+ */
 export async function rollDependingOnSystem(item) {
   // if (game.system.id === 'pf2e') {
   //   if (item.type === 'spell') {
@@ -140,5 +140,5 @@ export async function rollDependingOnSystem(item) {
   //   const actorHasItem = !!actor.items.get(item.id)
   //   return dnd5eRollItem(item, actor, actorHasItem)
   // }
-  return item.roll()
+  return item.roll();
 }
