@@ -2,6 +2,7 @@ import FoundryHelpers from '../lib/foundry-helpers';
 import { registerSocket } from '../socket';
 import Effect from './effect';
 import EffectHandler from './effect-handler';
+import { game } from '../settings';
 
 /**
  * Interface for working with effects and executing them as a GM via sockets
@@ -283,9 +284,9 @@ export default class EffectInterface {
   //   );
   // }
 
-  // =====================================
-  // Additional
-  // =====================================
+  // ============================================================
+  // Additional feature for retrocompatibility
+  // ============================================================
 
   /**
    * Checks to see if any of the current active effects applied to the actor
@@ -360,20 +361,29 @@ export default class EffectInterface {
     return this._socket.executeAsGM('addEffectOnActor', effect.name, uuid, undefined, false, effect);
   }
 
-  async toggleEffectByUuid(effectId: string, alwaysDelete = false) {
+  async toggleEffectFromIdOnActor(
+    effectId: string,
+    uuid: string,
+    alwaysDelete: boolean,
+    forceEnabled: boolean,
+    forceDisabled: boolean,
+  ) {
     if (effectId.length == 0) {
       ui.notifications?.error(`Please select or target a active effect to toggle ${effectId}`);
       return;
     }
 
-    const effect = <ActiveEffect>await fromUuid(effectId);
+    const actor = <Actor>game.actors?.get(uuid) || <Actor>game.actors?.getName(uuid);
+    const effect = <ActiveEffect>actor.effects.find((entity: ActiveEffect) => {
+      return <string>entity.id == effectId;
+    });
 
     if (!effect) {
       ui.notifications?.error(`Effect ${effectId} was not found`);
       return;
     }
 
-    return this._socket.executeAsGM('toggleEffectByUuid', effect.id, alwaysDelete);
+    return this._socket.executeAsGM('toggleEffectFromIdOnActor', effect.id, uuid, alwaysDelete, forceEnabled, forceDisabled);
   }
 
   /**

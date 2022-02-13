@@ -1,7 +1,8 @@
 import API from './api';
 import CONSTANTS from './constants';
 import EffectInterface from './effects/effect-interface';
-import { toggleEffectByUuid } from './lib/lib';
+import { rollDependingOnSystem, warn } from './lib/lib';
+import { LightDataHud } from './lights-hud-ate-models';
 import { canvas, game } from './settings';
 
 export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
@@ -24,10 +25,13 @@ export async function addLightsHUDButtons(app, html, data) {
   //     return
   // }
 
+  const imageDisplay = <boolean>game.settings.get(CONSTANTS.MODULE_NAME, 'imageDisplay');
+  const imageOpacity = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'imageOpacity') / 100;
+
   const lightItems: Item[] = [];
 
   //const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-  // const spellsItems = ['spell'];
+  // const spellsItems = ['spell','feat'];
   // For every itemwith a ATL/ATE effect
   actor.data.items.contents.forEach((im: Item) => {
     // if (im && physicalItems.includes(im.type)) {}
@@ -39,32 +43,33 @@ export async function addLightsHUDButtons(app, html, data) {
     }
   });
 
-  const imageDisplay = <boolean>game.settings.get(CONSTANTS.MODULE_NAME, 'imageDisplay');
-  const imageOpacity = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'imageOpacity') / 100;
+  // Convert item to LightHudData
 
-  const imagesParsed = lightItems.map(async (item: Item) => {
-    const im = <string>item.img;
-    const split = im.split('/');
-    const extensions = im.split('.');
-    const extension = extensions[extensions.length - 1];
-    const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
-    const vid = ['webm', 'mp4', 'm4v'].includes(extension);
-    // TODO for now we check if at least one active effect has the atl/ate changes on him
-    const aeAtl = <ActiveEffect>getATLEffectsFromItem(item)[0];
-    let applied = false;
-    if (aeAtl) {
-      applied = await API.hasEffectAppliedFromIdOnActor(<string>actor.id, <string>aeAtl.id);
-    }
-    return {
-      route: im,
-      name: item.name,
-      used: applied,
-      img,
-      vid,
-      type: img || vid,
-      id: item.id,
-    };
-  });
+  const imagesParsed = await Promise.all(
+    lightItems.map(async (item: Item) => {
+      const im = <string>item.img;
+      const split = im.split('/');
+      const extensions = im.split('.');
+      const extension = extensions[extensions.length - 1];
+      const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
+      const vid = ['webm', 'mp4', 'm4v'].includes(extension);
+      // TODO for now we check if at least one active effect has the atl/ate changes on him
+      const aeAtl = <ActiveEffect>getATLEffectsFromItem(item)[0];
+      let applied = false;
+      if (aeAtl) {
+        applied = await API.hasEffectAppliedFromIdOnActor(<string>actor.id, <string>aeAtl.id);
+      }
+      return <LightDataHud>{
+        route: im,
+        name: item.name,
+        used: applied,
+        img: img,
+        vid: vid,
+        type: img || vid,
+        itemid: item.id,
+      };
+    }),
+  );
 
   const wildcardDisplay = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/artSelect.hbs`, {
     imagesParsed,
@@ -73,47 +78,33 @@ export async function addLightsHUDButtons(app, html, data) {
   });
 
   // Define all three buttons
-  const tbuttonItemLight = $(
-    `<div class="control-icon ${CONSTANTS.MODULE_NAME} lightItem" title="Light Item"><i class="fas fa-lightbulb"></i></div>`,
-  );
-  // const tbuttonLight = $(
-  //   `<div class="control-icon ${CONSTANTS.MODULE_NAME} lightEffect" title="Light Effect"><i class="fas fa-sun"></i></div>`,
-  // );
-  // const tbuttonLantern = $(
+  // const tbuttonItemLight = $(
   //   `<div class="control-icon ${CONSTANTS.MODULE_NAME} lightItem" title="Light Item"><i class="fas fa-lightbulb"></i></div>`,
   // );
-  // const tbuttonTorch = $(
-  //   `<div class="control-icon ${CONSTANTS.MODULE_NAME} lightMacro" title="Light Macro"><i class="fas fa-fire"></i></div>`,
-  // );
 
-  // Get the position of the column
-  const position = game.settings.get(CONSTANTS.MODULE_NAME, 'position');
+  // // Get the position of the column
+  // const position = game.settings.get(CONSTANTS.MODULE_NAME, 'position');
 
-  // Create the column
-  const buttonsdiv = $(`<div class="col ${CONSTANTS.MODULE_NAME}-column-${position}"></div>`);
+  // // Create the column
+  // const buttonsdiv = $(`<div class="col ${CONSTANTS.MODULE_NAME}-column-${position}"></div>`);
 
-  // Wrap the previous icons
-  const newdiv = `<div class="${CONSTANTS.MODULE_NAME}-container"></div>`;
-  html.find('.col.left').before(newdiv);
+  // // Wrap the previous icons
+  // const newdiv = `<div class="${CONSTANTS.MODULE_NAME}-container"></div>`;
+  // html.find('.col.left').before(newdiv);
 
-  // Add the column
-  html.find(`.${CONSTANTS.MODULE_NAME}-container`).prepend(buttonsdiv);
+  // // Add the column
+  // html.find(`.${CONSTANTS.MODULE_NAME}-container`).prepend(buttonsdiv);
 
-  tbuttonItemLight.addClass('active');
-  // tbuttonLight.addClass('active');
-  // tbuttonLantern.addClass('active');
-  // tbuttonTorch.addClass('active');
+  // tbuttonItemLight.addClass('active');
 
   // Finally insert the buttons in the column
-  html.find('.col.lights-hud-ate-column-' + position).prepend(tbuttonItemLight);
-  // html.find(".col.lights-hud-ate-column-" + position).prepend(tbuttonTorch);
-  // html.find(".col.lights-hud-ate-column-" + position).prepend(tbuttonLantern);
-  // html.find(".col.lights-hud-ate-column-" + position).prepend(tbuttonLight);
+  // html.find('.col.lights-hud-ate-column-' + position).prepend(tbuttonItemLight);
 
   const is080 = !isNewerVersion('0.8.0', game.data.version);
 
   html
     .find('div.right')
+    // .find(".col.lights-hud-ate-column-" + position).prepend(tbuttonItemLight)
     .append(wildcardDisplay)
     .click((event) => {
       let activeButton, clickedButton, tokenButton;
@@ -140,24 +131,44 @@ export async function addLightsHUDButtons(app, html, data) {
   const buttons = html.find('.lights-hud-ate-button-select');
 
   buttons.map((button) => {
-    buttons[button].addEventListener('click', function (event) {
+    buttons[button].addEventListener('click', async function (event) {
       event.preventDefault();
       event.stopPropagation();
+      const buttonClick = event.button; // 0 left click
       // TODO Verificare recupero id dell'item
-      const uuid = '';
+      const itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
+      const isApplied = !!(<string>$(this).find('.lights-hud-ate-button-image').attr('data-applied'));
+      if (!itemId) {
+        warn(`No id ${itemId} founded for retrieve the item`);
+        return;
+      }
       const controlled = <Token[]>canvas.tokens?.controlled;
       const index = controlled.findIndex((x) => x.data._id === tokenD.id);
-      const tokenToChange = controlled[index];
-      const actorToChange = tokenToChange.actor?.id;
+      const tokenToChange = <Token>controlled[index];
+      const actorId = <string>tokenToChange.actor?.id;
+      if (!actorId) {
+        warn(`No id ${actorId} founded for retrieve the item`);
+        return;
+      }
+      const obj = <Actor>game.actors?.get(actorId) || <Actor>game.actors?.getName(actorId);
+      // const obj = <Item>game.items?.get(uuid) || <Item>game.items?.getName(uuid);
+      // const obj = tokenToChange.data;
+      if (isApplied) {
+        const atlEffectsS = obj.effects.filter((entity: ActiveEffect) => {
+          return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+        });
+        atlEffectsS.forEach((entity: ActiveEffect) => {
+          API.toggleEffectOnActor(actorId, <string>entity.id, false, false, false);
+        });
+      }
 
-      const obj = <any>fromUuid(uuid);
-      if (obj instanceof Item) {
-        //@ts-ignore
-        rollDependingOnSystem(obj);
-      } else if (obj instanceof ActiveEffect) {
-        toggleEffectByUuid(uuid);
+      const item = <Item>actor.items.find((entity: Item) => {
+        return <string>entity.id == itemId;
+      });
+      if (item) {
+        rollDependingOnSystem(item);
       } else {
-        // DO NOTHING
+        warn(`No item found for the id ${itemId}`);
       }
 
       //const updateTarget = tokenToChange.document ? tokenToChange.document : tokenToChange
@@ -165,6 +176,11 @@ export async function addLightsHUDButtons(app, html, data) {
       //let updateInfo = { img: event.target.dataset.name, ...dimensions }
       //updateTarget.update(updateInfo)
       // TODO GESTIRE GLI ACITVE EFFECT
+    });
+    buttons[button].addEventListener('contextmenu', async function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const buttonClick = event.button; // 0 left click
     });
   });
 }

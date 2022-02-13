@@ -74,8 +74,7 @@ export default class API {
     }
 
     if (actor && effect) {
-      //@ts-ignore
-      (<EffectInterface>LightsHUD.API.effectInterface).addEffectOnActor(effectName, <string>actor.id, effect);
+      API.effectInterface.addEffectOnActor(effectName, <string>actor.id, effect);
     }
   }
 
@@ -89,10 +88,32 @@ export default class API {
     let founded = false;
 
     if (actor && effectId) {
-      //@ts-ignore
-      founded = await (<EffectInterface>LightsHUD.API.effectInterface).hasEffectAppliedFromIdOnActor(
+      founded = await API.effectInterface.hasEffectAppliedFromIdOnActor(effectId, <string>actor.id);
+    }
+    return founded;
+  }
+
+  static async toggleEffectOnActor(
+    actorNameOrId: string,
+    effectId: string,
+    alwaysDelete: boolean,
+    forceEnabled: boolean,
+    forceDisabled: boolean,
+  ) {
+    const actor = <Actor>game.actors?.get(actorNameOrId) || <Actor>game.actors?.getName(actorNameOrId);
+
+    if (!actor) {
+      warn(`No actor found with reference '${actorNameOrId}'`, true);
+    }
+
+    let founded = false;
+    if (actor && effectId) {
+      founded = await API.effectInterface.toggleEffectFromIdOnActor(
         effectId,
         <string>actor.id,
+        alwaysDelete,
+        forceEnabled,
+        forceDisabled,
       );
     }
     return founded;

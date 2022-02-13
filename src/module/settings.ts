@@ -43,24 +43,49 @@ export function getAPI(): API {
 }
 
 export const registerSettings = function (): void {
+  game.settings.registerMenu(CONSTANTS.MODULE_NAME, 'resetAllSettings', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.reset.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.reset.hint`,
+    icon: 'fas fa-coins',
+    type: ResetSettingsDialog,
+    restricted: true,
+  });
+
+  // const settings = defaultSettings();
+  // for (const [name, data] of Object.entries(settings)) {
+  //   game.settings.register(CONSTANTS.MODULE_NAME, name, <any>data);
+  // }
+
+  // for (const [name, data] of Object.entries(otherSettings)) {
+  //     game.settings.register(CONSTANTS.MODULE_NAME, name, data);
+  // }
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'lights', {
+    scope: 'world',
+    config: false,
+    //@ts-ignore
+    default: SYSTEMS.DATA ? SYSTEMS.DATA.LIGHTS : [],
+    type: Array,
+  });
+
   // ============================================================
   // OLD SETTINGS TO REMOVE PROBABLY
   // ===========================================================
 
-  game.settings.register(CONSTANTS.MODULE_NAME, 'position', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.name`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.hint`),
-    scope: 'world',
-    config: true,
-    type: String,
-    default: 'left',
-    choices: {
-      left: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.choice.left`),
-      right: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.choice.position.right`),
-      top: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.choice.position.top`),
-      bottom: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.choice.position.bottom`),
-    },
-  });
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'position', {
+  //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.name`),
+  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.hint`),
+  //   scope: 'world',
+  //   config: true,
+  //   type: String,
+  //   default: 'left',
+  //   choices: {
+  //     left: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.choice.left`),
+  //     right: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.choice.position.right`),
+  //     top: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.choice.position.top`),
+  //     bottom: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.choice.position.bottom`),
+  //   },
+  // });
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'imageDisplay', {
     name: i18n(`${CONSTANTS.MODULE_NAME}.settings.imageDisplay.name`),
@@ -91,6 +116,42 @@ export const registerSettings = function (): void {
   });
 
   // ===================================================================
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
+    scope: 'client',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'debugHooks', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.hint`,
+    scope: 'world',
+    config: false,
+    default: false,
+    type: Boolean,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'systemFound', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.systemFound.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.systemFound.hint`,
+    scope: 'world',
+    config: false,
+    default: false,
+    type: Boolean,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'systemNotFoundWarningShown', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.systemNotFoundWarningShown.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.systemNotFoundWarningShown.hint`,
+    scope: 'world',
+    config: false,
+    default: false,
+    type: Boolean,
+  });
 };
 
 class ResetSettingsDialog extends FormApplication {

@@ -72,10 +72,11 @@ export default class EffectHandler {
    */
   async hasEffectApplied(effectName, uuid) {
     const actor = await this._foundryHelpers.getActorByUuid(uuid);
-    return actor?.data?.effects?.some(
+    const isApplied = actor?.data?.effects?.some(
       // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
       (activeEffect) => <string>activeEffect?.data?.label == effectName && !activeEffect?.data?.disabled,
     );
+    return isApplied;
   }
 
   /**
@@ -358,10 +359,11 @@ export default class EffectHandler {
       effectName = i18n(effectName);
     }
     const actor = await this._foundryHelpers.getActorByUuid(uuid);
-    return actor?.data?.effects?.some(
+    const isApplied = actor?.data?.effects?.some(
       // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?.label == effectName,
       (activeEffect) => <string>activeEffect?.data?.label == effectName,
     );
+    return isApplied;
   }
 
   /**
@@ -392,10 +394,11 @@ export default class EffectHandler {
    */
   async hasEffectAppliedFromIdOnActor(effectId, uuid): Promise<boolean> {
     const actor = await this._foundryHelpers.getActorByUuid(uuid);
-    return actor?.data?.effects?.some(
+    const isApplied = actor?.data?.effects?.some(
       // (activeEffect) => <boolean>activeEffect?.data?.flags?.isConvenient && <string>activeEffect?.data?._id == effectId,
       (activeEffect) => <string>activeEffect?.data?._id == effectId,
     );
+    return isApplied;
   }
 
   /**
@@ -539,8 +542,17 @@ export default class EffectHandler {
   /**
    * @href https://github.com/ElfFriend-DnD/foundryvtt-temp-effects-as-statuses/blob/main/scripts/temp-effects-as-statuses.js
    */
-  async toggleEffectByUuid(uuid: string, alwaysDelete = false) {
-    const effect = <ActiveEffect>await fromUuid(uuid);
+  async toggleEffectFromIdOnActor(
+    effectId: string,
+    uuid: string,
+    alwaysDelete: boolean,
+    forceEnabled: boolean,
+    forceDisabled: boolean,
+  ) {
+    const actor = <Actor>game.actors?.get(uuid) || <Actor>game.actors?.getName(uuid);
+    const effect = <ActiveEffect>actor.effects.find((entity: ActiveEffect) => {
+      return <string>entity.id == effectId;
+    });
     // nuke it if it has a statusId
     // brittle assumption
     // provides an option to always do this
@@ -548,20 +560,30 @@ export default class EffectHandler {
       const deleted = await effect.delete();
       return !!deleted;
     }
-
-    // otherwise toggle its disabled status
-    const updated = await effect.update({
-      disabled: !effect.data.disabled,
-    });
+    let updated;
+    if (forceEnabled) {
+      updated = await effect.update({
+        disabled: false,
+      });
+    } else if (forceDisabled) {
+      updated = await effect.update({
+        disabled: true,
+      });
+    } else {
+      // otherwise toggle its disabled status
+      updated = await effect.update({
+        disabled: !effect.data.disabled,
+      });
+    }
 
     return !!updated;
   }
 
-  async toggleEffectByUuidArr(...inAttributes) {
+  async toggleEffectFromIdOnActorArr(...inAttributes) {
     if (!Array.isArray(inAttributes)) {
       throw error('addEffectOnActorArr | inAttributes must be of type array');
     }
-    const [uuid, alwaysDelete] = inAttributes;
-    return this.toggleEffectByUuid(uuid, alwaysDelete);
+    const [effectId, uuid, alwaysDelete, forceEnabled, forceDisabled] = inAttributes;
+    return this.toggleEffectFromIdOnActor(effectId, uuid, alwaysDelete, forceEnabled, forceDisabled);
   }
 }

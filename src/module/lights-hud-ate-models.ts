@@ -27,6 +27,16 @@ export enum LightHUDPreset {
 //   Initial_Animation_Intensity = 'InitialAnimationIntensity',
 // }
 
+export class LightDataHud {
+  route: string;
+  name: string;
+  used: boolean;
+  img: boolean;
+  vid: boolean;
+  type: boolean;
+  itemid: string;
+}
+
 export class LightDataExt extends foundry.data.AmbientLightData {
   // name;
   // tokenID;

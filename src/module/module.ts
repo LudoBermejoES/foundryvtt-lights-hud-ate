@@ -31,7 +31,7 @@ export const initHooks = async (): Promise<void> => {
   }
 
   //@ts-ignore
-  window.LightHUD = {
+  window.LightHudAte = {
     API,
   };
 };
@@ -40,9 +40,9 @@ export const setupHooks = async (): Promise<void> => {
   // setup all the hooks
 
   //@ts-ignore
-  window.LightHUD.API.effectInterface = new EffectInterface(CONSTANTS.MODULE_NAME);
+  window.LightHudAte.API.effectInterface = new EffectInterface(CONSTANTS.MODULE_NAME);
   //@ts-ignore
-  window.LightHUD.API.effectInterface.initialize();
+  window.LightHudAte.API.effectInterface.initialize();
 
   if (game[CONSTANTS.MODULE_NAME]) {
     game[CONSTANTS.MODULE_NAME] = {};
@@ -51,7 +51,7 @@ export const setupHooks = async (): Promise<void> => {
     game[CONSTANTS.MODULE_NAME].API = {};
   }
   //@ts-ignore
-  game[CONSTANTS.MODULE_NAME].API = window.LightHUD.API;
+  game[CONSTANTS.MODULE_NAME].API = window.LightHudAte.API;
 };
 
 export const readyHooks = async (): Promise<void> => {

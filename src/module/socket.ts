@@ -62,8 +62,8 @@ export function registerSocket() {
   lightsHudAteSocket.register('removeEffectFromIdOnActor', (...args) =>
     API.effectInterface._effectHandler.removeEffectFromIdOnActorArr(...args),
   );
-  lightsHudAteSocket.register('toggleEffectByUuid', (...args) =>
-    API.effectInterface._effectHandler.toggleEffectByUuidArr(...args),
+  lightsHudAteSocket.register('toggleEffectFromIdOnActor', (...args) =>
+    API.effectInterface._effectHandler.toggleEffectFromIdOnActorArr(...args),
   );
 
   return lightsHudAteSocket;

@@ -48,7 +48,7 @@
     }
   ],
   "esmodules": ["./main.js"],
-  "styles": ["/styles/LightsHUD.css"],
+  "styles": ["/styles/lights-hud-wildcard.css"],
   "packs": [],
   "minimumCoreVersion": "9",
   "compatibleCoreVersion": "9",

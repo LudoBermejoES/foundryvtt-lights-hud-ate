@@ -67,3 +67,10 @@
 .token-sheet .lights-hud-ate-default.active {
   display: block;
 }
+
+/** additional */
+
+.lights-hud-ate-button-image .fa-fa-check {
+  color: lightgreen;
+  text-shadow: 0 0 8px lightgreen;
+}
