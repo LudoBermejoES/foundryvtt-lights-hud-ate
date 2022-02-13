@@ -1,5 +1,5 @@
 import CONSTANTS from '../constants';
-import { LightHUDElement, LightHUDPreset } from '../lights-hud-models';
+import { LightHUDElement, LightHUDPreset } from '../lights-hud-ate-models';
 
 export default {
   LIGHTS: <LightHUDElement[]>[

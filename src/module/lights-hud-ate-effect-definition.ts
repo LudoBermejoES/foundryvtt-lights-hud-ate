@@ -1,4 +1,4 @@
-import { LightDataExt, LightHUDElement, LightHUDPreset } from './lights-hud-models';
+import { LightDataExt, LightHUDElement, LightHUDPreset } from './lights-hud-ate-models';
 import API from './api';
 import CONSTANTS from './constants';
 import Effect, { Constants } from './effects/effect';

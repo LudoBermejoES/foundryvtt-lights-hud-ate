@@ -1,5 +1,7 @@
+import API from './api';
 import CONSTANTS from './constants';
-import { i18n } from './lib/lib';
+import { dialogWarning, i18n, warn } from './lib/lib';
+import { SYSTEMS } from './systems';
 
 export const game = getGame();
 export const canvas = getCanvas();
@@ -34,6 +36,10 @@ function getGame(): Game {
     throw new Error('Game Is Not Initialized');
   }
   return game;
+}
+
+export function getAPI(): API {
+  return game[CONSTANTS.MODULE_NAME].API;
 }
 
 export const registerSettings = function (): void {
@@ -83,4 +89,94 @@ export const registerSettings = function (): void {
     default: false,
     type: Boolean,
   });
+
+  // ===================================================================
 };
+
+class ResetSettingsDialog extends FormApplication {
+  constructor(...args: any[]) {
+    super(args);
+    //@ts-ignore
+    return new Dialog({
+      title: game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.resetsettings.title`),
+      content:
+        '<p style="margin-bottom:1rem;">' +
+        game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.resetsettings.content`) +
+        '</p>',
+      buttons: {
+        confirm: {
+          icon: '<i class="fas fa-check"></i>',
+          label: game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.resetsettings.confirm`),
+          callback: async () => {
+            await applyDefaultSettings();
+            window.location.reload();
+          },
+        },
+        cancel: {
+          icon: '<i class="fas fa-times"></i>',
+          label: game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.resetsettings.cancel`),
+        },
+      },
+      default: 'cancel',
+    });
+  }
+
+  async _updateObject(event: Event, formData?: object): Promise<any> {
+    // do nothing
+  }
+}
+
+async function applyDefaultSettings() {
+  const settings = defaultSettings(true);
+  for (const [name, data] of Object.entries(settings)) {
+    //@ts-ignore
+    await game.settings.set(CONSTANTS.MODULE_NAME, name, data.default);
+  }
+}
+
+function defaultSettings(apply = false) {
+  return {
+    // TODO
+  };
+}
+
+export async function checkSystem() {
+  if (!SYSTEMS.DATA) {
+    if (game.settings.get(CONSTANTS.MODULE_NAME, 'systemNotFoundWarningShown')) return;
+
+    await game.settings.set(CONSTANTS.MODULE_NAME, 'systemNotFoundWarningShown', true);
+
+    return Dialog.prompt({
+      title: game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.nosystemfound.title`),
+      content: dialogWarning(game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.nosystemfound.content`)),
+      callback: () => {},
+    });
+  }
+
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'systemFound')) return;
+
+  game.settings.set(CONSTANTS.MODULE_NAME, 'systemFound', true);
+
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'systemNotFoundWarningShown')) {
+    return new Dialog({
+      title: game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.systemfound.title`),
+      content: warn(game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.systemfound.content`), true),
+      buttons: {
+        confirm: {
+          icon: '<i class="fas fa-check"></i>',
+          label: game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.systemfound.confirm`),
+          callback: () => {
+            applyDefaultSettings();
+          },
+        },
+        cancel: {
+          icon: '<i class="fas fa-times"></i>',
+          label: game.i18n.localize('No'),
+        },
+      },
+      default: 'cancel',
+    }).render(true);
+  }
+
+  return applyDefaultSettings();
+}

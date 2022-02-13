@@ -6,8 +6,8 @@ import EffectInterface from './effects/effect-interface';
 import EffectHandler from './effects/effect-handler';
 import Effect from './effects/effect';
 import HOOKS from './hooks';
-import { EffectDefinitions } from './lights-hud-effect-definition';
-import { LightDataExt, LightHUDElement } from './lights-hud-models';
+import { EffectDefinitions } from './lights-hud-ate-effect-definition';
+import { LightDataExt, LightHUDElement } from './lights-hud-ate-models';
 
 export default class API {
   // static get effectInterface(): EffectInterface {

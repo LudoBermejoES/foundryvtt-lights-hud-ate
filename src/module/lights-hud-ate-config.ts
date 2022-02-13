@@ -105,10 +105,10 @@ export async function addLightsHUDButtons(app, html, data) {
   // tbuttonTorch.addClass('active');
 
   // Finally insert the buttons in the column
-  html.find('.col.lights-hud-column-' + position).prepend(tbuttonItemLight);
-  // html.find(".col.lights-hud-column-" + position).prepend(tbuttonTorch);
-  // html.find(".col.lights-hud-column-" + position).prepend(tbuttonLantern);
-  // html.find(".col.lights-hud-column-" + position).prepend(tbuttonLight);
+  html.find('.col.lights-hud-ate-column-' + position).prepend(tbuttonItemLight);
+  // html.find(".col.lights-hud-ate-column-" + position).prepend(tbuttonTorch);
+  // html.find(".col.lights-hud-ate-column-" + position).prepend(tbuttonLantern);
+  // html.find(".col.lights-hud-ate-column-" + position).prepend(tbuttonLight);
 
   const is080 = !isNewerVersion('0.8.0', game.data.version);
 
@@ -120,24 +120,24 @@ export async function addLightsHUDButtons(app, html, data) {
       for (const button of html.find('div.control-icon')) {
         if (button.classList.contains('active')) activeButton = button;
         if (button === event.target.parentElement) clickedButton = button;
-        if (button.dataset.action === 'lights-hud-selector') tokenButton = button;
+        if (button.dataset.action === 'lights-hud-ate-selector') tokenButton = button;
       }
 
       if (clickedButton === tokenButton && activeButton !== tokenButton) {
         tokenButton.classList.add('active');
 
-        html.find('.lights-hud-selector-wrap')[0].classList.add('active');
+        html.find('.lights-hud-ate-selector-wrap')[0].classList.add('active');
         const effectSelector = is080 ? '[data-action="effects"]' : '.effects';
         html.find(`.control-icon${effectSelector}`)[0].classList.remove('active');
         html.find('.status-effects')[0].classList.remove('active');
       } else {
         tokenButton.classList.remove('active');
 
-        html.find('.lights-hud-selector-wrap')[0].classList.remove('active');
+        html.find('.lights-hud-ate-selector-wrap')[0].classList.remove('active');
       }
     });
 
-  const buttons = html.find('.lights-hud-button-select');
+  const buttons = html.find('.lights-hud-ate-button-select');
 
   buttons.map((button) => {
     buttons[button].addEventListener('click', function (event) {

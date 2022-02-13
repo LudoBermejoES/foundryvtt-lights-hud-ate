@@ -1,4 +1,4 @@
-#token-hud .lights-hud-selector-wrap {
+#token-hud .lights-hud-ate-selector-wrap {
   position: absolute;
   left: 75px;
   visibility: hidden;
@@ -11,15 +11,15 @@
   grid-template-columns: 100px 100px 100px;
   overflow-y: auto;
 }
-#token-hud .lights-hud-selector-wrap.list {
+#token-hud .lights-hud-ate-selector-wrap.list {
   grid-template-columns: unset !important;
   max-width: 450px;
 }
 
-#token-hud .lights-hud-selector-wrap.active {
+#token-hud .lights-hud-ate-selector-wrap.active {
   visibility: visible;
 }
-#token-hud .lights-hud-button-select {
+#token-hud .lights-hud-ate-button-select {
   max-width: 300px;
   overflow-wrap: break-word;
   padding-top: 0;
@@ -30,40 +30,40 @@
   line-height: 0 !important;
 }
 
-#token-hud .lights-hud-button-select:hover .lights-hud-button-image {
+#token-hud .lights-hud-ate-button-select:hover .lights-hud-ate-button-image {
   opacity: 1 !important;
 }
 
-#token-hud .lights-hud-button-select.list {
+#token-hud .lights-hud-ate-button-select.list {
   max-width: 440px;
   width: 100% !important;
   margin: 8px 0px !important;
   line-height: 40px !important;
 }
 
-#token-hud .lights-hud-button-image {
+#token-hud .lights-hud-ate-button-image {
   width: 100px;
   height: 100px;
   margin: 2px;
   object-fit: contain;
 }
 
-#token-hud .lights-hud-button-disabled span,
-#token-hud .lights-hud-button-disabled img,
-#token-hud .lights-hud-button-disabled video {
+#token-hud .lights-hud-ate-button-disabled span,
+#token-hud .lights-hud-ate-button-disabled img,
+#token-hud .lights-hud-ate-button-disabled video {
   opacity: 1 !important;
   filter: grayscale(100%);
 }
-#token-hud .lights-hud-button-disabled span,
-#token-hud .lights-hud-button-disabled:hover img,
-#token-hud .lights-hud-button-disabled:hover video {
+#token-hud .lights-hud-ate-button-disabled span,
+#token-hud .lights-hud-ate-button-disabled:hover img,
+#token-hud .lights-hud-ate-button-disabled:hover video {
   /* opacity: 0.7 !important; */
   color: #ccc;
 }
 
-.token-sheet .lights-hud-default {
+.token-sheet .lights-hud-ate-default {
   display: none;
 }
-.token-sheet .lights-hud-default.active {
+.token-sheet .lights-hud-ate-default.active {
   display: block;
 }
