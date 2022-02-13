@@ -123,6 +123,13 @@
   "lights-hud-ate.settings.toggleDelete.name": "Always delete the active effect instead of disable",
   "lights-hud-ate.settings.toggleDelete.hint": "Instead of disabling some effects and deleting others, always delete a temporary effect toggled from the hud.",
 
+  "lights-hud-ate.setting.reset.name": "Reset settings to default",
+  "lights-hud-ate.setting.reset.label": "Reset Settings To Default",
+  "lights-hud-ate.setting.reset.hint": "This will reset all of the settings of back to the active game system's default.",
+  "lights-hud-ate.setting.debug.name": "Enable debugging",
+  "lights-hud-ate.setting.debug.label": "Prints debug messages to the console",
+  "lights-hud-ate.setting.debug.hint": " ",
+
   "lights-hud-ate.windows.art-select.title": "Select Art",
   "lights-hud-ate.windows.art-select.no-art-found": "No art found",
 

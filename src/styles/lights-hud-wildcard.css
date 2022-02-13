@@ -70,7 +70,15 @@
 
 /** additional */
 
-.lights-hud-ate-button-image .fa-fa-check {
-  color: lightgreen;
-  text-shadow: 0 0 8px lightgreen;
+.lights-hud-ate-button-select .fa-check {
+  color: green;
+  text-shadow: 0 0 8px green;
+}
+
+.lights-hud-ate-button-image .fa-check {
+  position: absolute;
+  left: 0;
+  color: green;
+  opacity: 0;
+  pointer-events: none;
 }

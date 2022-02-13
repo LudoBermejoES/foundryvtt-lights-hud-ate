@@ -1,5 +1,6 @@
 import API from './api';
 import CONSTANTS from './constants';
+import Effect from './effects/effect';
 import EffectInterface from './effects/effect-interface';
 import { rollDependingOnSystem, warn } from './lib/lib';
 import { LightDataHud } from './lights-hud-ate-models';
@@ -54,15 +55,30 @@ export async function addLightsHUDButtons(app, html, data) {
       const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
       const vid = ['webm', 'mp4', 'm4v'].includes(extension);
       // TODO for now we check if at least one active effect has the atl/ate changes on him
-      const aeAtl = <ActiveEffect>getATLEffectsFromItem(item)[0];
-      let applied = false;
-      if (aeAtl) {
-        applied = await API.hasEffectAppliedFromIdOnActor(<string>actor.id, <string>aeAtl.id);
+      const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(item) || [];
+      let used = false;
+      if (aeAtl.length > 0) {
+        const nameToSearch = <string>aeAtl[0].name || aeAtl[0].data.label;
+        const effectFromActor = <ActiveEffect>await API.findEffectByNameOnActor(<string>actor.id, nameToSearch);
+        if(!effectFromActor){
+          used = false;
+        }else{
+          const applied = await API.hasEffectAppliedOnActor(<string>actor.id, nameToSearch);
+          // If the active effect is disabled or is supressed
+          // const isDisabled = aeAtl[0].data.disabled || false;
+          // const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
+          const isDisabled = effectFromActor.data.disabled || false;
+          //@ts-ignore
+          const isSuppressed = effectFromActor.data.document.isSuppressed || false;
+          if (applied && !isDisabled && !isSuppressed) {
+            used = true;
+          }
+        }
       }
       return <LightDataHud>{
         route: im,
         name: item.name,
-        used: applied,
+        used: used,
         img: img,
         vid: vid,
         type: img || vid,

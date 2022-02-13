@@ -52,70 +52,58 @@ export default class API {
     return game.settings.set(CONSTANTS.MODULE_NAME, 'lights', inAttributes);
   }
 
-  static addEffect(actorNameOrId: string, effectName: string, lightData: LightDataExt) {
-    const actor = <Actor>game.actors?.get(actorNameOrId) || <Actor>game.actors?.getName(actorNameOrId);
+  static addEffect(actorId: string, effectName: string, effect: Effect) {
+    return API.effectInterface.addEffectOnActor(effectName, <string>actorId, effect);
+    // const actor = <Actor>game.actors?.get(actorNameOrId) || <Actor>game.actors?.getName(actorNameOrId);
 
-    if (!actor) {
-      warn(`No actor found with reference '${actorNameOrId}'`, true);
-    }
+    // if (!actor) {
+    //   warn(`No actor found with reference '${actorNameOrId}'`, true);
+    // }
 
-    let effect: Effect | undefined = undefined;
-    const lightsOrderByName = <LightHUDElement[]>API.LIGHTS.sort((a, b) => a.name.localeCompare(b.name));
-    lightsOrderByName.forEach((a: LightHUDElement) => {
-      if (a.id == effectName || i18n(a.name) == effectName) {
-        effect = <Effect>EffectDefinitions.all(lightData).find((e: Effect) => {
-          return e.customId == a.id;
-        });
-      }
-    });
+    // let effect: Effect | undefined = undefined;
+    // const lightsOrderByName = <LightHUDElement[]>API.LIGHTS.sort((a, b) => a.name.localeCompare(b.name));
+    // lightsOrderByName.forEach((a: LightHUDElement) => {
+    //   if (a.id == effectName || i18n(a.name) == effectName) {
+    //     effect = <Effect>EffectDefinitions.all(lightData).find((e: Effect) => {
+    //       return e.customId == a.id;
+    //     });
+    //   }
+    // });
 
-    if (!effect) {
-      warn(`No effect found with reference '${effectName}'`, true);
-    }
+    // if (!effect) {
+    //   warn(`No effect found with reference '${effectName}'`, true);
+    // }
 
-    if (actor && effect) {
-      API.effectInterface.addEffectOnActor(effectName, <string>actor.id, effect);
-    }
+    // if (actor && effect) {
+    //   API.effectInterface.addEffectOnActor(effectName, <string>actor.id, effect);
+    // }
   }
 
-  static async hasEffectAppliedFromIdOnActor(actorNameOrId: string, effectId: string) {
-    const actor = <Actor>game.actors?.get(actorNameOrId) || <Actor>game.actors?.getName(actorNameOrId);
+  static async findEffectByNameOnActor(actorId: string, effectName: string): Promise<ActiveEffect | null> {
+    return await API.effectInterface.findEffectByNameOnActor(effectName, <string>actorId);
+  }
 
-    if (!actor) {
-      warn(`No actor found with reference '${actorNameOrId}'`, true);
-    }
+  static async hasEffectAppliedOnActor(actorId: string, effectName: string) {
+    return await API.effectInterface.hasEffectAppliedOnActor(effectName, <string>actorId);
+  }
 
-    let founded = false;
-
-    if (actor && effectId) {
-      founded = await API.effectInterface.hasEffectAppliedFromIdOnActor(effectId, <string>actor.id);
-    }
-    return founded;
+  static async hasEffectAppliedFromIdOnActor(actorId: string, effectId: string) {
+    return await API.effectInterface.hasEffectAppliedFromIdOnActor(effectId, <string>actorId);
   }
 
   static async toggleEffectOnActor(
-    actorNameOrId: string,
+    actorId: string,
     effectId: string,
     alwaysDelete: boolean,
-    forceEnabled: boolean,
-    forceDisabled: boolean,
+    forceEnabled?: boolean,
+    forceDisabled?: boolean,
   ) {
-    const actor = <Actor>game.actors?.get(actorNameOrId) || <Actor>game.actors?.getName(actorNameOrId);
-
-    if (!actor) {
-      warn(`No actor found with reference '${actorNameOrId}'`, true);
-    }
-
-    let founded = false;
-    if (actor && effectId) {
-      founded = await API.effectInterface.toggleEffectFromIdOnActor(
-        effectId,
-        <string>actor.id,
-        alwaysDelete,
-        forceEnabled,
-        forceDisabled,
-      );
-    }
-    return founded;
+    return await API.effectInterface.toggleEffectFromIdOnActor(
+      effectId,
+      <string>actorId,
+      alwaysDelete,
+      forceEnabled,
+      forceDisabled,
+    );
   }
 }

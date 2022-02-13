@@ -65,7 +65,9 @@ export function registerSocket() {
   lightsHudAteSocket.register('toggleEffectFromIdOnActor', (...args) =>
     API.effectInterface._effectHandler.toggleEffectFromIdOnActorArr(...args),
   );
-
+  lightsHudAteSocket.register('findEffectByNameOnActor', (...args) =>
+    API.effectInterface._effectHandler.findEffectByNameOnActorArr(...args),
+  );
   return lightsHudAteSocket;
 }
 

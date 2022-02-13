@@ -21,8 +21,9 @@
                         <span class="lights-hud-ate-button-image" 
                             alt="{{image.label}}" data-name="{{image.route}}" data-item-id="{{image.itemid}}" data-applied="{{image.used}}">{{image.path}}</span>
                     {{/unless}}
+                    <i class="fas fa-share {{#if image.used}}active{{/if}}"></i>
                 {{else}}
-                    <span class="lights-hud-ate-button-image" 
+                    <span class="lights-hud-ate-button-image-text" 
                         alt="{{image.label}}" data-name="{{image.route}}" data-item-id="{{image.itemid}}" data-applied="{{image.used}}">{{image.name}}</span>
                     {{#if image.used}}
                     <i class="fas fa-check"></i>
