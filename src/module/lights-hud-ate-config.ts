@@ -57,12 +57,25 @@ export async function addLightsHUDButtons(app, html, data) {
       // TODO for now we check if at least one active effect has the atl/ate changes on him
       const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(item) || [];
       let used = false;
+      let disabled = false;
+      let suppressed = false;
+      let temporary = false;
+      let passive = false;
       if (aeAtl.length > 0) {
         const nameToSearch = <string>aeAtl[0].name || aeAtl[0].data.label;
-        const effectFromActor = <ActiveEffect>await API.findEffectByNameOnActor(<string>actor.id, nameToSearch);
-        if(!effectFromActor){
-          used = false;
-        }else{
+        // const effectFromActor = <ActiveEffect>await API.findEffectByNameOnActor(<string>actor.id, nameToSearch);
+        // regex expression to match all non-alphanumeric characters in string
+        const regex = /[^A-Za-z0-9]/g;
+        const effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
+          // use replace() method to match and remove all the non-alphanumeric characters
+          return nameToSearch
+            .replace(regex, '')
+            .toLowerCase()
+            .startsWith(ae.data.label?.replace(regex, '')?.toLowerCase());
+        });
+        if (!effectFromActor) {
+          // DO NOTHNG
+        } else {
           const applied = await API.hasEffectAppliedOnActor(<string>actor.id, nameToSearch);
           // If the active effect is disabled or is supressed
           // const isDisabled = aeAtl[0].data.disabled || false;
@@ -70,15 +83,25 @@ export async function addLightsHUDButtons(app, html, data) {
           const isDisabled = effectFromActor.data.disabled || false;
           //@ts-ignore
           const isSuppressed = effectFromActor.data.document.isSuppressed || false;
+          const isTemporary = effectFromActor.isTemporary || false;
+          const isPassive = !isTemporary;
           if (applied && !isDisabled && !isSuppressed) {
             used = true;
           }
+          disabled = isDisabled;
+          suppressed = isSuppressed;
+          temporary = isTemporary;
+          passive = isPassive;
         }
       }
       return <LightDataHud>{
         route: im,
         name: item.name,
-        used: used,
+        used: used || (passive && !disabled),
+        disabled: disabled,
+        suppressed: suppressed,
+        temporary: temporary,
+        passive: passive,
         img: img,
         vid: vid,
         type: img || vid,

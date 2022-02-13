@@ -550,7 +550,7 @@ export default class EffectHandler {
     forceEnabled?: boolean,
     forceDisabled?: boolean,
   ) {
-    const actor = <Actor>game.actors?.get(uuid) || <Actor>game.actors?.getName(uuid);
+    const actor = <Actor>game.actors?.get(uuid);
     const effect = <ActiveEffect>actor.effects.find((entity: ActiveEffect) => {
       return <string>entity.id == effectId;
     });

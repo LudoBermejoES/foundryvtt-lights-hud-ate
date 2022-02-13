@@ -31,6 +31,10 @@ export class LightDataHud {
   route: string;
   name: string;
   used: boolean;
+  disabled: boolean;
+  suppressed: boolean;
+  temporary: boolean;
+  passive: boolean;
   img: boolean;
   vid: boolean;
   type: boolean;

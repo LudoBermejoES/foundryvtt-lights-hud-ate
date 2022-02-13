@@ -70,15 +70,58 @@
 
 /** additional */
 
-.lights-hud-ate-button-select .fa-check {
+.lights-hud-ate-button-icon-text.fas.fa-lightbulb {
   color: green;
   text-shadow: 0 0 8px green;
 }
 
-.lights-hud-ate-button-image .fa-check {
-  position: absolute;
+.lights-hud-ate-button-icon.fas.fa-lightbulb {
   left: 0;
   color: green;
-  opacity: 0;
   pointer-events: none;
+}
+
+.lights-hud-ate-button-icon-text.far.fa-lightbulb {
+  color: red;
+  text-shadow: 0 0 8px red;
+}
+
+.lights-hud-ate-button-icon.far.fa-lightbulb {
+  left: 0;
+  color: red;
+  pointer-events: none;
+}
+
+.lights-hud-ate-button-icon-text.fas.fa-bomb {
+  color: yellow;
+  text-shadow: 0 0 8px yellow;
+}
+
+.lights-hud-ate-button-icon.fas.fa-bomb {
+  left: 0;
+  color: yellow;
+  pointer-events: none;
+}
+
+.lights-hud-ate-button-icon-text.fas.fa-eye {
+  color: purple;
+  text-shadow: 0 0 8px purple;
+}
+
+.lights-hud-ate-button-icon.fas.fa-eye {
+  left: 0;
+  color: purple;
+  pointer-events: none;
+}
+
+#token-hud .lights-hud-ate-button-disabled video {
+  opacity: 1 !important;
+  filter: grayscale(100%);
+}
+
+#token-hud .lights-hud-ate-button-disabled-passive span,
+#token-hud .lights-hud-ate-button-disabled-passive img,
+#token-hud .lights-hud-ate-button-disabled-passive video {
+  opacity: 1 !important;
+  /* filter: grayscale(100%); */
 }

@@ -5,7 +5,23 @@
     {{!-- {{#if imagesParsed}} --}}
     {{#each imagesParsed as |image|}}
         {{#if image.type}}
-            <button oncontextmenu="javascript:return false;" class="lights-hud-ate-button-select control-icon {{#unless ../imageDisplay}}list{{/unless}} {{#if image.used}}lights-hud-ate-button-disabled active{{/if}}" >
+            <button oncontextmenu="javascript:return false;" class="lights-hud-ate-button-select control-icon {{#unless ../imageDisplay}}list{{/unless}} 
+                {{#if image.used}}
+                    {{#if image.passive}}
+                        {{#if image.used}}
+                        lights-hud-ate-button-disabled-passive active
+                        {{else}}
+                        lights-hud-ate-button-disabled-passive
+                        {{/if}}
+                    {{else}}
+                        {{#if image.used}}
+                        lights-hud-ate-button-disabled active
+                        {{else}}
+                        lights-hud-ate-button-disabled
+                        {{/if}}
+                    {{/if}}
+                {{/if}}" >
+
                 {{#if ../imageDisplay}}
                     {{#if image.img}}
                         <img class="lights-hud-ate-button-image" src="{{image.route}}" 
@@ -21,12 +37,27 @@
                         <span class="lights-hud-ate-button-image" 
                             alt="{{image.label}}" data-name="{{image.route}}" data-item-id="{{image.itemid}}" data-applied="{{image.used}}">{{image.path}}</span>
                     {{/unless}}
-                    <i class="fas fa-share {{#if image.used}}active{{/if}}"></i>
+
+                    {{#if image.suppressed}}
+                    <i class="lights-hud-ate-button-icon fas fa-bomb"></i>
+                    {{else if image.passive}}
+                    <i class="lights-hud-ate-button-icon fas fa-eye"></i>
+                    {{else if image.used}}
+                    <i class="lights-hud-ate-button-icon fas fa-lightbulb"></i>
+                    {{else}}
+                    <i class="lights-hud-ate-button-icon far fa-lightbulb"></i>
+                    {{/if}}
                 {{else}}
                     <span class="lights-hud-ate-button-image-text" 
                         alt="{{image.label}}" data-name="{{image.route}}" data-item-id="{{image.itemid}}" data-applied="{{image.used}}">{{image.name}}</span>
-                    {{#if image.used}}
-                    <i class="fas fa-check"></i>
+                    {{#if image.suppressed}}
+                    <i class="lights-hud-ate-button-icon-text fas fa-bomb"></i>
+                    {{else if image.passive}}
+                    <i class="lights-hud-ate-button-icon-text fas fa-eye"></i>
+                    {{else if image.used}}
+                    <i class="lights-hud-ate-button-icon-text fas fa-lightbulb"></i>
+                    {{else}}
+                    <i class="lights-hud-ate-button-icon-text far fa-lightbulb"></i>
                     {{/if}}
                 {{/if}}
             </button>

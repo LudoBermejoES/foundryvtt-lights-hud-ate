@@ -78,10 +78,6 @@ export function dialogWarning(message, icon = 'fas fa-exclamation-triangle') {
     </p>`;
 }
 
-// =============================
-// Module specific function
-// =============================
-
 /*
  * Returns the first GM id.
  */
@@ -93,37 +89,9 @@ export function firstGM() {
   return gmId;
 }
 
-// export function registerHUD() {
-//   async function renderHudButton(hud, html, token) {
-//     renderHud(hud, html, token, '', doImageSearch, updateTokenImage, updateActorImage);
-//   }
-
-//   // Incorporating 'FVTT-TokenHUDWildcard' token hud button
-//   Hooks.on('renderTokenHUD', renderHudButton);
-// }
-
-// /**
-//  * @href https://github.com/ElfFriend-DnD/foundryvtt-temp-effects-as-statuses/blob/main/scripts/temp-effects-as-statuses.js
-//  */
-// export async function toggleEffectOnActor(effectUuid) {
-//   const effect = <ActiveEffect>await fromUuid(effectUuid);
-//   const alwaysDelete = game.settings.get(CONSTANTS.MODULE_NAME, 'toggleDelete');
-
-//   // nuke it if it has a statusId
-//   // brittle assumption
-//   // provides an option to always do this
-//   if (effect.getFlag('core', 'statusId') || alwaysDelete) {
-//     const deleted = await effect.delete();
-//     return !!deleted;
-//   }
-
-//   // otherwise toggle its disabled status
-//   const updated = await effect.update({
-//     disabled: !effect.data.disabled,
-//   });
-
-//   return !!updated;
-// }
+// =============================
+// Module specific function
+// =============================
 
 /**
  * @href https://github.com/itamarcu/roll-from-compendium/blob/master/scripts/roll-from-compendium.js
