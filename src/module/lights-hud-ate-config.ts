@@ -21,6 +21,10 @@ export async function addLightsHUDButtons(app, html, data) {
   // let tokenInfo = new tokenInformations(tokenInfoObject);
   const tokenD = <TokenDocument>app.object.document;
   const actor = <Actor>game.actors?.get(data.actorId);
+  if (!actor) {
+    warn(`No actor id ${data.actorId} founded for the light hud`);
+    return;
+  }
 
   const tokenId = <string>tokenD.id;
   const actorId = <string>actor.id;
@@ -246,23 +250,25 @@ export async function addLightsHUDButtons(app, html, data) {
       const duplicates = 1; // number od dropped light
 
       // TODO ADD CHECK FOR ACTOR AND TOKEN
-      const actor = <Actor>game.actors?.get(actorId);
       const item = <Item>actor.items.get(itemId);
-      // const tokenData = await actor.getTokenData({ elevation: _token?.data?.elevation ?? 0 });
-      const tokenData = <TokenData>await prepareTokenDataDropTheTorch(item,_token?.data?.elevation ?? 0)
+      let tokenDataDropTheTorch = <TokenData>await prepareTokenDataDropTheTorch(item,_token?.data?.elevation ?? 0);
+      const actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorch.actorId);
+      tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorch);
       //@ts-ignore
       const posData = await warpgate.crosshairs.show({
-        size: Math.max(tokenData.width, tokenData.height) * tokenData.scale,
+        size: Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height) * tokenDataDropTheTorch.scale,
         icon: `modules/${CONSTANTS.MODULE_NAME}/assets/black-hole-bolas.webp`,
         label: '',
       });
 
-      // await wait(AECONSTS.animationFunctions[animation].time);
       //get custom data macro
       const customTokenData = {};
 
       //@ts-ignore
-      warpgate.spawnAt({ x: posData.x, y: posData.y }, tokenData, customTokenData || {}, {}, { duplicates });
+      await warpgate.spawnAt({ x: posData.x, y: posData.y }, tokenDataDropTheTorch, customTokenData || {}, {}, { duplicates });
+
+      // Remove actor at the end
+      actorDropTheTorch.delete();
     });
   });
 

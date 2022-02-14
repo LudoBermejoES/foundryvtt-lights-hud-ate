@@ -254,7 +254,9 @@ export async function dropTheToken(item: Item, data: { x; y }, type = 'character
     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
   });
   atlEffects.forEach((ae: ActiveEffect) => {
-    API.addActiveEffectOnActor(<string>tokenData2.actorId, <any>ae.data);
+    // Make sure is enabled
+    ae.data.disabled = false;
+    API.addActiveEffectOnActor(<string>tokenData2.actorId, ae);
   });
 
   // Submit the Token creation request and activate the Tokens layer (if not already active)
@@ -282,18 +284,6 @@ export async function dropTheToken(item: Item, data: { x; y }, type = 'character
  * type : string , di solito `character` ,lista dei tipi accettati da Dnd5e [actorless,character,npc,vehicle]
  */
 export async function prepareTokenDataDropTheTorch(item: Item, elevation: number, type = 'character') {
-  // if (!Array.isArray(inAttributes)) {
-  //   throw Error('deleteAndcreateToken | inAttributes must be of type array');
-  // }
-  // const [actor, data, type, scene] = inAttributes;
-  // if (!actor) {
-  //   error('No actor is present');
-  //   return;
-  // }
-  // if (!scene) {
-  //   error('No scene is present');
-  //   return;
-  // }
   if (!type) {
     error('No type is present');
     return;
@@ -327,8 +317,10 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   const atlEffects = item.effects.filter((entity) => {
     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
   });
-  atlEffects.forEach((ae: ActiveEffect) => {
-    API.addActiveEffectOnActor(<string>tokenData2.actorId, <any>ae.data);
+  atlEffects.forEach(async (ae: ActiveEffect) => {
+    // Make sure is enabled
+    // ae.data.disabled = false;
+    await API.addActiveEffectOnActor(<string>tokenData2.actorId, ae);
   });
   return tokenData2;
 }
