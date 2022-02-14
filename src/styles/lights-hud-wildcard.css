@@ -70,6 +70,11 @@
 
 /** additional */
 
+.lights-hud-ate-button-macro-preset,
+.lights-hud-ate-button-macro-custom {
+  background: whitesmoke;
+}
+
 .lights-hud-ate-button-icon-text.fas.fa-lightbulb {
   color: green;
   text-shadow: 0 0 8px green;
@@ -92,12 +97,12 @@
   pointer-events: none;
 }
 
-.lights-hud-ate-button-icon-text.fas.fa-bomb {
+.lights-hud-ate-button-icon-text.fas.fa-exclamation-triangle {
   color: yellow;
   text-shadow: 0 0 8px yellow;
 }
 
-.lights-hud-ate-button-icon.fas.fa-bomb {
+.lights-hud-ate-button-icon.fas.fa-exclamation-triangle {
   left: 0;
   color: yellow;
   pointer-events: none;

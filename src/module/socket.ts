@@ -68,6 +68,9 @@ export function registerSocket() {
   lightsHudAteSocket.register('findEffectByNameOnActor', (...args) =>
     API.effectInterface._effectHandler.findEffectByNameOnActorArr(...args),
   );
+  lightsHudAteSocket.register('addActiveEffectOnActor', (...args) =>
+    API.effectInterface._effectHandler.addActiveEffectOnActorArr(...args),
+  );
   return lightsHudAteSocket;
 }
 

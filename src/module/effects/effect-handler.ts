@@ -3,7 +3,10 @@ import FoundryHelpers from './foundry-helpers';
 import { canvas, game } from '../settings';
 import Effect from './effect';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
-import { ActorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import {
+  ActiveEffectData,
+  ActorData,
+} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 export default class EffectHandler {
   _customEffects: Effect[];
@@ -300,7 +303,7 @@ export default class EffectHandler {
    * @param {string} effectName - the effect name to search for
    * @returns {Effect} the found effect
    */
-  async findEffectByNameOnActor(effectName:string, uuid:string): Promise<ActiveEffect | null> {
+  async findEffectByNameOnActor(effectName: string, uuid: string): Promise<ActiveEffect | null> {
     if (effectName) {
       effectName = i18n(effectName);
     }
@@ -586,5 +589,30 @@ export default class EffectHandler {
     }
     const [effectId, uuid, alwaysDelete, forceEnabled, forceDisabled] = inAttributes;
     return this.toggleEffectFromIdOnActor(effectId, uuid, alwaysDelete, forceEnabled, forceDisabled);
+  }
+
+  /**
+   * Adds the effect with the provided name to an actor matching the provided
+   * UUID
+   *
+   * @param {string} uuid - the uuid of the actor to add the effect to
+   * @param {string} activeEffectData - the name of the effect to add
+   */
+  async addActiveEffectOnActor(uuid, activeEffectData: ActiveEffectData) {
+    if (activeEffectData) {
+      const actor = <Actor>await this._foundryHelpers.getActorByUuid(uuid);
+      activeEffectData.origin = `Actor.${actor.id}`;
+      //@ts-ignore
+      actor.createEmbeddedDocuments('ActiveEffect', [activeEffectData]);
+      log(`Added effect ${activeEffectData.label} to ${actor.name} - ${actor.id}`);
+    }
+  }
+
+  async addActiveEffectOnActorArr(...inAttributes) {
+    if (!Array.isArray(inAttributes)) {
+      throw error('addActiveEffectOnActorArr | inAttributes must be of type array');
+    }
+    const [uuid, activeEffectData] = inAttributes;
+    return this.addActiveEffectOnActor(uuid, activeEffectData);
   }
 }

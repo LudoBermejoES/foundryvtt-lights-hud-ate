@@ -106,4 +106,8 @@ export default class API {
       forceDisabled,
     );
   }
+
+  static addActiveEffectOnActor(actorId: string, activeEffect: ActiveEffect) {
+    return API.effectInterface.addActiveEffectOnActor(<string>actorId, activeEffect.data);
+  }
 }

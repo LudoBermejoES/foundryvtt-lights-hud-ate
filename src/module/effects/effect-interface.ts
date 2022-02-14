@@ -4,6 +4,7 @@ import Effect from './effect';
 import EffectHandler from './effect-handler';
 import { game } from '../settings';
 import { isGMConnected } from '../lib/lib';
+import { ActiveEffectData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 /**
  * Interface for working with effects and executing them as a GM via sockets
@@ -397,6 +398,21 @@ export default class EffectInterface {
       );
     } else {
       return this._effectHandler.toggleEffectFromIdOnActor(effectId, uuid, alwaysDelete, forceEnabled, forceDisabled);
+    }
+  }
+
+  /**
+   * Adds the effect with the provided name to an actor matching the provided
+   * UUID
+   *
+   * @param {string} uuid - the uuid of the actor to add the effect to
+   * @param {string} activeEffectData - the name of the effect to add
+   */
+  async addActiveEffectOnActor(uuid, activeEffectData: ActiveEffectData) {
+    if (isGMConnected()) {
+      return this._socket.executeAsGM('addActiveEffectOnActor', uuid, activeEffectData);
+    } else {
+      return this._effectHandler.addActiveEffectOnActor(uuid, activeEffectData);
     }
   }
 

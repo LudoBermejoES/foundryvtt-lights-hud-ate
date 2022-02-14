@@ -71,7 +71,7 @@
                     {{/unless}}
 
                     {{#if image.suppressed}}
-                    <i class="lights-hud-ate-button-icon fas fa-bomb"></i>
+                    <i class="lights-hud-ate-button-icon fas fa-exclamation-triangle"></i>
                     {{else if image.passive}}
                     <i class="lights-hud-ate-button-icon fas fa-eye"></i>
                     {{else if image.applied}}
@@ -93,7 +93,7 @@
                         data-temporary="{{image.temporary}}"
                         data-passive="{{image.passive}}">{{image.name}}</span>
                     {{#if image.suppressed}}
-                    <i class="lights-hud-ate-button-icon-text fas fa-bomb"></i>
+                    <i class="lights-hud-ate-button-icon-text fas fa-exclamation-triangle"></i>
                     {{else if image.passive}}
                     <i class="lights-hud-ate-button-icon-text fas fa-eye"></i>
                     {{else if image.applied}}
@@ -110,6 +110,8 @@
         <span data-name="">{{localize "lights-hud-ate.windows.art-select.no-art-found"}}</span>
     </div>
     {{/if}} --}}
+    <button class="lights-hud-ate-button-macro-preset" data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-preset"}}</button>
+    <button class="lights-hud-ate-button-macro-custom" data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-custom"}}</button>
     </div>
 
 </div>

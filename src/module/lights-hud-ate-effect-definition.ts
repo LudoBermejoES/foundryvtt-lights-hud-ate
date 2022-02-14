@@ -140,6 +140,8 @@ export class EffectDefinitions {
           break;
         case 'ATL.height':
           break;
+        case 'ATL.img':
+          break;
         case 'ATl.img':
           break;
         case 'ATL.mirrorX':
