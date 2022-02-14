@@ -106,14 +106,25 @@ export const registerSettings = function (): void {
     default: 50,
   });
 
-  game.settings.register(CONSTANTS.MODULE_NAME, 'toggleDelete', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.toggleDelete.name`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.toggleDelete.hint`),
+  game.settings.register(CONSTANTS.MODULE_NAME, 'rollItem', {
+    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.rollItem.name`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.rollItem.hint`),
     config: true,
     scope: 'world',
-    default: false,
+    default: true,
     type: Boolean,
   });
+
+  // DEPRECATED TO DANGEROUS
+
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'toggleDelete', {
+  //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.toggleDelete.name`),
+  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.toggleDelete.hint`),
+  //   config: true,
+  //   scope: 'world',
+  //   default: false,
+  //   type: Boolean,
+  // });
 
   // ===================================================================
 

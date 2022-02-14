@@ -30,7 +30,7 @@ export enum LightHUDPreset {
 export class LightDataHud {
   route: string;
   name: string;
-  used: boolean;
+  applied: boolean;
   disabled: boolean;
   suppressed: boolean;
   temporary: boolean;
@@ -39,6 +39,7 @@ export class LightDataHud {
   vid: boolean;
   type: boolean;
   itemid: string;
+  effectid: string;
 }
 
 export class LightDataExt extends foundry.data.AmbientLightData {

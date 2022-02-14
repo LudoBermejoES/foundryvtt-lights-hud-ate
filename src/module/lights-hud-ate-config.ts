@@ -21,6 +21,9 @@ export async function addLightsHUDButtons(app, html, data) {
   const tokenD = <TokenDocument>app.object.document;
   const actor = <Actor>game.actors?.get(data.actorId);
 
+  const tokenId = <string>tokenD.id;
+  const actorId = <string>actor.id;
+
   // const images = await actor?.getTokenImages() ?? []
   // if (images.length < 2) {
   //     return
@@ -56,11 +59,12 @@ export async function addLightsHUDButtons(app, html, data) {
       const vid = ['webm', 'mp4', 'm4v'].includes(extension);
       // TODO for now we check if at least one active effect has the atl/ate changes on him
       const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(item) || [];
-      let used = false;
-      let disabled = false;
-      let suppressed = false;
-      let temporary = false;
-      let passive = false;
+      let appliedTmp = false;
+      let disabledTmp = false;
+      let suppressedTmp = false;
+      let temporaryTmp = false;
+      let passiveTmp = false;
+      let effectid = '';
       if (aeAtl.length > 0) {
         const nameToSearch = <string>aeAtl[0].name || aeAtl[0].data.label;
         // const effectFromActor = <ActiveEffect>await API.findEffectByNameOnActor(<string>actor.id, nameToSearch);
@@ -74,7 +78,7 @@ export async function addLightsHUDButtons(app, html, data) {
             .startsWith(ae.data.label?.replace(regex, '')?.toLowerCase());
         });
         if (!effectFromActor) {
-          // DO NOTHNG
+          warn(`No active effect found on actor ${actor.name} with name ${nameToSearch}`);
         } else {
           const applied = await API.hasEffectAppliedOnActor(<string>actor.id, nameToSearch);
           // If the active effect is disabled or is supressed
@@ -86,31 +90,35 @@ export async function addLightsHUDButtons(app, html, data) {
           const isTemporary = effectFromActor.isTemporary || false;
           const isPassive = !isTemporary;
           if (applied && !isDisabled && !isSuppressed) {
-            used = true;
+            appliedTmp = true;
           }
-          disabled = isDisabled;
-          suppressed = isSuppressed;
-          temporary = isTemporary;
-          passive = isPassive;
+          disabledTmp = isDisabled;
+          suppressedTmp = isSuppressed;
+          temporaryTmp = isTemporary;
+          passiveTmp = isPassive;
+          effectid = <string>effectFromActor.id;
         }
       }
       return <LightDataHud>{
         route: im,
         name: item.name,
-        used: used || (passive && !disabled),
-        disabled: disabled,
-        suppressed: suppressed,
-        temporary: temporary,
-        passive: passive,
+        applied: appliedTmp || (passiveTmp && !disabledTmp),
+        disabled: disabledTmp,
+        suppressed: suppressedTmp,
+        temporary: temporaryTmp,
+        passive: passiveTmp,
         img: img,
         vid: vid,
         type: img || vid,
         itemid: item.id,
+        effectid: effectid
       };
     }),
   );
 
   const wildcardDisplay = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/artSelect.hbs`, {
+    tokenId,
+    actorId,
     imagesParsed,
     imageDisplay,
     imageOpacity,
@@ -174,52 +182,108 @@ export async function addLightsHUDButtons(app, html, data) {
       event.preventDefault();
       event.stopPropagation();
       const buttonClick = event.button; // 0 left click
-      // TODO Verificare recupero id dell'item
+
+      // const controlled = <Token[]>canvas.tokens?.controlled;
+      // const index = controlled.findIndex((x) => x.data._id === tokenD.id);
+      // const tokenToChange = <Token>controlled[index];
+      // const actorId = <string>tokenToChange.actor?.id;
+
+      const actorId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-actor-id');
       const itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
+      const effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
       const isApplied = !!(<string>$(this).find('.lights-hud-ate-button-image').attr('data-applied'));
       if (!itemId) {
-        warn(`No id ${itemId} founded for retrieve the item`);
+        warn(`No item id ${itemId} founded for the light hud`);
         return;
       }
-      const controlled = <Token[]>canvas.tokens?.controlled;
-      const index = controlled.findIndex((x) => x.data._id === tokenD.id);
-      const tokenToChange = <Token>controlled[index];
-      const actorId = <string>tokenToChange.actor?.id;
+      if (!effectId) {
+        warn(`No active effect id ${effectId} founded for the light hud`);
+        return;
+      }
       if (!actorId) {
-        warn(`No id ${actorId} founded for retrieve the item`);
+        warn(`No actor id ${actorId} founded for the light hud`);
         return;
       }
-      const obj = <Actor>game.actors?.get(actorId) || <Actor>game.actors?.getName(actorId);
+      // const obj = <Actor>game.actors?.get(actorId) || <Actor>game.actors?.getName(actorId);
       // const obj = <Item>game.items?.get(uuid) || <Item>game.items?.getName(uuid);
       // const obj = tokenToChange.data;
       if (isApplied) {
-        const atlEffectsS = obj.effects.filter((entity: ActiveEffect) => {
-          return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
-        });
-        atlEffectsS.forEach((entity: ActiveEffect) => {
-          API.toggleEffectOnActor(actorId, <string>entity.id, false, false, false);
-        });
+        // const atlEffectsS = obj.effects.filter((entity: ActiveEffect) => {
+        //   return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+        // });
+        // const effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
+        //   return effectId == ae.id;
+        // });
+        API.toggleEffectOnActor(actorId, <string>effectId, false, false, false);
       }
 
-      const item = <Item>actor.items.find((entity: Item) => {
-        return <string>entity.id == itemId;
-      });
-      if (item) {
-        rollDependingOnSystem(item);
-      } else {
-        warn(`No item found for the id ${itemId}`);
-      }
+      // We roll the item ???
 
-      //const updateTarget = tokenToChange.document ? tokenToChange.document : tokenToChange
-      //const dimensions = getTokenDimensions(updateTarget, event.target.dataset.name)
-      //let updateInfo = { img: event.target.dataset.name, ...dimensions }
-      //updateTarget.update(updateInfo)
-      // TODO GESTIRE GLI ACITVE EFFECT
+      if(game.settings.get(CONSTANTS.MODULE_NAME,'rollItem') && !isApplied){
+        const item = <Item>actor.items.find((entity: Item) => {
+          return <string>entity.id == itemId;
+        });
+        if (item) {
+          // TODO if i need to manage the roll for specific system usually is enough item.roll()
+          rollDependingOnSystem(item);
+        } else {
+          warn(`No item found for the id ${itemId}`);
+        }
+      }
     });
     buttons[button].addEventListener('contextmenu', async function (event) {
       event.preventDefault();
       event.stopPropagation();
       const buttonClick = event.button; // 0 left click
+
+      const actorId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-actor-id');
+      const itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
+      const effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
+      const isApplied = !!(<string>$(this).find('.lights-hud-ate-button-image').attr('data-applied'));
+      if (!itemId) {
+        warn(`No item id ${itemId} founded for the light hud`);
+        return;
+      }
+      if (!effectId) {
+        warn(`No active effect id ${effectId} founded for the light hud`);
+        return;
+      }
+      if (!actorId) {
+        warn(`No actor id ${actorId} founded for the light hud`);
+        return;
+      }
+
+      // TODO PREPARATION TOKEN DATA
+
+      // TODO SET UP ANIMATION
+
+      // const animation = $(event.currentTarget.parentElement.parentElement)
+      // .find(".anim-dropdown")
+      // .val();
+
+      const duplicates = 1; // number od dropped light
+
+      // TODO ADD CHECK FOR ACTOR AND TOKEN
+      const tokenData = await actor.getTokenData({elevation: _token?.data?.elevation ?? 0});
+      //@ts-ignore
+      const posData = await warpgate.crosshairs.show({
+        size: Math.max(tokenData.width,tokenData.height)*tokenData.scale,
+        icon: `modules/${CONSTANTS.MODULE_NAME}/assets/black-hole-bolas.webp`,
+        label: "",
+      });
+
+      // await wait(AECONSTS.animationFunctions[animation].time);
+      //get custom data macro
+      const customTokenData = {};
+
+      //@ts-ignore
+      warpgate.spawnAt(
+        { x: posData.x, y: posData.y },
+        tokenData,
+        customTokenData || {},
+        {},
+        { duplicates }
+      );
     });
   });
 }

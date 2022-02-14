@@ -1,4 +1,4 @@
-import FoundryHelpers from '../lib/foundry-helpers';
+import FoundryHelpers from './foundry-helpers';
 import { registerSocket } from '../socket';
 import Effect from './effect';
 import EffectHandler from './effect-handler';

@@ -1,5 +1,5 @@
 import { error, i18n, log } from '../lib/lib';
-import FoundryHelpers from '../lib/foundry-helpers';
+import FoundryHelpers from './foundry-helpers';
 import { canvas, game } from '../settings';
 import Effect from './effect';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
@@ -300,7 +300,7 @@ export default class EffectHandler {
    * @param {string} effectName - the effect name to search for
    * @returns {Effect} the found effect
    */
-  async findEffectByNameOnActor(effectName, uuid): Promise<ActiveEffect | null> {
+  async findEffectByNameOnActor(effectName:string, uuid:string): Promise<ActiveEffect | null> {
     if (effectName) {
       effectName = i18n(effectName);
     }
