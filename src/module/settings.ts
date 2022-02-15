@@ -68,6 +68,14 @@ export const registerSettings = function (): void {
     type: Array,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'visions', {
+    scope: 'world',
+    config: false,
+    //@ts-ignore
+    default: SYSTEMS.DATA ? SYSTEMS.DATA.VISIONS : [],
+    type: Array,
+  });
+
   // ============================================================
   // OLD SETTINGS TO REMOVE PROBABLY
   // ===========================================================

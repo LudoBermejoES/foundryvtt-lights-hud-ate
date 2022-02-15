@@ -119,33 +119,88 @@ export async function rollDependingOnSystem(item: Item) {
 // Update the relevant light parameters of a token
 export function updateTokenLighting(
   token: Token,
+  lockRotation:boolean,
   dimSight: number,
   brightSight: number,
+  sightAngle: number,
   dimLight: number,
   brightLight: number,
   lightColor: string,
   lightAlpha: number,
-  angle: number,
-  animationType: string,
-  animationSpeed: number,
-  animationIntensity: number,
+  lightAngle: number,
+  lightAnimationType: string,
+  lightAnimationSpeed: number,
+  lightAnimationIntensity: number,
 ) {
+
+  if(dimSight == null || dimSight == undefined){
+    dimSight = token.data.dimSight;
+  }
+  if(brightSight == null || brightSight == undefined){
+    brightSight = token.data.brightSight;
+  }
+  if(sightAngle == null || sightAngle == undefined){
+    sightAngle = token.data.sightAngle;
+  }
+
+  if(lockRotation == null || lockRotation == undefined){
+    lockRotation = token.data.lockRotation;
+  }
+
+  if(dimLight == null || dimLight == undefined){
+    dimLight = token.data.dimLight;
+  }
+  if(brightLight == null || brightLight == undefined){
+    brightLight = token.data.brightLight;
+  }
+  if(lightColor == null || lightColor == undefined){
+    lightColor = <string>token.data.lightColor;
+  }
+  if(lightAlpha == null || lightAlpha == undefined){
+    lightAlpha = token.data.lightAlpha;
+  }
+  if(lightAngle == null || lightAngle == undefined){
+    lightAngle = token.data.lightAngle;
+  }
+
+  if(lightAnimationType == null || lightAnimationType == undefined){
+    lightAnimationType = <string>token.data.lightAnimation.type;
+  }
+  if(lightAnimationSpeed == null || lightAnimationSpeed == undefined){
+    lightAnimationSpeed = token.data.lightAnimation.speed;
+  }
+  if(lightAnimationIntensity == null || lightAnimationIntensity == undefined){
+    lightAnimationIntensity = token.data.lightAnimation.intensity;
+  }
+
   token.document.update({
     vision: true,
     dimSight: dimSight,
     brightSight: brightSight,
-    light: {
-      bright: brightLight,
-      dim: dimLight,
-      alpha: lightAlpha ** 2,
-      color: lightColor,
-      angle: angle,
-      animation: {
-        type: animationType,
-        speed: animationSpeed,
-        intensity: animationIntensity,
-      },
+    sightAngle: sightAngle,
+    lockRotation: lockRotation,
+    dimLight: dimLight,
+    brightLight:  brightLight,
+    lightAngle: lightAngle,
+    lightColor: lightColor,
+    lightAlpha: lightAlpha,
+    lightAnimation: {
+      type: lightAnimationType,
+      speed: lightAnimationSpeed,
+      intensity: lightAnimationIntensity
     },
+    // light: {
+    //   bright: brightLight,
+    //   dim: dimLight,
+    //   alpha: lightAlpha ** 2, // need  this ?
+    //   color: lightColor,
+    //   angle: lightAngle,
+    //   animation: {
+    //     type: lightAnimationType,
+    //     speed: lightAnimationSpeed,
+    //     intensity: lightAnimationIntensity,
+    //   },
+    // },
   });
 }
 
@@ -324,3 +379,27 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   });
   return tokenData2;
 }
+
+// export function namedfields(...fields) {
+//   return (...arr) => {
+//     const obj = {};
+//     fields.forEach((field, index) => {
+//       obj[field] = arr[index];
+//     });
+//     return obj;
+//   };
+// };
+
+// export function visions() {
+//   // Very ugly automated construction below. DRY, but at what cost?
+//   const VisionType = namedfields('name', 'dim', 'bright');
+//   return [
+//     VisionType(`No Change`, null, null),
+//     VisionType(`Self`, 1.5, 0),
+//     //VisionType(`Leave Unchanged`, null, null),
+//     VisionType(`Self`, 5, 0),
+//     VisionType(`Devil\`s Sight`, 0, 120)
+//   ].concat(...[...Array(6).keys()].map(x => (x+1)*30).map(n => {
+//     return VisionType(`Darkvision (${n} feet)`, n, 0);
+//   }));
+// }

@@ -3,8 +3,8 @@ import API from './api';
 import CONSTANTS from './constants';
 import Effect from './effects/effect';
 import EffectInterface from './effects/effect-interface';
-import { prepareTokenDataDropTheTorch, rollDependingOnSystem, updateTokenLighting, warn } from './lib/lib';
-import { LightDataHud } from './lights-hud-ate-models';
+import { dialogWarning, prepareTokenDataDropTheTorch, rollDependingOnSystem, updateTokenLighting, warn } from './lib/lib';
+import { LightDataHud, VisionHUDElement, VisionHUDPreset, LightHUDPreset, LightHUDElement } from './lights-hud-ate-models';
 import { canvas, game } from './settings';
 
 export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
@@ -70,6 +70,7 @@ export async function addLightsHUDButtons(app, html, data) {
       let temporaryTmp = false;
       let passiveTmp = false;
       let effectid = '';
+      let effectname = '';
       if (aeAtl.length > 0) {
         const nameToSearch = <string>aeAtl[0].name || aeAtl[0].data.label;
         // const effectFromActor = <ActiveEffect>await API.findEffectByNameOnActor(<string>actor.id, nameToSearch);
@@ -102,6 +103,7 @@ export async function addLightsHUDButtons(app, html, data) {
           temporaryTmp = isTemporary;
           passiveTmp = isPassive;
           effectid = <string>effectFromActor.id;
+          effectname = <string>effectFromActor.name ?? effectFromActor.data.label;
         }
       }
       return <LightDataHud>{
@@ -117,6 +119,7 @@ export async function addLightsHUDButtons(app, html, data) {
         type: img || vid,
         itemid: item.id,
         effectid: effectid,
+        effectname: effectname,
       };
     }),
   );
@@ -196,8 +199,10 @@ export async function addLightsHUDButtons(app, html, data) {
       // const actorId = <string>tokenToChange.actor?.id;
 
       const actorId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-actor-id');
+      const tokenId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-token-id');
       const itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
       const effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
+      const effectName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-name');
       const isApplied = !!(<string>$(this).find('.lights-hud-ate-button-image').attr('data-applied'));
       if (!itemId) {
         warn(`No item id ${itemId} founded for the light hud`);
@@ -215,7 +220,7 @@ export async function addLightsHUDButtons(app, html, data) {
       // const obj = <Item>game.items?.get(uuid) || <Item>game.items?.getName(uuid);
       // const obj = tokenToChange.data;
 
-      confirmDialog(actorId, itemId, effectId, isApplied).render(true);
+      confirmDialogATLEffectItem(actorId, itemId, effectId, actor.name, tokenD.name, effectName, isApplied).render(true);
     });
     buttons[button].addEventListener('contextmenu', async function (event) {
       event.preventDefault();
@@ -223,8 +228,10 @@ export async function addLightsHUDButtons(app, html, data) {
       const buttonClick = event.button; // 0 left click
 
       const actorId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-actor-id');
+      const tokenId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-token-id');
       const itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
       const effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
+      const effectName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-name');
       const isApplied = !!(<string>$(this).find('.lights-hud-ate-button-image').attr('data-applied'));
       if (!itemId) {
         warn(`No item id ${itemId} founded for the light hud`);
@@ -239,9 +246,7 @@ export async function addLightsHUDButtons(app, html, data) {
         return;
       }
 
-      // TODO PREPARATION TOKEN DATA
-
-      // TODO SET UP ANIMATION
+      // TODO SET UP ANIMATION ?? MAYBE IN SOME FUTURE RELEASE
 
       // const animation = $(event.currentTarget.parentElement.parentElement)
       // .find(".anim-dropdown")
@@ -249,26 +254,31 @@ export async function addLightsHUDButtons(app, html, data) {
 
       const duplicates = 1; // number od dropped light
 
-      // TODO ADD CHECK FOR ACTOR AND TOKEN
       const item = <Item>actor.items.get(itemId);
-      let tokenDataDropTheTorch = <TokenData>await prepareTokenDataDropTheTorch(item,_token?.data?.elevation ?? 0);
-      const actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorch.actorId);
-      tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorch);
-      //@ts-ignore
-      const posData = await warpgate.crosshairs.show({
-        size: Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height) * tokenDataDropTheTorch.scale,
-        icon: `modules/${CONSTANTS.MODULE_NAME}/assets/black-hole-bolas.webp`,
-        label: '',
-      });
+      let actorDropTheTorch:Actor|null = null;
+      try{
+        let tokenDataDropTheTorch = <TokenData>await prepareTokenDataDropTheTorch(item,_token?.data?.elevation ?? 0);
+        actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorch.actorId);
+        tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorch);
+        //@ts-ignore
+        const posData = await warpgate.crosshairs.show({
+          size: Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height) * tokenDataDropTheTorch.scale,
+          icon: `modules/${CONSTANTS.MODULE_NAME}/assets/black-hole-bolas.webp`,
+          label: '',
+        });
 
-      //get custom data macro
-      const customTokenData = {};
+        //get custom data macro
+        const customTokenData = {};
 
-      //@ts-ignore
-      await warpgate.spawnAt({ x: posData.x, y: posData.y }, tokenDataDropTheTorch, customTokenData || {}, {}, { duplicates });
+        //@ts-ignore
+        await warpgate.spawnAt({ x: posData.x, y: posData.y }, tokenDataDropTheTorch, customTokenData || {}, {}, { duplicates });
 
-      // Remove actor at the end
-      actorDropTheTorch.delete();
+      }finally{
+        if(actorDropTheTorch){
+          // Remove actor at the end
+          await (<Actor>actorDropTheTorch).delete();
+        }
+      }
     });
   });
 
@@ -277,6 +287,7 @@ export async function addLightsHUDButtons(app, html, data) {
     event.stopPropagation();
     const buttonClick = event.button; // 0 left click
     const actorId = <string>$(this).attr('data-actor-id');
+    const tokenId = <string>$(this).attr('data-token-id');
     // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings. This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
     const applyChanges = false;
     presetDialog(applyChanges).render(true);
@@ -287,46 +298,74 @@ export async function addLightsHUDButtons(app, html, data) {
     event.stopPropagation();
     const buttonClick = event.button; // 0 left click
     const actorId = <string>$(this).attr('data-actor-id');
+    const tokenId = <string>$(this).attr('data-token-id');
     // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings. This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
     const applyChanges = false;
     customDialog(applyChanges).render(true);
   });
 }
 
+/*
+<option value="nochange">No Change</option>
+<option value="dim0">Self</option>
+<option value="dim30">Darkvision (30 ft)</option>
+<option value="dim60">Darkvision (60 ft)</option>
+<option value="dim90">Darkvision (90 ft)</option>
+<option value="dim120">Darkvision (120 ft)</option>
+<option value="dim150">Darkvision (150 ft)</option>
+<option value="dim180">Darkvision (180 ft)</option>
+<option value="dim300">Eyes of Night (300 ft)</option>
+<option value="bright120">Devil's Sight (Warlock)</option>
+*/
+
+/*
+<option value="nochange">No Change</option>
+<option value="none">None</option>
+<option value="candle">Candle</option>
+<option value="lamp">Lamp</option>
+<option value="bullseye">Lantern (Bullseye)</option>
+<option value="hooded-dim">Lantern (Hooded - Dim)</option>
+<option value="hooded-bright">Lantern (Hooded - Bright)</option>
+<option value="light">Light (Cantrip)</option>
+<option value="torch">Torch</option>
+<option value="moon-touched">Moon-Touched</option>
+*/
+
+
 export function presetDialog(applyChanges: boolean): Dialog {
   return new Dialog({
-    title: `Token Vision Configuration`,
+    title: `Token Vision Configuration (Preset)`,
     content: `
     <form>
       <div class="form-group">
+        <label>Lock rotation:</label>
+        <div class="form-fields">
+          <input type="checkbox" name="lock-rotation" value="true" checked/>
+        </div>
+      </div>
+      <div class="form-group">
         <label>Vision Type:</label>
         <select id="vision-type" name="vision-type">
-          <option value="nochange">No Change</option>
-          <option value="dim0">Self</option>
-          <option value="dim30">Darkvision (30 ft)</option>
-          <option value="dim60">Darkvision (60 ft)</option>
-          <option value="dim90">Darkvision (90 ft)</option>
-          <option value="dim120">Darkvision (120 ft)</option>
-          <option value="dim150">Darkvision (150 ft)</option>
-          <option value="dim180">Darkvision (180 ft)</option>
-          <option value="dim300">Eyes of Night (300 ft)</option>
-          <option value="bright120">Devil's Sight (Warlock)</option>
+          ${
+            API.VISIONS.map((vision) => {
+              return `\t<option value=${vision.id}>${vision.name}</option>`;
+            }).join('\n')
+          }
         </select>
       </div>
       <div class="form-group">
         <label>Light Source:</label>
         <select id="light-source" name="light-source">
-          <option value="nochange">No Change</option>
-          <option value="none">None</option>
-          <option value="candle">Candle</option>
-          <option value="lamp">Lamp</option>
-          <option value="bullseye">Lantern (Bullseye)</option>
-          <option value="hooded-dim">Lantern (Hooded - Dim)</option>
-          <option value="hooded-bright">Lantern (Hooded - Bright)</option>
-          <option value="light">Light (Cantrip)</option>
-          <option value="torch">Torch</option>
-          <option value="moon-touched">Moon-Touched</option>
+          ${
+            API.LIGHTS.map((lightSource) => {
+              return `\t<option value=${lightSource.id}>${lightSource.name}</option>`;
+            }).join('\n')
+          }
         </select>
+      </div>
+      <div class="form-group">
+        <label>Duration in Minutes:</label>
+        <input type="number" id="duration" name="duration" min="0">
       </div>
     </form>
     `,
@@ -345,20 +384,91 @@ export function presetDialog(applyChanges: boolean): Dialog {
     close: (html: any) => {
       if (applyChanges) {
         for (const token of <Token[]>canvas.tokens?.controlled) {
-          const visionType = html.find('[name="vision-type"]')[0].value || 'none';
-          const lightSource = html.find('[name="light-source"]')[0].value || 'none';
-          let dimSight = 0;
-          let brightSight = 0;
-          let dimLight = 0;
-          let brightLight = 0;
-          let lightAngle = 360;
-          let lockRotation = token.data.lockRotation;
-          let lightAnimation = token.data.lightAnimation;
-          let lightAlpha = <number>token.data.lightAlpha;
-          let lightColor = <string>token.data.lightColor;
+          const actorId = <string>token.actor?.id;
+          const tokenId = token.id;
+          const visionType = html.find('[name="vision-type"]')[0].value || VisionHUDPreset.NONE;
+          const lightSource = html.find('[name="light-source"]')[0].value || LightHUDPreset.NONE;
+          const visionIndex = <VisionHUDElement>API.VISIONS.find((e) => e.id == visionType); // parseInt(html.find('[name="vision-type"]')[0].value) || 0;
+          const lightIndex = <LightHUDElement>API.LIGHTS.find((e) => e.id == lightSource); // parseInt(html.find('[name="light-source"]')[0].value) || 0;
+          const duration = parseInt(html.find('[name="duration"]')[0].value) || 0;
+          const lockRotation = Boolean(html.find('[name="lock-rotation"]')[0].value) ?? token.data.lockRotation;
+          let alias:string|null = null;
+          if(actorId || tokenId){
+            if(!alias){
+              if(token){
+                alias = <string>token.name;
+              } else {
+                alias = <string>game.actors?.get(actorId)?.name;
+              }
+            }
+          }
+          const speaker = {scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias};
+
+          // About time configuration
+          if (duration > 0) {
+            if (game.modules.get("about-time")?.active != true) {
+              ui.notifications?.error("About Time isn't loaded");
+            } else {
+              ((backup) => {
+                //@ts-ignore
+                game.Gametime.doIn({minutes:Math.floor(3 * duration / 4)}, () => {
+                  dialogWarning( `The ${lightIndex.name} burns low...`);
+                  ChatMessage.create({
+                    user: game.user?.id,
+                    content: `The ${lightIndex.name} burns low...`,
+                    speaker: speaker
+                  }, {});
+                });
+              })(Object.assign({}, token.data));
+              ((backup) => {
+                //@ts-ignore
+                game.Gametime.doIn({minutes:duration}, () => {
+                  dialogWarning( `The ${lightIndex.name} burns low...`);
+                  ChatMessage.create({
+                    user: game.user?.id,
+                    content: `The ${lightIndex.name} goes out, leaving you in darkness.`,
+                    speaker: speaker
+                  }, {});
+                  updateTokenLighting(
+                    token,
+                    backup.lockRotation,
+                    backup.dimSight,
+                    backup.brightSight,
+                    backup.sightAngle,
+                    backup.dimLight,
+                    backup.brightLight,
+                    <string>backup.lightColor,
+                    backup.lightAlpha,
+                    backup.lightAngle,
+                    <string>backup.lightAnimation.type,
+                    backup.lightAnimation.speed,
+                    backup.lightAnimation.intensity,
+                  );
+                });
+              })(Object.assign({}, token.data));
+            }
+          }
+
+          // Configure new token vision
+          const dimSight = visionIndex.dimSight ?? token.data.dimSight;
+          const brightSight = visionIndex.brightSight ?? token.data.brightSight;
+          const sightAngle = token.data.sightAngle;
+
+          const dimLight = lightIndex.dimLight ?? token.data.dimLight;
+          const brightLight = lightIndex.brightLight ?? token.data.brightLight;
+          const lightAngle = lightIndex.lightAngle ?? token.data.lightAngle;
+          // const lockRotation = lightSources[lightIndex].lockRotation ?? token.data.lockRotation;
+          // Common settings for all 'torch-like' options
+          // Feel free to change the values to your liking
+          const lightAnimation = token.data.lightAnimation ?? {type: "torch", speed: 2, intensity: 2};
+          const lightColor = <string>token.data.lightColor ?? "#f8c377"; // Fire coloring.
+          const lightAlpha = <number>token.data.lightAlpha ?? 0.15;
+
+          /*
           const colorFire = '#f8c377';
           const colorWhite = '#ffffff';
           const colorMoonGlow = '#f4f1c9';
+
           // Get Vision Type Values
           switch (visionType) {
             case 'dim0':
@@ -484,12 +594,16 @@ export function presetDialog(applyChanges: boolean): Dialog {
               lightAnimation = token.data.lightAnimation;
               lightAlpha = token.data.lightAlpha;
               lightColor = <string>token.data.lightColor;
+              sightAngle = token.data.sightAngle;
           }
+          */
           // Update Token
           updateTokenLighting(
             token,
+            lockRotation,
             dimSight,
             brightSight,
+            sightAngle,
             dimLight,
             brightLight,
             lightColor,
@@ -505,39 +619,9 @@ export function presetDialog(applyChanges: boolean): Dialog {
   });
 }
 
-export function customDialog(applyChanges: boolean): Dialog {
-  return new Dialog({
-    title: `Token Vision Configuration custom`,
-    content: `
-  <form>
-    <div class="form-group">
-      <label>Dim sight:</label>
-      <div class="form-fields">
-        <input type="number" name="dim-sight" value="0" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Bright sight:</label>
-      <div class="form-fields">
-        <input type="number" name="bright-sight" value="0" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Dim Light:</label>
-      <div class="form-fields">
-        <input type="number" name="ligh-dimt" value="0" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Bright Light:</label>
-      <div class="form-fields">
-        <input type="number" name="light-bright" value="0" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Light animation type:</label>
-      <div class="form-fields">
-        <select id="light-source" name="light-animation-type">
+/*
+
+<select id="light-source" name="light-animation-type">
           <option selected value="none">None</option>
           <option value="torch">Torch</option>
           <option value="pulse">Pulse</option>
@@ -553,6 +637,109 @@ export function customDialog(applyChanges: boolean): Dialog {
           <option value="roiling">Roiling</option>
           <option value="hole">Hole</option>
         </select>
+
+*/
+
+export function customDialog(applyChanges: boolean): Dialog {
+  let lightTypes = `<option selected value="none"> None</option>`
+  for (const [k, v] of Object.entries(CONFIG.Canvas.lightAnimations)) {
+      if(v){
+        const name = game.i18n.localize(v.label);
+        lightTypes += `<option value="${k.toLocaleLowerCase()}">${name}</option>`;
+      }
+  }
+
+  if (game.modules.get("CommunityLighting")?.active) {
+      lightTypes += `
+      <optgroup label= "Blitz" id="animationType">
+      <option value="BlitzFader">Fader</option>
+      <option value="BlitzLightning"}>Lightning (experimental)</option>
+      <option value="BlitzElectric Fault">Electrical Fault</option>
+      <option value="BlitzSimple Flash">Simple Flash</option>
+      <option value="BlitzRBG Flash">RGB Flash</option>
+      <option value="BlitzPolice Flash">Police Flash</option>
+      <option value="BlitzStatic Blur"> Static Blur</option>
+      <option value="BlitzAlternate Torch">Alternate Torch</option>
+      <option value="BlitzBlurred Torch">Blurred Torch</option>
+      <option value="BlitzGrid Force-Field Colorshift">Grid Force-Field Colorshift</option>
+      </optgroup>
+      <optgroup label="SecretFire" id="animationType">
+      <option value="SecretFireGrid Force-Field">Grid Force-Field</option>
+      <option value="SecretFireSmoke Patch">Smoke Patch</option>
+      <option value="SecretFireStar Light">Star Light</option>
+      <option value="SecretFireStar Light Disco">Star Light Disco</option>
+      </optgroup>
+  `
+  }
+
+  return new Dialog({
+    title: `Token Vision Configuration (Custom)`,
+    content: `
+  <form>
+    <div class="form-group">
+      <label>Temporary name for the light:</label>
+      <div class="form-fields">
+        <input type="text" name="temp-name" value="Custom Light"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Lock rotation:</label>
+      <div class="form-fields">
+        <input type="checkbox" name="lock-rotation" value="true" checked/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Dim sight:</label>
+      <div class="form-fields">
+        <input type="number" name="dim-sight" value="0" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Bright sight:</label>
+      <div class="form-fields">
+        <input type="number" name="bright-sight" value="0" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Sight angle:</label>
+      <div class="form-fields">
+        <input type="number" name="sight-angle" value="360" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Dim Light:</label>
+      <div class="form-fields">
+        <input type="number" name="light-dim" value="0" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Bright Light:</label>
+      <div class="form-fields">
+        <input type="number" name="light-bright" value="0" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Light angle:</label>
+      <div class="form-fields">
+        <input type="number" name="light-angle" value="360" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Light Color:</label>
+      <div class="form-fields">
+        <input type="color" name="light-color" value="#f8c377" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Light Alpha:</label>
+      <div class="form-fields">
+        <input type="range" name="light-alpha" value="0.5  min="0" max="1"  step="0.15" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Light animation type:</label>
+      <div class="form-fields">
+        <select id="light-source" name="light-animation-type" >${lightTypes}</select>
       </div>
     </div>
     <div class="form-group">
@@ -568,22 +755,8 @@ export function customDialog(applyChanges: boolean): Dialog {
       </div>
     </div>
     <div class="form-group">
-      <label>Light lock rotation:</label>
-      <div class="form-fields">
-        <input type="checkbox" name="light-lock-rotation" value="true" checked/>
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Light Color:</label>
-      <div class="form-fields">
-        <input type="color" name="light-color" value="#f8c377" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Light Alpha:</label>
-      <div class="form-fields">
-        <input type="range" name="light-alpha" value="0.5  min="0" max="1"  step="0.1" />
-      </div>
+      <label>Duration in Minutes:</label>
+      <input type="number" id="duration" name="duration" min="0">
     </div>
   </form>
   `,
@@ -602,21 +775,86 @@ export function customDialog(applyChanges: boolean): Dialog {
     close: (html: any) => {
       if (applyChanges) {
         for (const token of <Token[]>canvas.tokens?.controlled) {
+          const actorId = <string>token.actor?.id;
+          const tokenId = token.id;
+
+          const tempName = html.find('[name="temp-name"]')[0].value || '';
           // const visionType = html.find('[name="vision-type"]')[0].value || 'none';
           // const lightSource = html.find('[name="light-source"]')[0].value || 'none';
           const dimSight = html.find('[name="dim-sight"]')[0].value || 0;
           const brightSight = html.find('[name="bright-sight"]')[0].value || 0;
-          const dimLight = html.find('[name="light-source"]')[0].value || 0;
-          const brightLight = html.find('[name="light-source"]')[0].value || 0;
-          const lightAngle = html.find('[name="light-source"]')[0].value || 360;
-          const lockRotation = html.find('[name="light-lock-rotation"]')[0].value || token.data.lockRotation;
-          const lightAnimation = token.data.lightAnimation;
+          const sightAngle = html.find('[name="sight-angle"]')[0].value || 360;
+          const dimLight = html.find('[name="light-dim"]')[0].value || 0;
+          const brightLight = html.find('[name="light-bright"]')[0].value || 0;
+          const lightAngle = html.find('[name="light-angle"]')[0].value || 360;
+          const duration = parseInt(html.find('[name="duration"]')[0].value) || 0;
+          const lockRotation = html.find('[name="lock-rotation"]')[0].value || token.data.lockRotation;
+
+          let alias:string|null = null;
+          if(actorId || tokenId){
+            if(!alias){
+              if(token){
+                alias = <string>token.name;
+              } else {
+                alias = <string>game.actors?.get(actorId)?.name;
+              }
+            }
+          }
+          const speaker = {scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias};
+
+          // About time configuration
+          if (duration > 0) {
+            if (game.modules.get("about-time")?.active != true) {
+              ui.notifications?.error("About Time isn't loaded");
+            } else {
+              ((backup) => {
+                //@ts-ignore
+                game.Gametime.doIn({minutes:Math.floor(3 * duration / 4)}, () => {
+                  dialogWarning( `The ${tempName} burns low...`);
+                  ChatMessage.create({
+                    user: game.user?.id,
+                    content: `The ${tempName} burns low...`,
+                    speaker: speaker
+                  }, {});
+                });
+              })(Object.assign({}, token.data));
+              ((backup) => {
+                //@ts-ignore
+                game.Gametime.doIn({minutes:duration}, () => {
+                  dialogWarning( `The ${tempName} burns low...`);
+                  ChatMessage.create({
+                    user: game.user?.id,
+                    content: `The ${tempName} goes out, leaving you in darkness.`,
+                    speaker: speaker
+                  }, {});
+                  updateTokenLighting(
+                    token,
+                    backup.lockRotation,
+                    backup.dimSight,
+                    backup.brightSight,
+                    backup.sightAngle,
+                    backup.dimLight,
+                    backup.brightLight,
+                    <string>backup.lightColor,
+                    backup.lightAlpha,
+                    backup.lightAngle,
+                    <string>backup.lightAnimation.type,
+                    backup.lightAnimation.speed,
+                    backup.lightAnimation.intensity,
+                  );
+                });
+              })(Object.assign({}, token.data));
+            }
+          }
+
+
+          // const lightAnimation = token.data.lightAnimation;
           // Enable the Light Source type according to the type
           // "torch" / "pulse" / "chroma" / "wave" / "fog" / "sunburst" / "dome"
           // "emanation" / "hexa" / "ghost" / "energy" / "roiling" / "hole"
-          const lightAnimationType = html.find('[name="light-animation-type"]')[0].value || 'none';
-          const lightAnimationIntensity = html.find('[name="light-animation-intensity"]')[0].value || 5;
-          const lightAnimationSpeed = html.find('[name="light-animation-speed"]')[0].value || 5;
+          const lightAnimationType = html.find('[name="light-animation-type"]')[0].value || token.data.lightAnimation.type || 'none';
+          const lightAnimationSpeed = html.find('[name="light-animation-speed"]')[0].value || token.data.lightAnimation.speed;
+          const lightAnimationIntensity = html.find('[name="light-animation-intensity"]')[0].value || token.data.lightAnimation.intensity;
           const lightAlpha = html.find('[name="light-alpha"]')[0].value || token.data.lightAlpha;
           const lightColor = html.find('[name="light-color"]')[0].value || token.data.lightColor;
           // Update Token
@@ -624,14 +862,16 @@ export function customDialog(applyChanges: boolean): Dialog {
             token,
             dimSight,
             brightSight,
+            sightAngle,
             dimLight,
             brightLight,
             lightColor,
             lightAlpha,
             lightAngle,
-            lightAnimationType,
-            lightAnimationSpeed,
-            lightAnimationIntensity,
+            lockRotation,
+            <string>lightAnimationType,
+            <number>lightAnimationSpeed,
+            <number>lightAnimationIntensity,
           );
         }
       }
@@ -639,10 +879,10 @@ export function customDialog(applyChanges: boolean): Dialog {
   });
 }
 
-export function confirmDialog(actorId, itemId, effectId, isApplied): Dialog {
+export function confirmDialogATLEffectItem(actorId, itemId, effectId, actorname, tokenName, effectName, isApplied): Dialog {
   return new Dialog({
     title: 'Confirm the action',
-    content: `<div><h2>Are you sure to apply this effect ?</h2><div>`,
+    content: `<div><h2>Are you sure to ${isApplied ? 'disabled' : 'enabled' } the active effect ${effectName} on actor ${actorname} (token name is ${tokenName})?</h2><div>`,
     buttons: {
       yes: {
         label: 'Yes',

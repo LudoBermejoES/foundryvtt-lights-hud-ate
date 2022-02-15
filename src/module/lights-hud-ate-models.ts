@@ -2,13 +2,65 @@ export class LightHUDElement {
   id: string;
   name: string;
   img: string;
+  dimLight:number|null;
+  brightLight:number|null;
+  lightColor:string|null;
+  lightAlpha:number|null;
+  lightAngle:number|null;
+  lightAnimationType:string|null;
+  lightAnimationSpeed:string|null;
+  lightAnimationIntensity:string|null;
+}
+
+export class VisionHUDElement {
+  id: string;
+  name: string;
+  img: string;
+  dimSight: number|null;
+  brightSight:number|null;
+  sightAngle:number|null;
+}
+
+export enum VisionHUDPreset {
+  // additional generic
+  NO_CHANGE = 'nochange',
+  NONE = 'none',
+  SELF = 'normal', // this is not a error is a retrocompatibility feature
+  NORMAL = 'normal',
+  // additional dnd5e and pf2e
+  DARKVISION = 'darkvision',
+  SEE_INVISIBLE = 'seeinvisible',
+  BLIND_SIGHT = 'blindsight',
+  TREMOR_SENSE = 'tremorsense',
+  TRUE_SIGHT = 'truesight',
+  DEVILS_SIGHT = 'devilssight',
+  PASSIVE_STEALTH = '_ste',
+  PASSIVE_PERCEPTION = '_prc',
+  // additional PF2E
+  GREATER_DARKVISION = 'greaterdarkvision',
+  LOW_LIGHT_VISION = 'lowlightvision',
+  BLINDED = 'blinded',
+  // additional LIGHT HUD
+  DARKVISION_30 = 'darkvision30',
+  DARKVISION_60 = 'darkvision60',
+  DARKVISION_90 = 'darkvision90',
+  DARKVISION_120 = 'darkvision120',
+  DARKVISION_150 = 'darkvision150',
+  DARKVISION_180 = 'darkvision180',
+  EYES_OF_NIGHT = 'eyesofnight'
 }
 
 export enum LightHUDPreset {
-  TORCH = 'torch',
+  NO_CHANGE = 'nochange',
+  NONE = 'none',
+  CANDLE = 'candle',
+  LAMP = 'lamp',
+  LANTERN_BULLSEYE = 'lantern-bullseye',
+  LANTERN_HOODED_DIM = 'lantern-hooded-dim',
+  LANTERN_HOODED_BRIGHT = 'lantern-hooded-bright',
   LIGHT = 'light',
-  // LIGHT = 'lightSpell',
-  LANTERN = 'lantern',
+  TORCH = 'torch',
+  MOON_TOUCHED = 'moon-touched'
 }
 
 // export enum LightHUDPresetType {
@@ -40,6 +92,7 @@ export class LightDataHud {
   type: boolean;
   itemid: string;
   effectid: string;
+  effectname: string;
 }
 
 export class LightDataExt extends foundry.data.AmbientLightData {

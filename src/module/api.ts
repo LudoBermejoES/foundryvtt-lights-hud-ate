@@ -7,7 +7,7 @@ import EffectHandler from './effects/effect-handler';
 import Effect from './effects/effect';
 import HOOKS from './hooks';
 import { EffectDefinitions } from './lights-hud-ate-effect-definition';
-import { LightDataExt, LightHUDElement } from './lights-hud-ate-models';
+import { LightDataExt, LightHUDElement, VisionHUDElement } from './lights-hud-ate-models';
 
 export default class API {
   // static get effectInterface(): EffectInterface {
@@ -24,6 +24,15 @@ export default class API {
   static get LIGHTS(): LightHUDElement[] {
     return <any[]>game.settings.get(CONSTANTS.MODULE_NAME, 'lights');
   }
+
+  /**
+   * The attributes used to track dynamic attributes in this system
+   *
+   * @returns {array}
+   */
+    static get VISIONS(): VisionHUDElement[] {
+      return <any[]>game.settings.get(CONSTANTS.MODULE_NAME, 'visions');
+    }
 
   /**
    * Sets the attributes used to track dynamic attributes in this system
