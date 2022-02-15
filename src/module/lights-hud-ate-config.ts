@@ -5,6 +5,8 @@ import Effect from './effects/effect';
 import EffectInterface from './effects/effect-interface';
 import {
   dialogWarning,
+  i18n,
+  i18nFormat,
   prepareTokenDataDropTheTorch,
   rollDependingOnSystem,
   updateTokenLighting,
@@ -24,7 +26,7 @@ export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
   //     changes.key.startsWith('ATL')
   // );
   const atlEffects =
-    item.effects.filter((entity) => Boolean(entity.data.changes.find((effect) => effect.key.includes('ATL')))) ?? [];
+    item.effects.filter((entity) => !!entity.data.changes.find((effect) => effect.key.includes('ATL'))) ?? [];
   return atlEffects;
 }
 
@@ -118,10 +120,16 @@ export async function addLightsHUDButtons(app, html, data) {
           effectname = <string>effectFromActor.name ?? effectFromActor.data.label;
         }
       }
+      if (!suppressedTmp) {
+        appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+      } else {
+        appliedTmp = !appliedTmp;
+      }
+
       return <LightDataHud>{
         route: im,
         name: item.name,
-        applied: appliedTmp || (passiveTmp && !disabledTmp),
+        applied: appliedTmp,
         disabled: disabledTmp,
         suppressed: suppressedTmp,
         temporary: temporaryTmp,
@@ -167,7 +175,7 @@ export async function addLightsHUDButtons(app, html, data) {
   // Finally insert the buttons in the column
   // html.find('.col.lights-hud-ate-column-' + position).prepend(tbuttonItemLight);
 
-  const is080 = !isNewerVersion('0.8.0', game.data.version);
+  const is080 = !isNewerVersion('0.8.0', <string>game.data.version);
 
   html
     .find('div.right')
@@ -210,12 +218,29 @@ export async function addLightsHUDButtons(app, html, data) {
       // const tokenToChange = <Token>controlled[index];
       // const actorId = <string>tokenToChange.actor?.id;
 
-      const actorId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-actor-id');
-      const tokenId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-token-id');
-      const itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
-      const effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
-      const effectName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-name');
-      const isApplied = !!(<string>$(this).find('.lights-hud-ate-button-image').attr('data-applied'));
+      let actorId: string | null = null;
+      let tokenId: string | null = null;
+      let itemId: string | null = null;
+      let effectId: string | null = null;
+      let effectName: string | null = null;
+      let isApplied: boolean | null = null;
+
+      if (game.settings.get(CONSTANTS.MODULE_NAME, 'imageDisplay')) {
+        actorId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-actor-id');
+        tokenId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-token-id');
+        itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
+        effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
+        effectName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-name');
+        isApplied = <string>$(this).find('.lights-hud-ate-button-image').attr('data-applied') == 'true';
+      } else {
+        actorId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-actor-id');
+        tokenId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-token-id');
+        itemId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-item-id');
+        effectId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-effect-id');
+        effectName = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-effect-name');
+        isApplied = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-applied') == 'true';
+      }
+
       if (!itemId) {
         warn(`No item id ${itemId} founded for the light hud`);
         return;
@@ -246,7 +271,7 @@ export async function addLightsHUDButtons(app, html, data) {
       const itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
       const effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
       const effectName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-name');
-      const isApplied = Boolean(<string>$(this).find('.lights-hud-ate-button-image').attr('data-applied'));
+      const isApplied = <string>$(this).find('.lights-hud-ate-button-image').attr('data-applied') == 'true';
       if (!itemId) {
         warn(`No item id ${itemId} founded for the light hud`);
         return;
@@ -356,9 +381,15 @@ export function presetDialog(applyChanges: boolean): Dialog {
     content: `
     <form>
       <div class="form-group">
+        <label>Apply as ATE/ATL Effect:</label>
+        <div class="form-fields">
+          <input type="checkbox" name="apply-as-atl-ate" value="false" onclick="$(this).attr('value', this.checked ? true : false)"/>
+        </div>
+      </div>
+      <div class="form-group">
         <label>Lock rotation:</label>
         <div class="form-fields">
-          <input type="checkbox" name="lock-rotation" value="true" checked/>
+          <input type="checkbox" name="lock-rotation" value="false" onclick="$(this).attr('value', this.checked ? true : false)"/>
         </div>
       </div>
       <div class="form-group">
@@ -400,12 +431,13 @@ export function presetDialog(applyChanges: boolean): Dialog {
         for (const token of <Token[]>canvas.tokens?.controlled) {
           const actorId = <string>token.actor?.id;
           const tokenId = token.id;
+          const applyAsAtlAteEffect = html.find('[name="apply-as-atl-ate"]')[0].value == 'true' ?? false;
           const visionType = html.find('[name="vision-type"]')[0].value || VisionHUDPreset.NONE;
           const lightSource = html.find('[name="light-source"]')[0].value || LightHUDPreset.NONE;
           const visionIndex = <VisionHUDElement>API.VISIONS.find((e) => e.id == visionType); // parseInt(html.find('[name="vision-type"]')[0].value) || 0;
           const lightIndex = <LightHUDElement>API.LIGHTS.find((e) => e.id == lightSource); // parseInt(html.find('[name="light-source"]')[0].value) || 0;
           const duration = parseInt(html.find('[name="duration"]')[0].value) || 0;
-          const lockRotation = Boolean(html.find('[name="lock-rotation"]')[0].value) ?? token.data.lockRotation;
+          const lockRotation = html.find('[name="lock-rotation"]')[0].value == 'true' ?? token.data.lockRotation;
           let alias: string | null = null;
           if (actorId || tokenId) {
             if (!alias) {
@@ -455,17 +487,17 @@ export function presetDialog(applyChanges: boolean): Dialog {
                     backup.dimSight,
                     backup.brightSight,
                     backup.sightAngle,
-                    backup.dimLight,
-                    backup.brightLight,
-                    <string>backup.lightColor,
-                    backup.lightAlpha,
-                    backup.lightAngle,
-                    <string>backup.lightAnimation.type,
-                    backup.lightAnimation.speed,
-                    backup.lightAnimation.intensity,
-                    false,
-                    null,
-                    null,
+                    backup.light.dim,
+                    backup.light.bright,
+                    <string>backup.light.color,
+                    backup.light.alpha,
+                    backup.light.angle,
+                    <string>backup.light.animation.type,
+                    backup.light.animation.speed,
+                    backup.light.animation.intensity,
+                    applyAsAtlAteEffect,
+                    lightIndex.name,
+                    lightIndex.img,
                   );
                 });
               })(Object.assign({}, token.data));
@@ -477,19 +509,19 @@ export function presetDialog(applyChanges: boolean): Dialog {
           const brightSight = visionIndex.brightSight ?? token.data.brightSight;
           const sightAngle = visionIndex.sightAngle ?? token.data.sightAngle;
 
-          const dimLight = lightIndex.dimLight ?? token.data.dimLight;
-          const brightLight = lightIndex.brightLight ?? token.data.brightLight;
-          const lightAngle = lightIndex.lightAngle ?? token.data.lightAngle;
-          // const lockRotation = lightSources[lightIndex].lockRotation ?? token.data.lockRotation;
+          const dimLight = lightIndex.dimLight ?? token.data.light.dim;
+          const brightLight = lightIndex.brightLight ?? token.data.light.bright;
+          const lightAngle = lightIndex.lightAngle ?? token.data.light.angle;
+
           // Common settings for all 'torch-like' options
           // Feel free to change the values to your liking
           const lightAnimation = {
-            type: lightIndex.lightAnimationType ?? token.data.lightAnimation.type,
-            speed: lightIndex.lightAnimationSpeed ?? token.data.lightAnimation.speed,
-            intensity: lightIndex.lightAnimationIntensity ?? token.data.lightAnimation.intensity,
+            type: lightIndex.lightAnimationType ?? token.data.light.animation.type,
+            speed: lightIndex.lightAnimationSpeed ?? token.data.light.animation.speed,
+            intensity: lightIndex.lightAnimationIntensity ?? token.data.light.animation.intensity,
           };
-          const lightColor = lightIndex.lightColor ?? <string>token.data.lightColor;
-          const lightAlpha = lightIndex.lightAlpha ?? <number>token.data.lightAlpha;
+          const lightColor = lightIndex.lightColor ?? <string>token.data.light.color;
+          const lightAlpha = lightIndex.lightAlpha ?? <number>token.data.light.alpha;
           // Update Token
           updateTokenLighting(
             token,
@@ -505,7 +537,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
             <string>lightAnimation.type,
             <number>lightAnimation.speed,
             <number>lightAnimation.intensity,
-            false, // TODO
+            applyAsAtlAteEffect,
             lightIndex.name,
             lightIndex.img,
           );
@@ -568,6 +600,9 @@ export function customDialog(applyChanges: boolean): Dialog {
   `;
   }
 
+  $('.myCheckbox').prop('checked', true);
+  $('.myCheckbox').prop('checked', false);
+
   return new Dialog({
     title: `Token Vision Configuration (Custom)`,
     content: `
@@ -579,9 +614,15 @@ export function customDialog(applyChanges: boolean): Dialog {
       </div>
     </div>
     <div class="form-group">
+      <label>Apply as ATE/ATL Effect:</label>
+      <div class="form-fields">
+        <input type="checkbox" name="apply-as-atl-ate" value="false" onclick="$(this).attr('value', this.checked ? true : false)"/>
+      </div>
+    </div>
+    <div class="form-group">
       <label>Lock rotation:</label>
       <div class="form-fields">
-        <input type="checkbox" name="lock-rotation" value="true" checked/>
+        <input type="checkbox" name="lock-rotation" value="false" onclick="$(this).attr('value', this.checked ? true : false)"/>
       </div>
     </div>
     <div class="form-group">
@@ -673,9 +714,9 @@ export function customDialog(applyChanges: boolean): Dialog {
         for (const token of <Token[]>canvas.tokens?.controlled) {
           const actorId = <string>token.actor?.id;
           const tokenId = token.id;
-
+          const applyAsAtlAteEffect = html.find('[name="apply-as-atl-ate"]')[0].value == 'true' ?? false;
           const tempName = <string>html.find('[name="temp-name"]')[0].value || '';
-          const tempImage = <string>html.find('[name="temp-image"]')[0].value || '';
+          // const tempImage = <string>html.find('[name="temp-image"]')[0].value || '';
           // const visionType = html.find('[name="vision-type"]')[0].value || 'none';
           // const lightSource = html.find('[name="light-source"]')[0].value || 'none';
           const dimSight = html.find('[name="dim-sight"]')[0].value || 0;
@@ -685,7 +726,7 @@ export function customDialog(applyChanges: boolean): Dialog {
           const brightLight = html.find('[name="light-bright"]')[0].value || 0;
           const lightAngle = html.find('[name="light-angle"]')[0].value || 360;
           const duration = parseInt(html.find('[name="duration"]')[0].value) || 0;
-          const lockRotation = html.find('[name="lock-rotation"]')[0].value || token.data.lockRotation;
+          const lockRotation = html.find('[name="lock-rotation"]')[0].value == 'true' || token.data.lockRotation;
 
           let alias: string | null = null;
           if (actorId || tokenId) {
@@ -736,17 +777,17 @@ export function customDialog(applyChanges: boolean): Dialog {
                     backup.dimSight,
                     backup.brightSight,
                     backup.sightAngle,
-                    backup.dimLight,
-                    backup.brightLight,
-                    <string>backup.lightColor,
-                    backup.lightAlpha,
-                    backup.lightAngle,
-                    <string>backup.lightAnimation.type,
-                    backup.lightAnimation.speed,
-                    backup.lightAnimation.intensity,
-                    false,
-                    null,
-                    null,
+                    backup.light.dim,
+                    backup.light.bright,
+                    <string>backup.light.color,
+                    backup.light.alpha,
+                    backup.light.angle,
+                    <string>backup.light.animation.type,
+                    backup.light.animation.speed,
+                    backup.light.animation.intensity,
+                    applyAsAtlAteEffect,
+                    tempName,
+                    '',
                   );
                 });
               })(Object.assign({}, token.data));
@@ -758,16 +799,17 @@ export function customDialog(applyChanges: boolean): Dialog {
           // "torch" / "pulse" / "chroma" / "wave" / "fog" / "sunburst" / "dome"
           // "emanation" / "hexa" / "ghost" / "energy" / "roiling" / "hole"
           const lightAnimationType =
-            html.find('[name="light-animation-type"]')[0].value || token.data.lightAnimation.type || 'none';
+            html.find('[name="light-animation-type"]')[0].value || token.data.light.animation.type || 'none';
           const lightAnimationSpeed =
-            html.find('[name="light-animation-speed"]')[0].value || token.data.lightAnimation.speed;
+            html.find('[name="light-animation-speed"]')[0].value || token.data.light.animation.speed;
           const lightAnimationIntensity =
-            html.find('[name="light-animation-intensity"]')[0].value || token.data.lightAnimation.intensity;
-          const lightAlpha = html.find('[name="light-alpha"]')[0].value || token.data.lightAlpha;
-          const lightColor = html.find('[name="light-color"]')[0].value || token.data.lightColor;
+            html.find('[name="light-animation-intensity"]')[0].value || token.data.light.animation.intensity;
+          const lightAlpha = html.find('[name="light-alpha"]')[0].value || token.data.light.alpha;
+          const lightColor = html.find('[name="light-color"]')[0].value || token.data.light.color;
           // Update Token
           updateTokenLighting(
             token,
+            lockRotation,
             dimSight,
             brightSight,
             sightAngle,
@@ -776,13 +818,12 @@ export function customDialog(applyChanges: boolean): Dialog {
             lightColor,
             lightAlpha,
             lightAngle,
-            lockRotation,
             <string>lightAnimationType,
             <number>lightAnimationSpeed,
             <number>lightAnimationIntensity,
-            false, // TODO
+            applyAsAtlAteEffect,
             tempName,
-            tempImage,
+            '',
           );
         }
       }
@@ -800,19 +841,25 @@ export function confirmDialogATLEffectItem(
   isApplied,
 ): Dialog {
   return new Dialog({
-    title: 'Confirm the action',
-    content: `<div><h2>Are you sure to ${
-      isApplied ? 'disabled' : 'enabled'
-    } the active effect '${effectName}' on actor '${actorname}' (token name is '${tokenName}')?</h2><div>`,
+    title: i18n(`lights-hud-ate.windows.dialogs.confirm.apply.title`),
+    // content: `<div><h2>Are you sure to ${
+    //   isApplied ? 'disabled' : 'enabled'
+    // } the active effect '${effectName}' on actor '${actorname}' (token name is '${tokenName}')?</h2><div>`,
+    content: `<div><h2>${i18nFormat(`lights-hud-ate.windows.dialogs.confirm.apply.content`, {
+      isApplied: isApplied ? 'disabled' : 'enabled',
+      effectName: effectName,
+      actorname: actorname,
+      tokenName: tokenName,
+    })}</h2><div>`,
     buttons: {
       yes: {
-        label: 'Yes',
+        label: i18n(`lights-hud-ate.windows.dialogs.confirm.apply.choice.yes`),
         callback: (html) => {
           manageActiveEffectATL(actorId, itemId, effectId, isApplied);
         },
       },
       no: {
-        label: 'No',
+        label: i18n(`lights-hud-ate.windows.dialogs.confirm.apply.choice.no`),
         callback: (html) => {
           // Do nothing
         },
@@ -823,27 +870,31 @@ export function confirmDialogATLEffectItem(
 }
 
 export function manageActiveEffectATL(actorId, itemId, effectId, isApplied) {
-  if (isApplied) {
-    // const atlEffectsS = obj.effects.filter((entity: ActiveEffect) => {
-    //   return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
-    // });
-    // const effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
-    //   return effectId == ae.id;
-    // });
-    API.toggleEffectOnActor(actorId, <string>effectId, false, false, false);
-  }
-
   // We roll the item ???
-  if (game.settings.get(CONSTANTS.MODULE_NAME, 'rollItem') && !isApplied) {
-    const actor = <Actor>game.actors?.get(actorId);
-    const item = <Item>actor.items.find((entity: Item) => {
-      return <string>entity.id == itemId;
-    });
-    if (item) {
-      // TODO if i need to manage the roll for specific system usually is enough item.roll()
-      rollDependingOnSystem(item);
+  try {
+    if (game.settings.get(CONSTANTS.MODULE_NAME, 'rollItem') && !isApplied) {
+      const actor = <Actor>game.actors?.get(actorId);
+      const item = <Item>actor.items.find((entity: Item) => {
+        return <string>entity.id == itemId;
+      });
+      if (item) {
+        // TODO if i need to manage the roll for specific system usually is enough item.roll()
+        rollDependingOnSystem(item);
+      } else {
+        warn(`No item found for the id ${itemId}`);
+      }
+    }
+  } finally {
+    if (isApplied) {
+      // const atlEffectsS = obj.effects.filter((entity: ActiveEffect) => {
+      //   return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+      // });
+      // const effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
+      //   return effectId == ae.id;
+      // });
+      API.toggleEffectOnActor(actorId, <string>effectId, false, false, true);
     } else {
-      warn(`No item found for the id ${itemId}`);
+      API.toggleEffectOnActor(actorId, <string>effectId, false, true, false);
     }
   }
 }

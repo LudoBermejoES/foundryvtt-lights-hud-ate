@@ -223,11 +223,11 @@ export default class EffectHandler {
     }
   }
 
-  _addAtlChangesToEffect(effect) {
+  _addAtlChangesToEffect(effect: Effect) {
     effect.changes.push(...effect.atlChanges);
   }
 
-  _addTokenMagicChangesToEffect(effect) {
+  _addTokenMagicChangesToEffect(effect: Effect) {
     effect.changes.push(...effect.tokenMagicChanges);
   }
 

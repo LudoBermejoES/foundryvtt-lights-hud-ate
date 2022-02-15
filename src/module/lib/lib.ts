@@ -6,6 +6,7 @@ import {
 import API from '../api.js';
 import CONSTANTS from '../constants';
 import Effect, { Constants } from '../effects/effect.js';
+import { EffectDefinitions } from '../lights-hud-ate-effect-definition.js';
 import { canvas, game } from '../settings';
 
 // =============================
@@ -151,29 +152,29 @@ export async function updateTokenLighting(
   }
 
   if (dimLight == null || dimLight == undefined) {
-    dimLight = token.data.dimLight;
+    dimLight = token.data.light.dim;
   }
   if (brightLight == null || brightLight == undefined) {
-    brightLight = token.data.brightLight;
+    brightLight = token.data.light.bright;
   }
   if (lightColor == null || lightColor == undefined) {
-    lightColor = <string>token.data.lightColor;
+    lightColor = <string>token.data.light.color;
   }
   if (lightAlpha == null || lightAlpha == undefined) {
-    lightAlpha = token.data.lightAlpha;
+    lightAlpha = token.data.light.alpha;
   }
   if (lightAngle == null || lightAngle == undefined) {
-    lightAngle = token.data.lightAngle;
+    lightAngle = token.data.light.angle;
   }
 
   if (lightAnimationType == null || lightAnimationType == undefined) {
-    lightAnimationType = <string>token.data.lightAnimation.type;
+    lightAnimationType = <string>token.data.light.animation.type;
   }
   if (lightAnimationSpeed == null || lightAnimationSpeed == undefined) {
-    lightAnimationSpeed = token.data.lightAnimation.speed;
+    lightAnimationSpeed = token.data.light.animation.speed;
   }
   if (lightAnimationIntensity == null || lightAnimationIntensity == undefined) {
-    lightAnimationIntensity = token.data.lightAnimation.intensity;
+    lightAnimationIntensity = token.data.light.animation.intensity;
   }
 
   if (applyAsAtlEffect) {
@@ -186,47 +187,47 @@ export async function updateTokenLighting(
       seconds: <number>duration * 60, // minutes to seconds
       atlChanges: [
         {
-          key: this._createAtlEffectKey('ATL.dimSight'),
+          key: EffectDefinitions._createAtlEffectKey('ATL.dimSight'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
           value: dimSight && dimSight > 0 ? dimSight : token.data.dimSight,
         },
         {
-          key: this._createAtlEffectKey('ATL.brightSight'),
+          key: EffectDefinitions._createAtlEffectKey('ATL.brightSight'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
           value: brightSight && brightSight > 0 ? brightSight : token.data.brightSight,
         },
         {
-          key: this._createAtlEffectKey('ATL.light.dim'),
+          key: EffectDefinitions._createAtlEffectKey('ATL.light.dim'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: dimLight && dimLight > 0 ? dimLight : token.data.dimLight,
+          value: dimLight && dimLight > 0 ? dimLight : token.data.light.dim,
         },
         {
-          key: this._createAtlEffectKey('ATL.light.bright'),
+          key: EffectDefinitions._createAtlEffectKey('ATL.light.bright'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: brightLight && brightLight > 0 ? brightLight : token.data.brightLight,
+          value: brightLight && brightLight > 0 ? brightLight : token.data.light.bright,
         },
         {
-          key: this._createAtlEffectKey('ATL.light.angle'),
+          key: EffectDefinitions._createAtlEffectKey('ATL.light.angle'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: lightAngle ? lightAngle : token.data.lightAngle,
+          value: lightAngle ? lightAngle : token.data.light.angle,
         },
         {
-          key: this._createAtlEffectKey('ATL.light.color'),
+          key: EffectDefinitions._createAtlEffectKey('ATL.light.color'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: lightColor ? lightColor : token.data.lightColor,
+          value: lightColor ? lightColor : token.data.light.color,
         },
         {
-          key: this._createAtlEffectKey('ATL.light.alpha'),
+          key: EffectDefinitions._createAtlEffectKey('ATL.light.alpha'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: lightAlpha ? lightAlpha : token.data.lightAlpha,
+          value: lightAlpha ? lightAlpha : token.data.light.alpha,
         },
         {
-          key: this._createAtlEffectKey('ATL.light.animation'),
+          key: EffectDefinitions._createAtlEffectKey('ATL.light.animation'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
           value:
             lightAnimationType && lightAnimationSpeed > 0 && lightAnimationIntensity > 0
               ? `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}}`
-              : token.data.lightAnimation,
+              : token.data.light.animation,
         },
       ],
     });
@@ -238,28 +239,28 @@ export async function updateTokenLighting(
       brightSight: brightSight,
       sightAngle: sightAngle,
       lockRotation: lockRotation,
-      dimLight: dimLight,
-      brightLight: brightLight,
-      lightAngle: lightAngle,
-      lightColor: lightColor,
-      lightAlpha: lightAlpha,
-      lightAnimation: {
-        type: lightAnimationType,
-        speed: lightAnimationSpeed,
-        intensity: lightAnimationIntensity,
-      },
-      // light: {
-      //   bright: brightLight,
-      //   dim: dimLight,
-      //   alpha: lightAlpha ** 2, // need  this ?
-      //   color: lightColor,
-      //   angle: lightAngle,
-      //   animation: {
-      //     type: lightAnimationType,
-      //     speed: lightAnimationSpeed,
-      //     intensity: lightAnimationIntensity,
-      //   },
+      // dimLight: dimLight,
+      // brightLight: brightLight,
+      // lightAngle: lightAngle,
+      // lightColor: lightColor,
+      // lightAlpha: lightAlpha,
+      // lightAnimation: {
+      //   type: lightAnimationType,
+      //   speed: lightAnimationSpeed,
+      //   intensity: lightAnimationIntensity,
       // },
+      light: {
+        dim: dimLight,
+        bright: brightLight,
+        angle: lightAngle,
+        color: lightColor,
+        alpha: lightAlpha, //** 2, // need  this ?
+        animation: {
+          type: lightAnimationType,
+          speed: lightAnimationSpeed,
+          intensity: lightAnimationIntensity,
+        },
+      },
     });
   }
 }
@@ -321,7 +322,7 @@ export async function dropTheToken(item: Item, data: { x; y }, type = 'character
   // START CREATION
   let createdType = type;
   if (type === 'actorless') {
-    createdType = Object.keys(CONFIG.Actor.sheetClasses)[0];
+    createdType = Object.keys(CONFIG.Actor.typeLabels)[0];
   }
 
   let actorName = <string>item.name;
@@ -406,7 +407,7 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   // START CREATION
   let createdType = type;
   if (type === 'actorless') {
-    createdType = Object.keys(CONFIG.Actor.sheetClasses)[0];
+    createdType = Object.keys(CONFIG.Actor.typeLabels)[0];
   }
 
   let actorName = <string>item.name;
