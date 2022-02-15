@@ -443,6 +443,9 @@ export function presetDialog(applyChanges: boolean): Dialog {
                     <string>backup.lightAnimation.type,
                     backup.lightAnimation.speed,
                     backup.lightAnimation.intensity,
+                    false,
+                    null,
+                    null,
                   );
                 });
               })(Object.assign({}, token.data));
@@ -452,7 +455,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
           // Configure new token vision
           const dimSight = visionIndex.dimSight ?? token.data.dimSight;
           const brightSight = visionIndex.brightSight ?? token.data.brightSight;
-          const sightAngle = token.data.sightAngle;
+          const sightAngle = visionIndex.sightAngle ?? token.data.sightAngle;
 
           const dimLight = lightIndex.dimLight ?? token.data.dimLight;
           const brightLight = lightIndex.brightLight ?? token.data.brightLight;
@@ -460,143 +463,13 @@ export function presetDialog(applyChanges: boolean): Dialog {
           // const lockRotation = lightSources[lightIndex].lockRotation ?? token.data.lockRotation;
           // Common settings for all 'torch-like' options
           // Feel free to change the values to your liking
-          const lightAnimation = token.data.lightAnimation ?? {type: "torch", speed: 2, intensity: 2};
-          const lightColor = <string>token.data.lightColor ?? "#f8c377"; // Fire coloring.
-          const lightAlpha = <number>token.data.lightAlpha ?? 0.15;
-
-          /*
-          const colorFire = '#f8c377';
-          const colorWhite = '#ffffff';
-          const colorMoonGlow = '#f4f1c9';
-
-          // Get Vision Type Values
-          switch (visionType) {
-            case 'dim0':
-              dimSight = 1.5;
-              brightSight = 0;
-              break;
-            case 'dim30':
-              dimSight = 30;
-              brightSight = 0;
-              break;
-            case 'dim60':
-              dimSight = 60;
-              brightSight = 0;
-              break;
-            case 'dim90':
-              dimSight = 90;
-              brightSight = 0;
-              break;
-            case 'dim120':
-              dimSight = 120;
-              brightSight = 0;
-              break;
-            case 'dim150':
-              dimSight = 150;
-              brightSight = 0;
-              break;
-            case 'dim180':
-              dimSight = 180;
-              brightSight = 0;
-              break;
-            case 'dim300':
-              dimSight = 300;
-              brightSight = 0;
-              break;
-            case 'bright120':
-              dimSight = 0;
-              brightSight = 120;
-              break;
-            case 'nochange':
-            default:
-              dimSight = token.data.dimSight;
-              brightSight = token.data.brightSight;
-          }
-          // Get Light Source Values
-          switch (lightSource) {
-            case 'none':
-              dimLight = 0;
-              brightLight = 0;
-              //@ts-ignore
-              lightAnimation = { type: 'none' };
-              break;
-            case 'candle':
-              dimLight = 10;
-              brightLight = 5;
-              //@ts-ignore
-              lightAnimation = { type: 'torch', speed: 2, intensity: 2 };
-              lightColor = colorFire;
-              lightAlpha = 0.15;
-              break;
-            case 'lamp':
-              dimLight = 45;
-              brightLight = 15;
-              //@ts-ignore
-              lightAnimation = { type: 'torch', speed: 2, intensity: 2 };
-              lightColor = colorFire;
-              lightAlpha = 0.15;
-              break;
-            case 'bullseye':
-              dimLight = 120;
-              brightLight = 60;
-              lockRotation = false;
-              lightAngle = 52.5;
-              //@ts-ignore
-              lightAnimation = { type: 'torch', speed: 2, intensity: 2 };
-              lightColor = colorFire;
-              lightAlpha = 0.15;
-              break;
-            case 'hooded-dim':
-              dimLight = 5;
-              brightLight = 0;
-              //@ts-ignore
-              lightAnimation = { type: 'torch', speed: 2, intensity: 2 };
-              lightColor = colorFire;
-              lightAlpha = 0.15;
-              break;
-            case 'hooded-bright':
-              dimLight = 60;
-              brightLight = 30;
-              //@ts-ignore
-              lightAnimation = { type: 'torch', speed: 2, intensity: 2 };
-              lightColor = colorFire;
-              lightAlpha = 0.15;
-              break;
-            case 'light':
-              dimLight = 40;
-              brightLight = 20;
-              //@ts-ignore
-              lightAnimation = { type: 'none' };
-              lightColor = colorWhite;
-              lightAlpha = 0.15;
-              break;
-            case 'torch':
-              dimLight = 40;
-              brightLight = 20;
-              //@ts-ignore
-              lightAnimation = { type: 'torch', speed: 2, intensity: 2 };
-              lightColor = colorFire;
-              lightAlpha = 0.15;
-              break;
-            case 'moon-touched':
-              dimLight = 30;
-              brightLight = 15;
-              //@ts-ignore
-              lightAnimation = { type: 'none' };
-              lightColor = colorMoonGlow;
-              break;
-            case 'nochange':
-            default:
-              dimLight = token.data.dimLight;
-              brightLight = token.data.brightLight;
-              lightAngle = token.data.lightAngle;
-              lockRotation = token.data.lockRotation;
-              lightAnimation = token.data.lightAnimation;
-              lightAlpha = token.data.lightAlpha;
-              lightColor = <string>token.data.lightColor;
-              sightAngle = token.data.sightAngle;
-          }
-          */
+          const lightAnimation = {
+            type: lightIndex.lightAnimationType ?? token.data.lightAnimation.type,
+            speed: lightIndex.lightAnimationSpeed ?? token.data.lightAnimation.speed,
+            intensity: lightIndex.lightAnimationIntensity ?? token.data.lightAnimation.intensity
+          };
+          const lightColor = lightIndex.lightColor ?? <string>token.data.lightColor;
+          const lightAlpha = lightIndex.lightAlpha ?? <number>token.data.lightAlpha;
           // Update Token
           updateTokenLighting(
             token,
@@ -612,6 +485,9 @@ export function presetDialog(applyChanges: boolean): Dialog {
             <string>lightAnimation.type,
             <number>lightAnimation.speed,
             <number>lightAnimation.intensity,
+            false, // TODO
+            lightIndex.name,
+            lightIndex.img,
           );
         }
       }
@@ -778,7 +654,8 @@ export function customDialog(applyChanges: boolean): Dialog {
           const actorId = <string>token.actor?.id;
           const tokenId = token.id;
 
-          const tempName = html.find('[name="temp-name"]')[0].value || '';
+          const tempName = <string>html.find('[name="temp-name"]')[0].value || '';
+          const tempImage = <string>html.find('[name="temp-image"]')[0].value || '';
           // const visionType = html.find('[name="vision-type"]')[0].value || 'none';
           // const lightSource = html.find('[name="light-source"]')[0].value || 'none';
           const dimSight = html.find('[name="dim-sight"]')[0].value || 0;
@@ -841,6 +718,9 @@ export function customDialog(applyChanges: boolean): Dialog {
                     <string>backup.lightAnimation.type,
                     backup.lightAnimation.speed,
                     backup.lightAnimation.intensity,
+                    false,
+                    null,
+                    null,
                   );
                 });
               })(Object.assign({}, token.data));
@@ -860,6 +740,7 @@ export function customDialog(applyChanges: boolean): Dialog {
           // Update Token
           updateTokenLighting(
             token,
+            tempName,
             dimSight,
             brightSight,
             sightAngle,
@@ -872,6 +753,9 @@ export function customDialog(applyChanges: boolean): Dialog {
             <string>lightAnimationType,
             <number>lightAnimationSpeed,
             <number>lightAnimationIntensity,
+            false, // TODO
+            tempName,
+            tempImage,
           );
         }
       }

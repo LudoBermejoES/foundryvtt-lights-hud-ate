@@ -31,6 +31,7 @@
                             data-name="{{image.route}}"
                             data-item-id="{{image.itemid}}"
                             data-effect-id="{{image.effectid}}"
+                            data-effect-name="{{image.effectname}}"
                             data-applied="{{image.applied}}"
                             data-disabled="{{image.disabled}}"
                             data-suppressed="{{image.suppressed}}"
@@ -47,6 +48,7 @@
                             data-name="{{image.route}}"
                             data-item-id="{{image.itemid}}"
                             data-effect-id="{{image.effectid}}"
+                            data-effect-name="{{image.effectname}}"
                             data-applied="{{image.applied}}"
                             data-disabled="{{image.disabled}}"
                             data-suppressed="{{image.suppressed}}"
@@ -63,6 +65,7 @@
                             data-name="{{image.route}}"
                             data-item-id="{{image.itemid}}"
                             data-effect-id="{{image.effectid}}"
+                            data-effect-name="{{image.effectname}}"
                             data-applied="{{image.applied}}"
                             data-disabled="{{image.disabled}}"
                             data-suppressed="{{image.suppressed}}"
@@ -87,6 +90,7 @@
                         data-name="{{image.route}}"
                         data-item-id="{{image.itemid}}"
                         data-effect-id="{{image.effectid}}"
+                        data-effect-name="{{image.effectname}}"
                         data-applied="{{image.applied}}"
                         data-disabled="{{image.disabled}}"
                         data-suppressed="{{image.suppressed}}"
@@ -110,8 +114,12 @@
         <span data-name="">{{localize "lights-hud-ate.windows.art-select.no-art-found"}}</span>
     </div>
     {{/if}} --}}
-    <button class="lights-hud-ate-button-macro-preset" data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-preset"}}</button>
-    <button class="lights-hud-ate-button-macro-custom" data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-custom"}}</button>
+    <button class="lights-hud-ate-button-macro-preset"
+        data-token-id="{{tokenId}}"
+        data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-preset"}}</button>
+    <button class="lights-hud-ate-button-macro-custom"
+        data-token-id="{{tokenId}}"
+        data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-custom"}}</button>
     </div>
 
 </div>

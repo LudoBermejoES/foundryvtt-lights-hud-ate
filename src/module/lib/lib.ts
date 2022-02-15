@@ -131,6 +131,9 @@ export function updateTokenLighting(
   lightAnimationType: string,
   lightAnimationSpeed: number,
   lightAnimationIntensity: number,
+  applyAsAtlEffect = false,
+  effectName:string|null = null,
+  effectIcon:string|null = null,
 ) {
 
   if(dimSight == null || dimSight == undefined){
@@ -173,35 +176,42 @@ export function updateTokenLighting(
     lightAnimationIntensity = token.data.lightAnimation.intensity;
   }
 
-  token.document.update({
-    vision: true,
-    dimSight: dimSight,
-    brightSight: brightSight,
-    sightAngle: sightAngle,
-    lockRotation: lockRotation,
-    dimLight: dimLight,
-    brightLight:  brightLight,
-    lightAngle: lightAngle,
-    lightColor: lightColor,
-    lightAlpha: lightAlpha,
-    lightAnimation: {
-      type: lightAnimationType,
-      speed: lightAnimationSpeed,
-      intensity: lightAnimationIntensity
-    },
-    // light: {
-    //   bright: brightLight,
-    //   dim: dimLight,
-    //   alpha: lightAlpha ** 2, // need  this ?
-    //   color: lightColor,
-    //   angle: lightAngle,
-    //   animation: {
-    //     type: lightAnimationType,
-    //     speed: lightAnimationSpeed,
-    //     intensity: lightAnimationIntensity,
-    //   },
-    // },
-  });
+  if(applyAsAtlEffect){
+    const efffectAtlToApply = new Effect();
+
+
+
+  }else{
+    token.document.update({
+      vision: true,
+      dimSight: dimSight,
+      brightSight: brightSight,
+      sightAngle: sightAngle,
+      lockRotation: lockRotation,
+      dimLight: dimLight,
+      brightLight:  brightLight,
+      lightAngle: lightAngle,
+      lightColor: lightColor,
+      lightAlpha: lightAlpha,
+      lightAnimation: {
+        type: lightAnimationType,
+        speed: lightAnimationSpeed,
+        intensity: lightAnimationIntensity
+      },
+      // light: {
+      //   bright: brightLight,
+      //   dim: dimLight,
+      //   alpha: lightAlpha ** 2, // need  this ?
+      //   color: lightColor,
+      //   angle: lightAngle,
+      //   animation: {
+      //     type: lightAnimationType,
+      //     speed: lightAnimationSpeed,
+      //     intensity: lightAnimationIntensity,
+      //   },
+      // },
+    });
+  }
 }
 
 /**

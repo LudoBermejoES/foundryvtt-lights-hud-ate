@@ -2,6 +2,7 @@ export class LightHUDElement {
   id: string;
   name: string;
   img: string;
+  lockRotation: boolean|null;
   dimLight:number|null;
   brightLight:number|null;
   lightColor:string|null;

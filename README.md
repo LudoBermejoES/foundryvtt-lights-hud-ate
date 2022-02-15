@@ -39,14 +39,33 @@ To install this module manually:
 - **HELP WANTED** This is just a "fast to make" module maybe someone a little more expert than me with form application and hud layer can do a better form for a better user experience
 - [ATE](https://github.com/kandashi/Active-Token-Lighting) has still some problem with brigthSight and dimSight, and some numeric value, but some PR are been committed to kandashi attention for solve these issues, so will wait for his review.
 - [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) is not been updated for foundryvtt 9 so is not advisable to used right now.
+- The modules is not smart enough to distinct multiple ligthing effect on the same item and is not make sense ? Every item must have only one effect with _ATL changes_ on it. If multiple effect with _ATL changes_ are founded on the same item only the first is analyzed from the module, you can use multiple item where each has is own lighting configuration.
+
+## Module compatibility
+
+- [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) (need to be updated for 9)
+- [ATE](https://github.com/kandashi/Active-Token-Lighting) (have some issue with brigthSight and dimSight)
+- [Sense Walls Multisystem](https://github.com/p4535992/fvtt-sense-walls-multisystem/)
+
+## Supported Systems
+
+- [Dnd5e](https://gitlab.com/foundrynet/dnd5e)
+- [Pathfinder 2e](https://foundryvtt.com/packages/pf2e)
+
+**How can i add my system ?** That's is pretty easy on the code level ty to the design pattern so i just need some information on the system rules and voilà.
 
 ## Feature
+#### Add a custom ATE Effect for customize vision and lighting on my game
 
-### Add vision and lighting modification with ATE active effect
+This is already done from the [ATE](https://github.com/kandashi/Active-Token-Lighting) checkout the documentation.
+#### Add vision and lighting modification with ATE active effect (the advisable way)
 
-Add vision and lighting modification with ATE active effect, no token configuration is actually touched, everything is on the active effect management, the duration the remove, the adding, you can even merge the effect of two different kind of visions and lighting together
+Add vision and lighting modification with ATE active effect, no token configuration is actually touched, everything is on the active effect management, the duration the remove, the adding, you can even merge the effect of two different kind of visions and lighting together.
 
-#### Add a button to the 'Token vision configuration' macro
+The module is build to show on a hud panel all the item with some ATL effect applied on it, there is a distinction between passive, temporary, applied, need to be attuned or equipped condition.
+
+![img](./wiki/assets/tutorial_commented.png)
+#### Add a button to the 'Token vision configuration' macro (for everyone need to be just fast and not perfect)
 
 On the hud config of the token you can see on the popout form a button 'Call macro preset' and 'Call macro custom', the are a embedded version of the macro [token_vision_config.js](https://github.com/foundry-vtt-community/macros/blob/main/token/token_vision_config.js) and  the variant with about time [token_vision_config_about_time.js](https://github.com/foundry-vtt-community/macros/blob/main/module-specific/token_vision_config_about_time.js)for make the work of the gm more fast when forget to set some vision.
 
@@ -54,7 +73,13 @@ I add two dialog panel one for put the preset one from the current supported sys
 
 **NOTE:** The custom dialog work with [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) if is enabled and active it will show more options for animation type.
 
+**NOTE:** This is useful for fast configuration during the game, but is advisable to always use items with ATL changes on it.
 
+## How can i contribute 
+
+Anyone can contribute with a custom lighting and vision item, you just need to export the item you created with the ATL effect on it and i will create a compendium, or better open a PR on the official [ATE](https://github.com/kandashi/Active-Token-Lighting) compendium.
+
+![img](./wiki/assets/community_compendium.png)
 
 # Build
 
@@ -142,7 +167,9 @@ Any issues, bugs, or feature requests are always welcome to be reported directly
 - [LightsHUD](https://github.com/Malekal4699/LightsHUD/): [THE BEER-WARE LICENSE (Revision 42)](https://github.com/Malekal4699/LightsHUD/blob/master/LICENSE.md)
 - [TorchLight](https://github.com/PhilippeKr/TorchLight) : [???](https://github.com/PhilippeKr/TorchLight)
 - [Torch](https://github.com/League-of-Foundry-Developers/Torch): [???](https://github.com/League-of-Foundry-Developers/Torch)
-- []
+- [Image dropdown](https://github.com/marghoobsuleman/ms-Dropdown) with [MIT](https://github.com/marghoobsuleman/ms-Dropdown/blob/master/MIT-LICENSE.txt)
+- Some icons are retrieve from the [Dnd5e system](https://gitlab.com/foundrynet/dnd5e) with [MIT](https://gitlab.com/foundrynet/dnd5e/-/blob/master/LICENSE.txt)
+- Some icons are retrieve from the [Pf2 system](https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/) with [GPLv2](https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/-/blob/master/LICENSE)
 
 This package is under an [MIT license](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
 
@@ -161,3 +188,4 @@ Thanks to anyone who helps me with this code! I appreciate the user community's 
 - [TorchLight](https://github.com/PhilippeKr/TorchLight) ty to [PhilippeKr](https://github.com/PhilippeKr)
 - [Torch](https://github.com/League-of-Foundry-Developers/Torch) ty to [Lupestro](https://foundryvtt.com/community/lupestro)
 - [Drop My Torch](https://gitlab.com/derekstucki/drop-my-torch) ty to [Derekstucki](https://gitlab.com/derekstucki)
+- The dropdown with image is build with [Image dropdown](https://github.com/marghoobsuleman/ms-Dropdown)
