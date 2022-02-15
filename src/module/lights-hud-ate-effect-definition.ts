@@ -127,7 +127,6 @@ export class EffectDefinitions {
 
   static _createAtlEffectKey(key) {
     let result = key;
-    //@ts-ignore
     const version = (game.version ?? game.data.version).charAt(0);
 
     if (version == '9') {
@@ -139,8 +138,6 @@ export class EffectDefinitions {
         case 'ATL.dimSight':
           break;
         case 'ATL.height':
-          break;
-        case 'ATL.img':
           break;
         case 'ATl.img':
           break;
