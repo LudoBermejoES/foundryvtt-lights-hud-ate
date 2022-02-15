@@ -740,7 +740,6 @@ export function customDialog(applyChanges: boolean): Dialog {
           // Update Token
           updateTokenLighting(
             token,
-            tempName,
             dimSight,
             brightSight,
             sightAngle,

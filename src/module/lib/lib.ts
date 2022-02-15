@@ -5,7 +5,7 @@ import {
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from '../api.js';
 import CONSTANTS from '../constants';
-import Effect from '../effects/effect.js';
+import Effect, { Constants } from '../effects/effect.js';
 import { canvas, game } from '../settings';
 
 // =============================
@@ -134,6 +134,7 @@ export function updateTokenLighting(
   applyAsAtlEffect = false,
   effectName:string|null = null,
   effectIcon:string|null = null,
+  duration:number|null = null
 ) {
 
   if(dimSight == null || dimSight == undefined){
@@ -177,7 +178,61 @@ export function updateTokenLighting(
   }
 
   if(applyAsAtlEffect){
-    const efffectAtlToApply = new Effect();
+    const efffectAtlToApply = new Effect({
+      customId: <string>token.actor?.id,
+      name: <string>effectName,
+      description: ``,
+      // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
+      transfer: true,
+      seconds: <number>duration * 60, // minutes to seconds
+      atlChanges: [
+        {
+          key: this._createAtlEffectKey('ATL.dimSight'),
+          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+          value: dimSight && dimSight > 0 ? dimSight : token.data.dimSight,
+        },
+        {
+          key: this._createAtlEffectKey('ATL.brightSight'),
+          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+          value: brightSight && brightSight > 0 ? brightSight : token.data.brightSight,
+        },
+        {
+          key: this._createAtlEffectKey('ATL.light.dim'),
+          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+          value: dimLight && dimLight > 0 ? dimLight : token.data.dimLight,
+        },
+        {
+          key: this._createAtlEffectKey('ATL.light.bright'),
+          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+          value: brightLight && brightLight > 0 ? brightLight: token.data.brightLight,
+        },
+        {
+          key: this._createAtlEffectKey('ATL.light.angle'),
+          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+          value: lightAngle ? lightAngle : token.data.lightAngle,
+        },
+        {
+          key: this._createAtlEffectKey('ATL.light.color'),
+          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+          value: lightColor ? lightColor : token.data.lightColor,
+        },
+        {
+          key: this._createAtlEffectKey('ATL.light.alpha'),
+          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+          value: lightAlpha ? lightAlpha: token.data.lightAlpha,
+        },
+        {
+          key: this._createAtlEffectKey('ATL.light.animation'),
+          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+          value:
+            lightAnimationType &&
+            lightAnimationSpeed > 0 &&
+            lightAnimationIntensity > 0
+              ? `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}}`
+              : token.data.lightAnimation,
+        },
+      ],
+    });
 
 
 

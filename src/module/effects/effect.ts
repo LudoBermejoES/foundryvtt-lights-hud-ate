@@ -152,6 +152,7 @@ export class Constants {
     COLD_FIRE: '#389888',
     FIRE: '#f98026',
     WHITE: '#ffffff',
+    MOON_TOUCHED: '#f4f1c9',
   };
 
   static SECONDS = {

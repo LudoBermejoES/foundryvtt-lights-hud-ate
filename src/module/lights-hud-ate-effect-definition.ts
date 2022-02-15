@@ -1,4 +1,4 @@
-import { LightDataExt, LightHUDElement, LightHUDPreset } from './lights-hud-ate-models';
+import { LightHUDElement, LightHUDPreset } from './lights-hud-ate-models';
 import API from './api';
 import CONSTANTS from './constants';
 import Effect, { Constants } from './effects/effect';
@@ -19,22 +19,22 @@ export class EffectDefinitions {
    *
    * @returns {Effect[]} all the effects
    */
-  static all(lightData: LightDataExt): Effect[] {
+  static all(): Effect[] {
     const effects: Effect[] = [];
-    const blinded = EffectDefinitions.torch(lightData);
-    if (blinded) {
-      effects.push(blinded);
-    }
+    // const torch = EffectDefinitions.torch();
+    // if (torch) {
+    //   effects.push(torch);
+    // }
     return effects;
   }
 
-  static effect(name: string, lightData: LightDataExt): Effect | undefined {
-    const effect = <Effect>EffectDefinitions.all(lightData).find((effect: Effect) => {
+  static effect(name: string): Effect | undefined {
+    const effect = <Effect>EffectDefinitions.all().find((effect: Effect) => {
       return effect.name.toLowerCase() === name.toLowerCase();
     });
-    if (effect?.customId == LightHUDPreset.TORCH) {
-      return EffectDefinitions.torch(lightData);
-    }
+    // if (effect?.customId == LightHUDPreset.TORCH) {
+    //   return EffectDefinitions.torch();
+    // }
     return undefined;
   }
 
@@ -60,66 +60,66 @@ export class EffectDefinitions {
   //   });
   // }
 
-  static torch(lightData: LightDataExt) {
-    const effectSight = API.LIGHTS.find((a: LightHUDElement) => {
-      // use replace() method to match and remove all the non-alphanumeric characters
-      return a.id
-        .replace(EffectDefinitions.regex, '')
-        .toLowerCase()
-        .startsWith(LightHUDPreset.TORCH.replace(EffectDefinitions.regex, '').toLowerCase());
-    });
-    if (!effectSight) {
-      warn(`Cannot find for system '${game.system.id}' the active effect with id '${LightHUDPreset.TORCH}'`);
-      return;
-    }
-    return new Effect({
-      customId: LightHUDPreset.TORCH,
-      name:
-        lightData?.dim > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.torch.name2`, { number: lightData.dim })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.torch.name`),
-      description:
-        lightData?.dim > 0
-          ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.torch.description2`, { number: lightData?.dim })
-          : i18n(`${CONSTANTS.MODULE_NAME}.effects.torch.description`),
-      icon: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/torch.jpg`,
-      // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
-      transfer: true,
-      seconds: Constants.SECONDS.IN_ONE_HOUR,
-      atlChanges: [
-        {
-          key: this._createAtlEffectKey('ATL.dimLight'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: lightData?.dim > 0 ? String(lightData?.dim) : '40',
-        },
-        {
-          key: this._createAtlEffectKey('ATL.brightLight'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: lightData?.dim && lightData?.dim > 0 ? String(lightData?.dim / 2) : '20',
-        },
-        {
-          key: this._createAtlEffectKey('ATL.lightColor'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: lightData.tintColor ? lightData.tintColor : Constants.COLORS.FIRE,
-        },
-        {
-          key: this._createAtlEffectKey('ATL.lightAlpha'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: lightData.tintAlpha ? lightData.tintAlpha : 0.4,
-        },
-        {
-          key: this._createAtlEffectKey('ATL.lightAnimation'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value:
-            lightData.lightAnimation.type &&
-            lightData.lightAnimation.speed > 0 &&
-            lightData.lightAnimation.intensity > 0
-              ? `{"type": "${lightData.lightAnimation.type}","speed": ${lightData.lightAnimation.speed},"intensity": ${lightData.lightAnimation.intensity}}`
-              : '{"type": "torch","speed": 1,"intensity": 1}',
-        },
-      ],
-    });
-  }
+  // static torch() {
+  //   const effectSight = API.LIGHTS.find((a: LightHUDElement) => {
+  //     // use replace() method to match and remove all the non-alphanumeric characters
+  //     return a.id
+  //       .replace(EffectDefinitions.regex, '')
+  //       .toLowerCase()
+  //       .startsWith(LightHUDPreset.TORCH.replace(EffectDefinitions.regex, '').toLowerCase());
+  //   });
+  //   if (!effectSight) {
+  //     warn(`Cannot find for system '${game.system.id}' the active effect with id '${LightHUDPreset.TORCH}'`);
+  //     return;
+  //   }
+  //   return new Effect({
+  //     customId: LightHUDPreset.TORCH,
+  //     name:
+  //       lightData?.dim > 0
+  //         ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.torch.name2`, { number: lightData.dim })
+  //         : i18n(`${CONSTANTS.MODULE_NAME}.effects.torch.name`),
+  //     description:
+  //       lightData?.dim > 0
+  //         ? i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.torch.description2`, { number: lightData?.dim })
+  //         : i18n(`${CONSTANTS.MODULE_NAME}.effects.torch.description`),
+  //     icon: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/torch.jpg`,
+  //     // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
+  //     transfer: true,
+  //     seconds: Constants.SECONDS.IN_ONE_HOUR,
+  //     atlChanges: [
+  //       {
+  //         key: this._createAtlEffectKey('ATL.light.dim'),
+  //         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+  //         value: lightData?.dim && lightData?.dim > 0 ? String(lightData?.dim) : '40',
+  //       },
+  //       {
+  //         key: this._createAtlEffectKey('ATL.light.bright'),
+  //         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+  //         value: lightData?.bright && lightData?.bright > 0 ? String(lightData?.bright / 2) : '20',
+  //       },
+  //       {
+  //         key: this._createAtlEffectKey('ATL.light.color'),
+  //         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+  //         value: lightData.tintColor ? lightData.tintColor : Constants.COLORS.FIRE,
+  //       },
+  //       {
+  //         key: this._createAtlEffectKey('ATL.light.alpha'),
+  //         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+  //         value: lightData.tintAlpha ? lightData.tintAlpha : 0.4,
+  //       },
+  //       {
+  //         key: this._createAtlEffectKey('ATL.light.animation'),
+  //         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+  //         value:
+  //           lightData.lightAnimation.type &&
+  //           lightData.lightAnimation.speed > 0 &&
+  //           lightData.lightAnimation.intensity > 0
+  //             ? `{"type": "${lightData.lightAnimation.type}","speed": ${lightData.lightAnimation.speed},"intensity": ${lightData.lightAnimation.intensity}}`
+  //             : '{"type": "torch","speed": 1,"intensity": 1}',
+  //       },
+  //     ],
+  //   });
+  // }
 
   // ===========================================
   // Utility Effect
@@ -136,7 +136,7 @@ export class EffectDefinitions {
           break;
         case 'ATL.brightSight':
           break;
-        case 'ATL.light.dim':
+        case "ATL.dimSight":
           break;
         case 'ATL.height':
           break;
