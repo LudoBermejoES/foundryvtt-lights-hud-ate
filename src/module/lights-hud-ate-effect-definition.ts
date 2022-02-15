@@ -136,7 +136,7 @@ export class EffectDefinitions {
           break;
         case 'ATL.brightSight':
           break;
-        case "ATL.dimSight":
+        case 'ATL.dimSight':
           break;
         case 'ATL.height':
           break;

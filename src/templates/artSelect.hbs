@@ -77,7 +77,8 @@
                     <i class="lights-hud-ate-button-icon fas fa-exclamation-triangle"></i>
                     {{else if image.passive}}
                     <i class="lights-hud-ate-button-icon fas fa-eye"></i>
-                    {{else if image.applied}}
+                    {{/if}}
+                    {{#if image.applied}}
                     <i class="lights-hud-ate-button-icon fas fa-lightbulb"></i>
                     {{else}}
                     <i class="lights-hud-ate-button-icon far fa-lightbulb"></i>
@@ -100,7 +101,8 @@
                     <i class="lights-hud-ate-button-icon-text fas fa-exclamation-triangle"></i>
                     {{else if image.passive}}
                     <i class="lights-hud-ate-button-icon-text fas fa-eye"></i>
-                    {{else if image.applied}}
+                    {{/if}}
+                    {{#if image.applied}}
                     <i class="lights-hud-ate-button-icon-text fas fa-lightbulb"></i>
                     {{else}}
                     <i class="lights-hud-ate-button-icon-text far fa-lightbulb"></i>

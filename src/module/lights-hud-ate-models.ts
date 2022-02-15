@@ -2,24 +2,24 @@ export class LightHUDElement {
   id: string;
   name: string;
   img: string;
-  lockRotation: boolean|null;
-  dimLight:number|null;
-  brightLight:number|null;
-  lightColor:string|null;
-  lightAlpha:number|null;
-  lightAngle:number|null;
-  lightAnimationType:string|null;
-  lightAnimationSpeed:string|null;
-  lightAnimationIntensity:string|null;
+  lockRotation: boolean | null;
+  dimLight: number | null;
+  brightLight: number | null;
+  lightColor: string | null;
+  lightAlpha: number | null;
+  lightAngle: number | null;
+  lightAnimationType: string | null;
+  lightAnimationSpeed: string | null;
+  lightAnimationIntensity: string | null;
 }
 
 export class VisionHUDElement {
   id: string;
   name: string;
   img: string;
-  dimSight: number|null;
-  brightSight:number|null;
-  sightAngle:number|null;
+  dimSight: number | null;
+  brightSight: number | null;
+  sightAngle: number | null;
 }
 
 export enum VisionHUDPreset {
@@ -48,7 +48,7 @@ export enum VisionHUDPreset {
   DARKVISION_120 = 'darkvision120',
   DARKVISION_150 = 'darkvision150',
   DARKVISION_180 = 'darkvision180',
-  EYES_OF_NIGHT = 'eyesofnight'
+  EYES_OF_NIGHT = 'eyesofnight',
 }
 
 export enum LightHUDPreset {
@@ -61,7 +61,7 @@ export enum LightHUDPreset {
   LANTERN_HOODED_BRIGHT = 'lantern-hooded-bright',
   LIGHT = 'light',
   TORCH = 'torch',
-  MOON_TOUCHED = 'moon-touched'
+  MOON_TOUCHED = 'moon-touched',
 }
 
 // export enum LightHUDPresetType {

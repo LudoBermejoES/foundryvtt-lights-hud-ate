@@ -117,9 +117,9 @@ export async function rollDependingOnSystem(item: Item) {
 }
 
 // Update the relevant light parameters of a token
-export function updateTokenLighting(
+export async function updateTokenLighting(
   token: Token,
-  lockRotation:boolean,
+  lockRotation: boolean,
   dimSight: number,
   brightSight: number,
   sightAngle: number,
@@ -132,52 +132,51 @@ export function updateTokenLighting(
   lightAnimationSpeed: number,
   lightAnimationIntensity: number,
   applyAsAtlEffect = false,
-  effectName:string|null = null,
-  effectIcon:string|null = null,
-  duration:number|null = null
+  effectName: string | null = null,
+  effectIcon: string | null = null,
+  duration: number | null = null,
 ) {
-
-  if(dimSight == null || dimSight == undefined){
+  if (dimSight == null || dimSight == undefined) {
     dimSight = token.data.dimSight;
   }
-  if(brightSight == null || brightSight == undefined){
+  if (brightSight == null || brightSight == undefined) {
     brightSight = token.data.brightSight;
   }
-  if(sightAngle == null || sightAngle == undefined){
+  if (sightAngle == null || sightAngle == undefined) {
     sightAngle = token.data.sightAngle;
   }
 
-  if(lockRotation == null || lockRotation == undefined){
+  if (lockRotation == null || lockRotation == undefined) {
     lockRotation = token.data.lockRotation;
   }
 
-  if(dimLight == null || dimLight == undefined){
+  if (dimLight == null || dimLight == undefined) {
     dimLight = token.data.dimLight;
   }
-  if(brightLight == null || brightLight == undefined){
+  if (brightLight == null || brightLight == undefined) {
     brightLight = token.data.brightLight;
   }
-  if(lightColor == null || lightColor == undefined){
+  if (lightColor == null || lightColor == undefined) {
     lightColor = <string>token.data.lightColor;
   }
-  if(lightAlpha == null || lightAlpha == undefined){
+  if (lightAlpha == null || lightAlpha == undefined) {
     lightAlpha = token.data.lightAlpha;
   }
-  if(lightAngle == null || lightAngle == undefined){
+  if (lightAngle == null || lightAngle == undefined) {
     lightAngle = token.data.lightAngle;
   }
 
-  if(lightAnimationType == null || lightAnimationType == undefined){
+  if (lightAnimationType == null || lightAnimationType == undefined) {
     lightAnimationType = <string>token.data.lightAnimation.type;
   }
-  if(lightAnimationSpeed == null || lightAnimationSpeed == undefined){
+  if (lightAnimationSpeed == null || lightAnimationSpeed == undefined) {
     lightAnimationSpeed = token.data.lightAnimation.speed;
   }
-  if(lightAnimationIntensity == null || lightAnimationIntensity == undefined){
+  if (lightAnimationIntensity == null || lightAnimationIntensity == undefined) {
     lightAnimationIntensity = token.data.lightAnimation.intensity;
   }
 
-  if(applyAsAtlEffect){
+  if (applyAsAtlEffect) {
     const efffectAtlToApply = new Effect({
       customId: <string>token.actor?.id,
       name: <string>effectName,
@@ -204,7 +203,7 @@ export function updateTokenLighting(
         {
           key: this._createAtlEffectKey('ATL.light.bright'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: brightLight && brightLight > 0 ? brightLight: token.data.brightLight,
+          value: brightLight && brightLight > 0 ? brightLight : token.data.brightLight,
         },
         {
           key: this._createAtlEffectKey('ATL.light.angle'),
@@ -219,24 +218,20 @@ export function updateTokenLighting(
         {
           key: this._createAtlEffectKey('ATL.light.alpha'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: lightAlpha ? lightAlpha: token.data.lightAlpha,
+          value: lightAlpha ? lightAlpha : token.data.lightAlpha,
         },
         {
           key: this._createAtlEffectKey('ATL.light.animation'),
           mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
           value:
-            lightAnimationType &&
-            lightAnimationSpeed > 0 &&
-            lightAnimationIntensity > 0
+            lightAnimationType && lightAnimationSpeed > 0 && lightAnimationIntensity > 0
               ? `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}}`
               : token.data.lightAnimation,
         },
       ],
     });
-
-
-
-  }else{
+    await API.addEffect(<string>token.actor?.id, <string>effectName, efffectAtlToApply);
+  } else {
     token.document.update({
       vision: true,
       dimSight: dimSight,
@@ -244,14 +239,14 @@ export function updateTokenLighting(
       sightAngle: sightAngle,
       lockRotation: lockRotation,
       dimLight: dimLight,
-      brightLight:  brightLight,
+      brightLight: brightLight,
       lightAngle: lightAngle,
       lightColor: lightColor,
       lightAlpha: lightAlpha,
       lightAnimation: {
         type: lightAnimationType,
         speed: lightAnimationSpeed,
-        intensity: lightAnimationIntensity
+        intensity: lightAnimationIntensity,
       },
       // light: {
       //   bright: brightLight,
@@ -444,27 +439,3 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   });
   return tokenData2;
 }
-
-// export function namedfields(...fields) {
-//   return (...arr) => {
-//     const obj = {};
-//     fields.forEach((field, index) => {
-//       obj[field] = arr[index];
-//     });
-//     return obj;
-//   };
-// };
-
-// export function visions() {
-//   // Very ugly automated construction below. DRY, but at what cost?
-//   const VisionType = namedfields('name', 'dim', 'bright');
-//   return [
-//     VisionType(`No Change`, null, null),
-//     VisionType(`Self`, 1.5, 0),
-//     //VisionType(`Leave Unchanged`, null, null),
-//     VisionType(`Self`, 5, 0),
-//     VisionType(`Devil\`s Sight`, 0, 120)
-//   ].concat(...[...Array(6).keys()].map(x => (x+1)*30).map(n => {
-//     return VisionType(`Darkvision (${n} feet)`, n, 0);
-//   }));
-// }

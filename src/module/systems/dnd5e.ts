@@ -16,7 +16,7 @@ export default {
       lightAngle: null,
       lightAnimationType: null,
       lightAnimationSpeed: null,
-      lightAnimationIntensity: null
+      lightAnimationIntensity: null,
     },
     {
       id: LightHUDPreset.NONE,
@@ -30,7 +30,7 @@ export default {
       lightAngle: null,
       lightAnimationType: 'none',
       lightAnimationSpeed: null,
-      lightAnimationIntensity: null
+      lightAnimationIntensity: null,
     },
     {
       id: LightHUDPreset.CANDLE,
@@ -44,7 +44,7 @@ export default {
       lightAngle: 360,
       lightAnimationType: 'torch',
       lightAnimationSpeed: 2,
-      lightAnimationIntensity: 2
+      lightAnimationIntensity: 2,
     },
     {
       id: LightHUDPreset.LAMP,
@@ -58,7 +58,7 @@ export default {
       lightAngle: 360,
       lightAnimationType: 'torch',
       lightAnimationSpeed: 2,
-      lightAnimationIntensity: 2
+      lightAnimationIntensity: 2,
     },
     {
       id: LightHUDPreset.LANTERN_BULLSEYE,
@@ -72,7 +72,7 @@ export default {
       lightAngle: 52.5,
       lightAnimationType: 'torch',
       lightAnimationSpeed: 2,
-      lightAnimationIntensity: 2
+      lightAnimationIntensity: 2,
     },
     {
       id: LightHUDPreset.LANTERN_HOODED_DIM,
@@ -86,7 +86,7 @@ export default {
       lightAngle: 360,
       lightAnimationType: 'torch',
       lightAnimationSpeed: 2,
-      lightAnimationIntensity: 2
+      lightAnimationIntensity: 2,
     },
     {
       id: LightHUDPreset.LANTERN_HOODED_BRIGHT,
@@ -100,7 +100,7 @@ export default {
       lightAngle: 360,
       lightAnimationType: 'torch',
       lightAnimationSpeed: 2,
-      lightAnimationIntensity: 2
+      lightAnimationIntensity: 2,
     },
     {
       id: LightHUDPreset.LIGHT,
@@ -114,7 +114,7 @@ export default {
       lightAngle: 360,
       lightAnimationType: 'none',
       lightAnimationSpeed: null,
-      lightAnimationIntensity: null
+      lightAnimationIntensity: null,
     },
     {
       id: LightHUDPreset.TORCH,
@@ -128,7 +128,7 @@ export default {
       lightAngle: 360,
       lightAnimationType: 'torch',
       lightAnimationSpeed: 2,
-      lightAnimationIntensity: 2
+      lightAnimationIntensity: 2,
     },
     {
       id: LightHUDPreset.MOON_TOUCHED,
@@ -142,20 +142,76 @@ export default {
       lightAngle: 360,
       lightAnimationType: 'none',
       lightAnimationSpeed: null,
-      lightAnimationIntensity: null
+      lightAnimationIntensity: null,
     },
   ],
   VISIONS: <VisionHUDElement[]>[
-    { id: VisionHUDPreset.NO_CHANGE  , name: `No Change`,  img: ``, dimSight: null, brightSight: null, sightAngle:null},
-    { id: VisionHUDPreset.NONE  , name: `None`, img: ``, dimSight: 0, brightSight: 0, sightAngle:360},
-    { id: VisionHUDPreset.SELF  , name: `Self`, img: ``, dimSight: 5, brightSight: 0, sightAngle:360},
-    { id: VisionHUDPreset.DARKVISION_30, name: `Darkvision (30 ft)`, img: ``, dimSight: 30, brightSight: 0, sightAngle:360},
-    { id: VisionHUDPreset.DARKVISION_60  , name: `Darkvision (60 ft)`, img: ``, dimSight: 60, brightSight: 0, sightAngle:360},
-    { id: VisionHUDPreset.DARKVISION_90  , name: `Darkvision (90 ft)`, img: ``, dimSight: 90, brightSight: 0, sightAngle:360},
-    { id: VisionHUDPreset.DARKVISION_120  , name: `Darkvision (120 ft)`, img: ``, dimSight: 120, brightSight: 0, sightAngle:360},
-    { id: VisionHUDPreset.DARKVISION_150  , name: `Darkvision (150 ft)`, img: ``, dimSight: 150, brightSight: 0, sightAngle:360},
-    { id: VisionHUDPreset.DARKVISION_180  , name: `Darkvision (180 ft)`, img: ``, dimSight: 180, brightSight: 0, sightAngle:360},
-    { id: VisionHUDPreset.EYES_OF_NIGHT  , name: `Eyes of Night (300 ft)`, img: ``, dimSight: 300, brightSight: 0, sightAngle:360},
-    { id: VisionHUDPreset.DEVILS_SIGHT  , name: `Devil's Sight (Warlock)`, img: ``, dimSight: 0, brightSight: 120, sightAngle:360},
+    { id: VisionHUDPreset.NO_CHANGE, name: `No Change`, img: ``, dimSight: null, brightSight: null, sightAngle: null },
+    { id: VisionHUDPreset.NONE, name: `None`, img: ``, dimSight: 0, brightSight: 0, sightAngle: 360 },
+    { id: VisionHUDPreset.SELF, name: `Self`, img: ``, dimSight: 5, brightSight: 0, sightAngle: 360 },
+    {
+      id: VisionHUDPreset.DARKVISION_30,
+      name: `Darkvision (30 ft)`,
+      img: ``,
+      dimSight: 30,
+      brightSight: 0,
+      sightAngle: 360,
+    },
+    {
+      id: VisionHUDPreset.DARKVISION_60,
+      name: `Darkvision (60 ft)`,
+      img: ``,
+      dimSight: 60,
+      brightSight: 0,
+      sightAngle: 360,
+    },
+    {
+      id: VisionHUDPreset.DARKVISION_90,
+      name: `Darkvision (90 ft)`,
+      img: ``,
+      dimSight: 90,
+      brightSight: 0,
+      sightAngle: 360,
+    },
+    {
+      id: VisionHUDPreset.DARKVISION_120,
+      name: `Darkvision (120 ft)`,
+      img: ``,
+      dimSight: 120,
+      brightSight: 0,
+      sightAngle: 360,
+    },
+    {
+      id: VisionHUDPreset.DARKVISION_150,
+      name: `Darkvision (150 ft)`,
+      img: ``,
+      dimSight: 150,
+      brightSight: 0,
+      sightAngle: 360,
+    },
+    {
+      id: VisionHUDPreset.DARKVISION_180,
+      name: `Darkvision (180 ft)`,
+      img: ``,
+      dimSight: 180,
+      brightSight: 0,
+      sightAngle: 360,
+    },
+    {
+      id: VisionHUDPreset.EYES_OF_NIGHT,
+      name: `Eyes of Night (300 ft)`,
+      img: ``,
+      dimSight: 300,
+      brightSight: 0,
+      sightAngle: 360,
+    },
+    {
+      id: VisionHUDPreset.DEVILS_SIGHT,
+      name: `Devil's Sight (Warlock)`,
+      img: ``,
+      dimSight: 0,
+      brightSight: 120,
+      sightAngle: 360,
+    },
   ],
 };

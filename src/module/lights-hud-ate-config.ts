@@ -3,8 +3,20 @@ import API from './api';
 import CONSTANTS from './constants';
 import Effect from './effects/effect';
 import EffectInterface from './effects/effect-interface';
-import { dialogWarning, prepareTokenDataDropTheTorch, rollDependingOnSystem, updateTokenLighting, warn } from './lib/lib';
-import { LightDataHud, VisionHUDElement, VisionHUDPreset, LightHUDPreset, LightHUDElement } from './lights-hud-ate-models';
+import {
+  dialogWarning,
+  prepareTokenDataDropTheTorch,
+  rollDependingOnSystem,
+  updateTokenLighting,
+  warn,
+} from './lib/lib';
+import {
+  LightDataHud,
+  VisionHUDElement,
+  VisionHUDPreset,
+  LightHUDPreset,
+  LightHUDElement,
+} from './lights-hud-ate-models';
 import { canvas, game } from './settings';
 
 export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
@@ -12,7 +24,7 @@ export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
   //     changes.key.startsWith('ATL')
   // );
   const atlEffects =
-    item.effects.filter((entity) => !!entity.data.changes.find((effect) => effect.key.includes('ATL'))) ?? [];
+    item.effects.filter((entity) => Boolean(entity.data.changes.find((effect) => effect.key.includes('ATL')))) ?? [];
   return atlEffects;
 }
 
@@ -220,7 +232,9 @@ export async function addLightsHUDButtons(app, html, data) {
       // const obj = <Item>game.items?.get(uuid) || <Item>game.items?.getName(uuid);
       // const obj = tokenToChange.data;
 
-      confirmDialogATLEffectItem(actorId, itemId, effectId, actor.name, tokenD.name, effectName, isApplied).render(true);
+      confirmDialogATLEffectItem(actorId, itemId, effectId, actor.name, tokenD.name, effectName, isApplied).render(
+        true,
+      );
     });
     buttons[button].addEventListener('contextmenu', async function (event) {
       event.preventDefault();
@@ -232,7 +246,7 @@ export async function addLightsHUDButtons(app, html, data) {
       const itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
       const effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
       const effectName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-name');
-      const isApplied = !!(<string>$(this).find('.lights-hud-ate-button-image').attr('data-applied'));
+      const isApplied = Boolean(<string>$(this).find('.lights-hud-ate-button-image').attr('data-applied'));
       if (!itemId) {
         warn(`No item id ${itemId} founded for the light hud`);
         return;
@@ -255,9 +269,9 @@ export async function addLightsHUDButtons(app, html, data) {
       const duplicates = 1; // number od dropped light
 
       const item = <Item>actor.items.get(itemId);
-      let actorDropTheTorch:Actor|null = null;
-      try{
-        let tokenDataDropTheTorch = <TokenData>await prepareTokenDataDropTheTorch(item,_token?.data?.elevation ?? 0);
+      let actorDropTheTorch: Actor | null = null;
+      try {
+        let tokenDataDropTheTorch = <TokenData>await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0);
         actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorch.actorId);
         tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorch);
         //@ts-ignore
@@ -271,10 +285,15 @@ export async function addLightsHUDButtons(app, html, data) {
         const customTokenData = {};
 
         //@ts-ignore
-        await warpgate.spawnAt({ x: posData.x, y: posData.y }, tokenDataDropTheTorch, customTokenData || {}, {}, { duplicates });
-
-      }finally{
-        if(actorDropTheTorch){
+        await warpgate.spawnAt(
+          { x: posData.x, y: posData.y },
+          tokenDataDropTheTorch,
+          customTokenData || {},
+          {},
+          { duplicates },
+        );
+      } finally {
+        if (actorDropTheTorch) {
           // Remove actor at the end
           await (<Actor>actorDropTheTorch).delete();
         }
@@ -331,7 +350,6 @@ export async function addLightsHUDButtons(app, html, data) {
 <option value="moon-touched">Moon-Touched</option>
 */
 
-
 export function presetDialog(applyChanges: boolean): Dialog {
   return new Dialog({
     title: `Token Vision Configuration (Preset)`,
@@ -346,21 +364,17 @@ export function presetDialog(applyChanges: boolean): Dialog {
       <div class="form-group">
         <label>Vision Type:</label>
         <select id="vision-type" name="vision-type">
-          ${
-            API.VISIONS.map((vision) => {
-              return `\t<option value=${vision.id}>${vision.name}</option>`;
-            }).join('\n')
-          }
+          ${API.VISIONS.map((vision) => {
+            return `\t<option value=${vision.id}>${vision.name}</option>`;
+          }).join('\n')}
         </select>
       </div>
       <div class="form-group">
         <label>Light Source:</label>
         <select id="light-source" name="light-source">
-          ${
-            API.LIGHTS.map((lightSource) => {
-              return `\t<option value=${lightSource.id}>${lightSource.name}</option>`;
-            }).join('\n')
-          }
+          ${API.LIGHTS.map((lightSource) => {
+            return `\t<option value=${lightSource.id}>${lightSource.name}</option>`;
+          }).join('\n')}
         </select>
       </div>
       <div class="form-group">
@@ -392,43 +406,49 @@ export function presetDialog(applyChanges: boolean): Dialog {
           const lightIndex = <LightHUDElement>API.LIGHTS.find((e) => e.id == lightSource); // parseInt(html.find('[name="light-source"]')[0].value) || 0;
           const duration = parseInt(html.find('[name="duration"]')[0].value) || 0;
           const lockRotation = Boolean(html.find('[name="lock-rotation"]')[0].value) ?? token.data.lockRotation;
-          let alias:string|null = null;
-          if(actorId || tokenId){
-            if(!alias){
-              if(token){
+          let alias: string | null = null;
+          if (actorId || tokenId) {
+            if (!alias) {
+              if (token) {
                 alias = <string>token.name;
               } else {
                 alias = <string>game.actors?.get(actorId)?.name;
               }
             }
           }
-          const speaker = {scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias};
+          const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
 
           // About time configuration
           if (duration > 0) {
-            if (game.modules.get("about-time")?.active != true) {
+            if (game.modules.get('about-time')?.active != true) {
               ui.notifications?.error("About Time isn't loaded");
             } else {
               ((backup) => {
                 //@ts-ignore
-                game.Gametime.doIn({minutes:Math.floor(3 * duration / 4)}, () => {
-                  dialogWarning( `The ${lightIndex.name} burns low...`);
-                  ChatMessage.create({
-                    user: game.user?.id,
-                    content: `The ${lightIndex.name} burns low...`,
-                    speaker: speaker
-                  }, {});
+                game.Gametime.doIn({ minutes: Math.floor((3 * duration) / 4) }, () => {
+                  dialogWarning(`The ${lightIndex.name} burns low...`);
+                  ChatMessage.create(
+                    {
+                      user: game.user?.id,
+                      content: `The ${lightIndex.name} burns low...`,
+                      speaker: speaker,
+                    },
+                    {},
+                  );
                 });
               })(Object.assign({}, token.data));
               ((backup) => {
                 //@ts-ignore
-                game.Gametime.doIn({minutes:duration}, () => {
-                  dialogWarning( `The ${lightIndex.name} burns low...`);
-                  ChatMessage.create({
-                    user: game.user?.id,
-                    content: `The ${lightIndex.name} goes out, leaving you in darkness.`,
-                    speaker: speaker
-                  }, {});
+                game.Gametime.doIn({ minutes: duration }, () => {
+                  dialogWarning(`The ${lightIndex.name} burns low...`);
+                  ChatMessage.create(
+                    {
+                      user: game.user?.id,
+                      content: `The ${lightIndex.name} goes out, leaving you in darkness.`,
+                      speaker: speaker,
+                    },
+                    {},
+                  );
                   updateTokenLighting(
                     token,
                     backup.lockRotation,
@@ -466,7 +486,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
           const lightAnimation = {
             type: lightIndex.lightAnimationType ?? token.data.lightAnimation.type,
             speed: lightIndex.lightAnimationSpeed ?? token.data.lightAnimation.speed,
-            intensity: lightIndex.lightAnimationIntensity ?? token.data.lightAnimation.intensity
+            intensity: lightIndex.lightAnimationIntensity ?? token.data.lightAnimation.intensity,
           };
           const lightColor = lightIndex.lightColor ?? <string>token.data.lightColor;
           const lightAlpha = lightIndex.lightAlpha ?? <number>token.data.lightAlpha;
@@ -517,16 +537,16 @@ export function presetDialog(applyChanges: boolean): Dialog {
 */
 
 export function customDialog(applyChanges: boolean): Dialog {
-  let lightTypes = `<option selected value="none"> None</option>`
+  let lightTypes = `<option selected value="none"> None</option>`;
   for (const [k, v] of Object.entries(CONFIG.Canvas.lightAnimations)) {
-      if(v){
-        const name = game.i18n.localize(v.label);
-        lightTypes += `<option value="${k.toLocaleLowerCase()}">${name}</option>`;
-      }
+    if (v) {
+      const name = game.i18n.localize(v.label);
+      lightTypes += `<option value="${k.toLocaleLowerCase()}">${name}</option>`;
+    }
   }
 
-  if (game.modules.get("CommunityLighting")?.active) {
-      lightTypes += `
+  if (game.modules.get('CommunityLighting')?.active) {
+    lightTypes += `
       <optgroup label= "Blitz" id="animationType">
       <option value="BlitzFader">Fader</option>
       <option value="BlitzLightning"}>Lightning (experimental)</option>
@@ -545,7 +565,7 @@ export function customDialog(applyChanges: boolean): Dialog {
       <option value="SecretFireStar Light">Star Light</option>
       <option value="SecretFireStar Light Disco">Star Light Disco</option>
       </optgroup>
-  `
+  `;
   }
 
   return new Dialog({
@@ -667,43 +687,49 @@ export function customDialog(applyChanges: boolean): Dialog {
           const duration = parseInt(html.find('[name="duration"]')[0].value) || 0;
           const lockRotation = html.find('[name="lock-rotation"]')[0].value || token.data.lockRotation;
 
-          let alias:string|null = null;
-          if(actorId || tokenId){
-            if(!alias){
-              if(token){
+          let alias: string | null = null;
+          if (actorId || tokenId) {
+            if (!alias) {
+              if (token) {
                 alias = <string>token.name;
               } else {
                 alias = <string>game.actors?.get(actorId)?.name;
               }
             }
           }
-          const speaker = {scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias};
+          const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
 
           // About time configuration
           if (duration > 0) {
-            if (game.modules.get("about-time")?.active != true) {
+            if (game.modules.get('about-time')?.active != true) {
               ui.notifications?.error("About Time isn't loaded");
             } else {
               ((backup) => {
                 //@ts-ignore
-                game.Gametime.doIn({minutes:Math.floor(3 * duration / 4)}, () => {
-                  dialogWarning( `The ${tempName} burns low...`);
-                  ChatMessage.create({
-                    user: game.user?.id,
-                    content: `The ${tempName} burns low...`,
-                    speaker: speaker
-                  }, {});
+                game.Gametime.doIn({ minutes: Math.floor((3 * duration) / 4) }, () => {
+                  dialogWarning(`The ${tempName} burns low...`);
+                  ChatMessage.create(
+                    {
+                      user: game.user?.id,
+                      content: `The ${tempName} burns low...`,
+                      speaker: speaker,
+                    },
+                    {},
+                  );
                 });
               })(Object.assign({}, token.data));
               ((backup) => {
                 //@ts-ignore
-                game.Gametime.doIn({minutes:duration}, () => {
-                  dialogWarning( `The ${tempName} burns low...`);
-                  ChatMessage.create({
-                    user: game.user?.id,
-                    content: `The ${tempName} goes out, leaving you in darkness.`,
-                    speaker: speaker
-                  }, {});
+                game.Gametime.doIn({ minutes: duration }, () => {
+                  dialogWarning(`The ${tempName} burns low...`);
+                  ChatMessage.create(
+                    {
+                      user: game.user?.id,
+                      content: `The ${tempName} goes out, leaving you in darkness.`,
+                      speaker: speaker,
+                    },
+                    {},
+                  );
                   updateTokenLighting(
                     token,
                     backup.lockRotation,
@@ -727,14 +753,16 @@ export function customDialog(applyChanges: boolean): Dialog {
             }
           }
 
-
           // const lightAnimation = token.data.lightAnimation;
           // Enable the Light Source type according to the type
           // "torch" / "pulse" / "chroma" / "wave" / "fog" / "sunburst" / "dome"
           // "emanation" / "hexa" / "ghost" / "energy" / "roiling" / "hole"
-          const lightAnimationType = html.find('[name="light-animation-type"]')[0].value || token.data.lightAnimation.type || 'none';
-          const lightAnimationSpeed = html.find('[name="light-animation-speed"]')[0].value || token.data.lightAnimation.speed;
-          const lightAnimationIntensity = html.find('[name="light-animation-intensity"]')[0].value || token.data.lightAnimation.intensity;
+          const lightAnimationType =
+            html.find('[name="light-animation-type"]')[0].value || token.data.lightAnimation.type || 'none';
+          const lightAnimationSpeed =
+            html.find('[name="light-animation-speed"]')[0].value || token.data.lightAnimation.speed;
+          const lightAnimationIntensity =
+            html.find('[name="light-animation-intensity"]')[0].value || token.data.lightAnimation.intensity;
           const lightAlpha = html.find('[name="light-alpha"]')[0].value || token.data.lightAlpha;
           const lightColor = html.find('[name="light-color"]')[0].value || token.data.lightColor;
           // Update Token
@@ -762,10 +790,20 @@ export function customDialog(applyChanges: boolean): Dialog {
   });
 }
 
-export function confirmDialogATLEffectItem(actorId, itemId, effectId, actorname, tokenName, effectName, isApplied): Dialog {
+export function confirmDialogATLEffectItem(
+  actorId,
+  itemId,
+  effectId,
+  actorname,
+  tokenName,
+  effectName,
+  isApplied,
+): Dialog {
   return new Dialog({
     title: 'Confirm the action',
-    content: `<div><h2>Are you sure to ${isApplied ? 'disabled' : 'enabled' } the active effect ${effectName} on actor ${actorname} (token name is ${tokenName})?</h2><div>`,
+    content: `<div><h2>Are you sure to ${
+      isApplied ? 'disabled' : 'enabled'
+    } the active effect '${effectName}' on actor '${actorname}' (token name is '${tokenName}')?</h2><div>`,
     buttons: {
       yes: {
         label: 'Yes',
