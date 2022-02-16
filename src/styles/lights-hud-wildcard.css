@@ -119,6 +119,17 @@
   pointer-events: none;
 }
 
+.lights-hud-ate-button-icon-text.fas.fa-hourglass {
+  color: orange;
+  text-shadow: 0 0 8px orange;
+}
+
+.lights-hud-ate-button-icon.fas.fa-hourglass{
+  left: 0;
+  color: orange;
+  pointer-events: none;
+}
+
 #token-hud .lights-hud-ate-button-disabled video {
   opacity: 1 !important;
   filter: grayscale(100%);

@@ -1,5 +1,5 @@
 <div class="control-icon" data-action="lights-hud-ate-selector" >
-    <img src="modules/lights-hud-ate/assets/lightbulb-regular.svg" width="36" height="36" title="{{localize 'lights-hud-ate.windows.art-select.title' }}" />
+    <img src="modules/lights-hud-ate/assets/lightbulb-solid.svg" width="36" height="36" title="{{localize 'lights-hud-ate.windows.art-select.title' }}" />
 
     <div class="lights-hud-ate-selector-wrap {{#unless imageDisplay}}list{{/unless}}">
     {{!-- {{#if imagesParsed}} --}}
@@ -75,8 +75,12 @@
 
                     {{#if image.suppressed}}
                     <i class="lights-hud-ate-button-icon fas fa-exclamation-triangle"></i>
-                    {{else if image.passive}}
+                    {{/if}}
+                    {{#if image.passive}}
                     <i class="lights-hud-ate-button-icon fas fa-eye"></i>
+                    {{/if}}
+                    {{#if image.temporary}}
+                    <i class="lights-hud-ate-button-icon fas fa-hourglass"></i>
                     {{/if}}
                     {{#if image.applied}}
                     <i class="lights-hud-ate-button-icon fas fa-lightbulb"></i>
@@ -99,8 +103,11 @@
                         data-passive="{{image.passive}}">{{image.name}}</span>
                     {{#if image.suppressed}}
                     <i class="lights-hud-ate-button-icon-text fas fa-exclamation-triangle"></i>
-                    {{else if image.passive}}
+                    {{#if image.passive}}
                     <i class="lights-hud-ate-button-icon-text fas fa-eye"></i>
+                    {{/if}}
+                    {{#if image.temporary}}
+                    <i class="lights-hud-ate-button-icon-text fas fa-hourglass"></i>
                     {{/if}}
                     {{#if image.applied}}
                     <i class="lights-hud-ate-button-icon-text fas fa-lightbulb"></i>

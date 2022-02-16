@@ -2,7 +2,7 @@
 
 ![Latest Release Download Count](https://img.shields.io/github/downloads/p4535992/foundryvtt-lights-hud-ate/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) 
 
-[![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Flights-hud-ate&colorB=006400&style=for-the-badge)](https://forge-vtt.com/bazaar#package=lights-hud) 
+[![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Flights-hud-ate&colorB=006400&style=for-the-badge)](https://forge-vtt.com/bazaar#package=lights-hud-ate) 
 
 ![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fp4535992%2Ffoundryvtt-lights-hud-ate%2Fmaster%2Fsrc%2Fmodule.json&label=Foundry%20Version&query=$.compatibleCoreVersion&colorB=orange&style=for-the-badge)
 
@@ -14,10 +14,9 @@
 
 A Foundry VTT module that displays on the HUD config of the token all the available lighting items on the token/actor, with some [ATE](https://github.com/kandashi/Active-Token-Lighting) effect.
 
-This project is born like a fusion of two other modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/) and [ATE](https://github.com/kandashi/Active-Token-Lighting), but then i rewriting almost everything so is just a new module inspired form these other module.
+This project is born like a fusion of two other modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/) and [ATE](https://github.com/kandashi/Active-Token-Lighting), but then i rewriting almost everything so is just a new module inspired form these other module. Remember to support these authors if you feel generous on their patreon or kofi account.
 
-Remember tu support these authors if you feel generous:
-
+![imggif]()
 
 ## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
 
@@ -33,6 +32,29 @@ To install this module manually:
 4.  Click 'Install' and wait for installation to complete
 5.  Don't forget to enable the module in game using the "Manage Module" button
 
+### libWrapper
+
+This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) library for wrapping core methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
+
+### socketlib
+
+This module uses the [socketlib](https://github.com/manuelVo/foundryvtt-socketlib) library for wrapping socket methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
+
+### ATE (old ATL)
+
+This module uses the [ATE](https://github.com/kandashi/Active-Token-Lighting) library for wrapping methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
+
+## Suggested Modules
+
+- [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) (need to be updated for 9)
+- [Times up](https://gitlab.com/tposney/times-up)
+- [Dae](https://gitlab.com/tposney/dae)
+
+## Compatibility Modules
+
+- [Sense Walls Multisystem](https://github.com/p4535992/fvtt-sense-walls-multisystem/)
+- [About Time](https://gitlab.com/tposney/about-time)
+
 ## Known Issue\Limitation
 
 - **HELP WANTED** The token MUST BE LINKED TO A ACTOR,  if anyone can solve this let me know
@@ -40,12 +62,6 @@ To install this module manually:
 - [ATE](https://github.com/kandashi/Active-Token-Lighting) has still some problem with brigthSight and dimSight, and some numeric value, but some PR are been committed to kandashi attention for solve these issues, so will wait for his review.
 - [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) is not been updated for foundryvtt 9 so is not advisable to used right now.
 - The modules is not smart enough to distinct multiple ligthing effect on the same item and is not make sense ? Every item must have only one effect with _ATL changes_ on it. If multiple effect with _ATL changes_ are founded on the same item only the first is analyzed from the module, you can use multiple item where each has is own lighting configuration.
-
-## Module compatibility
-
-- [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) (need to be updated for 9)
-- [ATE](https://github.com/kandashi/Active-Token-Lighting) (have some issue with brigthSight and dimSight)
-- [Sense Walls Multisystem](https://github.com/p4535992/fvtt-sense-walls-multisystem/)
 
 ## Supported Systems
 
@@ -55,21 +71,34 @@ To install this module manually:
 **How can i add my system ?** That's is pretty easy on the code level ty to the design pattern so i just need some information on the system rules and voilà.
 
 ## Feature
-#### Add a custom ATE Effect for customize vision and lighting on my game
 
-This is already done from the [ATE](https://github.com/kandashi/Active-Token-Lighting) checkout the documentation.
-#### Add vision and lighting modification with ATE active effect (the advisable way)
+### Add a custom ATE Effect for customize vision and lighting on my game
+
+This is already done from the [ATE](https://github.com/kandashi/Active-Token-Lighting) checkout the documentation on that module.
+
+### Add vision and lighting modification with ATE active effect (the advisable way)
 
 Add vision and lighting modification with ATE active effect, no token configuration is actually touched, everything is on the active effect management, the duration the remove, the adding, you can even merge the effect of two different kind of visions and lighting together.
 
-The module is build to show on a hud panel all the item with some ATL effect applied on it, there is a distinction between passive, temporary, applied, need to be attuned or equipped condition.
+The module is build to show on a hud panel all the item with some ATL effect applied on it, there is a distinction between passive, temporary, applied, need to be attuned or equipped condition (suppressed).
 
 ![img](./wiki/assets/tutorial_commented.png)
-#### Add a button to the 'Token vision configuration' macro (for everyone need to be just fast and not perfect)
+
+| Symbol | Description  |
+|:----:|:----:|
+|![exclamation-triangle-solid](./wiki/icons/exclamation-triangle-solid.svg) | The symbol of the **yellow exclamation triangle** means the active effect is _suppressed_ for some reason that you can delve into in the effects panel, usually _need to be attuned or equipped condition_ this does not prevent the effect from being active or not, only that it will result in the subcategory of inactive effects. |
+|![eye-solid](./wiki/icons/eye-solid.svg) | The symbol of the **purple eye** means the active effect is _passive_ like a race feature or a special ability like darkvision, this does not prevent the effect from being active or not, only that it will result in the subcategory of inactive effects. |
+|![hourglass-solid](./wiki/icons/hourglass-solid.svg) | The symbol of the **orange hourglass** means the active effect is _temporary_ like a spell valid only for tot. rounds or seconds, this is usually managed from the [About Time](https://gitlab.com/tposney/about-time) module if installed, this does not prevent the effect from being active or not, only that it will result in the subcategory of temporary effects. |
+|![lightbulb-solid](./wiki/icons/lightbulb-solid.svg) | The symbol of the **green lightbulb** means the active effect is _enabled_ (or _applied_). |
+|![lightbulb-regular](./wiki/icons/lightbulb-regular.svg) | The symbol of the **red lightbulb** means the active effect is _disabled_ (or _not applied_). |
+
+### Add a button to the 'Token vision configuration' macro (for everyone need to be just fast and not perfect)
 
 On the hud config of the token you can see on the popout form a button 'Call macro preset' and 'Call macro custom', the are a embedded version of the macro [token_vision_config.js](https://github.com/foundry-vtt-community/macros/blob/main/token/token_vision_config.js) and  the variant with about time [token_vision_config_about_time.js](https://github.com/foundry-vtt-community/macros/blob/main/module-specific/token_vision_config_about_time.js)for make the work of the gm more fast when forget to set some vision.
 
 I add two dialog panel one for put the preset one from the current supported system and one for put a custom preset, _no store of these custom is done_, if you want to store a custom lighting or vision just create a item and use [ATE](https://github.com/kandashi/Active-Token-Lighting).
+
+**NOTE:** You can still apply the custom vision and light like a new active effect by checking the checkbox _Apply as ATE/ATL Effect_.
 
 **NOTE:** The custom dialog work with [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) if is enabled and active it will show more options for animation type.
 
