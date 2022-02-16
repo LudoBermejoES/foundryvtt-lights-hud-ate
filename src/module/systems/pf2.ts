@@ -5,7 +5,7 @@ export default {
   LIGHTS: <LightHUDElement[]>[
     {
       id: LightHUDPreset.NO_CHANGE,
-      name: `No Change`,
+      name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.NO_CHANGE}`,
       img: ``,
       lockRotation: null,
       dimLight: null,
@@ -19,7 +19,7 @@ export default {
     },
     {
       id: LightHUDPreset.NONE,
-      name: `None`,
+      name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.NONE}`,
       img: ``,
       lockRotation: false,
       dimLight: 0,
@@ -33,7 +33,7 @@ export default {
     },
     {
       id: LightHUDPreset.CANDLE,
-      name: `Candle`,
+      name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.CANDLE}`,
       img: ``,
       lockRotation: false,
       dimLight: 10,
@@ -47,7 +47,7 @@ export default {
     },
     {
       id: LightHUDPreset.LAMP,
-      name: `Lamp`,
+      name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.LAMP}`,
       img: ``,
       lockRotation: false,
       dimLight: 45,
@@ -61,7 +61,7 @@ export default {
     },
     {
       id: LightHUDPreset.LANTERN_BULLSEYE,
-      name: `Lantern (Bullseye)`,
+      name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.LANTERN_BULLSEYE}`,
       img: ``,
       lockRotation: false,
       dimLight: 120,
@@ -75,7 +75,7 @@ export default {
     },
     {
       id: LightHUDPreset.LANTERN_HOODED_DIM,
-      name: `Lantern (Hooded - Dim)`,
+      name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.LANTERN_HOODED_DIM}`,
       img: ``,
       lockRotation: false,
       dimLight: 5,
@@ -89,7 +89,7 @@ export default {
     },
     {
       id: LightHUDPreset.LANTERN_HOODED_BRIGHT,
-      name: `Lantern (Hooded - Bright)`,
+      name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.LANTERN_HOODED_BRIGHT}`,
       img: ``,
       lockRotation: false,
       dimLight: 60,
@@ -102,22 +102,8 @@ export default {
       lightAnimationIntensity: 2,
     },
     {
-      id: LightHUDPreset.LIGHT,
-      name: `Light`,
-      img: ``,
-      lockRotation: false,
-      dimLight: 40,
-      brightLight: 20,
-      lightColor: '#ffffff',
-      lightAlpha: 0.15,
-      lightAngle: 360,
-      lightAnimationType: 'none',
-      lightAnimationSpeed: null,
-      lightAnimationIntensity: null,
-    },
-    {
       id: LightHUDPreset.TORCH,
-      name: `Torch`,
+      name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.TORCH}`,
       img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/torch.jpg`,
       lockRotation: false,
       dimLight: 40,
@@ -131,12 +117,12 @@ export default {
     },
   ],
   VISIONS: <VisionHUDElement[]>[
-    { id: VisionHUDPreset.NO_CHANGE, name: `No Change`, img: ``, dimSight: null, brightSight: null, sightAngle: null },
-    { id: VisionHUDPreset.NONE, name: `None`, img: ``, dimSight: 0, brightSight: 0, sightAngle: 360 },
-    { id: VisionHUDPreset.SELF, name: `Self`, img: ``, dimSight: 5, brightSight: 0, sightAngle: 360 },
+    { id: VisionHUDPreset.NO_CHANGE, name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.NO_CHANGE}`, img: ``, dimSight: null, brightSight: null, sightAngle: null },
+    { id: VisionHUDPreset.NONE, name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.NONE}`, img: ``, dimSight: 0, brightSight: 0, sightAngle: 360 },
+    { id: VisionHUDPreset.SELF, name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.SELF}`, img: ``, dimSight: 5, brightSight: 0, sightAngle: 360 },
     {
       id: VisionHUDPreset.DARKVISION_30,
-      name: `Darkvision (30 ft)`,
+      name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DARKVISION_30}`,
       img: ``,
       dimSight: 30,
       brightSight: 0,
@@ -144,7 +130,7 @@ export default {
     },
     {
       id: VisionHUDPreset.DARKVISION_60,
-      name: `Darkvision (60 ft)`,
+      name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DARKVISION_60}`,
       img: ``,
       dimSight: 60,
       brightSight: 0,
@@ -152,7 +138,7 @@ export default {
     },
     {
       id: VisionHUDPreset.DARKVISION_90,
-      name: `Darkvision (90 ft)`,
+      name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DARKVISION_90}`,
       img: ``,
       dimSight: 90,
       brightSight: 0,
@@ -160,7 +146,7 @@ export default {
     },
     {
       id: VisionHUDPreset.DARKVISION_120,
-      name: `Darkvision (120 ft)`,
+      name:`${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DARKVISION_120}`,
       img: ``,
       dimSight: 120,
       brightSight: 0,
@@ -168,7 +154,7 @@ export default {
     },
     {
       id: VisionHUDPreset.DARKVISION_150,
-      name: `Darkvision (150 ft)`,
+      name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DARKVISION_150}`,
       img: ``,
       dimSight: 150,
       brightSight: 0,
@@ -176,7 +162,7 @@ export default {
     },
     {
       id: VisionHUDPreset.DARKVISION_180,
-      name: `Darkvision (180 ft)`,
+      name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DARKVISION_180}`,
       img: ``,
       dimSight: 180,
       brightSight: 0,

@@ -8,8 +8,6 @@ import { canvas, game } from './settings';
 import { registerSocket } from './socket';
 
 export const initHooks = async (): Promise<void> => {
-  // LightsHUD.debug();
-  // LightsHUD.clBanner();
   // registerSettings();
 
   // registerLibwrappers();
@@ -58,8 +56,6 @@ export const readyHooks = async (): Promise<void> => {
   // checkSystem();
   // registerHotkeys();
   // Hooks.callAll(HOOKS.READY);
-
-  // LightHUDPlaceableConfig.registerHooks();
 
   // Add any additional hooks if necessary
 

@@ -127,6 +127,7 @@ export class EffectDefinitions {
 
   static _createAtlEffectKey(key) {
     let result = key;
+    //@ts-ignore
     const version = (game.version ?? game.data.version).charAt(0);
 
     if (version == '9') {

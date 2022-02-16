@@ -396,7 +396,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
         <label>Vision Type:</label>
         <select id="vision-type" name="vision-type">
           ${API.VISIONS.map((vision) => {
-            return `\t<option value=${vision.id}>${vision.name}</option>`;
+            return `\t<option value=${vision.id}>${i18n(vision.name)}</option>`;
           }).join('\n')}
         </select>
       </div>
@@ -404,7 +404,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
         <label>Light Source:</label>
         <select id="light-source" name="light-source">
           ${API.LIGHTS.map((lightSource) => {
-            return `\t<option value=${lightSource.id}>${lightSource.name}</option>`;
+            return `\t<option value=${lightSource.id}>${i18n(lightSource.name)}</option>`;
           }).join('\n')}
         </select>
       </div>
@@ -458,11 +458,11 @@ export function presetDialog(applyChanges: boolean): Dialog {
               ((backup) => {
                 //@ts-ignore
                 game.Gametime.doIn({ minutes: Math.floor((3 * duration) / 4) }, () => {
-                  dialogWarning(`The ${lightIndex.name} burns low...`);
+                  dialogWarning(`The ${i18n(lightIndex.name)} burns low...`);
                   ChatMessage.create(
                     {
                       user: game.user?.id,
-                      content: `The ${lightIndex.name} burns low...`,
+                      content: `The ${i18n(lightIndex.name)} burns low...`,
                       speaker: speaker,
                     },
                     {},
@@ -472,11 +472,11 @@ export function presetDialog(applyChanges: boolean): Dialog {
               ((backup) => {
                 //@ts-ignore
                 game.Gametime.doIn({ minutes: duration }, () => {
-                  dialogWarning(`The ${lightIndex.name} burns low...`);
+                  dialogWarning(`The ${i18n(lightIndex.name)} burns low...`);
                   ChatMessage.create(
                     {
                       user: game.user?.id,
-                      content: `The ${lightIndex.name} goes out, leaving you in darkness.`,
+                      content: `The ${i18n(lightIndex.name)} goes out, leaving you in darkness.`,
                       speaker: speaker,
                     },
                     {},
