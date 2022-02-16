@@ -101,31 +101,37 @@ export async function addLightsHUDButtons(app, html, data) {
         });
         if (!effectFromActor) {
           warn(`No active effect found on actor ${actor.name} with name ${nameToSearch}`);
-        } else {
-          const applied = await API.hasEffectAppliedOnActor(<string>actor.id, nameToSearch);
-          // If the active effect is disabled or is supressed
-          // const isDisabled = aeAtl[0].data.disabled || false;
-          // const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
-          const isDisabled = effectFromActor.data.disabled || false;
-          //@ts-ignore
-          const isSuppressed = effectFromActor.data.document.isSuppressed || false;
-          const isTemporary = effectFromActor.isTemporary || false;
-          const isPassive = !isTemporary;
-          if (applied && !isDisabled && !isSuppressed) {
-            appliedTmp = true;
-          }
-          disabledTmp = isDisabled;
-          suppressedTmp = isSuppressed;
-          temporaryTmp = isTemporary;
-          passiveTmp = isPassive;
-          effectid = <string>effectFromActor.id;
-          effectname = <string>effectFromActor.name ?? effectFromActor.data.label;
+          aeAtl[0].data.transfer = false;
+          await API.addActiveEffectOnActor(<string>actor.id,aeAtl[0]);
         }
+        const applied = await API.hasEffectAppliedOnActor(<string>actor.id, nameToSearch);
+        // If the active effect is disabled or is supressed
+        // const isDisabled = aeAtl[0].data.disabled || false;
+        // const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
+        const isDisabled = effectFromActor.data.disabled || false;
+        //@ts-ignore
+        const isSuppressed = effectFromActor.data.document.isSuppressed || false;
+        const isTemporary = effectFromActor.isTemporary || false;
+        const isPassive = !isTemporary;
+        if (applied && !isDisabled && !isSuppressed) {
+          appliedTmp = true;
+        }
+        disabledTmp = isDisabled;
+        suppressedTmp = isSuppressed;
+        temporaryTmp = isTemporary;
+        passiveTmp = isPassive;
+        effectid = <string>effectFromActor.id;
+        effectname = <string>effectFromActor.name ?? effectFromActor.data.label;
+        
       }
       if (!suppressedTmp) {
         appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
       } else {
         appliedTmp = !appliedTmp;
+      }
+
+      if(!effectid){
+        warn(`No ATL active effect found on actor ${actor.name} from item ${item.name}`);
       }
 
       return <LightDataHud>{
@@ -140,6 +146,7 @@ export async function addLightsHUDButtons(app, html, data) {
         vid: vid,
         type: img || vid,
         itemid: item.id,
+        itemname: item.name,
         effectid: effectid,
         effectname: effectname,
       };
@@ -225,6 +232,7 @@ export async function addLightsHUDButtons(app, html, data) {
       let tokenId: string | null = null;
       let itemId: string | null = null;
       let effectId: string | null = null;
+      let itemName: string | null = null;
       let effectName: string | null = null;
       let isApplied: boolean | null = null;
 
@@ -232,6 +240,7 @@ export async function addLightsHUDButtons(app, html, data) {
         actorId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-actor-id');
         tokenId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-token-id');
         itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
+        itemName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-name');
         effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
         effectName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-name');
         isApplied = <string>$(this).find('.lights-hud-ate-button-image').attr('data-applied') == 'true';
@@ -239,6 +248,7 @@ export async function addLightsHUDButtons(app, html, data) {
         actorId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-actor-id');
         tokenId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-token-id');
         itemId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-item-id');
+        itemName = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-item-name');
         effectId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-effect-id');
         effectName = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-effect-name');
         isApplied = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-applied') == 'true';
@@ -260,7 +270,7 @@ export async function addLightsHUDButtons(app, html, data) {
       // const obj = <Item>game.items?.get(uuid) || <Item>game.items?.getName(uuid);
       // const obj = tokenToChange.data;
 
-      confirmDialogATLEffectItem(actorId, itemId, effectId, actor.name, tokenD.name, effectName, isApplied).render(
+      confirmDialogATLEffectItem(actorId, itemId, effectId, actor.name, tokenD.name, itemName, effectName, isApplied).render(
         true,
       );
     });
@@ -272,6 +282,7 @@ export async function addLightsHUDButtons(app, html, data) {
       const actorId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-actor-id');
       const tokenId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-token-id');
       const itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
+      const itemName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-name');
       const effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
       const effectName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-name');
       const isApplied = <string>$(this).find('.lights-hud-ate-button-image').attr('data-applied') == 'true';
@@ -288,44 +299,16 @@ export async function addLightsHUDButtons(app, html, data) {
         return;
       }
 
-      // TODO SET UP ANIMATION ?? MAYBE IN SOME FUTURE RELEASE
-
-      // const animation = $(event.currentTarget.parentElement.parentElement)
-      // .find(".anim-dropdown")
-      // .val();
-
-      const duplicates = 1; // number od dropped light
-
-      const item = <Item>actor.items.get(itemId);
-      let actorDropTheTorch: Actor | null = null;
-      try {
-        let tokenDataDropTheTorch = <TokenData>await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0);
-        actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorch.actorId);
-        tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorch);
-        //@ts-ignore
-        const posData = await warpgate.crosshairs.show({
-          size: Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height) * tokenDataDropTheTorch.scale,
-          icon: `modules/${CONSTANTS.MODULE_NAME}/assets/black-hole-bolas.webp`,
-          label: '',
-        });
-
-        //get custom data macro
-        const customTokenData = {};
-
-        //@ts-ignore
-        await warpgate.spawnAt(
-          { x: posData.x, y: posData.y },
-          tokenDataDropTheTorch,
-          customTokenData || {},
-          {},
-          { duplicates },
-        );
-      } finally {
-        if (actorDropTheTorch) {
-          // Remove actor at the end
-          await (<Actor>actorDropTheTorch).delete();
-        }
-      }
+      confirmDialogDropTheTorch(
+        actorId,
+        itemId,
+        effectId,
+        actor.name, // actorName
+        actor.token?.name, // tokenName,
+        itemName,
+        effectName,
+        isApplied,
+      )
     });
   });
 
@@ -791,8 +774,9 @@ export function confirmDialogATLEffectItem(
   actorId,
   itemId,
   effectId,
-  actorname,
+  actorName,
   tokenName,
+  itemName,
   effectName,
   isApplied,
 ): Dialog {
@@ -804,7 +788,8 @@ export function confirmDialogATLEffectItem(
     content: `<div><h2>${i18nFormat(`lights-hud-ate.windows.dialogs.confirm.apply.content`, {
       isApplied: isApplied ? 'disabled' : 'enabled' ,
       effectName: effectName,
-      actorname: actorname,
+      itemName: itemName,
+      actorName: actorName,
       tokenName: tokenName,
     })}</h2><div>`,
     buttons: {
@@ -816,6 +801,81 @@ export function confirmDialogATLEffectItem(
       },
       no: {
         label: i18n(`lights-hud-ate.windows.dialogs.confirm.apply.choice.no`),
+        callback: (html) => {
+          // Do nothing
+        },
+      },
+    },
+    default: 'no',
+  });
+}
+
+export function confirmDialogDropTheTorch(
+  actorId,
+  itemId,
+  effectId,
+  actorName,
+  tokenName,
+  itemName,
+  effectName,
+  isApplied,
+): Dialog {
+  return new Dialog({
+    title: i18n(`lights-hud-ate.windows.dialogs.confirm.dropthetorch.title`),
+    content: `<div><h2>${i18nFormat(`lights-hud-ate.windows.dialogs.confirm.dropthetorch.content`, {
+      isApplied: isApplied ? 'disabled' : 'enabled' ,
+      effectName: effectName,
+      itemName: itemName,
+      actorName: actorName,
+      tokenName: tokenName,
+    })}</h2><div>`,
+    buttons: {
+      yes: {
+        label: i18n(`lights-hud-ate.windows.dialogs.confirm.dropthetorch.choice.yes`),
+        callback: async (html) => {
+          const actor = <Actor>game.actors?.get(actorId);
+          // TODO SET UP ANIMATION ?? MAYBE IN SOME FUTURE RELEASE
+
+          // const animation = $(event.currentTarget.parentElement.parentElement)
+          // .find(".anim-dropdown")
+          // .val();
+
+          const duplicates = 1; // number od dropped light
+
+          const item = <Item>actor.items.get(itemId);
+          let actorDropTheTorch: Actor | null = null;
+          try {
+            let tokenDataDropTheTorch = <TokenData>await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0);
+            actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorch.actorId);
+            tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorch);
+            //@ts-ignore
+            const posData = await warpgate.crosshairs.show({
+              size: Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height) * tokenDataDropTheTorch.scale,
+              icon: `modules/${CONSTANTS.MODULE_NAME}/assets/black-hole-bolas.webp`,
+              label: '',
+            });
+
+            //get custom data macro
+            const customTokenData = {};
+
+            //@ts-ignore
+            await warpgate.spawnAt(
+              { x: posData.x, y: posData.y },
+              tokenDataDropTheTorch,
+              customTokenData || {},
+              {},
+              { duplicates },
+            );
+          } finally {
+            if (actorDropTheTorch) {
+              // Remove actor at the end
+              await (<Actor>actorDropTheTorch).delete();
+            }
+          }
+        },
+      },
+      no: {
+        label: i18n(`lights-hud-ate.windows.dialogs.confirm.dropthetorch.choice.no`),
         callback: (html) => {
           // Do nothing
         },

@@ -92,6 +92,7 @@ export class LightDataHud {
   vid: boolean;
   type: boolean;
   itemid: string;
+  itemname: string;
   effectid: string;
   effectname: string;
 }
