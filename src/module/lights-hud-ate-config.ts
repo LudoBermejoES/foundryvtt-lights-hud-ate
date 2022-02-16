@@ -102,7 +102,7 @@ export async function addLightsHUDButtons(app, html, data) {
         if (!effectFromActor) {
           warn(`No active effect found on actor ${actor.name} with name ${nameToSearch}`);
           aeAtl[0].data.transfer = false;
-          await API.addActiveEffectOnActor(<string>actor.id,aeAtl[0]);
+          await API.addActiveEffectOnActor(<string>actor.id, aeAtl[0]);
         }
         const applied = await API.hasEffectAppliedOnActor(<string>actor.id, nameToSearch);
         // If the active effect is disabled or is supressed
@@ -122,7 +122,6 @@ export async function addLightsHUDButtons(app, html, data) {
         passiveTmp = isPassive;
         effectid = <string>effectFromActor.id;
         effectname = <string>effectFromActor.name ?? effectFromActor.data.label;
-        
       }
       if (!suppressedTmp) {
         appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
@@ -130,7 +129,7 @@ export async function addLightsHUDButtons(app, html, data) {
         appliedTmp = !appliedTmp;
       }
 
-      if(!effectid){
+      if (!effectid) {
         warn(`No ATL active effect found on actor ${actor.name} from item ${item.name}`);
       }
 
@@ -270,22 +269,48 @@ export async function addLightsHUDButtons(app, html, data) {
       // const obj = <Item>game.items?.get(uuid) || <Item>game.items?.getName(uuid);
       // const obj = tokenToChange.data;
 
-      confirmDialogATLEffectItem(actorId, itemId, effectId, actor.name, tokenD.name, itemName, effectName, isApplied).render(
-        true,
-      );
+      confirmDialogATLEffectItem(
+        actorId,
+        itemId,
+        effectId,
+        actor.name,
+        tokenD.name,
+        itemName,
+        effectName,
+        isApplied,
+      ).render(true);
     });
     buttons[button].addEventListener('contextmenu', async function (event) {
       event.preventDefault();
       event.stopPropagation();
       const buttonClick = event.button; // 0 left click
 
-      const actorId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-actor-id');
-      const tokenId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-token-id');
-      const itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
-      const itemName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-name');
-      const effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
-      const effectName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-name');
-      const isApplied = <string>$(this).find('.lights-hud-ate-button-image').attr('data-applied') == 'true';
+      let actorId: string | null = null;
+      let tokenId: string | null = null;
+      let itemId: string | null = null;
+      let effectId: string | null = null;
+      let itemName: string | null = null;
+      let effectName: string | null = null;
+      let isApplied: boolean | null = null;
+
+      if (game.settings.get(CONSTANTS.MODULE_NAME, 'imageDisplay')) {
+        actorId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-actor-id');
+        tokenId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-token-id');
+        itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
+        itemName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-name');
+        effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
+        effectName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-name');
+        isApplied = <string>$(this).find('.lights-hud-ate-button-image').attr('data-applied') == 'true';
+      } else {
+        actorId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-actor-id');
+        tokenId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-token-id');
+        itemId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-item-id');
+        itemName = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-item-name');
+        effectId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-effect-id');
+        effectName = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-effect-name');
+        isApplied = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-applied') == 'true';
+      }
+
       if (!itemId) {
         warn(`No item id ${itemId} founded for the light hud`);
         return;
@@ -308,7 +333,7 @@ export async function addLightsHUDButtons(app, html, data) {
         itemName,
         effectName,
         isApplied,
-      )
+      ).render(true);
     });
   });
 
@@ -786,7 +811,7 @@ export function confirmDialogATLEffectItem(
     //   isApplied ? 'disabled' : 'enabled'
     // } the active effect '${effectName}' on actor '${actorname}' (token name is '${tokenName}')?</h2><div>`,
     content: `<div><h2>${i18nFormat(`lights-hud-ate.windows.dialogs.confirm.apply.content`, {
-      isApplied: isApplied ? 'disabled' : 'enabled' ,
+      isApplied: isApplied ? 'disabled' : 'enabled',
       effectName: effectName,
       itemName: itemName,
       actorName: actorName,
@@ -823,7 +848,7 @@ export function confirmDialogDropTheTorch(
   return new Dialog({
     title: i18n(`lights-hud-ate.windows.dialogs.confirm.dropthetorch.title`),
     content: `<div><h2>${i18nFormat(`lights-hud-ate.windows.dialogs.confirm.dropthetorch.content`, {
-      isApplied: isApplied ? 'disabled' : 'enabled' ,
+      isApplied: isApplied ? 'disabled' : 'enabled',
       effectName: effectName,
       itemName: itemName,
       actorName: actorName,
@@ -845,7 +870,9 @@ export function confirmDialogDropTheTorch(
           const item = <Item>actor.items.get(itemId);
           let actorDropTheTorch: Actor | null = null;
           try {
-            let tokenDataDropTheTorch = <TokenData>await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0);
+            let tokenDataDropTheTorch = <TokenData>(
+              await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0)
+            );
             actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorch.actorId);
             tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorch);
             //@ts-ignore

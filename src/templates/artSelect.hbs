@@ -1,5 +1,7 @@
 <div class="control-icon" data-action="lights-hud-ate-selector" >
-    <img src="modules/lights-hud-ate/assets/lightbulb-solid.svg" width="36" height="36" title="{{localize 'lights-hud-ate.windows.art-select.title' }}" />
+    <img src="modules/lights-hud-ate/assets/lightbulb-solid.svg" 
+        style="color: aliceblue; background: aliceblue;"
+        width="36" height="36" title="{{localize 'lights-hud-ate.windows.art-select.title' }}" />
 
     <div class="lights-hud-ate-selector-wrap {{#unless imageDisplay}}list{{/unless}}">
     {{!-- {{#if imagesParsed}} --}}
@@ -30,6 +32,7 @@
                             data-actor-id="{{../actorId}}"
                             data-name="{{image.route}}"
                             data-item-id="{{image.itemid}}"
+                            data-item-name="{{image.itemname}}"
                             data-effect-id="{{image.effectid}}"
                             data-effect-name="{{image.effectname}}"
                             data-applied="{{image.applied}}"
@@ -47,6 +50,7 @@
                             data-actor-id="{{../actorId}}"
                             data-name="{{image.route}}"
                             data-item-id="{{image.itemid}}"
+                            data-item-name="{{image.itemname}}"
                             data-effect-id="{{image.effectid}}"
                             data-effect-name="{{image.effectname}}"
                             data-applied="{{image.applied}}"
@@ -64,6 +68,7 @@
                             data-actor-id="{{../actorId}}"
                             data-name="{{image.route}}"
                             data-item-id="{{image.itemid}}"
+                            data-item-name="{{image.itemname}}"
                             data-effect-id="{{image.effectid}}"
                             data-effect-name="{{image.effectname}}"
                             data-applied="{{image.applied}}"
@@ -94,6 +99,7 @@
                         data-actor-id="{{../actorId}}"
                         data-name="{{image.route}}"
                         data-item-id="{{image.itemid}}"
+                        data-item-name="{{image.itemname}}"
                         data-effect-id="{{image.effectid}}"
                         data-effect-name="{{image.effectname}}"
                         data-applied="{{image.applied}}"

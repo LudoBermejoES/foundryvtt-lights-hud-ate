@@ -28,7 +28,7 @@
   "lights-hud-ate.windows.art-select.call-macro-custom": "Call macro custom",
 
   "lights-hud-ate.windows.dialogs.confirm.apply.title": "Confirm the action",
-  "lights-hud-ate.windows.dialogs.confirm.apply.content": "Are you sure to {isApplied} the active effect '{effectName}' from item {itemName} on actor '{actorName}' (token name is '{tokenName}')?",
+  "lights-hud-ate.windows.dialogs.confirm.apply.content": "Are you sure to {isApplied} the active effect '{effectName}' from item '{itemName}' on actor '{actorName}' (token name is '{tokenName}')?",
   "lights-hud-ate.windows.dialogs.confirm.apply.choice.yes": "Yes",
   "lights-hud-ate.windows.dialogs.confirm.apply.choice.no": "No",
 

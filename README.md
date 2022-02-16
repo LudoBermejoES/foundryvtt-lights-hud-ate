@@ -16,7 +16,9 @@ A Foundry VTT module that displays on the HUD config of the token all the availa
 
 This project is born like a fusion of two other modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/) and [ATE](https://github.com/kandashi/Active-Token-Lighting), but then i rewriting everything so now is just a new module inspired form these other module. Remember to support these authors if you feel generous on their patreon or kofi account.
 
-![imggif]()
+**NOTE:** I will release this only after ATE has fixed some issue.
+
+![imggif](./wiki/assets/first_release_tutorial_left.gif)
 
 ## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
 
