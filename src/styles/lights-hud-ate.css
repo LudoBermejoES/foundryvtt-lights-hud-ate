@@ -124,7 +124,7 @@
   text-shadow: 0 0 8px orange;
 }
 
-.lights-hud-ate-button-icon.fas.fa-hourglass{
+.lights-hud-ate-button-icon.fas.fa-hourglass {
   left: 0;
   color: orange;
   pointer-events: none;

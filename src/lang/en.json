@@ -45,7 +45,7 @@
   "lights-hud-ate.lights.lantern-hooded-dim.name": "Lantern (Hooded - Dim)",
   "lights-hud-ate.lights.lantern-hooded-dim.description": "This light is used from the module 'LightHUD+ATE'",
   "lights-hud-ate.lights.lantern-hooded-bright.name": "Lantern (Hooded - Bright)",
-  "lights-hud-ate.lights.lantern-hooded-bright.description":  "This light is used from the module 'LightHUD+ATE'",
+  "lights-hud-ate.lights.lantern-hooded-bright.description": "This light is used from the module 'LightHUD+ATE'",
   "lights-hud-ate.lights.light.name": "Light",
   "lights-hud-ate.lights.light.description": "This light is used from the module 'LightHUD+ATE'",
   "lights-hud-ate.lights.torch.name": "Torch",
@@ -57,7 +57,7 @@
   "lights-hud-ate.visions.default.name2": "No vision Level ({number})",
   "lights-hud-ate.visions.default.description": "This vision is used from the module 'LightHUD+ATE'",
   "lights-hud-ate.visions.default.description2": "This vision is used from the module 'LightHUD+ATE'",
-  "lights-hud-ate.visions.nochange.name": "None change",
+  "lights-hud-ate.visions.nochange.name": "No change",
   "lights-hud-ate.visions.nochange.name2": "This vision is used from the module 'LightHUD+ATE'",
   "lights-hud-ate.visions.nochange.description": "This vision is used from the module 'LightHUD+ATE'",
   "lights-hud-ate.visions.nochange.description2": "This vision is used from the module 'LightHUD+ATE'",
@@ -112,8 +112,8 @@
   "lights-hud-ate.visions.darkvision60.description": "This vision is used from the module 'LightHUD+ATE'",
   "lights-hud-ate.visions.darkvision90.name": "Darkvision (90)",
   "lights-hud-ate.visions.darkvision90.description": "This vision is used from the module 'LightHUD+ATE'",
-  "lights-hud-ate.visions.'darkvision120.name": "Darkvision (120)",
-  "lights-hud-ate.visions.'darkvision120.description": "This vision is used from the module 'LightHUD+ATE'",
+  "lights-hud-ate.visions.darkvision120.name": "Darkvision (120)",
+  "lights-hud-ate.visions.darkvision120.description": "This vision is used from the module 'LightHUD+ATE'",
   "lights-hud-ate.visions.darkvision150.name": "Darkvision (150)",
   "lights-hud-ate.visions.darkvision150.description": "This vision is used from the module 'LightHUD+ATE'",
   "lights-hud-ate.visions.darkvision180.name": "Darkvision (180)",
@@ -131,5 +131,4 @@
   "lights-hud-ate.dialogs.systemfound.title": "System Recognized",
   "lights-hud-ate.dialogs.systemfound.content": "This system was previously not supported, but in an recent update it was added as a supported system!<br><br>Do you want to load this system's default Item Pile settings?",
   "lights-hud-ate.dialogs.systemfound.confirm": "Apply System Defaults"
-
 }

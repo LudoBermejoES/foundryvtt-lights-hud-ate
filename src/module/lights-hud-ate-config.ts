@@ -68,6 +68,8 @@ export async function addLightsHUDButtons(app, html, data) {
 
   // Convert item to LightHudData
 
+  const isGM = game.user?.isGM;
+
   const imagesParsed = await Promise.all(
     lightItems.map(async (item: Item) => {
       const im = <string>item.img;
@@ -150,6 +152,7 @@ export async function addLightsHUDButtons(app, html, data) {
     imagesParsed,
     imageDisplay,
     imageOpacity,
+    isGM,
   });
 
   // Define all three buttons
@@ -349,32 +352,6 @@ export async function addLightsHUDButtons(app, html, data) {
   });
 }
 
-/*
-<option value="nochange">No Change</option>
-<option value="dim0">Self</option>
-<option value="dim30">Darkvision (30 ft)</option>
-<option value="dim60">Darkvision (60 ft)</option>
-<option value="dim90">Darkvision (90 ft)</option>
-<option value="dim120">Darkvision (120 ft)</option>
-<option value="dim150">Darkvision (150 ft)</option>
-<option value="dim180">Darkvision (180 ft)</option>
-<option value="dim300">Eyes of Night (300 ft)</option>
-<option value="bright120">Devil's Sight (Warlock)</option>
-*/
-
-/*
-<option value="nochange">No Change</option>
-<option value="none">None</option>
-<option value="candle">Candle</option>
-<option value="lamp">Lamp</option>
-<option value="bullseye">Lantern (Bullseye)</option>
-<option value="hooded-dim">Lantern (Hooded - Dim)</option>
-<option value="hooded-bright">Lantern (Hooded - Bright)</option>
-<option value="light">Light (Cantrip)</option>
-<option value="torch">Torch</option>
-<option value="moon-touched">Moon-Touched</option>
-*/
-
 export function presetDialog(applyChanges: boolean): Dialog {
   return new Dialog({
     title: `Token Vision Configuration (Preset)`,
@@ -546,27 +523,6 @@ export function presetDialog(applyChanges: boolean): Dialog {
     },
   });
 }
-
-/*
-
-<select id="light-source" name="light-animation-type">
-          <option selected value="none">None</option>
-          <option value="torch">Torch</option>
-          <option value="pulse">Pulse</option>
-          <option value="chroma">Chroma</option>
-          <option value="wave">Wave</option>
-          <option value="fog">Fog</option>
-          <option value="sunburst">Sunburst</option>
-          <option value="dome">Dome</option>
-          <option value="emanation">Emanation</option>
-          <option value="hexa">Hexa</option>
-          <option value="ghost">Ghost</option>
-          <option value="energy">Energy</option>
-          <option value="roiling">Roiling</option>
-          <option value="hole">Hole</option>
-        </select>
-
-*/
 
 export function customDialog(applyChanges: boolean): Dialog {
   let lightTypes = `<option selected value="none"> None</option>`;
@@ -846,7 +802,7 @@ export function confirmDialogATLEffectItem(
     //   isApplied ? 'disabled' : 'enabled'
     // } the active effect '${effectName}' on actor '${actorname}' (token name is '${tokenName}')?</h2><div>`,
     content: `<div><h2>${i18nFormat(`lights-hud-ate.windows.dialogs.confirm.apply.content`, {
-      isApplied: isApplied ? 'disabled' : 'enabled',
+      isApplied: isApplied ? 'disabled' : 'enabled' ,
       effectName: effectName,
       actorname: actorname,
       tokenName: tokenName,

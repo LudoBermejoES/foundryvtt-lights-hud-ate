@@ -13,6 +13,7 @@
 
 // Import TypeScript modules
 import CONSTANTS from './module/constants';
+import { error } from './module/lib/lib';
 import { initHooks, readyHooks, setupHooks } from './module/module';
 import { registerSettings } from './module/settings';
 import { canvas, game } from './module/settings';
@@ -55,10 +56,26 @@ Hooks.once('setup', function () {
 /* ------------------------------------ */
 Hooks.once('ready', () => {
   // Do anything once the module is ready
-  // if (!game.modules.get("lib-wrapper")?.active && game.user.isGM){
-  // 	ui.notifications.error(`The '${MODULE_NAME}' module requires to install and activate the 'libWrapper' module.`);
-  // 	return;
-  // }
+  if (!game.modules.get('lib-wrapper')?.active && game.user?.isGM) {
+    let word = 'install and activate';
+    if (game.modules.get('lib-wrapper')) word = 'activate';
+    throw error(`Requires the 'libWrapper' module. Please ${word} it.`);
+  }
+  if (!game.modules.get('socketlib')?.active && game.user?.isGM) {
+    let word = 'install and activate';
+    if (game.modules.get('socketlib')) word = 'activate';
+    throw error(`Requires the 'socketlib' module. Please ${word} it.`);
+  }
+  if (!game.modules.get('ATL')?.active && game.user?.isGM) {
+    let word = 'install and activate';
+    if (game.modules.get('ATL')) word = 'activate';
+    throw error(`Requires the 'ATL' module. Please ${word} it.`);
+  }
+  if (!game.modules.get('warpgate')?.active && game.user?.isGM) {
+    let word = 'install and activate';
+    if (game.modules.get('warpgate')) word = 'activate';
+    throw error(`Requires the 'warpgate' module. Please ${word} it.`);
+  }
 
   readyHooks();
 });

@@ -103,6 +103,7 @@
                         data-passive="{{image.passive}}">{{image.name}}</span>
                     {{#if image.suppressed}}
                     <i class="lights-hud-ate-button-icon-text fas fa-exclamation-triangle"></i>
+                    {{/if}}
                     {{#if image.passive}}
                     <i class="lights-hud-ate-button-icon-text fas fa-eye"></i>
                     {{/if}}
@@ -130,7 +131,7 @@
     <button class="lights-hud-ate-button-macro-custom"
         data-token-id="{{tokenId}}"
         data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-custom"}}</button>
-    </div>
     {{/if}}
+    </div>
 </div>
 
