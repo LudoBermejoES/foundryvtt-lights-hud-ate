@@ -123,6 +123,7 @@
         <span data-name="">{{localize "lights-hud-ate.windows.art-select.no-art-found"}}</span>
     </div>
     {{/if}} --}}
+    {{#if isGM}}
     <button class="lights-hud-ate-button-macro-preset"
         data-token-id="{{tokenId}}"
         data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-preset"}}</button>
@@ -130,6 +131,6 @@
         data-token-id="{{tokenId}}"
         data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-custom"}}</button>
     </div>
-
+    {{/if}}
 </div>
 

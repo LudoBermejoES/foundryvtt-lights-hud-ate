@@ -12,9 +12,9 @@
 
 ![GitHub all releases](https://img.shields.io/github/downloads/p4535992/foundryvtt-lights-hud-ate/total?style=for-the-badge)
 
-A Foundry VTT module that displays on the HUD config of the token all the available lighting items on the token/actor, with some [ATE](https://github.com/kandashi/Active-Token-Lighting) effect.
+A Foundry VTT module that displays on the HUD config of the token all the available lighting items on the token/actor, with some [ATE](https://github.com/kandashi/Active-Token-Lighting) effect, so you can light a torch or turn of without modify the token configuration and you can set with [Times up](https://gitlab.com/tposney/times-up) and [Dae](https://gitlab.com/tposney/dae) time and condition of the vision and light effect on the token.
 
-This project is born like a fusion of two other modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/) and [ATE](https://github.com/kandashi/Active-Token-Lighting), but then i rewriting almost everything so is just a new module inspired form these other module. Remember to support these authors if you feel generous on their patreon or kofi account.
+This project is born like a fusion of two other modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/) and [ATE](https://github.com/kandashi/Active-Token-Lighting), but then i rewriting everything so now is just a new module inspired form these other module. Remember to support these authors if you feel generous on their patreon or kofi account.
 
 ![imggif]()
 
@@ -44,13 +44,17 @@ This module uses the [socketlib](https://github.com/manuelVo/foundryvtt-socketli
 
 This module uses the [ATE](https://github.com/kandashi/Active-Token-Lighting) library for wrapping methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
 
-## Suggested Modules
+### Warpgate
+
+This module uses the [warpgate](https://github.com/trioderegion/warpgate) library for wrapping methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
+
+## Suggested mdules to use with this module
 
 - [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) (need to be updated for 9)
 - [Times up](https://gitlab.com/tposney/times-up)
 - [Dae](https://gitlab.com/tposney/dae)
 
-## Compatibility Modules
+## Compatibility modules
 
 - [Sense Walls Multisystem](https://github.com/p4535992/fvtt-sense-walls-multisystem/)
 - [About Time](https://gitlab.com/tposney/about-time)
@@ -59,9 +63,10 @@ This module uses the [ATE](https://github.com/kandashi/Active-Token-Lighting) li
 
 - **HELP WANTED** The token MUST BE LINKED TO A ACTOR,  if anyone can solve this let me know
 - **HELP WANTED** This is just a "fast to make" module maybe someone a little more expert than me with form application and hud layer can do a better form for a better user experience
-- [ATE](https://github.com/kandashi/Active-Token-Lighting) has still some problem with brigthSight and dimSight, and some numeric value, but some PR are been committed to kandashi attention for solve these issues, so will wait for his review.
+- [ATE](https://github.com/kandashi/Active-Token-Lighting) has still some problem with brigthSight and dimSight, and some numeric value, but some PR are been committed to kandashi attention for solve these issues, so i will wait for his review.
 - [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) is not been updated for foundryvtt 9 so is not advisable to used right now.
 - The modules is not smart enough to distinct multiple ligthing effect on the same item and is not make sense ? Every item must have only one effect with _ATL changes_ on it. If multiple effect with _ATL changes_ are founded on the same item only the first is analyzed from the module, you can use multiple item where each has is own lighting configuration.
+- The [warpgate](https://github.com/trioderegion/warpgate) function `spawnAt` should include a check distance of  spawn so no player drop torch on a very far point of the canvas.
 
 ## Supported Systems
 
@@ -80,7 +85,7 @@ This is already done from the [ATE](https://github.com/kandashi/Active-Token-Lig
 
 Add vision and lighting modification with ATE active effect, no token configuration is actually touched, everything is on the active effect management, the duration the remove, the adding, you can even merge the effect of two different kind of visions and lighting together.
 
-The module is build to show on a hud panel all the item with some ATL effect applied on it, there is a distinction between passive, temporary, applied, need to be attuned or equipped condition (suppressed).
+The module is build to show on a left click of the button with the image of a lightBulb on the hud panel all the item with some ATL effect present on the token\actor, there is a distinction between passive, temporary, applied, need to be attuned or equipped condition (suppressed).
 
 ![img](./wiki/assets/tutorial_commented.png)
 
@@ -94,15 +99,27 @@ The module is build to show on a hud panel all the item with some ATL effect app
 
 ### Add a button to the 'Token vision configuration' macro (for everyone need to be just fast and not perfect)
 
-On the hud config of the token you can see on the popout form a button 'Call macro preset' and 'Call macro custom', the are a embedded version of the macro [token_vision_config.js](https://github.com/foundry-vtt-community/macros/blob/main/token/token_vision_config.js) and  the variant with about time [token_vision_config_about_time.js](https://github.com/foundry-vtt-community/macros/blob/main/module-specific/token_vision_config_about_time.js)for make the work of the gm more fast when forget to set some vision.
+This is useful for fast configuration during the game, but is advisable to always use items with ATL changes on it.
 
-I add two dialog panel one for put the preset one from the current supported system and one for put a custom preset, _no store of these custom is done_, if you want to store a custom lighting or vision just create a item and use [ATE](https://github.com/kandashi/Active-Token-Lighting).
+On the hud config of the token **if you are a GM**, you can see on the popout form a couple of buttons 'Call macro preset' and 'Call macro custom', they are a embedded version of the macro [token_vision_config.js](https://github.com/foundry-vtt-community/macros/blob/main/token/token_vision_config.js) and  the variant with about time [token_vision_config_about_time.js](https://github.com/foundry-vtt-community/macros/blob/main/module-specific/token_vision_config_about_time.js) for make the work of the gm more fast when forget to set some vision.
 
-**NOTE:** You can still apply the custom vision and light like a new active effect by checking the checkbox _Apply as ATE/ATL Effect_.
+I add two dialog panel one for put the preset one from the current supported system and one for put a custom preset, _no store of these custom is done_, if you want to store a custom lighting or vision it's advisable to create a item and apply [ATE](https://github.com/kandashi/Active-Token-Lighting) effects on it.
+
+**NOTE:** You can still apply the custom vision and light like a new active effect by checking the checkbox _Apply as ATE/ATL Effect_, so no excuse now.
 
 **NOTE:** The custom dialog work with [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) if is enabled and active it will show more options for animation type.
 
-**NOTE:** This is useful for fast configuration during the game, but is advisable to always use items with ATL changes on it.
+### Drop the light (work but need feed back from the community for better user experience)
+
+This feature is inspired from [Drop My Torch](https://gitlab.com/derekstucki/drop-my-torch), but completely rewrite and the actor/token is created on runtime. 
+
+If you right click on a image/voice of the hud panel we call the [warpgate](https://github.com/trioderegion/warpgate) function `spawnAt` for let the player drop a light on the canvas.
+
+**NOTE:**For let player make use of this you need to set the permission of player to create token (i don't know if warpgate has some function with socketLib for executeAsGM).
+
+**NOTE:**For now there is no discrimination on the item you can drop. You can drop a _Torch_, like you can drop a _Light Spell_ , like you can drop your _Darkvision feature_, probably some condition for let drop only physical items
+
+
 
 ## How can i contribute 
 
@@ -199,6 +216,7 @@ Any issues, bugs, or feature requests are always welcome to be reported directly
 - [Image dropdown](https://github.com/marghoobsuleman/ms-Dropdown) with [MIT](https://github.com/marghoobsuleman/ms-Dropdown/blob/master/MIT-LICENSE.txt)
 - Some icons are retrieve from the [Dnd5e system](https://gitlab.com/foundrynet/dnd5e) with [MIT](https://gitlab.com/foundrynet/dnd5e/-/blob/master/LICENSE.txt)
 - Some icons are retrieve from the [Pf2 system](https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/) with [GPLv2](https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/-/blob/master/LICENSE)
+- [warpgate](https://github.com/trioderegion/warpgate) with [GPL-3.0 License](https://github.com/trioderegion/warpgate/blob/master/LICENSE), but is under the the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/) so it should be fine to use the MIT license here.
 
 This package is under an [MIT license](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
 
@@ -218,3 +236,4 @@ Thanks to anyone who helps me with this code! I appreciate the user community's 
 - [Torch](https://github.com/League-of-Foundry-Developers/Torch) ty to [Lupestro](https://foundryvtt.com/community/lupestro)
 - [Drop My Torch](https://gitlab.com/derekstucki/drop-my-torch) ty to [Derekstucki](https://gitlab.com/derekstucki)
 - The dropdown with image is build with [Image dropdown](https://github.com/marghoobsuleman/ms-Dropdown)
+- [warpgate](https://github.com/trioderegion/warpgate) ty to [trioderegion](https://github.com/trioderegion)
