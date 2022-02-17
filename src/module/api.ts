@@ -61,8 +61,38 @@ export default class API {
     return game.settings.set(CONSTANTS.MODULE_NAME, 'lights', inAttributes);
   }
 
-  static addEffect(actorId: string, effectName: string, effect: Effect) {
-    return API.effectInterface.addEffectOnActor(effectName, <string>actorId, effect);
+  static async addEffect(actorId: string, effectName: string, effect: Effect) {
+    // const entity = <Actor>game.actors?.get(actorId);
+    // if (entity.documentName !== 'Actor') {
+    //   return;
+    // }
+    // let link = getProperty(entity, 'data.token.actorLink');
+    // if (link === undefined) {
+    //   link = true;
+    // }
+    // let tokenArray: any[] = [];
+    // if (!link) {
+    //   //@ts-ignore
+    //   tokenArray = [entity.token?.object];
+    // } else {
+    //   tokenArray = entity.getActiveTokens();
+    // }
+    // if (tokenArray === []) {
+    //   return;
+    // }
+    // const originals = link
+    //   ? (await entity.getFlag('ATL', 'originals')) || {}
+    //   : (await entity.token?.getFlag('ATL', 'originals')) || {};
+
+    const result = await API.effectInterface.addEffectOnActor(effectName, <string>actorId, effect);
+
+    // if (link) {
+    //   await entity.setFlag('ATL', 'originals', originals);
+    // } else {
+    //   await entity.token?.setFlag('ATL', 'originals', originals);
+    // }
+
+    return result;
     // const actor = <Actor>game.actors?.get(actorNameOrId) || <Actor>game.actors?.getName(actorNameOrId);
 
     // if (!actor) {
@@ -107,16 +137,76 @@ export default class API {
     forceEnabled?: boolean,
     forceDisabled?: boolean,
   ) {
-    return await API.effectInterface.toggleEffectFromIdOnActor(
+    // const entity = <Actor>game.actors?.get(actorId);
+    // if (entity.documentName !== 'Actor') {
+    //   return;
+    // }
+    // let link = getProperty(entity, 'data.token.actorLink');
+    // if (link === undefined) {
+    //   link = true;
+    // }
+    // let tokenArray: any[] = [];
+    // if (!link) {
+    //   //@ts-ignore
+    //   tokenArray = [entity.token?.object];
+    // } else {
+    //   tokenArray = entity.getActiveTokens();
+    // }
+    // if (tokenArray === []) {
+    //   return;
+    // }
+    // const originals = link
+    //   ? (await entity.getFlag('ATL', 'originals')) || {}
+    //   : (await entity.token?.getFlag('ATL', 'originals')) || {};
+
+    const result = await API.effectInterface.toggleEffectFromIdOnActor(
       effectId,
       <string>actorId,
       alwaysDelete,
       forceEnabled,
       forceDisabled,
     );
+
+    // if (link) {
+    //   await entity.setFlag('ATL', 'originals', originals);
+    // } else {
+    //   await entity.token?.setFlag('ATL', 'originals', originals);
+    // }
+
+    return result;
   }
 
-  static addActiveEffectOnActor(actorId: string, activeEffect: ActiveEffect) {
-    return API.effectInterface.addActiveEffectOnActor(<string>actorId, activeEffect.data);
+  static async addActiveEffectOnActor(actorId: string, activeEffect: ActiveEffect) {
+    // const entity = <Actor>game.actors?.get(actorId);
+    // if (entity.documentName !== 'Actor') {
+    //   return;
+    // }
+    // let link = getProperty(entity, 'data.token.actorLink');
+    // if (link === undefined) {
+    //   link = true;
+    // }
+    // let tokenArray: any[] = [];
+    // if (!link) {
+    //   //@ts-ignore
+    //   tokenArray = [entity.token?.object];
+    // } else {
+    //   tokenArray = entity.getActiveTokens();
+    // }
+    // if (tokenArray === []) {
+    //   return;
+    // }
+    // const originals = link
+    //   ? (await entity.getFlag('ATL', 'originals')) || {}
+    //   : (await entity.token?.getFlag('ATL', 'originals')) || {};
+
+    const result = API.effectInterface.addActiveEffectOnActor(<string>actorId, activeEffect.data);
+
+    // if (link) {
+    //   await entity.setFlag('ATL', 'originals', originals);
+    // } else {
+    //   await entity.token?.setFlag('ATL', 'originals', originals);
+    // }
+
+    return result;
   }
 }

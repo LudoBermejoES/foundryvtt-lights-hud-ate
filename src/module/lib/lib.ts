@@ -479,11 +479,13 @@ export async function dropTheToken(item: Item, data: { x; y }, type = 'character
   const atlEffects = item.effects.filter((entity) => {
     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
   });
-  atlEffects.forEach((ae: ActiveEffect) => {
-    // Make sure is enabled
-    ae.data.disabled = false;
-    API.addActiveEffectOnActor(<string>tokenData2.actorId, ae);
-  });
+  await Promise.all(
+    atlEffects.map(async (ae: ActiveEffect) => {
+      // Make sure is enabled
+      ae.data.disabled = false;
+      await API.addActiveEffectOnActor(<string>tokenData2.actorId, ae);
+    }),
+  );
 
   // Submit the Token creation request and activate the Tokens layer (if not already active)
   canvas.getLayerByEmbeddedName('Token')?.activate();

@@ -565,11 +565,11 @@ export default class EffectHandler {
       return !!deleted;
     }
     let updated;
-    if (forceEnabled) {
+    if (forceEnabled && effect.data.disabled) {
       updated = await effect.update({
         disabled: false,
       });
-    } else if (forceDisabled) {
+    } else if (forceDisabled && !effect.data.disabled) {
       updated = await effect.update({
         disabled: true,
       });

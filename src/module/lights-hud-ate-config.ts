@@ -590,6 +590,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
   }
 
   if (id === undefined) id = '';
+  if (name === undefined) name = '';
   if (light === undefined) light = undefined;
   if (height === undefined) height = '';
   if (width === undefined) width = '';
@@ -670,7 +671,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
   const dialogContent = `
   <form>
       <div class="form-group">
-          <label>Preset Name</label>
+          <label>Effect Name</label>
           <input id="name" name="${id}" type="text" value="${name}"></input>
       </div>
       <div class="form-group">
@@ -782,7 +783,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
           <label>Luminosity</label>
           <div class="form-fields">
               <input type="range" id="lightLuminosity" name="lightLuminosity" value="${luminosity}" min="-1" max="1" step="0.05">
-   <span class="range-value">0.5</span>
+              <span class="range-value">0.5</span>
           </div>
       </div>
 
