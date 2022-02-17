@@ -158,7 +158,7 @@ export async function updateTokenLighting(
   if (applyAsAtlEffect) {
     const atlChanges:any = [];
 
-    if(height && height){
+    if(height && height > 0){
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.height'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
@@ -235,7 +235,7 @@ export async function updateTokenLighting(
         value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}, "reverse":${lightAnimationReverse}}`
       });
     }
-    if(lightAnimationType && lightAnimationSpeed && lightAnimationIntensity){
+    else if(lightAnimationType && lightAnimationSpeed && lightAnimationIntensity){
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.light.animation'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
