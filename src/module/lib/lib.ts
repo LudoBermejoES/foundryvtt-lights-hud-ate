@@ -154,92 +154,90 @@ export async function updateTokenLighting(
   width: number | null = null,
   scale: number | null = null,
 ) {
-
   if (applyAsAtlEffect) {
-    const atlChanges:any = [];
+    const atlChanges: any = [];
 
-    if(height && height > 0){
+    if (height && height > 0) {
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.height'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: height,
       });
     }
-    if(width && width > 0) {
+    if (width && width > 0) {
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.width'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: width,
       });
     }
-    if(scale && scale > 0){
+    if (scale && scale > 0) {
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.scale'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: scale,
       });
     }
-    if(dimSight && dimSight > 0){
+    if (dimSight && dimSight > 0) {
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.dimSight'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: dimSight,
       });
     }
-    if(brightSight && brightSight > 0) {
+    if (brightSight && brightSight > 0) {
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.brightSight'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: brightSight && brightSight > 0 ? brightSight : token.data.brightSight,
       });
     }
-    if(dimLight && dimLight > 0) {
+    if (dimLight && dimLight > 0) {
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.light.dim'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: dimLight,
       });
     }
-    if(brightLight && brightLight > 0){
+    if (brightLight && brightLight > 0) {
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.light.bright'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: brightLight,
       });
     }
-    if(lightAngle){
+    if (lightAngle) {
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.light.angle'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: lightAngle,
       });
     }
-    if(lightColor){
+    if (lightColor) {
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.light.color'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: lightColor,
       });
     }
-    if(lightAlpha){
+    if (lightAlpha) {
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.light.alpha'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: lightAlpha,
       });
     }
-    if(lightAnimationType && lightAnimationSpeed && lightAnimationIntensity && lightAnimationReverse){
+    if (lightAnimationType && lightAnimationSpeed && lightAnimationIntensity && lightAnimationReverse) {
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.light.animation'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}, "reverse":${lightAnimationReverse}}`
+        value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}, "reverse":${lightAnimationReverse}}`,
       });
-    }
-    else if(lightAnimationType && lightAnimationSpeed && lightAnimationIntensity){
+    } else if (lightAnimationType && lightAnimationSpeed && lightAnimationIntensity) {
       atlChanges.push({
         key: EffectDefinitions._createAtlEffectKey('ATL.light.animation'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}}`
+        value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}}`,
       });
     }
     const efffectAtlToApply = new Effect({
@@ -249,8 +247,8 @@ export async function updateTokenLighting(
       description: ``,
       // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
       transfer: true,
-      seconds: (duration != null ? <number>duration * 60 : undefined), // minutes to seconds
-      atlChanges: atlChanges
+      seconds: duration != null ? <number>duration * 60 : undefined, // minutes to seconds
+      atlChanges: atlChanges,
     });
     await API.addEffect(<string>token.actor?.id, <string>effectName, efffectAtlToApply);
   } else {
@@ -328,7 +326,7 @@ export async function updateTokenLighting(
     }
 
     token.document.update({
-       // lockRotation: lockRotation,
+      // lockRotation: lockRotation,
       vision: vision,
       // dimSight: dimSight,
       // brightSight: brightSight,
@@ -351,24 +349,24 @@ export async function updateTokenLighting(
       width: width,
       scale: scale,
       light: {
-          dim: dimLight,
-          bright: brightLight,
-          color: lightColor,
-          //@ts-ignore
-          animation: {
-              type: lightAnimationType,
-              speed: lightAnimationSpeed,
-              intensity: lightAnimationIntensity,
-              reverse: lightAnimationReverse
-          },
-          alpha: lightAlpha,
-          angle: lightAngle,
-          coloration: lightColoration,
-          luminosity: lightLuminosity,
-          gradual: lightGradual,
-          saturation: lightSaturation,
-          contrast: lightContrast,
-          shadows: lightShadows,
+        dim: dimLight,
+        bright: brightLight,
+        color: lightColor,
+        //@ts-ignore
+        animation: {
+          type: lightAnimationType,
+          speed: lightAnimationSpeed,
+          intensity: lightAnimationIntensity,
+          reverse: lightAnimationReverse,
+        },
+        alpha: lightAlpha,
+        angle: lightAngle,
+        coloration: lightColoration,
+        luminosity: lightLuminosity,
+        gradual: lightGradual,
+        saturation: lightSaturation,
+        contrast: lightContrast,
+        shadows: lightShadows,
       },
       dimSight: dimSight,
       brightSight: brightSight,
@@ -555,10 +553,9 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
 }
 
 export async function checkString(value) {
-  if (value === ""){
-    return "";
-  }
-  else{
+  if (value === '') {
+    return '';
+  } else {
     return Number(value);
   }
 }

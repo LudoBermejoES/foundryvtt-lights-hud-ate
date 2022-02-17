@@ -173,9 +173,10 @@ export const registerSettings = function (): void {
   });
 };
 
-class ResetSettingsDialog extends FormApplication {
-  constructor(...args: any[]) {
-    super(args);
+class ResetSettingsDialog extends FormApplication<FormApplicationOptions, object, any> {
+  constructor(...args) {
+    //@ts-ignore
+    super(...args);
     //@ts-ignore
     return new Dialog({
       title: game.i18n.localize(`${CONSTANTS.MODULE_NAME}.dialogs.resetsettings.title`),

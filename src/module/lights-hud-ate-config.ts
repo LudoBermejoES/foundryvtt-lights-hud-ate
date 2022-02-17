@@ -571,78 +571,100 @@ export function presetDialog(applyChanges: boolean): Dialog {
   });
 }
 
-export function customATLDialog(applyChanges: boolean, preset:any = undefined, copy = false): Dialog {
-  let { light, dimSight, brightSight, sightAngle, name, height, width, scale, id } = preset ? preset : 0
-  let { dim, bright, color, animation, alpha, angle, coloration, contrast, gradual, luminosity, saturation, shadows } = light ? light : 0
+export function customATLDialog(applyChanges: boolean, preset: any = undefined, copy = false): Dialog {
+  let { light, dimSight, brightSight, sightAngle, name, height, width, scale, id } = preset ? preset : 0;
+  let { dim, bright, color, animation, alpha, angle, coloration, contrast, gradual, luminosity, saturation, shadows } =
+    light ? light : 0;
   switch (copy) {
-      case true: {
-        name = `${name} (copy)`;
-        break;
-      }
-      case false: {
-        name = `${name}`;
-        break;
-      }
-      default: {
-        name = "";
-      }
+    case true: {
+      name = `${name} (copy)`;
+      break;
+    }
+    case false: {
+      name = `${name}`;
+      break;
+    }
+    default: {
+      name = '';
+    }
   }
 
-  if (id === undefined) id = "";
+  if (id === undefined) id = '';
   if (light === undefined) light = undefined;
-  if (height === undefined) height = "";
-  if (width === undefined) width = "";
-  if (scale === undefined) scale = "";
-  if (dim === undefined) dim = "";
-  if (bright === undefined) bright = ""
-  if (dimSight === undefined) dimSight = ""
-  if (brightSight === undefined) brightSight = ""
-  if (sightAngle === undefined) sightAngle = ""
-  if (color === undefined) color = ""
-  if (angle === undefined) angle = ""
-  if (alpha === undefined) alpha = ""
-  if (animation === undefined) animation = {}
-  if (coloration === undefined) coloration = ""
-  if (contrast === undefined) contrast = ""
-  if (gradual === undefined) gradual = false
-  if (luminosity === undefined) luminosity = ""
-  if (saturation === undefined) saturation = ""
-  if (shadows === undefined) shadows = ""
+  if (height === undefined) height = '';
+  if (width === undefined) width = '';
+  if (scale === undefined) scale = '';
+  if (dim === undefined) dim = '';
+  if (bright === undefined) bright = '';
+  if (dimSight === undefined) dimSight = '';
+  if (brightSight === undefined) brightSight = '';
+  if (sightAngle === undefined) sightAngle = '';
+  if (color === undefined) color = '';
+  if (angle === undefined) angle = '';
+  if (alpha === undefined) alpha = '';
+  if (animation === undefined) animation = {};
+  if (coloration === undefined) coloration = '';
+  if (contrast === undefined) contrast = '';
+  if (gradual === undefined) gradual = false;
+  if (luminosity === undefined) luminosity = '';
+  if (saturation === undefined) saturation = '';
+  if (shadows === undefined) shadows = '';
 
-
-  let colorationTypes = ``
+  let colorationTypes = ``;
   for (const [k, v] of Object.entries(AdaptiveLightingShader.COLORATION_TECHNIQUES)) {
-      const name = game.i18n.localize(v.label)
-      colorationTypes += `<option value="${v.id}" ${coloration === v.id ? "selected" : ""}>${name}</option>`;
+    const name = game.i18n.localize(v.label);
+    colorationTypes += `<option value="${v.id}" ${coloration === v.id ? 'selected' : ''}>${name}</option>`;
   }
 
-  let lightTypes = `<option selected value="none"> None</option>`
+  let lightTypes = `<option selected value="none"> None</option>`;
   for (const [k, v] of Object.entries(CONFIG.Canvas.lightAnimations)) {
-      const name = game.i18n.localize(v.label)
-      lightTypes += `<option value="${k.toLocaleLowerCase()}" ${animation.type === k ? "selected" : ""}>${name}</option>`;
+    const name = game.i18n.localize(v.label);
+    lightTypes += `<option value="${k.toLocaleLowerCase()}" ${animation.type === k ? 'selected' : ''}>${name}</option>`;
   }
 
-  if (game.modules.get("CommunityLighting")?.active) {
-      lightTypes += `
+  if (game.modules.get('CommunityLighting')?.active) {
+    lightTypes += `
       <optgroup label= "Blitz" id="animationType">
-      <option value="BlitzFader" ${animation.type === "BlitzFader" ? 'selected' : ''}>Fader</option>
-      <option value="BlitzLightning" ${animation.type === "BlitzLightning" ? 'selected' : ''}>Lightning (expirmental)</option>
-      <option value="BlitzElectric Fault" ${animation.type === "BlitzElectric Fault" ? 'selected' : ''}>Electrical Fault</option>
-      <option value="BlitzSimple Flash" ${animation.type === "BlitzSimple Flash" ? 'selected' : ''}>Simple Flash</option>
-      <option value="BlitzRBG Flash" ${animation.type === "BlitzRBG Flash" ? 'selected' : ''}>RGB Flash</option>
-      <option value="BlitzPolice Flash" ${animation.type === "BlitzPolice Flash" ? 'selected' : ''}>Police Flash</option>
-      <option value="BlitzStatic Blur" ${animation.type === "BlitzStatic Blur" ? 'selected' : ''}> Static Blur</option>
-      <option value="BlitzAlternate Torch" ${animation.type === "BlitzAlternate Torch" ? 'selected' : ''}>Alternate Torch</option>
-      <option value="BlitzBlurred Torch" ${animation.type === "BlitzBlurred Torch" ? 'selected' : ''}>Blurred Torch</option>
-      <option value="BlitzGrid Force-Field Colorshift" ${animation.type === "BlitzGrid Force-Field Colorshift" ? 'selected' : ''}>Grid Force-Field Colorshift</option>
+      <option value="BlitzFader" ${animation.type === 'BlitzFader' ? 'selected' : ''}>Fader</option>
+      <option value="BlitzLightning" ${
+        animation.type === 'BlitzLightning' ? 'selected' : ''
+      }>Lightning (expirmental)</option>
+      <option value="BlitzElectric Fault" ${
+        animation.type === 'BlitzElectric Fault' ? 'selected' : ''
+      }>Electrical Fault</option>
+      <option value="BlitzSimple Flash" ${
+        animation.type === 'BlitzSimple Flash' ? 'selected' : ''
+      }>Simple Flash</option>
+      <option value="BlitzRBG Flash" ${animation.type === 'BlitzRBG Flash' ? 'selected' : ''}>RGB Flash</option>
+      <option value="BlitzPolice Flash" ${
+        animation.type === 'BlitzPolice Flash' ? 'selected' : ''
+      }>Police Flash</option>
+      <option value="BlitzStatic Blur" ${animation.type === 'BlitzStatic Blur' ? 'selected' : ''}> Static Blur</option>
+      <option value="BlitzAlternate Torch" ${
+        animation.type === 'BlitzAlternate Torch' ? 'selected' : ''
+      }>Alternate Torch</option>
+      <option value="BlitzBlurred Torch" ${
+        animation.type === 'BlitzBlurred Torch' ? 'selected' : ''
+      }>Blurred Torch</option>
+      <option value="BlitzGrid Force-Field Colorshift" ${
+        animation.type === 'BlitzGrid Force-Field Colorshift' ? 'selected' : ''
+      }>Grid Force-Field Colorshift</option>
       </optgroup>
       <optgroup label="SecretFire" id="animationType">
-      <option value="SecretFireGrid Force-Field" ${animation.type === "SecretFireGrid Force-Field" ? 'selected' : ''}>Grid Force-Field</option>
-      <option value="SecretFireSmoke Patch" ${animation.type === "SecretFireSmoke Patch" ? 'selected' : ''}>Smoke Patch</option>
-      <option value="SecretFireStar Light" ${animation.type === "SecretFireStar Light" ? 'selected' : ''}>Star Light</option>
-      <option value="SecretFireStar Light Disco" ${animation.type === "SecretFireStar Light Disco" ? 'selected' : ''}>Star Light Disco</option>
+      <option value="SecretFireGrid Force-Field" ${
+        animation.type === 'SecretFireGrid Force-Field' ? 'selected' : ''
+      }>Grid Force-Field</option>
+      <option value="SecretFireSmoke Patch" ${
+        animation.type === 'SecretFireSmoke Patch' ? 'selected' : ''
+      }>Smoke Patch</option>
+      <option value="SecretFireStar Light" ${
+        animation.type === 'SecretFireStar Light' ? 'selected' : ''
+      }>Star Light</option>
+      <option value="SecretFireStar Light Disco" ${
+        animation.type === 'SecretFireStar Light Disco' ? 'selected' : ''
+      }>Star Light Disco</option>
       </optgroup>
-  `
+  `;
   }
 
   const dialogContent = `
@@ -725,19 +747,25 @@ export function customATLDialog(applyChanges: boolean, preset:any = undefined, c
       <div class="form-group lights-hud-ate-sub-group" ">
           <label>Animation Speed</label>
           <div class="form-fields">
-              <input id="animationSpeed" name="animationSpeed" type="range" min="1" max="10" step="1" value="${animation?.speed}"></input>
+              <input id="animationSpeed" name="animationSpeed" type="range" min="1" max="10" step="1" value="${
+                animation?.speed
+              }"></input>
           </div>
       </div>
       <div class="form-group lights-hud-ate-sub-group">
           <label>Reverse Direction</label>
           <div class="form-fields">
-              <input type="checkbox" id="animationReverse" name="animationReverse" ${animation?.reverse ? "checked" : ""} onclick="$(this).attr('value', this.checked ? true : false)">
+              <input type="checkbox" id="animationReverse" name="animationReverse" ${
+                animation?.reverse ? 'checked' : ''
+              } onclick="$(this).attr('value', this.checked ? true : false)">
           </div>
       </div>
       <div class="form-group lights-hud-ate-sub-group">
           <label>Animation Intensity</label>
           <div class="form-fields">
-              <input id="animationIntensity" name="animationIntensity" type="range" min="1" max="10" step="1" value="${animation?.intensity}"></input>
+              <input id="animationIntensity" name="animationIntensity" type="range" min="1" max="10" step="1" value="${
+                animation?.intensity
+              }"></input>
           </div>
       </div>
       <h3>Advanced Animation</h3>
@@ -761,7 +789,9 @@ export function customATLDialog(applyChanges: boolean, preset:any = undefined, c
       <div class="form-group lights-hud-ate-sub-group">
           <label>Gradual Illumination</label>
           <div class="form-fields">
-              <input type="checkbox" id="lightGradual" name="lightGradual" ${gradual ? "checked" : ""} onclick="$(this).attr('value', this.checked ? true : false)">
+              <input type="checkbox" id="lightGradual" name="lightGradual" ${
+                gradual ? 'checked' : ''
+              } onclick="$(this).attr('value', this.checked ? true : false)">
           </div>
       </div>
 
@@ -788,170 +818,170 @@ export function customATLDialog(applyChanges: boolean, preset:any = undefined, c
           `;
 
   return new Dialog({
-      title: `Token Vision Configuration (Custom)`,
-      content: dialogContent,
-      buttons: {
-        yes: {
-          icon: "<i class='fas fa-check'></i>",
-          label: `Apply Changes`,
-          callback: () => (applyChanges = true),
-        },
-        no: {
-          icon: "<i class='fas fa-times'></i>",
-          label: `Cancel Changes`,
-        },
+    title: `Token Vision Configuration (Custom)`,
+    content: dialogContent,
+    buttons: {
+      yes: {
+        icon: "<i class='fas fa-check'></i>",
+        label: `Apply Changes`,
+        callback: () => (applyChanges = true),
       },
-      default: 'no',
-      close: async (html: any) => {
-        if (applyChanges) {
-          const id = <string>html.find("#name")[0].name || randomID();
-          const effectName = <string>html.find("#name")[0].value || '';
-          const height = <number>await checkString(html.find("#height")[0].value);
-          const width = <number>await checkString(html.find("#width")[0].value);
-          const scale = <number>await checkString(html.find("#scale")[0].value);
-          const dimLight = <number>await checkString(html.find("#dim")[0].value);
-          const brightLight = <number>await checkString(html.find("#bright")[0].value);
-          const dimSight = <number>await checkString(html.find("#dimSight")[0].value);
-          const brightSight = <number>await checkString(html.find("#brightSight")[0].value);
-          const lightColor = <string>html.find("#color")[0].value;
-          const sightAngle = <number>await checkString(html.find("#sightAngle")[0].value);
-          const lightAlpha = <number>await checkString(html.find("#alpha")[0].value);
-          const lightAngle = <number>await checkString(html.find("#angle")[0].value);
-          const lightAnimationType = <string>html.find("#animationType")[0].value;
-          const lightAnimationSpeed = <number>await checkString(html.find("#animationSpeed")[0].value);
-          const lightAnimationIntensity = <number>await checkString(html.find("#animationIntensity")[0].value);
-          const lightAnimationReverse = <boolean>html.find("#animationIntensity").is(":checked");
-          const coloration = <number>await checkString(html.find("#lightColoration")[0].value);
-          const luminosity = <number>await checkString(html.find("#lightLuminosity")[0].value);
-          const gradual = <boolean>html.find("#lightGradual").is(":checked");
-          const saturation = <number>await checkString(html.find("#lightSaturation")[0].value);
-          const contrast = <number>await checkString(html.find("#lightContrast")[0].value);
-          const shadows = <number>await checkString(html.find("#lightShadows")[0].value);
-          const vision = (dimSight > 0 || brightSight > 0) ? true : false;
+      no: {
+        icon: "<i class='fas fa-times'></i>",
+        label: `Cancel Changes`,
+      },
+    },
+    default: 'no',
+    close: async (html: any) => {
+      if (applyChanges) {
+        const id = <string>html.find('#name')[0].name || randomID();
+        const effectName = <string>html.find('#name')[0].value || '';
+        const height = <number>await checkString(html.find('#height')[0].value);
+        const width = <number>await checkString(html.find('#width')[0].value);
+        const scale = <number>await checkString(html.find('#scale')[0].value);
+        const dimLight = <number>await checkString(html.find('#dim')[0].value);
+        const brightLight = <number>await checkString(html.find('#bright')[0].value);
+        const dimSight = <number>await checkString(html.find('#dimSight')[0].value);
+        const brightSight = <number>await checkString(html.find('#brightSight')[0].value);
+        const lightColor = <string>html.find('#color')[0].value;
+        const sightAngle = <number>await checkString(html.find('#sightAngle')[0].value);
+        const lightAlpha = <number>await checkString(html.find('#alpha')[0].value);
+        const lightAngle = <number>await checkString(html.find('#angle')[0].value);
+        const lightAnimationType = <string>html.find('#animationType')[0].value;
+        const lightAnimationSpeed = <number>await checkString(html.find('#animationSpeed')[0].value);
+        const lightAnimationIntensity = <number>await checkString(html.find('#animationIntensity')[0].value);
+        const lightAnimationReverse = <boolean>html.find('#animationIntensity').is(':checked');
+        const coloration = <number>await checkString(html.find('#lightColoration')[0].value);
+        const luminosity = <number>await checkString(html.find('#lightLuminosity')[0].value);
+        const gradual = <boolean>html.find('#lightGradual').is(':checked');
+        const saturation = <number>await checkString(html.find('#lightSaturation')[0].value);
+        const contrast = <number>await checkString(html.find('#lightContrast')[0].value);
+        const shadows = <number>await checkString(html.find('#lightShadows')[0].value);
+        const vision = dimSight > 0 || brightSight > 0 ? true : false;
 
-          const applyAsAtlAteEffect = <boolean>html.find("#apply-as-atl-ate").is(":checked") ?? false;
-          const duration = <number>html.find("#duration")[0].value;
+        const applyAsAtlAteEffect = <boolean>html.find('#apply-as-atl-ate').is(':checked') ?? false;
+        const duration = <number>html.find('#duration')[0].value;
 
-          // const tokenData:TokenData = {
-          //     name: effectName,
-          //     height: height,
-          //     width: width,
-          //     scale: scale,
-          //     light: {
-          //         dim: dimLight,
-          //         bright: brightLight,
-          //         color: lightColor,
-          //         //@ts-ignore
-          //         animation: {
-          //             type: lightAnimationType,
-          //             speed: lightAnimationSpeed,
-          //             intensity: lightAnimationIntensity,
-          //             reverse: lightAnimationReverse
-          //         },
-          //         alpha: lightAlpha,
-          //         angle: lightAngle,
-          //         coloration: coloration,
-          //         luminosity: luminosity,
-          //         gradual: gradual,
-          //         saturation: saturation,
-          //         contrast: contrast,
-          //         shadows: shadows,
-          //     },
-          //     dimSight: dimSight,
-          //     brightSight: brightSight,
-          //     sightAngle: sightAngle,
+        // const tokenData:TokenData = {
+        //     name: effectName,
+        //     height: height,
+        //     width: width,
+        //     scale: scale,
+        //     light: {
+        //         dim: dimLight,
+        //         bright: brightLight,
+        //         color: lightColor,
+        //         //@ts-ignore
+        //         animation: {
+        //             type: lightAnimationType,
+        //             speed: lightAnimationSpeed,
+        //             intensity: lightAnimationIntensity,
+        //             reverse: lightAnimationReverse
+        //         },
+        //         alpha: lightAlpha,
+        //         angle: lightAngle,
+        //         coloration: coloration,
+        //         luminosity: luminosity,
+        //         gradual: gradual,
+        //         saturation: saturation,
+        //         contrast: contrast,
+        //         shadows: shadows,
+        //     },
+        //     dimSight: dimSight,
+        //     brightSight: brightSight,
+        //     sightAngle: sightAngle,
 
-          //     id: id
-          // }
-          //const final = Object.fromEntries(Object.entries(object).filter(([_, v]) => v != ""));
-          //ATL.AddPreset(tempName, final)
-          for (const token of <Token[]>canvas.tokens?.controlled) {
-            const actorId = <string>token.actor?.id;
-            const tokenId = token.id;
+        //     id: id
+        // }
+        //const final = Object.fromEntries(Object.entries(object).filter(([_, v]) => v != ""));
+        //ATL.AddPreset(tempName, final)
+        for (const token of <Token[]>canvas.tokens?.controlled) {
+          const actorId = <string>token.actor?.id;
+          const tokenId = token.id;
 
-            let alias: string | null = null;
-            if (actorId || tokenId) {
-              if (!alias) {
-                if (token) {
-                  alias = <string>token.name;
-                } else {
-                  alias = <string>game.actors?.get(actorId)?.name;
-                }
-              }
-            }
-            const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
-
-            // About time configuration
-            if (duration > 0) {
-              if (game.modules.get('about-time')?.active != true) {
-                ui.notifications?.error("About Time isn't loaded");
+          let alias: string | null = null;
+          if (actorId || tokenId) {
+            if (!alias) {
+              if (token) {
+                alias = <string>token.name;
               } else {
-                ((backup) => {
-                  //@ts-ignore
-                  game.Gametime.doIn({ minutes: Math.floor((3 * duration) / 4) }, () => {
-                    dialogWarning(`The ${effectName} burns low...`);
-                    ChatMessage.create(
-                      {
-                        user: game.user?.id,
-                        content: `The ${effectName} burns low...`,
-                        speaker: speaker,
-                      },
-                      {},
-                    );
-                  });
-                })(Object.assign({}, token.data));
-                ((backup) => {
-                  //@ts-ignore
-                  game.Gametime.doIn({ minutes: duration }, () => {
-                    dialogWarning(`The ${effectName} burns low...`);
-                    ChatMessage.create(
-                      {
-                        user: game.user?.id,
-                        content: `The ${effectName} goes out, leaving you in darkness.`,
-                        speaker: speaker,
-                      },
-                      {},
-                    );
-                    updateTokenLighting(
-                      token,
-                      //backup.lockRotation,
-                      backup.dimSight,
-                      backup.brightSight,
-                      backup.sightAngle,
-                      backup.light.dim,
-                      backup.light.bright,
-                      <string>backup.light.color,
-                      backup.light.alpha,
-                      backup.light.angle,
-
-                      backup.light.coloration,
-                      backup.light.luminosity,
-                      backup.light.gradual,
-                      backup.light.saturation,
-                      backup.light.contrast,
-                      backup.light.shadows,
-
-                      <string>backup.light.animation.type,
-                      backup.light.animation.speed,
-                      backup.light.animation.intensity,
-                      backup.light.animation.reverse,
-
-                      applyAsAtlAteEffect,
-                      effectName,
-                      '',
-                      duration,
-
-                      backup.vision,
-                      //id,
-                      // backup.name,
-                      backup.height,
-                      backup.width,
-                      backup.scale,
-                    );
-                  });
-                })(Object.assign({}, token.data));
+                alias = <string>game.actors?.get(actorId)?.name;
               }
             }
+          }
+          const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
+
+          // About time configuration
+          if (duration > 0) {
+            if (game.modules.get('about-time')?.active != true) {
+              ui.notifications?.error("About Time isn't loaded");
+            } else {
+              ((backup) => {
+                //@ts-ignore
+                game.Gametime.doIn({ minutes: Math.floor((3 * duration) / 4) }, () => {
+                  dialogWarning(`The ${effectName} burns low...`);
+                  ChatMessage.create(
+                    {
+                      user: game.user?.id,
+                      content: `The ${effectName} burns low...`,
+                      speaker: speaker,
+                    },
+                    {},
+                  );
+                });
+              })(Object.assign({}, token.data));
+              ((backup) => {
+                //@ts-ignore
+                game.Gametime.doIn({ minutes: duration }, () => {
+                  dialogWarning(`The ${effectName} burns low...`);
+                  ChatMessage.create(
+                    {
+                      user: game.user?.id,
+                      content: `The ${effectName} goes out, leaving you in darkness.`,
+                      speaker: speaker,
+                    },
+                    {},
+                  );
+                  updateTokenLighting(
+                    token,
+                    //backup.lockRotation,
+                    backup.dimSight,
+                    backup.brightSight,
+                    backup.sightAngle,
+                    backup.light.dim,
+                    backup.light.bright,
+                    <string>backup.light.color,
+                    backup.light.alpha,
+                    backup.light.angle,
+
+                    backup.light.coloration,
+                    backup.light.luminosity,
+                    backup.light.gradual,
+                    backup.light.saturation,
+                    backup.light.contrast,
+                    backup.light.shadows,
+
+                    <string>backup.light.animation.type,
+                    backup.light.animation.speed,
+                    backup.light.animation.intensity,
+                    backup.light.animation.reverse,
+
+                    applyAsAtlAteEffect,
+                    effectName,
+                    '',
+                    duration,
+
+                    backup.vision,
+                    //id,
+                    // backup.name,
+                    backup.height,
+                    backup.width,
+                    backup.scale,
+                  );
+                });
+              })(Object.assign({}, token.data));
+            }
+          }
 
           // Update Token
           updateTokenLighting(
@@ -990,11 +1020,10 @@ export function customATLDialog(applyChanges: boolean, preset:any = undefined, c
             width,
             scale,
           );
-
-          }
         }
       }
-    });
+    },
+  });
 }
 /*
 export function customDialog(applyChanges: boolean): Dialog {
@@ -1363,7 +1392,7 @@ export function confirmDialogDropTheTorch(
 
             // Get the current permission level for the selected token.
             const currentPermissions = <number>(<Actor>actorDropTheTorch).data.permission.default;
-            (<Actor>actorDropTheTorch).update({permission:{default:3}});
+            (<Actor>actorDropTheTorch).update({ permission: { default: 3 } });
             // If the current permission level is anything above 'None' then reset it to 'None'
             // if (currentPermissions > 0)
             // {
@@ -1374,7 +1403,6 @@ export function confirmDialogDropTheTorch(
             // {
             //   (<Actor>actorDropTheTorch).update({permission:{default:3}});
             // }
-
           } finally {
             if (actorDropTheTorch) {
               // Remove actor at the end
