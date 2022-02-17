@@ -120,7 +120,7 @@ export async function rollDependingOnSystem(item: Item) {
 // Update the relevant light parameters of a token
 export async function updateTokenLighting(
   token: Token,
-  lockRotation: boolean,
+  //lockRotation: boolean,
   dimSight: number,
   brightSight: number,
   sightAngle: number,
@@ -129,138 +129,250 @@ export async function updateTokenLighting(
   lightColor: string,
   lightAlpha: number,
   lightAngle: number,
-  lightAnimationType: string,
-  lightAnimationSpeed: number,
-  lightAnimationIntensity: number,
+
+  lightColoration: number | null = null,
+  lightLuminosity: number | null = null,
+  lightGradual: boolean | null = null,
+  lightSaturation: number | null = null,
+  lightContrast: number | null = null,
+  lightShadows: number | null = null,
+
+  lightAnimationType: string | null,
+  lightAnimationSpeed: number | null,
+  lightAnimationIntensity: number | null,
+  lightAnimationReverse: boolean | null,
+
   applyAsAtlEffect = false,
   effectName: string | null = null,
   effectIcon: string | null = null,
   duration: number | null = null,
+
+  vision = false,
+  // id: string | null = null,
+  // name: string | null = null,
+  height: number | null = null,
+  width: number | null = null,
+  scale: number | null = null,
 ) {
-  if (dimSight == null || dimSight == undefined) {
-    dimSight = token.data.dimSight;
-  }
-  if (brightSight == null || brightSight == undefined) {
-    brightSight = token.data.brightSight;
-  }
-  if (sightAngle == null || sightAngle == undefined) {
-    sightAngle = token.data.sightAngle;
-  }
-
-  if (lockRotation == null || lockRotation == undefined) {
-    lockRotation = token.data.lockRotation;
-  }
-
-  if (dimLight == null || dimLight == undefined) {
-    dimLight = token.data.light.dim;
-  }
-  if (brightLight == null || brightLight == undefined) {
-    brightLight = token.data.light.bright;
-  }
-  if (lightColor == null || lightColor == undefined) {
-    lightColor = <string>token.data.light.color;
-  }
-  if (lightAlpha == null || lightAlpha == undefined) {
-    lightAlpha = token.data.light.alpha;
-  }
-  if (lightAngle == null || lightAngle == undefined) {
-    lightAngle = token.data.light.angle;
-  }
-
-  if (lightAnimationType == null || lightAnimationType == undefined) {
-    lightAnimationType = <string>token.data.light.animation.type;
-  }
-  if (lightAnimationSpeed == null || lightAnimationSpeed == undefined) {
-    lightAnimationSpeed = token.data.light.animation.speed;
-  }
-  if (lightAnimationIntensity == null || lightAnimationIntensity == undefined) {
-    lightAnimationIntensity = token.data.light.animation.intensity;
-  }
 
   if (applyAsAtlEffect) {
+    const atlChanges:any = [];
+
+    if(height && height){
+      atlChanges.push({
+        key: EffectDefinitions._createAtlEffectKey('ATL.height'),
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: height,
+      });
+    }
+    if(width && width > 0) {
+      atlChanges.push({
+        key: EffectDefinitions._createAtlEffectKey('ATL.width'),
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: width,
+      });
+    }
+    if(scale && scale > 0){
+      atlChanges.push({
+        key: EffectDefinitions._createAtlEffectKey('ATL.scale'),
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: scale,
+      });
+    }
+    if(dimSight && dimSight > 0){
+      atlChanges.push({
+        key: EffectDefinitions._createAtlEffectKey('ATL.dimSight'),
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: dimSight,
+      });
+    }
+    if(brightSight && brightSight > 0) {
+      atlChanges.push({
+        key: EffectDefinitions._createAtlEffectKey('ATL.brightSight'),
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: brightSight && brightSight > 0 ? brightSight : token.data.brightSight,
+      });
+    }
+    if(dimLight && dimLight > 0) {
+      atlChanges.push({
+        key: EffectDefinitions._createAtlEffectKey('ATL.light.dim'),
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: dimLight,
+      });
+    }
+    if(brightLight && brightLight > 0){
+      atlChanges.push({
+        key: EffectDefinitions._createAtlEffectKey('ATL.light.bright'),
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: brightLight,
+      });
+    }
+    if(lightAngle){
+      atlChanges.push({
+        key: EffectDefinitions._createAtlEffectKey('ATL.light.angle'),
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: lightAngle,
+      });
+    }
+    if(lightColor){
+      atlChanges.push({
+        key: EffectDefinitions._createAtlEffectKey('ATL.light.color'),
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: lightColor,
+      });
+    }
+    if(lightAlpha){
+      atlChanges.push({
+        key: EffectDefinitions._createAtlEffectKey('ATL.light.alpha'),
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: lightAlpha,
+      });
+    }
+    if(lightAnimationType && lightAnimationSpeed && lightAnimationIntensity && lightAnimationReverse){
+      atlChanges.push({
+        key: EffectDefinitions._createAtlEffectKey('ATL.light.animation'),
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}, "reverse":${lightAnimationReverse}}`
+      });
+    }
+    if(lightAnimationType && lightAnimationSpeed && lightAnimationIntensity){
+      atlChanges.push({
+        key: EffectDefinitions._createAtlEffectKey('ATL.light.animation'),
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}}`
+      });
+    }
     const efffectAtlToApply = new Effect({
+      // customId: id || <string>token.actor?.id,
       customId: <string>token.actor?.id,
       name: <string>effectName,
       description: ``,
       // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
       transfer: true,
-      seconds: <number>duration * 60, // minutes to seconds
-      atlChanges: [
-        {
-          key: EffectDefinitions._createAtlEffectKey('ATL.dimSight'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: dimSight && dimSight > 0 ? dimSight : token.data.dimSight,
-        },
-        {
-          key: EffectDefinitions._createAtlEffectKey('ATL.brightSight'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: brightSight && brightSight > 0 ? brightSight : token.data.brightSight,
-        },
-        {
-          key: EffectDefinitions._createAtlEffectKey('ATL.light.dim'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: dimLight && dimLight > 0 ? dimLight : token.data.light.dim,
-        },
-        {
-          key: EffectDefinitions._createAtlEffectKey('ATL.light.bright'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: brightLight && brightLight > 0 ? brightLight : token.data.light.bright,
-        },
-        {
-          key: EffectDefinitions._createAtlEffectKey('ATL.light.angle'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: lightAngle ? lightAngle : token.data.light.angle,
-        },
-        {
-          key: EffectDefinitions._createAtlEffectKey('ATL.light.color'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: lightColor ? lightColor : token.data.light.color,
-        },
-        {
-          key: EffectDefinitions._createAtlEffectKey('ATL.light.alpha'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value: lightAlpha ? lightAlpha : token.data.light.alpha,
-        },
-        {
-          key: EffectDefinitions._createAtlEffectKey('ATL.light.animation'),
-          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-          value:
-            lightAnimationType && lightAnimationSpeed > 0 && lightAnimationIntensity > 0
-              ? `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}}`
-              : token.data.light.animation,
-        },
-      ],
+      seconds: (duration != null ? <number>duration * 60 : undefined), // minutes to seconds
+      atlChanges: atlChanges
     });
     await API.addEffect(<string>token.actor?.id, <string>effectName, efffectAtlToApply);
   } else {
+    // TODO FIND A BETTER WAY FOR THIS
+    if (dimSight == null || dimSight == undefined) {
+      dimSight = token.data.dimSight;
+    }
+    if (brightSight == null || brightSight == undefined) {
+      brightSight = token.data.brightSight;
+    }
+    if (sightAngle == null || sightAngle == undefined) {
+      sightAngle = token.data.sightAngle;
+    }
+
+    // if (lockRotation == null || lockRotation == undefined) {
+    //   lockRotation = token.data.lockRotation;
+    // }
+
+    if (dimLight == null || dimLight == undefined) {
+      dimLight = token.data.light.dim;
+    }
+    if (brightLight == null || brightLight == undefined) {
+      brightLight = token.data.light.bright;
+    }
+    if (lightColor == null || lightColor == undefined) {
+      lightColor = <string>token.data.light.color;
+    }
+    if (lightAlpha == null || lightAlpha == undefined) {
+      lightAlpha = token.data.light.alpha;
+    }
+    if (lightAngle == null || lightAngle == undefined) {
+      lightAngle = token.data.light.angle;
+    }
+
+    if (lightColoration == null || lightColoration == undefined) {
+      lightColoration = token.data.light.angle;
+    }
+    if (lightLuminosity == null || lightLuminosity == undefined) {
+      lightLuminosity = token.data.light.angle;
+    }
+    if (lightGradual == null || lightGradual == undefined) {
+      lightGradual = token.data.light.gradual;
+    }
+    if (lightSaturation == null || lightSaturation == undefined) {
+      lightSaturation = token.data.light.saturation;
+    }
+    if (lightContrast == null || lightContrast == undefined) {
+      lightContrast = token.data.light.contrast;
+    }
+    if (lightShadows == null || lightShadows == undefined) {
+      lightShadows = token.data.light.shadows;
+    }
+
+    if (lightAnimationType == null || lightAnimationType == undefined) {
+      lightAnimationType = <string>token.data.light.animation.type;
+    }
+    if (lightAnimationSpeed == null || lightAnimationSpeed == undefined) {
+      lightAnimationSpeed = token.data.light.animation.speed;
+    }
+    if (lightAnimationIntensity == null || lightAnimationIntensity == undefined) {
+      lightAnimationIntensity = token.data.light.animation.intensity;
+    }
+    if (lightAnimationReverse == null || lightAnimationReverse == undefined) {
+      lightAnimationReverse = token.data.light.animation.reverse;
+    }
+
+    if (height == null || height == undefined) {
+      height = token.data.height;
+    }
+    if (width == null || width == undefined) {
+      width = token.data.width;
+    }
+    if (scale == null || scale == undefined) {
+      scale = token.data.scale;
+    }
+
     token.document.update({
-      vision: true,
+       // lockRotation: lockRotation,
+      vision: vision,
+      // dimSight: dimSight,
+      // brightSight: brightSight,
+      // sightAngle: sightAngle,
+      // light: {
+      //   dim: dimLight,
+      //   bright: brightLight,
+      //   angle: lightAngle,
+      //   color: lightColor,
+      //   alpha: lightAlpha,
+      //   animation: {
+      //     type: lightAnimationType,
+      //     speed: lightAnimationSpeed,
+      //     intensity: lightAnimationIntensity,
+      //   },
+      // },
+      // id: id
+      // name: name,
+      height: height,
+      width: width,
+      scale: scale,
+      light: {
+          dim: dimLight,
+          bright: brightLight,
+          color: lightColor,
+          //@ts-ignore
+          animation: {
+              type: lightAnimationType,
+              speed: lightAnimationSpeed,
+              intensity: lightAnimationIntensity,
+              reverse: lightAnimationReverse
+          },
+          alpha: lightAlpha,
+          angle: lightAngle,
+          coloration: lightColoration,
+          luminosity: lightLuminosity,
+          gradual: lightGradual,
+          saturation: lightSaturation,
+          contrast: lightContrast,
+          shadows: lightShadows,
+      },
       dimSight: dimSight,
       brightSight: brightSight,
       sightAngle: sightAngle,
-      lockRotation: lockRotation,
-      // dimLight: dimLight,
-      // brightLight: brightLight,
-      // lightAngle: lightAngle,
-      // lightColor: lightColor,
-      // lightAlpha: lightAlpha,
-      // lightAnimation: {
-      //   type: lightAnimationType,
-      //   speed: lightAnimationSpeed,
-      //   intensity: lightAnimationIntensity,
-      // },
-      light: {
-        dim: dimLight,
-        bright: brightLight,
-        angle: lightAngle,
-        color: lightColor,
-        alpha: lightAlpha, //** 2, // need  this ?
-        animation: {
-          type: lightAnimationType,
-          speed: lightAnimationSpeed,
-          intensity: lightAnimationIntensity,
-        },
-      },
     });
   }
 }
@@ -429,14 +541,24 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   const tokenData2: TokenData = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
   tokenData2.actorId = <string>actor.data._id;
   tokenData2.actorLink = true;
+  // tokenData2.vision = false; // TODO we use this only for light ?
 
   const atlEffects = item.effects.filter((entity) => {
     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
   });
   atlEffects.forEach(async (ae: ActiveEffect) => {
     // Make sure is enabled
-    // ae.data.disabled = false;
+    ae.data.disabled = false;
     await API.addActiveEffectOnActor(<string>tokenData2.actorId, ae);
   });
   return tokenData2;
+}
+
+export async function checkString(value) {
+  if (value === ""){
+    return "";
+  }
+  else{
+    return Number(value);
+  }
 }

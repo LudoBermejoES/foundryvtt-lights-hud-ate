@@ -141,3 +141,7 @@
   opacity: 1 !important;
   /* filter: grayscale(100%); */
 }
+
+.lights-hud-ate-sub-group {
+  margin-left: 20px !important;
+}

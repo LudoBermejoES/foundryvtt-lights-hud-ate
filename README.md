@@ -94,10 +94,12 @@ The module is build to show on a left click of the button with the image of a li
 | Symbol | Description  |
 |:----:|:----:|
 |![exclamation-triangle-solid](./wiki/icons/exclamation-triangle-solid.svg) | The symbol of the **yellow exclamation triangle** means the active effect is _suppressed_ for some reason that you can delve into in the effects panel, usually _need to be attuned or equipped condition_ this does not prevent the effect from being active or not, only that it will result in the subcategory of inactive effects. |
-|![eye-solid](./wiki/icons/eye-solid.svg) | The symbol of the **purple eye** means the active effect is _passive_ like a race feature or a special ability like darkvision, this does not prevent the effect from being active or not, only that it will result in the subcategory of inactive effects. |
-|![hourglass-solid](./wiki/icons/hourglass-solid.svg) | The symbol of the **orange hourglass** means the active effect is _temporary_ like a spell valid only for tot. rounds or seconds, this is usually managed from the [About Time](https://gitlab.com/tposney/about-time) module if installed, this does not prevent the effect from being active or not, only that it will result in the subcategory of temporary effects. |
+|![eye-solid](./wiki/icons/eye-solid.svg) | The symbol of the **purple eye** means the active effect is _passive_ like a race feature or a special ability like _darkvision_, this does not prevent the effect from being active or not, only that it will result in the subcategory of inactive effects. |
+|![hourglass-solid](./wiki/icons/hourglass-solid.svg) | The symbol of the **orange hourglass** means the active effect is _temporary_ like a spell valid only for tot. rounds or seconds, this is usually managed from the [Times up](https://gitlab.com/tposney/times-up) module if installed, this does not prevent the effect from being active or not, only that it will result in the subcategory of temporary effects. |
 |![lightbulb-solid](./wiki/icons/lightbulb-solid.svg) | The symbol of the **green lightbulb** means the active effect is _enabled_ (or _applied_). |
 |![lightbulb-regular](./wiki/icons/lightbulb-regular.svg) | The symbol of the **red lightbulb** means the active effect is _disabled_ (or _not applied_). |
+
+By default the module it will roll the item associated to the ATL effect, so you can apply other things like consumable feature and apply measure template.
 
 ### Add a button to the 'Token vision configuration' macro (for everyone need to be just fast and not perfect)
 
@@ -117,13 +119,11 @@ This feature is inspired from [Drop My Torch](https://gitlab.com/derekstucki/dro
 
 If you right click on a image/voice of the hud panel we call the [warpgate](https://github.com/trioderegion/warpgate) function `spawnAt` for let the player drop a light on the canvas.
 
-**NOTE:**For let player make use of this you need to set the permission of player to create token (i don't know if warpgate has some function with socketLib for executeAsGM).
+**NOTE:** For let player make use of this you need to set the permission of player to create token (i don't know if warpgate has some function with socketLib for executeAsGM).
 
-**NOTE:**For now there is no discrimination on the item you can drop. You can drop a _Torch_, like you can drop a _Light Spell_ , like you can drop your _Darkvision feature_, probably some condition for let drop only physical items
+**NOTE:** For now there is no discrimination on the item you can drop. You can drop a _Torch_, like you can drop a _Light Spell_ , like you can drop your _Darkvision feature_, probably some condition for let drop only physical items
 
-
-
-## How can i contribute 
+## How can i contribute with my ownt item ?
 
 Anyone can contribute with a custom lighting and vision item, you just need to export the item you created with the ATL effect on it and i will create a compendium, or better open a PR on the official [ATE](https://github.com/kandashi/Active-Token-Lighting) compendium.
 
