@@ -62,60 +62,8 @@ export default class API {
   }
 
   static async addEffect(actorId: string, effectName: string, effect: Effect) {
-    // const entity = <Actor>game.actors?.get(actorId);
-    // if (entity.documentName !== 'Actor') {
-    //   return;
-    // }
-    // let link = getProperty(entity, 'data.token.actorLink');
-    // if (link === undefined) {
-    //   link = true;
-    // }
-    // let tokenArray: any[] = [];
-    // if (!link) {
-    //   //@ts-ignore
-    //   tokenArray = [entity.token?.object];
-    // } else {
-    //   tokenArray = entity.getActiveTokens();
-    // }
-    // if (tokenArray === []) {
-    //   return;
-    // }
-    // const originals = link
-    //   ? (await entity.getFlag('ATL', 'originals')) || {}
-    //   : (await entity.token?.getFlag('ATL', 'originals')) || {};
-
     const result = await API.effectInterface.addEffectOnActor(effectName, <string>actorId, effect);
-
-    // if (link) {
-    //   await entity.setFlag('ATL', 'originals', originals);
-    // } else {
-    //   await entity.token?.setFlag('ATL', 'originals', originals);
-    // }
-
     return result;
-    // const actor = <Actor>game.actors?.get(actorNameOrId) || <Actor>game.actors?.getName(actorNameOrId);
-
-    // if (!actor) {
-    //   warn(`No actor found with reference '${actorNameOrId}'`, true);
-    // }
-
-    // let effect: Effect | undefined = undefined;
-    // const lightsOrderByName = <LightHUDElement[]>API.LIGHTS.sort((a, b) => a.name.localeCompare(b.name));
-    // lightsOrderByName.forEach((a: LightHUDElement) => {
-    //   if (a.id == effectName || i18n(a.name) == effectName) {
-    //     effect = <Effect>EffectDefinitions.all(lightData).find((e: Effect) => {
-    //       return e.customId == a.id;
-    //     });
-    //   }
-    // });
-
-    // if (!effect) {
-    //   warn(`No effect found with reference '${effectName}'`, true);
-    // }
-
-    // if (actor && effect) {
-    //   API.effectInterface.addEffectOnActor(effectName, <string>actor.id, effect);
-    // }
   }
 
   static async findEffectByNameOnActor(actorId: string, effectName: string): Promise<ActiveEffect | null> {
@@ -137,28 +85,6 @@ export default class API {
     forceEnabled?: boolean,
     forceDisabled?: boolean,
   ) {
-    // const entity = <Actor>game.actors?.get(actorId);
-    // if (entity.documentName !== 'Actor') {
-    //   return;
-    // }
-    // let link = getProperty(entity, 'data.token.actorLink');
-    // if (link === undefined) {
-    //   link = true;
-    // }
-    // let tokenArray: any[] = [];
-    // if (!link) {
-    //   //@ts-ignore
-    //   tokenArray = [entity.token?.object];
-    // } else {
-    //   tokenArray = entity.getActiveTokens();
-    // }
-    // if (tokenArray === []) {
-    //   return;
-    // }
-    // const originals = link
-    //   ? (await entity.getFlag('ATL', 'originals')) || {}
-    //   : (await entity.token?.getFlag('ATL', 'originals')) || {};
-
     const result = await API.effectInterface.toggleEffectFromIdOnActor(
       effectId,
       <string>actorId,
@@ -166,47 +92,11 @@ export default class API {
       forceEnabled,
       forceDisabled,
     );
-
-    // if (link) {
-    //   await entity.setFlag('ATL', 'originals', originals);
-    // } else {
-    //   await entity.token?.setFlag('ATL', 'originals', originals);
-    // }
-
     return result;
   }
 
   static async addActiveEffectOnActor(actorId: string, activeEffect: ActiveEffect) {
-    // const entity = <Actor>game.actors?.get(actorId);
-    // if (entity.documentName !== 'Actor') {
-    //   return;
-    // }
-    // let link = getProperty(entity, 'data.token.actorLink');
-    // if (link === undefined) {
-    //   link = true;
-    // }
-    // let tokenArray: any[] = [];
-    // if (!link) {
-    //   //@ts-ignore
-    //   tokenArray = [entity.token?.object];
-    // } else {
-    //   tokenArray = entity.getActiveTokens();
-    // }
-    // if (tokenArray === []) {
-    //   return;
-    // }
-    // const originals = link
-    //   ? (await entity.getFlag('ATL', 'originals')) || {}
-    //   : (await entity.token?.getFlag('ATL', 'originals')) || {};
-
     const result = API.effectInterface.addActiveEffectOnActor(<string>actorId, activeEffect.data);
-
-    // if (link) {
-    //   await entity.setFlag('ATL', 'originals', originals);
-    // } else {
-    //   await entity.token?.setFlag('ATL', 'originals', originals);
-    // }
-
     return result;
   }
 }

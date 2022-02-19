@@ -51,31 +51,6 @@ export const registerSettings = function (): void {
     restricted: true,
   });
 
-  // const settings = defaultSettings();
-  // for (const [name, data] of Object.entries(settings)) {
-  //   game.settings.register(CONSTANTS.MODULE_NAME, name, <any>data);
-  // }
-
-  // for (const [name, data] of Object.entries(otherSettings)) {
-  //     game.settings.register(CONSTANTS.MODULE_NAME, name, data);
-  // }
-
-  game.settings.register(CONSTANTS.MODULE_NAME, 'lights', {
-    scope: 'world',
-    config: false,
-    //@ts-ignore
-    default: SYSTEMS.DATA ? SYSTEMS.DATA.LIGHTS : [],
-    type: Array,
-  });
-
-  game.settings.register(CONSTANTS.MODULE_NAME, 'visions', {
-    scope: 'world',
-    config: false,
-    //@ts-ignore
-    default: SYSTEMS.DATA ? SYSTEMS.DATA.VISIONS : [],
-    type: Array,
-  });
-
   // ============================================================
   // OLD SETTINGS TO REMOVE PROBABLY
   // ===========================================================
@@ -171,6 +146,14 @@ export const registerSettings = function (): void {
     default: false,
     type: Boolean,
   });
+
+  const settings = defaultSettings();
+  for (const [name, data] of Object.entries(settings)) {
+    game.settings.register(CONSTANTS.MODULE_NAME, name, data);
+  }
+  // for (const [name, data] of Object.entries(otherSettings)) {
+  //     game.settings.register(CONSTANTS.MODULE_NAME, name, data);
+  // }
 };
 
 class ResetSettingsDialog extends FormApplication<FormApplicationOptions, object, any> {
@@ -213,11 +196,97 @@ async function applyDefaultSettings() {
     //@ts-ignore
     await game.settings.set(CONSTANTS.MODULE_NAME, name, data.default);
   }
+  const settings2 = otherSettings(true);
+  for (const [name, data] of Object.entries(settings2)) {
+    //@ts-ignore
+    await game.settings.set(CONSTANTS.MODULE_NAME, name, data.default);
+  }
 }
 
 function defaultSettings(apply = false) {
   return {
-    // TODO
+    lights: {
+      scope: 'world',
+      config: false,
+      //@ts-ignore
+      default: SYSTEMS.DATA ? SYSTEMS.DATA.LIGHTS : [],
+      type: Array,
+    },
+    visions: {
+      scope: 'world',
+      config: false,
+      //@ts-ignore
+      default: SYSTEMS.DATA ? SYSTEMS.DATA.VISIONS : [],
+      type: Array,
+    },
+  };
+}
+
+function otherSettings(apply = false) {
+  return {
+    debug: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
+      scope: 'client',
+      config: true,
+      default: false,
+      type: Boolean,
+    },
+
+    debugHooks: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.hint`,
+      scope: 'world',
+      config: false,
+      default: false,
+      type: Boolean,
+    },
+
+    systemFound: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.systemFound.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.systemFound.hint`,
+      scope: 'world',
+      config: false,
+      default: false,
+      type: Boolean,
+    },
+
+    systemNotFoundWarningShown: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.systemNotFoundWarningShown.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.systemNotFoundWarningShown.hint`,
+      scope: 'world',
+      config: false,
+      default: false,
+      type: Boolean,
+    },
+
+    imageDisplay: {
+      name: i18n(`${CONSTANTS.MODULE_NAME}.settings.imageDisplay.name`),
+      hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.imageDisplay.hint`),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: true,
+    },
+  
+    imageOpacity: {
+      name: i18n(`${CONSTANTS.MODULE_NAME}.settings.opacity.name`),
+      hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.opacity.hint`),
+      scope: 'world',
+      config: true,
+      range: <any>{ min: 0, max: 100, step: 1 },
+      type: Number,
+      default: 50,
+    },
+  
+    rollItem: {
+      name: i18n(`${CONSTANTS.MODULE_NAME}.settings.rollItem.name`),
+      hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.rollItem.hint`),
+      config: true,
+      scope: 'world',
+      default: true,
+      type: Boolean,
+    },
   };
 }
 
