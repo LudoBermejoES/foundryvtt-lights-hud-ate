@@ -93,7 +93,7 @@ export async function addLightsHUDButtons(app, html, data) {
         // const effectFromActor = <ActiveEffect>await API.findEffectByNameOnActor(<string>actor.id, nameToSearch);
         // regex expression to match all non-alphanumeric characters in string
         const regex = /[^A-Za-z0-9]/g;
-        const effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
+        let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
           // use replace() method to match and remove all the non-alphanumeric characters
           return nameToSearch
             .replace(regex, '')
@@ -104,6 +104,14 @@ export async function addLightsHUDButtons(app, html, data) {
           warn(`No active effect found on actor ${actor.name} with name ${nameToSearch}`);
           aeAtl[0].data.transfer = false;
           await API.addActiveEffectOnActor(<string>actor.id, aeAtl[0]);
+          // ???
+          effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
+            // use replace() method to match and remove all the non-alphanumeric characters
+            return nameToSearch
+              .replace(regex, '')
+              .toLowerCase()
+              .startsWith(ae.data.label?.replace(regex, '')?.toLowerCase());
+          });
         }
         const applied = await API.hasEffectAppliedOnActor(<string>actor.id, nameToSearch);
         // If the active effect is disabled or is supressed
