@@ -38,9 +38,9 @@ function getGame(): Game {
   return game;
 }
 
-export function getAPI(): API {
-  return game[CONSTANTS.MODULE_NAME].API;
-}
+// export function getAPI(): API {
+//   return game[CONSTANTS.MODULE_NAME].API;
+// }
 
 export const registerSettings = function (): void {
   game.settings.registerMenu(CONSTANTS.MODULE_NAME, 'resetAllSettings', {
@@ -147,6 +147,15 @@ export const registerSettings = function (): void {
     type: Boolean,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'preconfiguredSystem', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.preconfiguredSystem.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.preconfiguredSystem.hint`,
+    scope: 'world',
+    config: false,
+    default: false,
+    type: Boolean,
+  });
+  
   const settings = defaultSettings();
   for (const [name, data] of Object.entries(settings)) {
     game.settings.register(CONSTANTS.MODULE_NAME, name, data);
@@ -268,7 +277,7 @@ function otherSettings(apply = false) {
       type: Boolean,
       default: true,
     },
-  
+
     imageOpacity: {
       name: i18n(`${CONSTANTS.MODULE_NAME}.settings.opacity.name`),
       hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.opacity.hint`),
@@ -278,7 +287,7 @@ function otherSettings(apply = false) {
       type: Number,
       default: 50,
     },
-  
+
     rollItem: {
       name: i18n(`${CONSTANTS.MODULE_NAME}.settings.rollItem.name`),
       hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.rollItem.hint`),

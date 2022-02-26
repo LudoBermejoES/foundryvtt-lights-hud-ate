@@ -1,3 +1,16 @@
+export interface SenseData {
+  id: string; // This is the unique id used for sync all the senses and conditions (please no strange character, no whitespace and all in lowercase...)
+  name: string; // This is the unique name used for sync all the senses and conditions (here you cna put any dirty character you want)
+  path: string; // This is the path to the property you want to associate with this sense e.g. data.skills.prc.passive
+  img: string; // [OPTIONAL] Image to associate to this sense
+  visionLevelMinIndex: number; // [OPTIONAL] check a min index for filter a range of sense can see these conditions, or viceversa conditions can be seen only from this sense
+  visionLevelMaxIndex: number; // [OPTIONAL] check a max index for filter a range of sense can see these conditions, or viceversa conditions can be seen only from this sense
+  conditionElevation: boolean; // [OPTIONAL] force to check the elevation between the source token and the target token, useful when using module like 'Levels'
+  conditionTargets: string[]; // [OPTIONAL] force to apply the check only for these sources (you can set this but is used only from sense)
+  conditionSources: string[]; // [OPTIONAL] force to apply the check only for these sources (you can set this but is used only from condition)
+  effectCustomId: string; // [OPTIONAL] if you use the module 'DFreds Convenient Effects', you can associate a custom active effect by using the customId string of the DFred effect
+}
+
 export class LightHUDElement {
   id: string;
   name: string;
@@ -64,22 +77,6 @@ export enum LightHUDPreset {
   MOON_TOUCHED = 'moon-touched',
 }
 
-// export enum LightHUDPresetType {
-//   SPELL = 'spell',
-//   CONSUMABLE = 'consumable'
-// }
-
-// export enum LightHUDFlags {
-//   Initial_Bright_Radius = 'InitialBrightRadius',
-//   Initial_Dim_Radius = 'InitialDimRadius',
-//   Initial_Light_Color = 'InitialLightColor',
-//   Initial_Color_Intensity = 'InitialColorIntensity',
-//   Initial_Light_Angle = 'Initiallight.angle',
-//   Initial_Animation_Type = 'InitialAnimationType',
-//   Initial_Animation_Speed = 'InitialAnimationSpeed',
-//   Initial_Animation_Intensity = 'InitialAnimationIntensity',
-// }
-
 export class LightDataHud {
   route: string;
   name: string;
@@ -96,7 +93,3 @@ export class LightDataHud {
   effectid: string;
   effectname: string;
 }
-
-// export class LightDataExt extends foundry.data.AmbientLightData {
-
-// }

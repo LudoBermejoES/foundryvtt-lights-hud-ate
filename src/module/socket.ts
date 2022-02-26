@@ -9,7 +9,7 @@ export const SOCKET_HANDLERS = {
   CALL_HOOK: 'callHook',
 
   /**
-   * Sense Walls sockets
+   * Item pile sockets
    */
 
   /**
@@ -21,21 +21,24 @@ export const SOCKET_HANDLERS = {
    */
 };
 
-export let lightsHudAteSocket;
+export let lightHudAteSocket;
 
 export function registerSocket() {
-  debug('Registered lightsHUDSocket');
+  debug('Registered lightHudAteSocket');
   //@ts-ignore
-  lightsHudAteSocket = socketlib.registerModule(CONSTANTS.MODULE_NAME);
+  lightHudAteSocket = socketlib.registerModule(CONSTANTS.MODULE_NAME);
 
   /**
    * Generic socket
    */
-  lightsHudAteSocket.register(SOCKET_HANDLERS.CALL_HOOK, (hook, ...args) => callHook(hook, ...args));
+  lightHudAteSocket.register(SOCKET_HANDLERS.CALL_HOOK, (hook, ...args) => callHook(hook, ...args));
 
-  /**
-   * Sense walls sockets
-   */
+  // /**
+  //  * Conditional Visibility sockets
+  //  */
+  // lightHudAteSocket.register(SOCKET_HANDLERS.ON_RENDER_TOKEN_CONFIG, (...args) =>
+  //   API._onRenderTokenConfig(...args),
+  // );
 
   /**
    * UI sockets
@@ -48,30 +51,33 @@ export function registerSocket() {
   /**
    * Effects
    */
-  lightsHudAteSocket.register('toggleEffect', (...args) => API.effectInterface._effectHandler.toggleEffectArr(...args));
-  lightsHudAteSocket.register('addEffect', (...args) => API.effectInterface._effectHandler.addEffectArr(...args));
-  lightsHudAteSocket.register('removeEffect', (...args) => API.effectInterface._effectHandler.removeEffectArr(...args));
-  // senseWallsSocket.register('addActorDataChanges', (...args) => API._actorUpdater.addActorDataChanges(...args));
-  // senseWallsSocket.register('removeActorDataChanges', (...args) => API._actorUpdater.removeActorDataChanges(...args));
-  lightsHudAteSocket.register('addEffectOnActor', (...args) =>
-    API.effectInterface._effectHandler.addEffectOnActorArr(...args),
+
+  // lightHudAteSocket.register('addActorDataChanges', (...args) => API._actorUpdater.addActorDataChanges(...args));
+  // lightHudAteSocket.register('removeActorDataChanges', (...args) => API._actorUpdater.removeActorDataChanges(...args));
+  lightHudAteSocket.register('toggleEffect', (...args) => API.toggleEffectArr(...args));
+  lightHudAteSocket.register('addEffect', (...args) => API.addEffectArr(...args));
+  lightHudAteSocket.register('removeEffect', (...args) => API.removeEffectArr(...args));
+
+  lightHudAteSocket.register('addEffectOnActor', (...args) => API.addEffectOnActorArr(...args));
+  lightHudAteSocket.register('removeEffectOnActor', (...args) => API.removeEffectOnActorArr(...args));
+  lightHudAteSocket.register('removeEffectFromIdOnActor', (...args) =>
+    API.removeEffectFromIdOnActorArr(...args),
   );
-  lightsHudAteSocket.register('removeEffectOnActor', (...args) =>
-    API.effectInterface._effectHandler.removeEffectOnActorArr(...args),
+  lightHudAteSocket.register('toggleEffectFromIdOnActor', (...args) =>
+    API.toggleEffectFromIdOnActorArr(...args),
   );
-  lightsHudAteSocket.register('removeEffectFromIdOnActor', (...args) =>
-    API.effectInterface._effectHandler.removeEffectFromIdOnActorArr(...args),
+  lightHudAteSocket.register('findEffectByNameOnActor', (...args) => API.findEffectByNameOnActorArr(...args));
+
+  lightHudAteSocket.register('addEffectOnToken', (...args) => API.addEffectOnTokenArr(...args));
+  lightHudAteSocket.register('removeEffectOnToken', (...args) => API.removeEffectOnTokenArr(...args));
+  lightHudAteSocket.register('removeEffectFromIdOnToken', (...args) =>
+    API.removeEffectFromIdOnTokenArr(...args),
   );
-  lightsHudAteSocket.register('toggleEffectFromIdOnActor', (...args) =>
-    API.effectInterface._effectHandler.toggleEffectFromIdOnActorArr(...args),
+  lightHudAteSocket.register('toggleEffectFromIdOnToken', (...args) =>
+    API.toggleEffectFromIdOnTokenArr(...args),
   );
-  lightsHudAteSocket.register('findEffectByNameOnActor', (...args) =>
-    API.effectInterface._effectHandler.findEffectByNameOnActorArr(...args),
-  );
-  lightsHudAteSocket.register('addActiveEffectOnActor', (...args) =>
-    API.effectInterface._effectHandler.addActiveEffectOnActorArr(...args),
-  );
-  return lightsHudAteSocket;
+  lightHudAteSocket.register('findEffectByNameOnToken', (...args) => API.findEffectByNameOnTokenArr(...args));
+  return lightHudAteSocket;
 }
 
 async function callHook(inHookName, ...args) {

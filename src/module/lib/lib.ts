@@ -3,10 +3,10 @@ import {
   ActorData,
   TokenData,
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
-import API from '../api.js';
+import API from '../api';
 import CONSTANTS from '../constants';
-import Effect, { Constants } from '../effects/effect.js';
-import { EffectDefinitions } from '../lights-hud-ate-effect-definition.js';
+import Effect, { Constants } from '../effects/effect';
+import { LightHUDAteEffectDefinitions } from '../lights-hud-ate-effect-definition';
 import { canvas, game } from '../settings';
 
 // =============================
@@ -159,83 +159,83 @@ export async function updateTokenLighting(
 
     if (height && height > 0) {
       atlChanges.push({
-        key: EffectDefinitions._createAtlEffectKey('ATL.height'),
+        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.height'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: height,
       });
     }
     if (width && width > 0) {
       atlChanges.push({
-        key: EffectDefinitions._createAtlEffectKey('ATL.width'),
+        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.width'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: width,
       });
     }
     if (scale && scale > 0) {
       atlChanges.push({
-        key: EffectDefinitions._createAtlEffectKey('ATL.scale'),
+        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.scale'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: scale,
       });
     }
     if (dimSight && dimSight > 0) {
       atlChanges.push({
-        key: EffectDefinitions._createAtlEffectKey('ATL.dimSight'),
+        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.dimSight'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: dimSight,
       });
     }
     if (brightSight && brightSight > 0) {
       atlChanges.push({
-        key: EffectDefinitions._createAtlEffectKey('ATL.brightSight'),
+        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.brightSight'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: brightSight && brightSight > 0 ? brightSight : token.data.brightSight,
       });
     }
     if (dimLight && dimLight > 0) {
       atlChanges.push({
-        key: EffectDefinitions._createAtlEffectKey('ATL.light.dim'),
+        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.dim'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: dimLight,
       });
     }
     if (brightLight && brightLight > 0) {
       atlChanges.push({
-        key: EffectDefinitions._createAtlEffectKey('ATL.light.bright'),
+        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.bright'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: brightLight,
       });
     }
     if (lightAngle) {
       atlChanges.push({
-        key: EffectDefinitions._createAtlEffectKey('ATL.light.angle'),
+        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.angle'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: lightAngle,
       });
     }
     if (lightColor) {
       atlChanges.push({
-        key: EffectDefinitions._createAtlEffectKey('ATL.light.color'),
+        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.color'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: lightColor,
       });
     }
     if (lightAlpha) {
       atlChanges.push({
-        key: EffectDefinitions._createAtlEffectKey('ATL.light.alpha'),
+        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.alpha'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: lightAlpha,
       });
     }
     if (lightAnimationType && lightAnimationSpeed && lightAnimationIntensity && lightAnimationReverse) {
       atlChanges.push({
-        key: EffectDefinitions._createAtlEffectKey('ATL.light.animation'),
+        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.animation'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}, "reverse":${lightAnimationReverse}}`,
       });
     } else if (lightAnimationType && lightAnimationSpeed && lightAnimationIntensity) {
       atlChanges.push({
-        key: EffectDefinitions._createAtlEffectKey('ATL.light.animation'),
+        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.animation'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}}`,
       });
@@ -250,7 +250,7 @@ export async function updateTokenLighting(
       seconds: duration != null ? <number>duration * 60 : undefined, // minutes to seconds
       atlChanges: atlChanges,
     });
-    await API.addEffect(<string>token.actor?.id, <string>effectName, efffectAtlToApply);
+    await API.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
   } else {
     // TODO FIND A BETTER WAY FOR THIS
     if (dimSight == null || dimSight == undefined) {
@@ -483,7 +483,7 @@ export async function dropTheToken(item: Item, data: { x; y }, type = 'character
     atlEffects.map(async (ae: ActiveEffect) => {
       // Make sure is enabled
       ae.data.disabled = false;
-      await API.addActiveEffectOnActor(<string>tokenData2.actorId, ae);
+      await API.addActiveEffectOnToken(<string>actor.token?.id, ae);
     }),
   );
 
@@ -549,7 +549,7 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   atlEffects.forEach(async (ae: ActiveEffect) => {
     // Make sure is enabled
     ae.data.disabled = false;
-    await API.addActiveEffectOnActor(<string>tokenData2.actorId, ae);
+    await API.addActiveEffectOnToken(<string>actor.token?.id, ae);
   });
   return tokenData2;
 }

@@ -8,7 +8,7 @@ import { canvas, game } from './settings';
 /**
  * Defines all of the effect definitions
  */
-export class EffectDefinitions {
+export class LightHUDAteEffectDefinitions {
   constructor() {}
 
   // regex expression to match all non-alphanumeric characters in string
@@ -29,7 +29,7 @@ export class EffectDefinitions {
   }
 
   static effect(name: string): Effect | undefined {
-    const effect = <Effect>EffectDefinitions.all().find((effect: Effect) => {
+    const effect = <Effect>LightHUDAteEffectDefinitions.all().find((effect: Effect) => {
       return effect.name.toLowerCase() === name.toLowerCase();
     });
     // if (effect?.customId == LightHUDPreset.TORCH) {

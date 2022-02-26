@@ -34,6 +34,7 @@ export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
 export async function addLightsHUDButtons(app, html, data) {
   const tokenInfoObject = app.object.data;
   // let tokenInfo = new tokenInformations(tokenInfoObject);
+  const token = <Token>app.object;
   const tokenD = <TokenDocument>app.object.document;
   const actor = <Actor>game.actors?.get(data.actorId);
   if (!actor) {
@@ -43,11 +44,6 @@ export async function addLightsHUDButtons(app, html, data) {
 
   const tokenId = <string>tokenD.id;
   const actorId = <string>actor.id;
-
-  // const images = await actor?.getTokenImages() ?? []
-  // if (images.length < 2) {
-  //     return
-  // }
 
   const imageDisplay = <boolean>game.settings.get(CONSTANTS.MODULE_NAME, 'imageDisplay');
   const imageOpacity = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'imageOpacity') / 100;
@@ -101,11 +97,11 @@ export async function addLightsHUDButtons(app, html, data) {
             .startsWith(ae.data.label?.replace(regex, '')?.toLowerCase());
         });
         if (!effectFromActor) {
-          warn(`No active effect found on actor ${actor.name} with name ${nameToSearch}`);
+          warn(`No active effect found on token ${token.name} with name ${nameToSearch}`);
           aeAtl[0].data.transfer = false;
-          await API.addActiveEffectOnActor(<string>actor.id, aeAtl[0]);
+          await API.addActiveEffectOnToken(<string>tokenD.id, aeAtl[0]);
           // ???
-          effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
+          effectFromActor = <ActiveEffect>tokenD.actor?.data.effects.find((ae: ActiveEffect) => {
             // use replace() method to match and remove all the non-alphanumeric characters
             return nameToSearch
               .replace(regex, '')
@@ -113,7 +109,7 @@ export async function addLightsHUDButtons(app, html, data) {
               .startsWith(ae.data.label?.replace(regex, '')?.toLowerCase());
           });
         }
-        const applied = await API.hasEffectAppliedOnActor(<string>actor.id, nameToSearch);
+        const applied = await API.hasEffectAppliedOnToken(<string>tokenD.id, nameToSearch, true);
         // If the active effect is disabled or is supressed
         // const isDisabled = aeAtl[0].data.disabled || false;
         // const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
@@ -139,7 +135,7 @@ export async function addLightsHUDButtons(app, html, data) {
       }
 
       if (!effectid) {
-        warn(`No ATL active effect found on actor ${actor.name} from item ${item.name}`);
+        warn(`No ATL active effect found on actor ${token.name} from item ${item.name}`);
       }
 
       return <LightDataHud>{
@@ -280,6 +276,7 @@ export async function addLightsHUDButtons(app, html, data) {
 
       confirmDialogATLEffectItem(
         actorId,
+        tokenId,
         itemId,
         effectId,
         actor.name,
@@ -338,7 +335,7 @@ export async function addLightsHUDButtons(app, html, data) {
         itemId,
         effectId,
         actor.name, // actorName
-        actor.token?.name, // tokenName,
+        tokenD?.name, // tokenName,
         itemName,
         effectName,
         isApplied,
@@ -1297,6 +1294,7 @@ export function customDialog(applyChanges: boolean): Dialog {
 */
 export function confirmDialogATLEffectItem(
   actorId,
+  tokenId,
   itemId,
   effectId,
   actorName,
@@ -1432,10 +1430,11 @@ export function confirmDialogDropTheTorch(
 }
 
 export function manageActiveEffectATL(actorId, itemId, effectId, isApplied) {
+  const actor = <Actor>game.actors?.get(actorId);
+  const tokenId = actor.getActiveTokens()[0].id;
   // We roll the item ???
   try {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'rollItem') && !isApplied) {
-      const actor = <Actor>game.actors?.get(actorId);
       const item = <Item>actor.items.find((entity: Item) => {
         return <string>entity.id == itemId;
       });
@@ -1454,9 +1453,9 @@ export function manageActiveEffectATL(actorId, itemId, effectId, isApplied) {
       // const effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
       //   return effectId == ae.id;
       // });
-      API.toggleEffectOnActor(actorId, <string>effectId, false, false, true);
+      API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, false, true);
     } else {
-      API.toggleEffectOnActor(actorId, <string>effectId, false, true, false);
+      API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, true, false);
     }
   }
 }
