@@ -3,7 +3,8 @@ import { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-type
 import { EffectDurationData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectDurationData';
 import { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
 import { isEmptyObject } from 'jquery';
-import { SenseData } from '../lights-hud-ate-models';
+import { SenseData } from '../conditional-visibility-models';
+import { i18n } from '../lib/lib';
 import { game } from '../settings';
 
 /**
@@ -96,9 +97,9 @@ export default class Effect {
     const isPassive = !this.isTemporary;
     return {
       id: this._id,
-      name: this.name,
-      label: this.name,
-      description: this.description, // 4535992 this not make sense, but it doesn't hurt either
+      name: i18n(this.name),
+      label: i18n(this.name),
+      description: i18n(this.description), // 4535992 this not make sense, but it doesn't hurt either
       icon: this.icon,
       tint: this.tint,
       duration: this._getDurationData(),
@@ -108,7 +109,7 @@ export default class Effect {
           overlay: overlay ? overlay : this.overlay ? this.overlay : false, // MOD 4535992
         },
         isConvenient: true,
-        convenientDescription: this.description,
+        convenientDescription: i18n(this.description),
         dae: this._isEmptyObject(this.dae)
           ? isPassive
             ? { stackable: false, specialDuration: [], transfer: true }
@@ -252,7 +253,7 @@ export class EffectSupport {
   static buildDefault(senseData: SenseData, isPassive: boolean): Effect {
     return new Effect({
       customId: senseData.id,
-      name: senseData.name,
+      name: i18n(senseData.name),
       description: ``,
       icon: senseData.img,
       tint: undefined,
@@ -367,8 +368,8 @@ export class EffectSupport {
 
     return new Effect({
       customId: <string>effect.id,
-      name: effect.data.label,
-      description: <string>effect.data.flags.customEffectDescription,
+      name: i18n(effect.data.label),
+      description: i18n(<string>effect.data.flags.customEffectDescription),
       icon: <string>effect.data.icon,
       tint: <string>effect.data.tint,
       seconds: effect.data.duration.seconds,
@@ -392,8 +393,8 @@ export class EffectSupport {
     //@ts-ignore
     return ActiveEffect.create({
       id: p._id,
-      name: p.label,
-      label: p.label,
+      name: i18n(p.label),
+      label: i18n(p.label),
       icon: p.icon,
       tint: p.tint,
       duration: EffectSupport._getDurationData(
@@ -409,7 +410,7 @@ export class EffectSupport {
         },
         isConvenient: true,
         //@ts-ignore
-        convenientDescription: p.description ? p.description : '',
+        convenientDescription: p.description ? i18n(p.description) : '',
         dae: this._isEmptyObject(p.flags.dae) ? { stackable: false, specialDuration: [], transfer: true } : p.flags.dae,
       }),
       origin: origin ? origin : p.origin ? p.origin : '', // MOD 4535992
