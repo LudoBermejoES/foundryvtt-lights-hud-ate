@@ -2,8 +2,6 @@ import { ActiveEffectDataProperties } from '@league-of-foundry-developers/foundr
 import { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
 import { EffectDurationData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectDurationData';
 import { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
-import { isEmptyObject } from 'jquery';
-import { SenseData } from '../conditional-visibility-models';
 import { i18n } from '../lib/lib';
 import { game } from '../settings';
 
@@ -250,12 +248,19 @@ export class Constants {
 }
 
 export class EffectSupport {
-  static buildDefault(senseData: SenseData, isPassive: boolean): Effect {
+  static buildDefault(
+    effectData: any,
+    isPassive: boolean,
+    changes: any[] = [],
+    atlChanges: any[] = [],
+    tokenMagicChanges: any[] = [],
+    atcvChanges: any[] = [],
+  ): Effect {
     return new Effect({
-      customId: senseData.id,
-      name: i18n(senseData.name),
+      customId: effectData.id,
+      name: i18n(effectData.name),
       description: ``,
-      icon: senseData.img,
+      icon: effectData.img,
       tint: undefined,
       seconds: 0,
       rounds: 0,
@@ -264,23 +269,16 @@ export class EffectSupport {
         {},
         {
           core: {
-            statusId: isPassive ? undefined : senseData.id,
+            statusId: isPassive ? undefined : effectData.id,
             overlay: false,
           },
           isConvenient: true,
         },
       ),
-      changes: [],
-      atlChanges: [],
-      tokenMagicChanges: [],
-      atcvChanges: [
-        {
-          key: 'ATCV.' + senseData.id,
-          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
-          value: `0`,
-          priority: 5,
-        },
-      ],
+      changes: changes,
+      atlChanges: atlChanges,
+      tokenMagicChanges: tokenMagicChanges,
+      atcvChanges: atcvChanges,
       isDisabled: false,
       isTemporary: !isPassive,
       isSuppressed: false,
