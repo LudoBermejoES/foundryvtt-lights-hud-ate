@@ -1,5 +1,7 @@
-CHANGELOG
-===================================
+## 0.11
+
+- Rewriting with typescript and update for foundryvtt'
+- Integration with ATE
 
 ## 0.10.5
 * Fixed #16 #8 #1 partially. 

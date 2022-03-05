@@ -60,22 +60,14 @@ export function registerSocket() {
 
   lightHudAteSocket.register('addEffectOnActor', (...args) => API.addEffectOnActorArr(...args));
   lightHudAteSocket.register('removeEffectOnActor', (...args) => API.removeEffectOnActorArr(...args));
-  lightHudAteSocket.register('removeEffectFromIdOnActor', (...args) =>
-    API.removeEffectFromIdOnActorArr(...args),
-  );
-  lightHudAteSocket.register('toggleEffectFromIdOnActor', (...args) =>
-    API.toggleEffectFromIdOnActorArr(...args),
-  );
+  lightHudAteSocket.register('removeEffectFromIdOnActor', (...args) => API.removeEffectFromIdOnActorArr(...args));
+  lightHudAteSocket.register('toggleEffectFromIdOnActor', (...args) => API.toggleEffectFromIdOnActorArr(...args));
   lightHudAteSocket.register('findEffectByNameOnActor', (...args) => API.findEffectByNameOnActorArr(...args));
 
   lightHudAteSocket.register('addEffectOnToken', (...args) => API.addEffectOnTokenArr(...args));
   lightHudAteSocket.register('removeEffectOnToken', (...args) => API.removeEffectOnTokenArr(...args));
-  lightHudAteSocket.register('removeEffectFromIdOnToken', (...args) =>
-    API.removeEffectFromIdOnTokenArr(...args),
-  );
-  lightHudAteSocket.register('toggleEffectFromIdOnToken', (...args) =>
-    API.toggleEffectFromIdOnTokenArr(...args),
-  );
+  lightHudAteSocket.register('removeEffectFromIdOnToken', (...args) => API.removeEffectFromIdOnTokenArr(...args));
+  lightHudAteSocket.register('toggleEffectFromIdOnToken', (...args) => API.toggleEffectFromIdOnTokenArr(...args));
   lightHudAteSocket.register('findEffectByNameOnToken', (...args) => API.findEffectByNameOnTokenArr(...args));
   return lightHudAteSocket;
 }

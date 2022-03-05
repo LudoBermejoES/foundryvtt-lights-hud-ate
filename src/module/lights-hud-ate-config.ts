@@ -8,6 +8,7 @@ import {
   dialogWarning,
   i18n,
   i18nFormat,
+  isStringEquals,
   prepareTokenDataDropTheTorch,
   rollDependingOnSystem,
   updateTokenLighting,
@@ -87,14 +88,8 @@ export async function addLightsHUDButtons(app, html, data) {
       if (aeAtl.length > 0) {
         const nameToSearch = <string>aeAtl[0].name || aeAtl[0].data.label;
         // const effectFromActor = <ActiveEffect>await API.findEffectByNameOnActor(<string>actor.id, nameToSearch);
-        // regex expression to match all non-alphanumeric characters in string
-        const regex = /[^A-Za-z0-9]/g;
         let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
-          // use replace() method to match and remove all the non-alphanumeric characters
-          return nameToSearch
-            .replace(regex, '')
-            .toLowerCase()
-            .startsWith(ae.data.label?.replace(regex, '')?.toLowerCase());
+          return isStringEquals(nameToSearch, ae.data.label);
         });
         if (!effectFromActor) {
           warn(`No active effect found on token ${token.name} with name ${nameToSearch}`);
@@ -102,11 +97,7 @@ export async function addLightsHUDButtons(app, html, data) {
           await API.addActiveEffectOnToken(<string>tokenD.id, aeAtl[0]);
           // ???
           effectFromActor = <ActiveEffect>tokenD.actor?.data.effects.find((ae: ActiveEffect) => {
-            // use replace() method to match and remove all the non-alphanumeric characters
-            return nameToSearch
-              .replace(regex, '')
-              .toLowerCase()
-              .startsWith(ae.data.label?.replace(regex, '')?.toLowerCase());
+            return isStringEquals(nameToSearch, ae.data.label);
           });
         }
         const applied = await API.hasEffectAppliedOnToken(<string>tokenD.id, nameToSearch, true);

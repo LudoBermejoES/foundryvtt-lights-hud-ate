@@ -11,9 +11,6 @@ import { canvas, game } from './settings';
 export class LightHUDAteEffectDefinitions {
   constructor() {}
 
-  // regex expression to match all non-alphanumeric characters in string
-  private static regex = /[^A-Za-z0-9]/g;
-
   /**
    * Get all effects
    *
@@ -63,10 +60,7 @@ export class LightHUDAteEffectDefinitions {
   // static torch() {
   //   const effectSight = API.LIGHTS.find((a: LightHUDElement) => {
   //     // use replace() method to match and remove all the non-alphanumeric characters
-  //     return a.id
-  //       .replace(EffectDefinitions.regex, '')
-  //       .toLowerCase()
-  //       .startsWith(LightHUDPreset.TORCH.replace(EffectDefinitions.regex, '').toLowerCase());
+  //     return isStringsEqual(a.id,LightHUDPreset.TORCH);
   //   });
   //   if (!effectSight) {
   //     warn(`Cannot find for system '${game.system.id}' the active effect with id '${LightHUDPreset.TORCH}'`);

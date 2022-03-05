@@ -155,7 +155,7 @@ export const registerSettings = function (): void {
     default: false,
     type: Boolean,
   });
-  
+
   const settings = defaultSettings();
   for (const [name, data] of Object.entries(settings)) {
     game.settings.register(CONSTANTS.MODULE_NAME, name, data);

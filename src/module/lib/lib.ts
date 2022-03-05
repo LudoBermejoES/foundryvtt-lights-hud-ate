@@ -44,6 +44,13 @@ export function notify(message) {
   return message;
 }
 
+export function info(info, notify = false) {
+  info = `${CONSTANTS.MODULE_NAME} | ${info}`;
+  if (notify) ui.notifications?.info(info);
+  console.log(info.replace('<br>', '\n'));
+  return info;
+}
+
 export function warn(warning, notify = false) {
   warning = `${CONSTANTS.MODULE_NAME} | ${warning}`;
   if (notify) ui.notifications?.warn(warning);
@@ -62,11 +69,11 @@ export function timelog(message): void {
 }
 
 export const i18n = (key: string): string => {
-  return game.i18n.localize(key).trim();
+  return game.i18n.localize(key)?.trim();
 };
 
 export const i18nFormat = (key: string, data = {}): string => {
-  return game.i18n.format(key, data).trim();
+  return game.i18n.format(key, data)?.trim();
 };
 
 // export const setDebugLevel = (debugText: string): void => {
@@ -83,6 +90,34 @@ export function dialogWarning(message, icon = 'fas fa-exclamation-triangle') {
     </p>`;
 }
 
+export function cleanUpString(stringToCleanUp: string) {
+  // regex expression to match all non-alphanumeric characters in string
+  const regex = /[^A-Za-z0-9]/g;
+  if (stringToCleanUp) {
+    return i18n(stringToCleanUp).replace(regex, '').toLowerCase();
+  } else {
+    return stringToCleanUp;
+  }
+}
+
+export function isStringEquals(stringToCheck1: string, stringToCheck2: string, startsWith = true): boolean {
+  if (stringToCheck1 && stringToCheck2) {
+    if (startsWith) {
+      return cleanUpString(stringToCheck1).startsWith(cleanUpString(stringToCheck2));
+    } else {
+      return cleanUpString(stringToCheck1) === cleanUpString(stringToCheck2);
+    }
+  } else {
+    return stringToCheck1 === stringToCheck2;
+  }
+}
+
+// =========================================================================================
+
+// =============================
+// Module specific function
+// =============================
+
 /*
  * Returns the first GM id.
  */
@@ -93,10 +128,6 @@ export function firstGM() {
   }
   return gmId;
 }
-
-// =============================
-// Module specific function
-// =============================
 
 /**
  * @href https://github.com/itamarcu/roll-from-compendium/blob/master/scripts/roll-from-compendium.js
