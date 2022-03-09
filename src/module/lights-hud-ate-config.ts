@@ -8,6 +8,7 @@ import {
   dialogWarning,
   i18n,
   i18nFormat,
+  info,
   isStringEquals,
   prepareTokenDataDropTheTorch,
   rollDependingOnSystem,
@@ -39,7 +40,7 @@ export async function addLightsHUDButtons(app, html, data) {
   const tokenD = <TokenDocument>app.object.document;
   const actor = <Actor>game.actors?.get(data.actorId);
   if (!actor) {
-    warn(`No actor id ${data.actorId} founded for the light hud`);
+    info(`No actor id ${data.actorId} founded for the light hud`);
     return;
   }
 
@@ -92,7 +93,7 @@ export async function addLightsHUDButtons(app, html, data) {
           return isStringEquals(nameToSearch, ae.data.label);
         });
         if (!effectFromActor) {
-          warn(`No active effect found on token ${token.name} with name ${nameToSearch}`);
+          info(`No active effect found on token ${token.name} with name ${nameToSearch}`);
           aeAtl[0].data.transfer = false;
           await API.addActiveEffectOnToken(<string>tokenD.id, aeAtl[0]);
           // ???
@@ -125,8 +126,8 @@ export async function addLightsHUDButtons(app, html, data) {
         appliedTmp = !appliedTmp;
       }
 
-      if (!effectid) {
-        warn(`No ATL active effect found on actor ${token.name} from item ${item.name}`);
+      if (aeAtl.length > 0 && !effectid) {
+        warn(`No ATL active effect found on actor ${token.name} from item ${item.name}`,true);
       }
 
       return <LightDataHud>{
@@ -250,15 +251,15 @@ export async function addLightsHUDButtons(app, html, data) {
       }
 
       if (!itemId) {
-        warn(`No item id ${itemId} founded for the light hud`);
+        warn(`No item id ${itemId} founded for the light hud`,true);
         return;
       }
       if (!effectId) {
-        warn(`No active effect id ${effectId} founded for the light hud`);
+        warn(`No active effect id ${effectId} founded for the light hud`,true);
         return;
       }
       if (!actorId) {
-        warn(`No actor id ${actorId} founded for the light hud`);
+        warn(`No actor id ${actorId} founded for the light hud`,true);
         return;
       }
       // const obj = <Actor>game.actors?.get(actorId) || <Actor>game.actors?.getName(actorId);
@@ -309,15 +310,15 @@ export async function addLightsHUDButtons(app, html, data) {
       }
 
       if (!itemId) {
-        warn(`No item id ${itemId} founded for the light hud`);
+        warn(`No item id ${itemId} founded for the light hud`,true);
         return;
       }
       if (!effectId) {
-        warn(`No active effect id ${effectId} founded for the light hud`);
+        warn(`No active effect id ${effectId} founded for the light hud`,true);
         return;
       }
       if (!actorId) {
-        warn(`No actor id ${actorId} founded for the light hud`);
+        warn(`No actor id ${actorId} founded for the light hud`,true);
         return;
       }
 

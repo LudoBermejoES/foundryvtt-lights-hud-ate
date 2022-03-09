@@ -61,6 +61,39 @@ export const readyHooks = async (): Promise<void> => {
 
   // registerHUD();
   Hooks.on('renderTokenHUD', (app, html, data) => {
-    addLightsHUDButtons(app, html, data);
+    module.renderTokenHUD(app, html, data);
   });
+};
+
+const module = {
+  async renderTokenHUD(...args) {
+    const [app, html, data] = args;
+    // TODO WE NEED THIS
+    // if (!game.user?.isGM) {
+    //   return;
+    // }
+    // if (!game.settings.get(CONSTANTS.MODULE_NAME, 'enableHud')) {
+    //   return;
+    // }
+    addLightsHUDButtons(app, html, data);
+
+    // Adjustable vision
+    // let tokenHUDButton = GetTokenHUDButtonHTML(data._id);
+    // const tokenId = <string>data._id;
+    // const token = <Token>canvas.tokens?.controlled.find(t => t.data._id == tokenId);
+    // const tokenHUDButtonTemplate = $(`<div class="control-icon avtoggle"><i class="lights-hud-ate-adjustableVision-eye"></i></div>`);
+    // const $tokenHUDButton = tokenHUDButtonTemplate;
+    // $tokenHUDButton.toggleClass("active", <boolean>token.data.document?.getFlag(CONSTANTS.MODULE_NAME, LightHUDFlags.useAltVision) || false);
+    // const tokenHUDButton = $tokenHUDButton
+    // html.find(".col.left").prepend(tokenHUDButton);
+
+    // html.find(".col.left").on("click", ".control-icon.avtoggle", (event) => {
+    //   //TokenHUDButtonOnClick(data._id, tokenHUDButton)
+    //   const selected = !token.data.document?.getFlag(CONSTANTS.MODULE_NAME, LightHUDFlags.useAltVision);
+
+    //   //ToggleTokenHUDActive(selected);
+    //   $('.lights-hud-ate-adjustableVision-eye').parent().toggleClass("active", selected);
+    //   token.document.setFlag(CONSTANTS.MODULE_NAME, LightHUDFlags.useAltVision, selected);
+    // });
+  },
 };

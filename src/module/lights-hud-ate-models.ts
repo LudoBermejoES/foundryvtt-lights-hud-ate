@@ -93,3 +93,11 @@ export class LightDataHud {
   effectid: string;
   effectname: string;
 }
+
+//export enum LightHUDFlags {
+//  altDimDistance = 'altDimDistance',
+//  altBrightDistance = 'altBrightDistance',
+//  dimDistance = 'realDimDistance',
+//  brightDistance = 'realBrightDistance',
+//  useAltVision = 'useAltVision'
+//}
