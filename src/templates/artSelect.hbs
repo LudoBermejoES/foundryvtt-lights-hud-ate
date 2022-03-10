@@ -1,5 +1,5 @@
 <div class="control-icon" data-action="lights-hud-ate-selector" >
-    <img src="modules/lights-hud-ate/assets/lightbulb-solid.svg" 
+    <img src="modules/lights-hud-ate/assets/lightbulb-solid.svg"
         style="color: aliceblue; background: aliceblue;"
         width="36" height="36" title="{{localize 'lights-hud-ate.windows.art-select.title' }}" />
 
@@ -38,7 +38,7 @@
                             data-applied="{{image.applied}}"
                             data-disabled="{{image.disabled}}"
                             data-suppressed="{{image.suppressed}}"
-                            data-temporary="{{image.temporary}}"
+                            data-temporary="{{image.isTemporary}}"
                             data-passive="{{image.passive}}"
                             style="opacity:{{../imageOpacity}};">
                         </img>
@@ -56,7 +56,7 @@
                             data-applied="{{image.applied}}"
                             data-disabled="{{image.disabled}}"
                             data-suppressed="{{image.suppressed}}"
-                            data-temporary="{{image.temporary}}"
+                            data-temporary="{{image.isTemporary}}"
                             data-passive="{{image.passive}}"
                             style="opacity:{{../imageOpacity}};" autoplay loop>
                         </video>
@@ -74,7 +74,7 @@
                             data-applied="{{image.applied}}"
                             data-disabled="{{image.disabled}}"
                             data-suppressed="{{image.suppressed}}"
-                            data-temporary="{{image.temporary}}"
+                            data-temporary="{{image.isTemporary}}"
                             data-passive="{{image.passive}}">{{image.path}}</span>
                     {{/unless}}
 
@@ -84,8 +84,8 @@
                     {{#if image.passive}}
                     <i class="lights-hud-ate-button-icon fas fa-eye"></i>
                     {{/if}}
-                    {{#if image.temporary}}
-                    <i class="lights-hud-ate-button-icon fas fa-hourglass"></i>
+                    {{#if image.isTemporary}}
+                    <i class="lights-hud-ate-button-icon fas fa-clock"></i>
                     {{/if}}
                     {{#if image.applied}}
                     <i class="lights-hud-ate-button-icon fas fa-lightbulb"></i>
@@ -105,7 +105,7 @@
                         data-applied="{{image.applied}}"
                         data-disabled="{{image.disabled}}"
                         data-suppressed="{{image.suppressed}}"
-                        data-temporary="{{image.temporary}}"
+                        data-temporary="{{image.isTemporary}}"
                         data-passive="{{image.passive}}">{{image.name}}</span>
                     {{#if image.suppressed}}
                     <i class="lights-hud-ate-button-icon-text fas fa-exclamation-triangle"></i>
@@ -113,8 +113,8 @@
                     {{#if image.passive}}
                     <i class="lights-hud-ate-button-icon-text fas fa-eye"></i>
                     {{/if}}
-                    {{#if image.temporary}}
-                    <i class="lights-hud-ate-button-icon-text fas fa-hourglass"></i>
+                    {{#if image.isTemporary}}
+                    <i class="lights-hud-ate-button-icon-text fas fa-clock"></i>
                     {{/if}}
                     {{#if image.applied}}
                     <i class="lights-hud-ate-button-icon-text fas fa-lightbulb"></i>

@@ -83,7 +83,7 @@ export class LightDataHud {
   applied: boolean;
   disabled: boolean;
   suppressed: boolean;
-  temporary: boolean;
+  isTemporary: boolean;
   passive: boolean;
   img: boolean;
   vid: boolean;
@@ -92,6 +92,22 @@ export class LightDataHud {
   itemname: string;
   effectid: string;
   effectname: string;
+  // ADDED
+  remainingSeconds:number
+  turns:number;
+  isExpired:boolean;
+}
+
+export class LightDataDialog {
+  actorId:string;
+  tokenId:string;
+  itemId:string;
+  effectId:string;
+  actorName:string;
+  tokenName:string;
+  itemName:string;
+  effectName:string;
+  isApplied:boolean;
 }
 
 //export enum LightHUDFlags {

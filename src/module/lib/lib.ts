@@ -6,7 +6,9 @@ import {
 import API from '../api';
 import CONSTANTS from '../constants';
 import Effect, { Constants } from '../effects/effect';
+import { getATLEffectsFromItem } from '../lights-hud-ate-config';
 import { LightHUDAteEffectDefinitions } from '../lights-hud-ate-effect-definition';
+import { LightDataHud } from '../lights-hud-ate-models';
 import { canvas, game } from '../settings';
 
 // =============================
@@ -590,5 +592,127 @@ export async function checkString(value) {
     return '';
   } else {
     return Number(value);
+  }
+}
+
+export async  function retrieveItemLights(actor, token):Promise<LightDataHud[]> {
+  // const actor = <Actor>this._actor;
+  // const token = <Token>this._token;
+
+  //const actor = <Actor>canvas.tokens?.controlled[0]?.actor ?? game.user?.character ?? null;
+  //const token = <Token>canvas.tokens?.controlled[0] ?? null;
+
+  if (!actor || !token) return [];
+
+  const lightItems: Item[] = [];
+  //const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+  // const spellsItems = ['spell','feat'];
+  // For every itemwith a ATL/ATE effect
+  actor.data.items.contents.forEach((im: Item) => {
+    // if (im && physicalItems.includes(im.type)) {}
+    const atlEffects = im.effects.filter((entity) => {
+      return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+    });
+    if (atlEffects.length > 0) {
+      lightItems.push(im);
+    }
+  });
+
+  // Convert item to LightHudData
+  const imagesParsed = await Promise.all(
+    lightItems.map(async (item: Item) => {
+      const im = <string>item.img;
+      const split = im.split('/');
+      const extensions = im.split('.');
+      const extension = extensions[extensions.length - 1];
+      const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
+      const vid = ['webm', 'mp4', 'm4v'].includes(extension);
+      // TODO for now we check if at least one active effect has the atl/ate changes on him
+      const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(item) || [];
+      let appliedTmp = false;
+      let disabledTmp = false;
+      let suppressedTmp = false;
+      let temporaryTmp = false;
+      let passiveTmp = false;
+      let effectidTmp = '';
+      let effectnameTmp = '';
+      let turnsTmp = 0;
+      let isExpiredTmp = false;
+      if (aeAtl.length > 0) {
+        const nameToSearch = <string>aeAtl[0].name || aeAtl[0].data.label;
+        // const effectFromActor = <ActiveEffect>await API.findEffectByNameOnActor(<string>actor.id, nameToSearch);
+        let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
+          return isStringEquals(nameToSearch, ae.data.label);
+        });
+        // Check if someone has delete the active effect but the item with the ATL changes is still on inventory
+        if (!effectFromActor) {
+          info(`No active effect found on token ${token.name} with name ${nameToSearch}`);
+          aeAtl[0].data.transfer = false;
+          await API.addActiveEffectOnToken(<string>token.id, aeAtl[0]);
+          // ???
+          effectFromActor = <ActiveEffect>token.actor?.data.effects.find((ae: ActiveEffect) => {
+            return isStringEquals(nameToSearch, ae.data.label);
+          });
+        }
+        const applied = await API.hasEffectAppliedOnToken(<string>token.id, nameToSearch, true);
+        // If the active effect is disabled or is supressed
+        // const isDisabled = aeAtl[0].data.disabled || false;
+        // const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
+        disabledTmp = effectFromActor.data.disabled || false;
+        //@ts-ignore
+        suppressedTmp = effectFromActor.data.document.isSuppressed || false;
+        temporaryTmp = effectFromActor.isTemporary || false;
+        passiveTmp = !temporaryTmp;
+        if (applied && !disabledTmp && !suppressedTmp) {
+          appliedTmp = true;
+        }
+        effectidTmp = <string>effectFromActor.id;
+        effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
+        // ADDED
+        const remainingSeconds = this._getSecondsRemaining(effectFromActor.data.duration);
+        turnsTmp = <number>effectFromActor.data.duration.turns;
+        isExpiredTmp = remainingSeconds < 0;
+      }
+      if (!suppressedTmp) {
+        appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+      } else {
+        appliedTmp = !appliedTmp;
+      }
+
+      if (aeAtl.length > 0 && !effectidTmp) {
+        warn(`No ATL active effect found on actor ${token.name} from item ${item.name}`,true);
+      }
+
+      return <LightDataHud>{
+        route: im,
+        name: item.name,
+        applied: appliedTmp,
+        disabled: disabledTmp,
+        suppressed: suppressedTmp,
+        isTemporary: temporaryTmp,
+        passive: passiveTmp,
+        img: img,
+        vid: vid,
+        type: img || vid,
+        itemid: item.id,
+        itemname: item.name,
+        effectid: effectidTmp,
+        effectname: effectnameTmp,
+        turns:turnsTmp,
+        isExpired:isExpiredTmp
+      };
+    }),
+  );
+  return imagesParsed;
+}
+
+// TODO consider handling rounds/seconds/turns based on whatever is defined for the effect rather than do conversions
+function _getSecondsRemaining(duration) {
+  if (duration.seconds || duration.rounds) {
+    const seconds =
+      duration.seconds ?? duration.rounds * (CONFIG.time?.roundTime ?? 6);
+    return duration.startTime + seconds - game.time.worldTime;
+  } else {
+    return Infinity;
   }
 }

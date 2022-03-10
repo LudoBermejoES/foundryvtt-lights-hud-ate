@@ -89,6 +89,15 @@ export const registerSettings = function (): void {
     default: 50,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'useDfredPanelEffects', {
+    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.useDfredPanelEffects.name`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.useDfredPanelEffects.hint`),
+    config: true,
+    scope: 'world',
+    default: false,
+    type: Boolean,
+  });
+
   game.settings.register(CONSTANTS.MODULE_NAME, 'rollItem', {
     name: i18n(`${CONSTANTS.MODULE_NAME}.settings.rollItem.name`),
     hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.rollItem.hint`),
