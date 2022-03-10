@@ -516,7 +516,7 @@ export async function dropTheToken(item: Item, data: { x; y }, type = 'character
     atlEffects.map(async (ae: ActiveEffect) => {
       // Make sure is enabled
       ae.data.disabled = false;
-      await API.addActiveEffectOnToken(<string>actor.token?.id, ae);
+      await API.addActiveEffectOnToken(<string>actor.token?.id, ae.data);
     }),
   );
 
@@ -582,7 +582,7 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   atlEffects.forEach(async (ae: ActiveEffect) => {
     // Make sure is enabled
     ae.data.disabled = false;
-    await API.addActiveEffectOnToken(<string>actor.token?.id, ae);
+    await API.addActiveEffectOnToken(<string>actor.token?.id, ae.data);
   });
   return tokenData2;
 }
@@ -648,11 +648,15 @@ export async function retrieveItemLights(actor, token): Promise<LightDataHud[]> 
         if (!effectFromActor) {
           info(`No active effect found on token ${token.name} with name ${nameToSearch}`);
           aeAtl[0].data.transfer = false;
-          await API.addActiveEffectOnToken(<string>token.id, aeAtl[0]);
+          await API.addActiveEffectOnToken(<string>token.id, aeAtl[0].data);
           // ???
           effectFromActor = <ActiveEffect>token.actor?.data.effects.find((ae: ActiveEffect) => {
             return isStringEquals(nameToSearch, ae.data.label);
           });
+        }
+        if(!effectFromActor){
+          warn(`No active effect found on token ${token.name} with name ${nameToSearch}`);
+          return new LightDataHud();
         }
         const applied = await API.hasEffectAppliedOnToken(<string>token.id, nameToSearch, true);
         // If the active effect is disabled or is supressed
@@ -669,7 +673,7 @@ export async function retrieveItemLights(actor, token): Promise<LightDataHud[]> 
         effectidTmp = <string>effectFromActor.id;
         effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
         // ADDED
-        const remainingSeconds = this._getSecondsRemaining(effectFromActor.data.duration);
+        const remainingSeconds = _getSecondsRemaining(effectFromActor.data.duration);
         turnsTmp = <number>effectFromActor.data.duration.turns;
         isExpiredTmp = remainingSeconds < 0;
       }
@@ -703,7 +707,11 @@ export async function retrieveItemLights(actor, token): Promise<LightDataHud[]> 
       };
     }),
   );
-  return imagesParsed;
+
+  const imagesParsedFilter = imagesParsed.filter((i:LightDataHud)=>{
+    return i.effectname;
+  });
+  return imagesParsedFilter;
 }
 
 // TODO consider handling rounds/seconds/turns based on whatever is defined for the effect rather than do conversions

@@ -223,6 +223,15 @@ const API = {
     return result;
   },
 
+  async addActiveEffectOnTokenArr(...inAttributes: any[]) {
+    if (!Array.isArray(inAttributes)) {
+      throw error('addActiveEffectOnTokenArr | inAttributes must be of type array');
+    }
+    const [tokenId, activeEffectData] = inAttributes;
+    const result = (<EffectInterface>this.effectInterface)._effectHandler.addActiveEffectOnToken(<string>tokenId, activeEffectData);
+    return result;
+  },
+
   async updateEffectFromIdOnTokenArr(...inAttributes: any[]): Promise<boolean | undefined> {
     if (!Array.isArray(inAttributes)) {
       throw error('updateEffectFromIdOnTokenArr | inAttributes must be of type array');
@@ -324,8 +333,8 @@ const API = {
     return result;
   },
 
-  async addActiveEffectOnActor(actorId: string, activeEffect: ActiveEffect) {
-    const result = this.effectInterface.addActiveEffectOnActor(<string>actorId, activeEffect.data);
+  async addActiveEffectOnActor(actorId: string, activeEffectData: ActiveEffectData) {
+    const result = this.effectInterface.addActiveEffectOnActor(<string>actorId, activeEffectData);
     return result;
   },
 
@@ -380,8 +389,8 @@ const API = {
     return result;
   },
 
-  async addActiveEffectOnToken(tokenId: string, activeEffect: ActiveEffect) {
-    const result = this.effectInterface.addActiveEffectOnToken(<string>tokenId, activeEffect.data);
+  async addActiveEffectOnToken(tokenId: string, activeEffectData: ActiveEffectData) {
+    const result = await this.effectInterface.addActiveEffectOnToken(<string>tokenId, activeEffectData);
     return result;
   },
 

@@ -161,15 +161,16 @@ export async function addLightsHUDButtons(app, html, data) {
   // );
 
   if (!game.settings.get(CONSTANTS.MODULE_NAME, 'useBasicPanelEffects')) {
-    const effectsPanelApp = new EffectsPanelApp();
-    await effectsPanelApp.init(actor, tokenD);
+    const imagesParsed = await retrieveItemLights(actor, tokenD);
+    const effectsPanelApp = new EffectsPanelApp(imagesParsed);
+    //await effectsPanelApp.init(actor, tokenD);
     effectsPanelApp.render(true);
   } else {
     // ================================
     // OLD CODE
     //=================================
 
-    const imagesParsed = retrieveItemLights(actor, tokenD);
+    const imagesParsed = await retrieveItemLights(actor, tokenD);
 
     const wildcardDisplay = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/artSelect.hbs`, {
       tokenId,

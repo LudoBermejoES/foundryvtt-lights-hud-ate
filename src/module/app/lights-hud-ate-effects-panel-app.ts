@@ -19,15 +19,18 @@ export default class EffectsPanelApp extends Application {
     return mergeObject(super.defaultOptions, {
       id: 'lights-hud-ate-effects-panel',
       popOut: false,
-      template: `modules/${CONSTANTS.MODULE_NAME}l/templates/effects-panel.html`,
+      template: `modules/${CONSTANTS.MODULE_NAME}/templates/effects-panel.html`,
     });
   }
 
   /**
    * Initializes the application and its dependencies
    */
-  constructor() {
+  constructor(itemLights) {
     super();
+    // MOD 4535992
+    this._itemLights = itemLights;
+    // END MOD 4535992
     this._controller = new EffectsPanelController(this);
     /**
      * Debounce and slightly delayed request to re-render this panel. Necessary for situations where it is not possible
@@ -79,12 +82,4 @@ export default class EffectsPanelApp extends Application {
   get _icons() {
     return this._rootView.find('div[data-effect-id]');
   }
-
-  // MOD 4535992
-
-  async init(actor, token) {
-    this._itemLights = await retrieveItemLights(actor, token);
-  }
-
-  // END MOD 4535992
 }

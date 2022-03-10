@@ -77,6 +77,11 @@ export function registerSocket() {
   lightHudAteSocket.register('updateActiveEffectFromNameOnToken', (...args) =>
     API.updateActiveEffectFromNameOnTokenArr(...args),
   );
+
+  lightHudAteSocket.register('addActiveEffectOnToken', (...args) =>
+    API.addActiveEffectOnTokenArr(...args),
+  );
+  
   return lightHudAteSocket;
 }
 
