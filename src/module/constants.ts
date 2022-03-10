@@ -18,7 +18,7 @@ const CONSTANTS = {
     IN_TWO_WEEKS: 1_209_600,
     IN_ONE_YEAR: 31_536_000,
     IN_TWO_YEARS: 63_072_000,
-  }
+  },
 };
 
 CONSTANTS.PATH = `modules/${CONSTANTS.MODULE_NAME}/`;

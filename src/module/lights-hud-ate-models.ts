@@ -93,21 +93,21 @@ export class LightDataHud {
   effectid: string;
   effectname: string;
   // ADDED
-  remainingSeconds:number
-  turns:number;
-  isExpired:boolean;
+  remainingSeconds: number;
+  turns: number;
+  isExpired: boolean;
 }
 
 export class LightDataDialog {
-  actorId:string;
-  tokenId:string;
-  itemId:string;
-  effectId:string;
-  actorName:string;
-  tokenName:string;
-  itemName:string;
-  effectName:string;
-  isApplied:boolean;
+  actorId: string;
+  tokenId: string;
+  itemId: string;
+  effectId: string;
+  actorName: string;
+  tokenName: string;
+  itemName: string;
+  effectName: string;
+  isApplied: boolean;
 }
 
 //export enum LightHUDFlags {

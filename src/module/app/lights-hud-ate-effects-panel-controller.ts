@@ -7,15 +7,14 @@ import API from '../api';
 import { confirmDialogATLEffectItem } from '../lights-hud-ate-dialogs';
 
 export default class EffectsPanelController {
-
-  _viewMvc:EffectsPanelApp;
+  _viewMvc: EffectsPanelApp;
 
   // MOD 4535992
   temporaryEffectsRightClickBehavior = 'Disable';
   passiveEffectsRightClickBehavior = 'Disable';
   showPassiveEffects = true;
-  refresh:any;
-  _itemLights:LightDataHud[];
+  refresh: any;
+  _itemLights: LightDataHud[];
   // END MOD 4535992
 
   /**
@@ -23,10 +22,10 @@ export default class EffectsPanelController {
    *
    * @param {EffectsPanelController} viewMvc - the app that the controller can interact with
    */
-  constructor(viewMvc:EffectsPanelApp) {
+  constructor(viewMvc: EffectsPanelApp) {
     this._viewMvc = viewMvc;
     // this._settings = new Settings();
-    this._itemLights = viewMvc._itemLights
+    this._itemLights = viewMvc._itemLights;
   }
 
   get data() {
@@ -136,7 +135,7 @@ export default class EffectsPanelController {
 
     // MOD 4535992
     const lightDataDialog = this.retrieveDataFromHtml(event.currentTarget);
-    if(!lightDataDialog) return;
+    if (!lightDataDialog) return;
     confirmDialogATLEffectItem(lightDataDialog).render(true);
     // END MOD 4535992
   }
@@ -145,7 +144,7 @@ export default class EffectsPanelController {
     const $target = $(event.currentTarget);
     // MOD 4535992
     const lightDataDialog = this.retrieveDataFromHtml(event.currentTarget);
-    if(!lightDataDialog) return;
+    if (!lightDataDialog) return;
     // END MOD 4535992
     const actor = this._actor;
     const effect = actor?.effects.get($target.attr('data-effect-id') ?? '');
@@ -168,8 +167,7 @@ export default class EffectsPanelController {
   // TODO consider handling rounds/seconds/turns based on whatever is defined for the effect rather than do conversions
   _getSecondsRemaining(duration) {
     if (duration.seconds || duration.rounds) {
-      const seconds =
-        duration.seconds ?? duration.rounds * (CONFIG.time?.roundTime ?? 6);
+      const seconds = duration.seconds ?? duration.rounds * (CONFIG.time?.roundTime ?? 6);
       return duration.startTime + seconds - game.time.worldTime;
     } else {
       return Infinity;
@@ -178,7 +176,7 @@ export default class EffectsPanelController {
 
   // MOD 4535992
 
-  retrieveDataFromHtml(html) : LightDataDialog | undefined{
+  retrieveDataFromHtml(html): LightDataDialog | undefined {
     const lightDataDialog = new LightDataDialog();
     lightDataDialog.actorId = <string>$(html).attr('data-actor-id');
     lightDataDialog.tokenId = <string>$(html).attr('data-token-id');
@@ -189,27 +187,27 @@ export default class EffectsPanelController {
     lightDataDialog.isApplied = <string>$(html).attr('data-applied') == 'true';
 
     if (!lightDataDialog.itemId) {
-      warn(`No item id ${lightDataDialog.itemId} founded for the light hud`,true);
+      warn(`No item id ${lightDataDialog.itemId} founded for the light hud`, true);
       return;
     }
     if (!lightDataDialog.effectId) {
-      warn(`No active effect id ${lightDataDialog.effectId} founded for the light hud`,true);
+      warn(`No active effect id ${lightDataDialog.effectId} founded for the light hud`, true);
       return;
     }
     if (!lightDataDialog.actorId) {
-      warn(`No actor id ${lightDataDialog.actorId} founded for the light hud`,true);
+      warn(`No actor id ${lightDataDialog.actorId} founded for the light hud`, true);
       return;
     }
 
     const currentActor = game.actors?.get(lightDataDialog.actorId);
     if (!currentActor) {
-      warn(`No actor founded with id ${lightDataDialog.actorId} for the light hud`,true);
+      warn(`No actor founded with id ${lightDataDialog.actorId} for the light hud`, true);
       return;
     }
 
-    const currentToken = canvas.tokens?.placeables?.find((t:Token) => t.id === lightDataDialog.tokenId);
+    const currentToken = canvas.tokens?.placeables?.find((t: Token) => t.id === lightDataDialog.tokenId);
     if (!currentToken) {
-      warn(`No token founded with id ${lightDataDialog.tokenId} for the light hud`,true);
+      warn(`No token founded with id ${lightDataDialog.tokenId} for the light hud`, true);
       return;
     }
 

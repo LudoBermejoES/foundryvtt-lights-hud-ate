@@ -1,8 +1,23 @@
-import { TokenData } from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs";
-import API from "./api";
-import CONSTANTS from "./constants";
-import { checkString, dialogWarning, i18n, i18nFormat, prepareTokenDataDropTheTorch, rollDependingOnSystem, updateTokenLighting, warn } from "./lib/lib";
-import { LightDataDialog, LightHUDElement, LightHUDPreset, VisionHUDElement, VisionHUDPreset } from "./lights-hud-ate-models";
+import { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import API from './api';
+import CONSTANTS from './constants';
+import {
+  checkString,
+  dialogWarning,
+  i18n,
+  i18nFormat,
+  prepareTokenDataDropTheTorch,
+  rollDependingOnSystem,
+  updateTokenLighting,
+  warn,
+} from './lib/lib';
+import {
+  LightDataDialog,
+  LightHUDElement,
+  LightHUDPreset,
+  VisionHUDElement,
+  VisionHUDPreset,
+} from './lights-hud-ate-models';
 import { canvas, game } from './settings';
 
 export function presetDialog(applyChanges: boolean): Dialog {
@@ -947,7 +962,12 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
       yes: {
         label: i18n(`lights-hud-ate.windows.dialogs.confirm.apply.choice.yes`),
         callback: (html) => {
-          manageActiveEffectATL(lightDataDialog.actorId, lightDataDialog.itemId, lightDataDialog.effectId, lightDataDialog.isApplied);
+          manageActiveEffectATL(
+            lightDataDialog.actorId,
+            lightDataDialog.itemId,
+            lightDataDialog.effectId,
+            lightDataDialog.isApplied,
+          );
         },
       },
       no: {
@@ -961,7 +981,7 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
   });
 }
 
-export function confirmDialogDropTheTorch(lightDataDialog:LightDataDialog): Dialog {
+export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dialog {
   return new Dialog({
     title: i18n(`lights-hud-ate.windows.dialogs.confirm.dropthetorch.title`),
     content: `<div><h2>${i18nFormat(`lights-hud-ate.windows.dialogs.confirm.dropthetorch.content`, {

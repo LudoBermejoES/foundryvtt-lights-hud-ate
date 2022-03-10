@@ -70,6 +70,15 @@ export const registerSettings = function (): void {
   //   },
   // });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'useBasicPanelEffects', {
+    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.name`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.hint`),
+    config: true,
+    scope: 'world',
+    default: false,
+    type: Boolean,
+  });
+
   game.settings.register(CONSTANTS.MODULE_NAME, 'imageDisplay', {
     name: i18n(`${CONSTANTS.MODULE_NAME}.settings.imageDisplay.name`),
     hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.imageDisplay.hint`),
@@ -87,15 +96,6 @@ export const registerSettings = function (): void {
     range: <any>{ min: 0, max: 100, step: 1 },
     type: Number,
     default: 50,
-  });
-
-  game.settings.register(CONSTANTS.MODULE_NAME, 'useDfredPanelEffects', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.useDfredPanelEffects.name`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.useDfredPanelEffects.hint`),
-    config: true,
-    scope: 'world',
-    default: false,
-    type: Boolean,
   });
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'rollItem', {
@@ -274,6 +274,15 @@ function otherSettings(apply = false) {
       hint: `${CONSTANTS.MODULE_NAME}.setting.systemNotFoundWarningShown.hint`,
       scope: 'world',
       config: false,
+      default: false,
+      type: Boolean,
+    },
+
+    useBasicPanelEffects: {
+      name: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.name`),
+      hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.hint`),
+      config: true,
+      scope: 'world',
       default: false,
       type: Boolean,
     },

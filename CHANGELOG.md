@@ -1,4 +1,4 @@
-## 0.11
+## 0.11.0
 
 - Rewriting with typescript and update for foundryvtt'
 - Integration with ATE

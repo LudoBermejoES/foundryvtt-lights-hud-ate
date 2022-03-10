@@ -10,11 +10,10 @@ import API from '../api.js';
  * Application class for handling the UI of the effects panel
  */
 export default class EffectsPanelApp extends Application {
-
-  _controller:EffectsPanelController;
-  refresh:any;
+  _controller: EffectsPanelController;
+  refresh: any;
   _rootView;
-  _itemLights:LightDataHud[];
+  _itemLights: LightDataHud[];
 
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
@@ -46,19 +45,10 @@ export default class EffectsPanelApp extends Application {
   activateListeners($html) {
     this._rootView = $html;
 
-    this._icons.on(
-      'contextmenu',
-      this._controller.onIconRightClick.bind(this._controller)
-    );
-    this._icons.on(
-      'dblclick',
-      this._controller.onIconDoubleClick.bind(this._controller)
-    );
+    this._icons.on('contextmenu', this._controller.onIconRightClick.bind(this._controller));
+    this._icons.on('dblclick', this._controller.onIconDoubleClick.bind(this._controller));
     // MOD 4535992
-    this._icons.on(
-      'click',
-      this._controller.onIconClick.bind(this._controller)
-    );
+    this._icons.on('click', this._controller.onIconClick.bind(this._controller));
     // END MOD 4535992
   }
 
@@ -92,8 +82,8 @@ export default class EffectsPanelApp extends Application {
 
   // MOD 4535992
 
-  async init(actor, token){
-    this._itemLights = await retrieveItemLights(actor,token);
+  async init(actor, token) {
+    this._itemLights = await retrieveItemLights(actor, token);
   }
 
   // END MOD 4535992

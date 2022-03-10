@@ -595,7 +595,7 @@ export async function checkString(value) {
   }
 }
 
-export async  function retrieveItemLights(actor, token):Promise<LightDataHud[]> {
+export async function retrieveItemLights(actor, token): Promise<LightDataHud[]> {
   // const actor = <Actor>this._actor;
   // const token = <Token>this._token;
 
@@ -680,7 +680,7 @@ export async  function retrieveItemLights(actor, token):Promise<LightDataHud[]> 
       }
 
       if (aeAtl.length > 0 && !effectidTmp) {
-        warn(`No ATL active effect found on actor ${token.name} from item ${item.name}`,true);
+        warn(`No ATL active effect found on actor ${token.name} from item ${item.name}`, true);
       }
 
       return <LightDataHud>{
@@ -698,8 +698,8 @@ export async  function retrieveItemLights(actor, token):Promise<LightDataHud[]> 
         itemname: item.name,
         effectid: effectidTmp,
         effectname: effectnameTmp,
-        turns:turnsTmp,
-        isExpired:isExpiredTmp
+        turns: turnsTmp,
+        isExpired: isExpiredTmp,
       };
     }),
   );
@@ -709,8 +709,7 @@ export async  function retrieveItemLights(actor, token):Promise<LightDataHud[]> 
 // TODO consider handling rounds/seconds/turns based on whatever is defined for the effect rather than do conversions
 function _getSecondsRemaining(duration) {
   if (duration.seconds || duration.rounds) {
-    const seconds =
-      duration.seconds ?? duration.rounds * (CONFIG.time?.roundTime ?? 6);
+    const seconds = duration.seconds ?? duration.rounds * (CONFIG.time?.roundTime ?? 6);
     return duration.startTime + seconds - game.time.worldTime;
   } else {
     return Infinity;

@@ -17,7 +17,12 @@ import {
   updateTokenLighting,
   warn,
 } from './lib/lib';
-import { confirmDialogATLEffectItem, confirmDialogDropTheTorch, customATLDialog, presetDialog } from './lights-hud-ate-dialogs';
+import {
+  confirmDialogATLEffectItem,
+  confirmDialogDropTheTorch,
+  customATLDialog,
+  presetDialog,
+} from './lights-hud-ate-dialogs';
 import {
   LightDataHud,
   VisionHUDElement,
@@ -155,163 +160,113 @@ export async function addLightsHUDButtons(app, html, data) {
   //   }),
   // );
 
-  const effectsPanelApp = new EffectsPanelApp();
-  await effectsPanelApp.init(actor,tokenD);
-  effectsPanelApp.render(true);
+  if (!game.settings.get(CONSTANTS.MODULE_NAME, 'useBasicPanelEffects')) {
+    const effectsPanelApp = new EffectsPanelApp();
+    await effectsPanelApp.init(actor, tokenD);
+    effectsPanelApp.render(true);
+  } else {
+    // ================================
+    // OLD CODE
+    //=================================
 
-  // ================================
-  // OLD CODE
-  //=================================
+    const imagesParsed = retrieveItemLights(actor, tokenD);
 
-  /*
-  const imagesParsed = retrieveItemLights(actor,tokenD);
-
-  const wildcardDisplay = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/artSelect.hbs`, {
-    tokenId,
-    actorId,
-    imagesParsed,
-    imageDisplay,
-    imageOpacity,
-    isGM,
-  });
-
-  const is080 = !isNewerVersion('0.8.0', <string>game.data.version);
-
-  html
-    .find('div.right')
-    // .find(".col.lights-hud-ate-column-" + position).prepend(tbuttonItemLight)
-    .append(wildcardDisplay)
-    .click((event) => {
-      let activeButton, clickedButton, tokenButton;
-      for (const button of html.find('div.control-icon')) {
-        if (button.classList.contains('active')) activeButton = button;
-        if (button === event.target.parentElement) clickedButton = button;
-        if (button.dataset.action === 'lights-hud-ate-selector') tokenButton = button;
-      }
-
-      if (clickedButton === tokenButton && activeButton !== tokenButton) {
-        tokenButton.classList.add('active');
-
-        html.find('.lights-hud-ate-selector-wrap')[0].classList.add('active');
-        const effectSelector = is080 ? '[data-action="effects"]' : '.effects';
-        html.find(`.control-icon${effectSelector}`)[0].classList.remove('active');
-        html.find('.status-effects')[0].classList.remove('active');
-      } else {
-        tokenButton.classList.remove('active');
-
-        html.find('.lights-hud-ate-selector-wrap')[0].classList.remove('active');
-      }
+    const wildcardDisplay = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/artSelect.hbs`, {
+      tokenId,
+      actorId,
+      imagesParsed,
+      imageDisplay,
+      imageOpacity,
+      isGM,
     });
 
-  const buttons = html.find('.lights-hud-ate-button-select');
-  const buttonMacroPreset = $(html.find('.lights-hud-ate-button-macro-preset'));
-  const buttonMacroCustom = $(html.find('.lights-hud-ate-button-macro-custom'));
+    const is080 = !isNewerVersion('0.8.0', <string>game.data.version);
 
-  buttons.map((button) => {
-    buttons[button].addEventListener('click', async function (event) {
+    html
+      .find('div.right')
+      // .find(".col.lights-hud-ate-column-" + position).prepend(tbuttonItemLight)
+      .append(wildcardDisplay)
+      .click((event) => {
+        let activeButton, clickedButton, tokenButton;
+        for (const button of html.find('div.control-icon')) {
+          if (button.classList.contains('active')) activeButton = button;
+          if (button === event.target.parentElement) clickedButton = button;
+          if (button.dataset.action === 'lights-hud-ate-selector') tokenButton = button;
+        }
+
+        if (clickedButton === tokenButton && activeButton !== tokenButton) {
+          tokenButton.classList.add('active');
+
+          html.find('.lights-hud-ate-selector-wrap')[0].classList.add('active');
+          const effectSelector = is080 ? '[data-action="effects"]' : '.effects';
+          html.find(`.control-icon${effectSelector}`)[0].classList.remove('active');
+          html.find('.status-effects')[0].classList.remove('active');
+        } else {
+          tokenButton.classList.remove('active');
+
+          html.find('.lights-hud-ate-selector-wrap')[0].classList.remove('active');
+        }
+      });
+
+    const buttons = html.find('.lights-hud-ate-button-select');
+    const buttonMacroPreset = $(html.find('.lights-hud-ate-button-macro-preset'));
+    const buttonMacroCustom = $(html.find('.lights-hud-ate-button-macro-custom'));
+
+    buttons.map((button) => {
+      buttons[button].addEventListener('click', async function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const buttonClick = event.button; // 0 left click
+
+        const lightDataDialog = retrieveDataFromHtml(this);
+        if (lightDataDialog) {
+          confirmDialogATLEffectItem(lightDataDialog).render(true);
+        }
+      });
+      buttons[button].addEventListener('contextmenu', async function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const buttonClick = event.button; // 0 left click
+
+        const lightDataDialog = retrieveDataFromHtml(this);
+        if (lightDataDialog) {
+          confirmDialogDropTheTorch(lightDataDialog).render(true);
+        }
+      });
+    });
+
+    buttonMacroPreset.on('click', async function (event) {
       event.preventDefault();
       event.stopPropagation();
       const buttonClick = event.button; // 0 left click
-
-      // const lightDataDialog = new LightDataDialog();
-
-      // if (game.settings.get(CONSTANTS.MODULE_NAME, 'imageDisplay')) {
-      //   lightDataDialog.actorId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-actor-id');
-      //   lightDataDialog.tokenId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-token-id');
-      //   lightDataDialog.itemId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-id');
-      //   lightDataDialog.itemName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-item-name');
-      //   lightDataDialog.effectId = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-id');
-      //   lightDataDialog.effectName = <string>$(this).find('.lights-hud-ate-button-image').attr('data-effect-name');
-      //   lightDataDialog.isApplied = <string>$(this).find('.lights-hud-ate-button-image').attr('data-applied') == 'true';
-      // } else {
-      //   lightDataDialog.actorId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-actor-id');
-      //   lightDataDialog.tokenId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-token-id');
-      //   lightDataDialog.itemId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-item-id');
-      //   lightDataDialog.itemName = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-item-name');
-      //   lightDataDialog.effectId = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-effect-id');
-      //   lightDataDialog.effectName = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-effect-name');
-      //   lightDataDialog.isApplied = <string>$(this).find('.lights-hud-ate-button-image-text').attr('data-applied') == 'true';
-      // }
-
-      // if (!lightDataDialog.itemId) {
-      //   warn(`No item id ${lightDataDialog.itemId} founded for the light hud`,true);
-      //   return;
-      // }
-      // if (!lightDataDialog.effectId) {
-      //   warn(`No active effect id ${lightDataDialog.effectId} founded for the light hud`,true);
-      //   return;
-      // }
-      // if (!lightDataDialog.actorId) {
-      //   warn(`No actor id ${lightDataDialog.actorId} founded for the light hud`,true);
-      //   return;
-      // }
-
-      // const currentActor = game.actors?.get(lightDataDialog.actorId);
-      // if (!currentActor) {
-      //   warn(`No actor founded with id ${lightDataDialog.actorId} for the light hud`,true);
-      //   return;
-      // }
-
-      // const currentToken = canvas.tokens?.placeables?.find((t:Token) => t.id === lightDataDialog.tokenId);
-      // if (!currentToken) {
-      //   warn(`No token founded with id ${lightDataDialog.tokenId} for the light hud`,true);
-      //   return;
-      // }
-
-      // lightDataDialog.actorName = <string>currentActor.name;
-      // lightDataDialog.tokenName = <string>currentToken.name;
-
-      const lightDataDialog = retrieveDataFromHtml(this);
-      if(lightDataDialog){
-        confirmDialogATLEffectItem(lightDataDialog).render(true);
-      }
+      const actorId = <string>$(this).attr('data-actor-id');
+      const tokenId = <string>$(this).attr('data-token-id');
+      // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings.
+      // This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
+      const applyChanges = false;
+      presetDialog(applyChanges).render(true);
     });
-    buttons[button].addEventListener('contextmenu', async function (event) {
+
+    buttonMacroCustom.on('click', async function (event) {
       event.preventDefault();
       event.stopPropagation();
       const buttonClick = event.button; // 0 left click
-
-      const lightDataDialog = retrieveDataFromHtml(this);
-      if(lightDataDialog){
-        confirmDialogDropTheTorch(lightDataDialog).render(true);
-      }
+      const actorId = <string>$(this).attr('data-actor-id');
+      const tokenId = <string>$(this).attr('data-token-id');
+      // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings.
+      // This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
+      const applyChanges = false;
+      //customDialog(applyChanges).render(true);
+      customATLDialog(applyChanges).render(true);
     });
-  });
-
-  buttonMacroPreset.on('click', async function (event) {
-    event.preventDefault();
-    event.stopPropagation();
-    const buttonClick = event.button; // 0 left click
-    const actorId = <string>$(this).attr('data-actor-id');
-    const tokenId = <string>$(this).attr('data-token-id');
-    // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings.
-    // This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
-    const applyChanges = false;
-    presetDialog(applyChanges).render(true);
-  });
-
-  buttonMacroCustom.on('click', async function (event) {
-    event.preventDefault();
-    event.stopPropagation();
-    const buttonClick = event.button; // 0 left click
-    const actorId = <string>$(this).attr('data-actor-id');
-    const tokenId = <string>$(this).attr('data-token-id');
-    // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings.
-    // This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
-    const applyChanges = false;
-    //customDialog(applyChanges).render(true);
-    customATLDialog(applyChanges).render(true);
-  });
-  */
+  }
 }
-
 
 // ================================
 // OLD CODE
 //=================================
 
-/*
-function retrieveDataFromHtml(html) : LightDataDialog | undefined{
+function retrieveDataFromHtml(html): LightDataDialog | undefined {
   const lightDataDialog = new LightDataDialog();
 
   if (game.settings.get(CONSTANTS.MODULE_NAME, 'imageDisplay')) {
@@ -329,31 +284,32 @@ function retrieveDataFromHtml(html) : LightDataDialog | undefined{
     lightDataDialog.itemName = <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-item-name');
     lightDataDialog.effectId = <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-effect-id');
     lightDataDialog.effectName = <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-effect-name');
-    lightDataDialog.isApplied = <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-applied') == 'true';
+    lightDataDialog.isApplied =
+      <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-applied') == 'true';
   }
 
   if (!lightDataDialog.itemId) {
-    warn(`No item id ${lightDataDialog.itemId} founded for the light hud`,true);
+    warn(`No item id ${lightDataDialog.itemId} founded for the light hud`, true);
     return;
   }
   if (!lightDataDialog.effectId) {
-    warn(`No active effect id ${lightDataDialog.effectId} founded for the light hud`,true);
+    warn(`No active effect id ${lightDataDialog.effectId} founded for the light hud`, true);
     return;
   }
   if (!lightDataDialog.actorId) {
-    warn(`No actor id ${lightDataDialog.actorId} founded for the light hud`,true);
+    warn(`No actor id ${lightDataDialog.actorId} founded for the light hud`, true);
     return;
   }
 
   const currentActor = game.actors?.get(lightDataDialog.actorId);
   if (!currentActor) {
-    warn(`No actor founded with id ${lightDataDialog.actorId} for the light hud`,true);
+    warn(`No actor founded with id ${lightDataDialog.actorId} for the light hud`, true);
     return;
   }
 
-  const currentToken = canvas.tokens?.placeables?.find((t:Token) => t.id === lightDataDialog.tokenId);
+  const currentToken = canvas.tokens?.placeables?.find((t: Token) => t.id === lightDataDialog.tokenId);
   if (!currentToken) {
-    warn(`No token founded with id ${lightDataDialog.tokenId} for the light hud`,true);
+    warn(`No token founded with id ${lightDataDialog.tokenId} for the light hud`, true);
     return;
   }
 
@@ -365,11 +321,9 @@ function retrieveDataFromHtml(html) : LightDataDialog | undefined{
 // TODO consider handling rounds/seconds/turns based on whatever is defined for the effect rather than do conversions
 function _getSecondsRemaining(duration) {
   if (duration.seconds || duration.rounds) {
-    const seconds =
-      duration.seconds ?? duration.rounds * (CONFIG.time?.roundTime ?? 6);
+    const seconds = duration.seconds ?? duration.rounds * (CONFIG.time?.roundTime ?? 6);
     return duration.startTime + seconds - game.time.worldTime;
   } else {
     return Infinity;
   }
 }
-*/
