@@ -25,8 +25,8 @@
   "lights-hud-ate.windows.art-select.title": "Select Art",
   "lights-hud-ate.windows.art-select.no-art-found": "No art found",
 
-  "lights-hud-ate.windows.art-select.call-macro-preset": "Call macro preset",
-  "lights-hud-ate.windows.art-select.call-macro-custom": "Call macro custom",
+  "lights-hud-ate.windows.art-select.call-macro-preset": "[GM] Call macro preset",
+  "lights-hud-ate.windows.art-select.call-macro-custom": "[GM] Call macro custom",
 
   "lights-hud-ate.windows.dialogs.confirm.apply.title": "Confirm the action",
   "lights-hud-ate.windows.dialogs.confirm.apply.content": "Are you sure to {isApplied} the active effect '{effectName}' from item '{itemName}' on actor '{actorName}' (token name is '{tokenName}')?",

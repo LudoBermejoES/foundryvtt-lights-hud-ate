@@ -70,14 +70,14 @@ export const registerSettings = function (): void {
   //   },
   // });
 
-  game.settings.register(CONSTANTS.MODULE_NAME, 'useBasicPanelEffects', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.name`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.hint`),
-    config: true,
-    scope: 'world',
-    default: false,
-    type: Boolean,
-  });
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'useBasicPanelEffects', {
+  //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.name`),
+  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.hint`),
+  //   config: false,
+  //   scope: 'world',
+  //   default: true,
+  //   type: Boolean,
+  // });
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'imageDisplay', {
     name: i18n(`${CONSTANTS.MODULE_NAME}.settings.imageDisplay.name`),
@@ -267,14 +267,14 @@ function otherSettings(apply = false) {
       type: Boolean,
     },
 
-    useBasicPanelEffects: {
-      name: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.name`),
-      hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.hint`),
-      config: true,
-      scope: 'world',
-      default: false,
-      type: Boolean,
-    },
+    // useBasicPanelEffects: {
+    //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.name`),
+    //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.hint`),
+    //   config: true,
+    //   scope: 'world',
+    //   default: false,
+    //   type: Boolean,
+    // },
 
     imageDisplay: {
       name: i18n(`${CONSTANTS.MODULE_NAME}.settings.imageDisplay.name`),

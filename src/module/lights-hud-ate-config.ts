@@ -61,11 +61,15 @@ export async function addLightsHUDButtons(app, html, data) {
 
   const isGM = game.user?.isGM;
 
-  if (!game.settings.get(CONSTANTS.MODULE_NAME, 'useBasicPanelEffects')) {
-    const imagesParsed = await retrieveItemLights(actor, token);
-    const effectsPanelApp = new EffectsPanelApp(imagesParsed);
-    effectsPanelApp.render(true);
-  } else {
+  // if (!game.settings.get(CONSTANTS.MODULE_NAME, 'useBasicPanelEffects')) {
+  //   const imagesParsed = await retrieveItemLights(actor, token);
+  //   const effectsPanelApp = new EffectsPanelApp(imagesParsed);
+  //   effectsPanelApp.render(true);
+  //   html
+  //     .find('div.right')
+  //     // .find(".col.lights-hud-ate-column-" + position).prepend(tbuttonItemLight)
+  //     .append(effectsPanelApp);
+  // } else {
     // ================================
     // OLD CODE
     //=================================
@@ -160,7 +164,7 @@ export async function addLightsHUDButtons(app, html, data) {
       //customDialog(applyChanges).render(true);
       customATLDialog(applyChanges).render(true);
     });
-  }
+  // }
 }
 
 // ================================

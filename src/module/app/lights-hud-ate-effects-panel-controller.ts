@@ -4,7 +4,12 @@ import { info, isStringEquals, warn } from '../lib/lib';
 import { canvas, game } from '../settings';
 import EffectsPanelApp from './lights-hud-ate-effects-panel-app';
 import API from '../api';
-import { confirmDialogATLEffectItem, confirmDialogDropTheTorch, customATLDialog, presetDialog } from '../lights-hud-ate-dialogs';
+import {
+  confirmDialogATLEffectItem,
+  confirmDialogDropTheTorch,
+  customATLDialog,
+  presetDialog,
+} from '../lights-hud-ate-dialogs';
 
 export default class EffectsPanelController {
   _viewMvc: EffectsPanelApp;
@@ -34,7 +39,7 @@ export default class EffectsPanelController {
       disabledEffects: this._disabledEffects,
       tokenId: this._token?.id,
       actorId: this._actor?.id,
-      isGM: game.user?.isGM
+      isGM: game.user?.isGM,
     };
   }
 
@@ -145,17 +150,17 @@ export default class EffectsPanelController {
     // if (!effect) return;
 
     // MOD 4535992
-    if (!effect){
+    if (!effect) {
       const macroPreset = <string>$target.attr('data-button-macro-preset') ?? '';
-      const macroCustom =  <string>$target.attr('data-button-macro-custom') ?? '';
-      if(macroPreset){
+      const macroCustom = <string>$target.attr('data-button-macro-custom') ?? '';
+      if (macroPreset) {
         const actorId = <string>$(this).attr('data-actor-id');
         const tokenId = <string>$(this).attr('data-token-id');
         // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings.
         // This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
         const applyChanges = false;
         presetDialog(applyChanges).render(true);
-      }else if(macroCustom){
+      } else if (macroCustom) {
         const actorId = <string>$(this).attr('data-actor-id');
         const tokenId = <string>$(this).attr('data-token-id');
         // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings.
@@ -163,10 +168,10 @@ export default class EffectsPanelController {
         const applyChanges = false;
         //customDialog(applyChanges).render(true);
         customATLDialog(applyChanges).render(true);
-      }else{
+      } else {
         return;
       }
-    }else{
+    } else {
       const lightDataDialog = this.retrieveDataFromHtml(event.currentTarget);
       if (!lightDataDialog) return;
       confirmDialogATLEffectItem(lightDataDialog).render(true);

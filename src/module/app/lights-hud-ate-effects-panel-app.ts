@@ -77,6 +77,10 @@ export default class EffectsPanelApp extends Application {
     // if (ui.sidebar?._collapsed) {
     //   this.element.css('right', '50px');
     // }
+    $( document )
+      .find('div.right')
+      // .find(".col.lights-hud-ate-column-" + position).prepend(tbuttonItemLight)
+      .append(this.element)
   }
 
   get _icons() {

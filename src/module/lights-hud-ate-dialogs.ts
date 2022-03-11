@@ -49,7 +49,9 @@ export function presetDialog(applyChanges: boolean): Dialog {
         <label>Light Source:</label>
         <select id="light-source" name="light-source" is="ms-dropdown-ligthhudate">
           ${API.LIGHTS.map((lightSource) => {
-            return `\t<option data-image="${lightSource.img}" value=${lightSource.id}>${i18n(lightSource.name)}</option>`;
+            return `\t<option data-image="${lightSource.img}" value=${lightSource.id}>${i18n(
+              lightSource.name,
+            )}</option>`;
           }).join('\n')}
         </select>
       </div>

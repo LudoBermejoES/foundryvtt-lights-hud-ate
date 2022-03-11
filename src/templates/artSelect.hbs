@@ -40,8 +40,8 @@
                             data-suppressed="{{image.suppressed}}"
                             data-temporary="{{image.isTemporary}}"
                             data-passive="{{image.passive}}"
-                            style="opacity:{{../imageOpacity}};">
-                        </img>
+                            style="opacity:{{../imageOpacity}};" />
+
                     {{/if}}
                     {{#if image.vid}}
                         <video class="lights-hud-ate-button-image" src="{{image.icon}}"
@@ -88,9 +88,9 @@
                     <i class="lights-hud-ate-button-icon fas fa-clock"></i>
                     {{/if}}
                     {{#if image.applied}}
-                    <i class="lights-hud-ate-button-icon fas fa-lightbulb"></i>
+                    <i class="lights-hud-ate-button-icon applied fas fa-lightbulb"></i>
                     {{else}}
-                    <i class="lights-hud-ate-button-icon far fa-lightbulb"></i>
+                    <i class="lights-hud-ate-button-icon fas fa-lightbulb"></i>
                     {{/if}}
                 {{else}}
                     <span class="lights-hud-ate-button-image-text"
@@ -117,9 +117,9 @@
                     <i class="lights-hud-ate-button-icon-text fas fa-clock"></i>
                     {{/if}}
                     {{#if image.applied}}
-                    <i class="lights-hud-ate-button-icon-text fas fa-lightbulb"></i>
+                    <i class="lights-hud-ate-button-icon-text applied fas fa-lightbulb"></i>
                     {{else}}
-                    <i class="lights-hud-ate-button-icon-text far fa-lightbulb"></i>
+                    <i class="lights-hud-ate-button-icon-text fas fa-lightbulb"></i>
                     {{/if}}
                 {{/if}}
             </button>

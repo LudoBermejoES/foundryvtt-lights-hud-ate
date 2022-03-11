@@ -594,7 +594,7 @@ export async function checkNumberFromString(value) {
   }
 }
 
-export async function retrieveItemLights(actor:Actor, token:Token): Promise<LightDataHud[]> {
+export async function retrieveItemLights(actor: Actor, token: Token): Promise<LightDataHud[]> {
   // const actor = <Actor>this._actor;
   // const token = <Token>this._token;
 
@@ -659,7 +659,7 @@ export async function retrieveItemLights(actor:Actor, token:Token): Promise<Ligh
             return isStringEquals(nameToSearch, ae.data.label);
           });
         }
-        if(!effectFromActor){
+        if (!effectFromActor) {
           warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
           return new LightDataHud();
         }
@@ -687,7 +687,7 @@ export async function retrieveItemLights(actor:Actor, token:Token): Promise<Ligh
         _idTmp = <string>effectFromActor.data._id;
         flagsTmp = effectFromActor.data?.flags || {};
         // Little trick if
-        if(!effectFromActor.data?.flags?.convenientDescription){
+        if (!effectFromActor.data?.flags?.convenientDescription) {
           flagsTmp['convenientDescription'] = item.data.name;
         }
       }
@@ -724,12 +724,12 @@ export async function retrieveItemLights(actor:Actor, token:Token): Promise<Ligh
         isExpired: isExpiredTmp,
         label: labelTmp,
         _id: _idTmp,
-        flags: flagsTmp
+        flags: flagsTmp,
       };
     }),
   );
 
-  const imagesParsedFilter = imagesParsed.filter((i:LightDataHud)=>{
+  const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
     return i.effectname;
   });
   return imagesParsedFilter;

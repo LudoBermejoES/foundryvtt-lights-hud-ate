@@ -228,7 +228,10 @@ const API = {
       throw error('addActiveEffectOnTokenArr | inAttributes must be of type array');
     }
     const [tokenId, activeEffectData] = inAttributes;
-    const result = (<EffectInterface>this.effectInterface)._effectHandler.addActiveEffectOnToken(<string>tokenId, activeEffectData);
+    const result = (<EffectInterface>this.effectInterface)._effectHandler.addActiveEffectOnToken(
+      <string>tokenId,
+      activeEffectData,
+    );
     return result;
   },
 

@@ -18,6 +18,7 @@
 
 #token-hud .lights-hud-ate-selector-wrap.active {
   visibility: visible;
+  display: grid;
 }
 #token-hud .lights-hud-ate-button-select {
   max-width: 300px;
@@ -76,7 +77,7 @@
 .lights-hud-ate-button-macro-custom {
   background: whitesmoke;
 }
-
+/*
 .lights-hud-ate-button-icon-text.fas.fa-lightbulb {
   color: green;
   text-shadow: 0 0 8px green;
@@ -94,6 +95,28 @@
 }
 
 .lights-hud-ate-button-icon.far.fa-lightbulb {
+  left: 0;
+  color: red;
+  pointer-events: none;
+}
+*/
+.lights-hud-ate-button-icon-text.applied.fas.fa-lightbulb {
+  color: green;
+  text-shadow: 0 0 8px green;
+}
+
+.lights-hud-ate-button-icon.applied.fas.fa-lightbulb {
+  left: 0;
+  color: green;
+  pointer-events: none;
+}
+
+.lights-hud-ate-button-icon-text.fas.fa-lightbulb {
+  color: red;
+  text-shadow: 0 0 8px red;
+}
+
+.lights-hud-ate-button-icon.fas.fa-lightbulb {
   left: 0;
   color: red;
   pointer-events: none;
@@ -120,17 +143,6 @@
   color: purple;
   pointer-events: none;
 }
-
-/* .lights-hud-ate-button-icon-text.fas.fa-hourglass {
-  color: orange;
-  text-shadow: 0 0 8px orange;
-}
-
-.lights-hud-ate-button-icon.fas.fa-hourglass {
-  left: 0;
-  color: orange;
-  pointer-events: none;
-} */
 
 .lights-hud-ate-button-icon-text.fas.fa-clock {
   color: orange;
@@ -162,7 +174,7 @@
 /** ================= */
 /** additional 2      */
 /** ================= */
-
+/*
 .lights-hud-ate-tags {
   display: flex;
   flex-wrap: wrap;
@@ -295,12 +307,19 @@
   color: orange;
 }
 
-.lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-lightbulb {
+.lights-hud-ate-effect-panel .effect-item .icon .badge.applied.fas.fa-lightbulb {
   color: green;
+  text-shadow: 0 0 8px green;
 }
 
 .lights-hud-ate-effect-panel .effect-item .icon .badge.far.fa-lightbulb {
   color: red;
+  text-shadow: 0 0 8px red;
+}
+
+.lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-lightbulb {
+  color: red;
+  text-shadow: 0 0 8px red;
 }
 
 .lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-exclamation-triangle {
@@ -310,3 +329,4 @@
 .lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-eye {
   color: purple;
 }
+*/

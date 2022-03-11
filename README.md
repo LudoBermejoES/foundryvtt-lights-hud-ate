@@ -16,13 +16,9 @@
 
 A Foundry VTT module that displays on the HUD config of the token all the available lighting items on the token/actor, with some [ATE](https://github.com/kandashi/Active-Token-Lighting) effect, so you can light a torch or turn of without modify the token configuration and you can set with [Times up](https://gitlab.com/tposney/times-up) and [Dae](https://gitlab.com/tposney/dae) time and condition of the vision and light effect on the token.
 
-This project is born like a fusion of the feature of these modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/), [ATE](https://github.com/kandashi/Active-Token-Lighting) and [DFreds Effects Panel](https://github.com/DFreds/dfreds-effects-panel), but after the initial code i rewriting everything so many times now is just a new module inspired form these other module. Remember to support these authors if you feel generous on their patreon or kofi account.
-
-This was the first beta release :
+This project is born like a fusion of the feature of these modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/), [ATE](https://github.com/kandashi/Active-Token-Lighting), but after the initial code i rewriting everything so many times now is just a new module inspired form these other module. Remember to support these authors if you feel generous on their patreon or kofi account.
 
 ![imggif](./wiki/assets/first_release_tutorial_left.gif)
-
-This is the last release :
 
 
 ## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
@@ -100,7 +96,7 @@ The module is build to show on a left click of the button with the image of a li
 |:----:|:----:|
 |![exclamation-triangle-solid](./wiki/icons/exclamation-triangle-solid.svg) | The symbol of the **yellow exclamation triangle** means the active effect is _suppressed_ for some reason that you can delve into in the effects panel, usually _need to be attuned or equipped condition_ this does not prevent the effect from being active or not, only that it will result in the subcategory of inactive effects. |
 |![eye-solid](./wiki/icons/eye-solid.svg) | The symbol of the **purple eye** means the active effect is _passive_ like a race feature or a special ability like _darkvision_, this does not prevent the effect from being active or not, only that it will result in the subcategory of inactive effects. |
-|![hourglass-solid](./wiki/icons/hourglass-solid.svg) | The symbol of the **orange hourglass** means the active effect is _temporary_ like a spell valid only for tot. rounds or seconds, this is usually managed from the [Times up](https://gitlab.com/tposney/times-up) module if installed, this does not prevent the effect from being active or not, only that it will result in the subcategory of temporary effects. |
+|![clock-solid](./wiki/icons/clock-solid.svg) | The symbol of the **orange clock** means the active effect is _temporary_ like a spell valid only for tot. rounds or seconds, this is usually managed from the [Times up](https://gitlab.com/tposney/times-up) module if installed, this does not prevent the effect from being active or not, only that it will result in the subcategory of temporary effects. |
 |![lightbulb-solid](./wiki/icons/lightbulb-solid.svg) | The symbol of the **green lightbulb** means the active effect is _enabled_ (or _applied_). |
 |![lightbulb-regular](./wiki/icons/lightbulb-regular.svg) | The symbol of the **red lightbulb** means the active effect is _disabled_ (or _not applied_). |
 

@@ -12,7 +12,7 @@
     "update": "npm install --save-dev @league-of-foundry-developers/foundry-vtt-types@9",
     "lint": "eslint --ext .ts,.js,.vue .",
     "lintfix": "eslint --fix --ext .ts,.js,.vue ./src",
-    "prettier-format": "prettier --config .prettierrc --write \"./src/**/*.(ts|js|json|scss|css)\""
+    "prettier-format": "prettier --config .prettierrc --write \"./src/**/*.(ts|js|json|scss|css|html)\""
   },
   "author": "",
   "license": "",

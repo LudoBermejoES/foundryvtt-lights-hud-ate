@@ -98,9 +98,9 @@ export class LightDataHud {
   remainingSeconds: number;
   turns: number;
   isExpired: boolean;
-  label:string;
-  _id:string;
-  flags:any;
+  label: string;
+  _id: string;
+  flags: any;
 }
 
 export class LightDataDialog {
