@@ -1,0 +1,118 @@
+<div class="control-icon">
+  <section class="lights-hud-ate-effect-panel">
+    {{#if (canViewEffectsPanel)}} {{#each enabledEffects as |effect|}}
+    <div class="effect-item">
+      <div class="effect-info">
+        <h1>{{effect.label}}</h1>
+        {{#if (canViewEffectDetails)}}
+        <div class="effect-info-details">
+          {{#if effect.flags.convenientDescription}}
+          <h2>{{effect.flags.convenientDescription}}</h2>
+          {{/if}}
+          <div class="lights-hud-ate-tags">
+            <div class="tag tag_primary">{{#if effect.isTemporary}} temporary {{else}} passive {{/if}}</div>
+            <div class="tag tag_secondary">{{remainingTimeLabel effect}}</div>
+          </div>
+        </div>
+        {{/if}}
+      </div>
+      <div
+        class="icon"
+        data-effect-id="{{effect._id}}"
+        data-token-id="{{effect.tokenid}}"
+        data-actor-id="{{effect.actorid}}"
+        data-icon="{{effect.icon}}"
+        data-item-id="{{effect.itemid}}"
+        data-item-name="{{effect.itemname}}"
+        data-effect-id-2="{{effect.effectid}}"
+        data-effect-name="{{effect.effectname}}"
+        data-applied="{{effect.applied}}"
+        data-disabled="{{effect.disabled}}"
+        data-suppressed="{{effect.suppressed}}"
+        data-temporary="{{effect.isTemporary}}"
+        data-passive="{{effect.passive}}"
+        style="background-image: url({{effect.icon}})"
+      >
+        {{#if effect.isExpired}}
+        <i class="expired badge fas fa-clock"></i>
+        {{else if effect.isTemporary}}
+        <i class="badge fas fa-clock"></i>
+        {{else}}
+        <i class="unlimited badge fas fa-infinity"></i>
+        {{/if}} {{#if effect.suppressed}}
+        <i class="badge fas fa-exclamation-triangle"></i>
+        {{/if}} {{#if effect.passive}}
+        <i class="badge fas fa-eye"></i>
+        {{/if}} {{#if effect.applied}}
+        <i class="badge fas fa-lightbulb"></i>
+        {{else}}
+        <i class="badge far fa-lightbulb"></i>
+        {{/if}}
+      </div>
+    </div>
+    {{/each}} {{#if (and enabledEffects.length disabledEffects.length (canShowDisabledEffects) ) }}
+    <hr />
+    {{/if}} {{#if (canShowDisabledEffects)}} {{#each disabledEffects as |effect|}}
+    <div class="effect-item">
+      <div class="effect-info">
+        <h1>{{effect.label}}</h1>
+        {{#if (canViewEffectDetails)}}
+        <div class="effect-info-details">
+          {{#if effect.flags.convenientDescription}}
+          <h2>{{effect.flags.convenientDescription}}</h2>
+          {{/if}}
+          <div class="tags">
+            <div class="tag tag_primary">{{#if effect.isTemporary}} temporary {{else}} passive {{/if}}</div>
+            <div class="tag tag_secondary">{{remainingTimeLabel effect}}</div>
+            <div class="tag tag_tertiary">disabled</div>
+          </div>
+        </div>
+        {{/if}}
+      </div>
+      <div
+        class="disabled icon"
+        data-effect-id="{{effect._id}}"
+        data-token-id="{{effect.tokenid}}"
+        data-actor-id="{{effect.actorid}}"
+        data-icon="{{effect.icon}}"
+        data-item-id="{{effect.itemid}}"
+        data-item-name="{{effect.itemname}}"
+        data-effect-id-2="{{effect.effectid}}"
+        data-effect-name="{{effect.effectname}}"
+        data-applied="{{effect.applied}}"
+        data-disabled="{{effect.disabled}}"
+        data-suppressed="{{effect.suppressed}}"
+        data-temporary="{{effect.isTemporary}}"
+        data-passive="{{effect.passive}}"
+        style="background-image: url({{effect.icon}});"
+      >
+        {{#if effect.isExpired}}
+        <i class="expired badge fas fa-clock"></i>
+        {{else if effect.isTemporary}}
+        <i class="badge fas fa-clock"></i>
+        {{else}}
+        <i class="unlimited badge fas fa-infinity"></i>
+        {{/if}} {{#if effect.suppressed}}
+        <i class="badge fas fa-exclamation-triangle"></i>
+        {{/if}} {{#if effect.passive}}
+        <i class="badge fas fa-eye"></i>
+        {{/if}} {{#if effect.applied}}
+        <i class="badge fas fa-lightbulb"></i>
+        {{else}}
+        <i class="badge far fa-lightbulb"></i>
+        {{/if}}
+      </div>
+    </div>
+    {{/each}} {{/if}} {{/if}}
+  </section>
+  {{#if isGM}}
+  <section class="lights-hud-ate-effect-panel">
+    <button data-button-macro-preset="true" data-token-id="{{tokenId}}" data-actor-id="{{actorId}}">
+      {{localize "lights-hud-ate.windows.art-select.call-macro-preset"}}
+    </button>
+    <button data-button-macro-custom="true" data-token-id="{{tokenId}}" data-actor-id="{{actorId}}">
+      {{localize "lights-hud-ate.windows.art-select.call-macro-custom"}}
+    </button>
+  </section>
+  {{/if}}
+</div>

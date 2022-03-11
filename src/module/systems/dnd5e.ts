@@ -7,7 +7,7 @@ export default {
     {
       id: LightHUDPreset.NO_CHANGE,
       name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.NO_CHANGE}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/token-icon.svg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/token-icon.svg`,
       lockRotation: null,
       dimLight: null,
       brightLight: null,
@@ -21,7 +21,7 @@ export default {
     {
       id: LightHUDPreset.NONE,
       name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.NONE}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/light_01.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/light_01.jpg`,
       lockRotation: false,
       dimLight: 0,
       brightLight: 0,
@@ -35,7 +35,7 @@ export default {
     {
       id: LightHUDPreset.CANDLE,
       name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.CANDLE}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/candle.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/candle.jpg`,
       lockRotation: false,
       dimLight: 10,
       brightLight: 5,
@@ -49,7 +49,7 @@ export default {
     {
       id: LightHUDPreset.LAMP,
       name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.LAMP}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/lamp.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/lamp.jpg`,
       lockRotation: false,
       dimLight: 45,
       brightLight: 15,
@@ -63,7 +63,7 @@ export default {
     {
       id: LightHUDPreset.LANTERN_BULLSEYE,
       name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.LANTERN_BULLSEYE}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/lantern.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/lantern.jpg`,
       lockRotation: false,
       dimLight: 120,
       brightLight: 60,
@@ -77,7 +77,7 @@ export default {
     {
       id: LightHUDPreset.LANTERN_HOODED_DIM,
       name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.LANTERN_HOODED_DIM}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/lantern.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/lantern.jpg`,
       lockRotation: false,
       dimLight: 5,
       brightLight: 0,
@@ -91,7 +91,7 @@ export default {
     {
       id: LightHUDPreset.LANTERN_HOODED_BRIGHT,
       name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.LANTERN_HOODED_BRIGHT}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/lantern.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/lantern.jpg`,
       lockRotation: false,
       dimLight: 60,
       brightLight: 30,
@@ -105,7 +105,7 @@ export default {
     {
       id: LightHUDPreset.TORCH,
       name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.TORCH}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/torch.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/torch.jpg`,
       lockRotation: false,
       dimLight: 40,
       brightLight: 20,
@@ -119,7 +119,7 @@ export default {
     {
       id: LightHUDPreset.LIGHT,
       name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.LIGHT}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/light-sky-1.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/light-sky-1.jpg`,
       lockRotation: false,
       dimLight: 40,
       brightLight: 20,
@@ -133,7 +133,7 @@ export default {
     {
       id: LightHUDPreset.MOON_TOUCHED,
       name: `${CONSTANTS.MODULE_NAME}.lights.${LightHUDPreset.MOON_TOUCHED}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/explosion-sky-3.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/explosion-sky-3.jpg`,
       lockRotation: false,
       dimLight: 30,
       brightLight: 15,
@@ -149,7 +149,7 @@ export default {
     {
       id: VisionHUDPreset.NO_CHANGE,
       name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.NO_CHANGE}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/token-icon.svg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/token-icon.svg`,
       dimSight: null,
       brightSight: null,
       sightAngle: null,
@@ -157,7 +157,7 @@ export default {
     {
       id: VisionHUDPreset.NONE,
       name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.NONE}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/light_01.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/light_01.jpg`,
       dimSight: 0,
       brightSight: 0,
       sightAngle: 360,
@@ -165,7 +165,7 @@ export default {
     {
       id: VisionHUDPreset.SELF,
       name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.SELF}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/light_02.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/light_02.jpg`,
       dimSight: 5,
       brightSight: 0,
       sightAngle: 360,
@@ -173,7 +173,7 @@ export default {
     {
       id: VisionHUDPreset.DARKVISION_30,
       name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DARKVISION_30}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/evil-eye-red-1.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/evil-eye-red-1.jpg`,
       dimSight: 30,
       brightSight: 0,
       sightAngle: 360,
@@ -181,7 +181,7 @@ export default {
     {
       id: VisionHUDPreset.DARKVISION_60,
       name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DARKVISION_60}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/evil-eye-red-2.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/evil-eye-red-2.jpg`,
       dimSight: 60,
       brightSight: 0,
       sightAngle: 360,
@@ -189,7 +189,7 @@ export default {
     {
       id: VisionHUDPreset.DARKVISION_90,
       name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DARKVISION_90}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/evil-eye-red-3.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/evil-eye-red-3.jpg`,
       dimSight: 90,
       brightSight: 0,
       sightAngle: 360,
@@ -197,7 +197,7 @@ export default {
     {
       id: VisionHUDPreset.DARKVISION_120,
       name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DARKVISION_120}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/evil-eye-eerie-1.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/evil-eye-eerie-1.jpg`,
       dimSight: 120,
       brightSight: 0,
       sightAngle: 360,
@@ -205,7 +205,7 @@ export default {
     {
       id: VisionHUDPreset.DARKVISION_150,
       name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DARKVISION_150}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/evil-eye-eerie-2.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/evil-eye-eerie-2.jpg`,
       dimSight: 150,
       brightSight: 0,
       sightAngle: 360,
@@ -213,7 +213,7 @@ export default {
     {
       id: VisionHUDPreset.DARKVISION_180,
       name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DARKVISION_180}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/evil-eye-eerie-3.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/evil-eye-eerie-3.jpg`,
       dimSight: 180,
       brightSight: 0,
       sightAngle: 360,
@@ -221,7 +221,7 @@ export default {
     {
       id: VisionHUDPreset.EYES_OF_NIGHT,
       name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.EYES_OF_NIGHT}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/shadow_12.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/shadow_12.jpg`,
       dimSight: 300,
       brightSight: 0,
       sightAngle: 360,
@@ -229,7 +229,7 @@ export default {
     {
       id: VisionHUDPreset.DEVILS_SIGHT,
       name: `${CONSTANTS.MODULE_NAME}.visions.${VisionHUDPreset.DEVILS_SIGHT}.name`,
-      img: `modules/${CONSTANTS.MODULE_NAME}/icons/ae/blue_17.jpg`,
+      img: `modules/${CONSTANTS.MODULE_NAME}/assets/icons/ae/blue_17.jpg`,
       dimSight: 0,
       brightSight: 120,
       sightAngle: 360,

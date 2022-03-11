@@ -1,6 +1,5 @@
 import { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from './api';
-import EffectsPanelApp from './app/lights-hud-ate-effects-panel-app';
 import CONSTANTS from './constants';
 import Effect from './effects/effect';
 import EffectInterface from './effects/effect-interface';
@@ -70,100 +69,100 @@ export async function addLightsHUDButtons(app, html, data) {
   //     // .find(".col.lights-hud-ate-column-" + position).prepend(tbuttonItemLight)
   //     .append(effectsPanelApp);
   // } else {
-    // ================================
-    // OLD CODE
-    //=================================
+  // ================================
+  // OLD CODE
+  //=================================
 
-    const imagesParsed = await retrieveItemLights(actor, token);
+  const imagesParsed = await retrieveItemLights(actor, token);
 
-    const wildcardDisplay = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/artSelect.hbs`, {
-      tokenId,
-      actorId,
-      isGM,
-      imagesParsed,
-      imageDisplay,
-      imageOpacity,
+  const wildcardDisplay = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/artSelect.hbs`, {
+    tokenId,
+    actorId,
+    isGM,
+    imagesParsed,
+    imageDisplay,
+    imageOpacity,
+  });
+
+  const is080 = !isNewerVersion('0.8.0', <string>game.data.version);
+
+  html
+    .find('div.right')
+    // .find(".col.lights-hud-ate-column-" + position).prepend(tbuttonItemLight)
+    .append(wildcardDisplay)
+    .click((event) => {
+      let activeButton, clickedButton, tokenButton;
+      for (const button of html.find('div.control-icon')) {
+        if (button.classList.contains('active')) activeButton = button;
+        if (button === event.target.parentElement) clickedButton = button;
+        if (button.dataset.action === 'lights-hud-ate-selector') tokenButton = button;
+      }
+
+      if (clickedButton === tokenButton && activeButton !== tokenButton) {
+        tokenButton.classList.add('active');
+
+        html.find('.lights-hud-ate-selector-wrap')[0].classList.add('active');
+        const effectSelector = is080 ? '[data-action="effects"]' : '.effects';
+        html.find(`.control-icon${effectSelector}`)[0].classList.remove('active');
+        html.find('.status-effects')[0].classList.remove('active');
+      } else {
+        tokenButton.classList.remove('active');
+
+        html.find('.lights-hud-ate-selector-wrap')[0].classList.remove('active');
+      }
     });
 
-    const is080 = !isNewerVersion('0.8.0', <string>game.data.version);
+  const buttons = html.find('.lights-hud-ate-button-select');
+  const buttonMacroPreset = $(html.find('.lights-hud-ate-button-macro-preset'));
+  const buttonMacroCustom = $(html.find('.lights-hud-ate-button-macro-custom'));
 
-    html
-      .find('div.right')
-      // .find(".col.lights-hud-ate-column-" + position).prepend(tbuttonItemLight)
-      .append(wildcardDisplay)
-      .click((event) => {
-        let activeButton, clickedButton, tokenButton;
-        for (const button of html.find('div.control-icon')) {
-          if (button.classList.contains('active')) activeButton = button;
-          if (button === event.target.parentElement) clickedButton = button;
-          if (button.dataset.action === 'lights-hud-ate-selector') tokenButton = button;
-        }
-
-        if (clickedButton === tokenButton && activeButton !== tokenButton) {
-          tokenButton.classList.add('active');
-
-          html.find('.lights-hud-ate-selector-wrap')[0].classList.add('active');
-          const effectSelector = is080 ? '[data-action="effects"]' : '.effects';
-          html.find(`.control-icon${effectSelector}`)[0].classList.remove('active');
-          html.find('.status-effects')[0].classList.remove('active');
-        } else {
-          tokenButton.classList.remove('active');
-
-          html.find('.lights-hud-ate-selector-wrap')[0].classList.remove('active');
-        }
-      });
-
-    const buttons = html.find('.lights-hud-ate-button-select');
-    const buttonMacroPreset = $(html.find('.lights-hud-ate-button-macro-preset'));
-    const buttonMacroCustom = $(html.find('.lights-hud-ate-button-macro-custom'));
-
-    buttons.map((button) => {
-      buttons[button].addEventListener('click', async function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        const buttonClick = event.button; // 0 left click
-
-        const lightDataDialog = retrieveDataFromHtml(this);
-        if (lightDataDialog) {
-          confirmDialogATLEffectItem(lightDataDialog).render(true);
-        }
-      });
-      buttons[button].addEventListener('contextmenu', async function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        const buttonClick = event.button; // 0 left click
-
-        const lightDataDialog = retrieveDataFromHtml(this);
-        if (lightDataDialog) {
-          confirmDialogDropTheTorch(lightDataDialog).render(true);
-        }
-      });
-    });
-
-    buttonMacroPreset.on('click', async function (event) {
+  buttons.map((button) => {
+    buttons[button].addEventListener('click', async function (event) {
       event.preventDefault();
       event.stopPropagation();
       const buttonClick = event.button; // 0 left click
-      const actorId = <string>$(this).attr('data-actor-id');
-      const tokenId = <string>$(this).attr('data-token-id');
-      // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings.
-      // This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
-      const applyChanges = false;
-      presetDialog(applyChanges).render(true);
-    });
 
-    buttonMacroCustom.on('click', async function (event) {
+      const lightDataDialog = retrieveDataFromHtml(this);
+      if (lightDataDialog) {
+        confirmDialogATLEffectItem(lightDataDialog).render(true);
+      }
+    });
+    buttons[button].addEventListener('contextmenu', async function (event) {
       event.preventDefault();
       event.stopPropagation();
       const buttonClick = event.button; // 0 left click
-      const actorId = <string>$(this).attr('data-actor-id');
-      const tokenId = <string>$(this).attr('data-token-id');
-      // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings.
-      // This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
-      const applyChanges = false;
-      //customDialog(applyChanges).render(true);
-      customATLDialog(applyChanges).render(true);
+
+      const lightDataDialog = retrieveDataFromHtml(this);
+      if (lightDataDialog) {
+        confirmDialogDropTheTorch(lightDataDialog).render(true);
+      }
     });
+  });
+
+  buttonMacroPreset.on('click', async function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const buttonClick = event.button; // 0 left click
+    const actorId = <string>$(this).attr('data-actor-id');
+    const tokenId = <string>$(this).attr('data-token-id');
+    // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings.
+    // This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
+    const applyChanges = false;
+    presetDialog(applyChanges).render(true);
+  });
+
+  buttonMacroCustom.on('click', async function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const buttonClick = event.button; // 0 left click
+    const actorId = <string>$(this).attr('data-actor-id');
+    const tokenId = <string>$(this).attr('data-token-id');
+    // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings.
+    // This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
+    const applyChanges = false;
+    //customDialog(applyChanges).render(true);
+    customATLDialog(applyChanges).render(true);
+  });
   // }
 }
 
