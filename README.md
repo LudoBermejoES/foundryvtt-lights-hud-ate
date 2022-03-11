@@ -16,10 +16,14 @@
 
 A Foundry VTT module that displays on the HUD config of the token all the available lighting items on the token/actor, with some [ATE](https://github.com/kandashi/Active-Token-Lighting) effect, so you can light a torch or turn of without modify the token configuration and you can set with [Times up](https://gitlab.com/tposney/times-up) and [Dae](https://gitlab.com/tposney/dae) time and condition of the vision and light effect on the token.
 
-This project is born like a fusion of these modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/), [ATE](https://github.com/kandashi/Active-Token-Lighting) and [DFreds Effects Panel](https://github.com/DFreds/dfreds-effects-panel), but then i rewriting everything so many times now is just a new module inspired form these other module. Remember to support these authors if you feel generous on their patreon or kofi account.
+This project is born like a fusion of the feature of these modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/), [ATE](https://github.com/kandashi/Active-Token-Lighting) and [DFreds Effects Panel](https://github.com/DFreds/dfreds-effects-panel), but after the initial code i rewriting everything so many times now is just a new module inspired form these other module. Remember to support these authors if you feel generous on their patreon or kofi account.
 
+This was the first beta release :
 
 ![imggif](./wiki/assets/first_release_tutorial_left.gif)
+
+This is the last release :
+
 
 ## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
 
