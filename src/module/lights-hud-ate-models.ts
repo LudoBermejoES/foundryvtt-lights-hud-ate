@@ -78,7 +78,7 @@ export enum LightHUDPreset {
 }
 
 export class LightDataHud {
-  route: string;
+  icon: string;
   name: string;
   applied: boolean;
   disabled: boolean;
@@ -92,10 +92,15 @@ export class LightDataHud {
   itemname: string;
   effectid: string;
   effectname: string;
-  // ADDED
+  tokenid: string;
+  actorid: string;
+  // ADDED FOR DFRED PANEL
   remainingSeconds: number;
   turns: number;
   isExpired: boolean;
+  label:string;
+  _id:string;
+  flags:any;
 }
 
 export class LightDataDialog {

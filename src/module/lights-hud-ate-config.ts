@@ -61,124 +61,24 @@ export async function addLightsHUDButtons(app, html, data) {
 
   const isGM = game.user?.isGM;
 
-  // const lightItems: Item[] = [];
-  // //const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-  // // const spellsItems = ['spell','feat'];
-  // // For every itemwith a ATL/ATE effect
-  // actor.data.items.contents.forEach((im: Item) => {
-  //   // if (im && physicalItems.includes(im.type)) {}
-  //   const atlEffects = im.effects.filter((entity) => {
-  //     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
-  //   });
-  //   if (atlEffects.length > 0) {
-  //     lightItems.push(im);
-  //   }
-  // });
-
-  // // Convert item to LightHudData
-  // const imagesParsed = await Promise.all(
-  //   lightItems.map(async (item: Item) => {
-  //     const im = <string>item.img;
-  //     const split = im.split('/');
-  //     const extensions = im.split('.');
-  //     const extension = extensions[extensions.length - 1];
-  //     const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
-  //     const vid = ['webm', 'mp4', 'm4v'].includes(extension);
-  //     // TODO for now we check if at least one active effect has the atl/ate changes on him
-  //     const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(item) || [];
-  //     let appliedTmp = false;
-  //     let disabledTmp = false;
-  //     let suppressedTmp = false;
-  //     let temporaryTmp = false;
-  //     let passiveTmp = false;
-  //     let effectidTmp = '';
-  //     let effectnameTmp = '';
-  //     let turnsTmp = 0;
-  //     let isExpiredTmp = false;
-  //     if (aeAtl.length > 0) {
-  //       const nameToSearch = <string>aeAtl[0].name || aeAtl[0].data.label;
-  //       // const effectFromActor = <ActiveEffect>await API.findEffectByNameOnActor(<string>actor.id, nameToSearch);
-  //       let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
-  //         return isStringEquals(nameToSearch, ae.data.label);
-  //       });
-  //       if (!effectFromActor) {
-  //         info(`No active effect found on token ${token.name} with name ${nameToSearch}`);
-  //         aeAtl[0].data.transfer = false;
-  //         await API.addActiveEffectOnToken(<string>tokenD.id, aeAtl[0]);
-  //         // ???
-  //         effectFromActor = <ActiveEffect>tokenD.actor?.data.effects.find((ae: ActiveEffect) => {
-  //           return isStringEquals(nameToSearch, ae.data.label);
-  //         });
-  //       }
-  //       const applied = await API.hasEffectAppliedOnToken(<string>tokenD.id, nameToSearch, true);
-  //       // If the active effect is disabled or is supressed
-  //       // const isDisabled = aeAtl[0].data.disabled || false;
-  //       // const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
-  //       disabledTmp = effectFromActor.data.disabled || false;
-  //       //@ts-ignore
-  //       suppressedTmp = effectFromActor.data.document.isSuppressed || false;
-  //       temporaryTmp = effectFromActor.isTemporary || false;
-  //       passiveTmp = !temporaryTmp;
-  //       if (applied && !disabledTmp && !suppressedTmp) {
-  //         appliedTmp = true;
-  //       }
-  //       effectidTmp = <string>effectFromActor.id;
-  //       effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
-  //       // ADDED
-  //       const remainingSeconds = _getSecondsRemaining(effectFromActor.data.duration);
-  //       turnsTmp = <number>effectFromActor.data.duration.turns;
-  //       isExpiredTmp = remainingSeconds < 0;
-  //     }
-  //     if (!suppressedTmp) {
-  //       appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
-  //     } else {
-  //       appliedTmp = !appliedTmp;
-  //     }
-
-  //     if (aeAtl.length > 0 && !effectidTmp) {
-  //       warn(`No ATL active effect found on actor ${token.name} from item ${item.name}`,true);
-  //     }
-
-  //     return <LightDataHud>{
-  //       route: im,
-  //       name: item.name,
-  //       applied: appliedTmp,
-  //       disabled: disabledTmp,
-  //       suppressed: suppressedTmp,
-  //       isTemporary: temporaryTmp,
-  //       passive: passiveTmp,
-  //       img: img,
-  //       vid: vid,
-  //       type: img || vid,
-  //       itemid: item.id,
-  //       itemname: item.name,
-  //       effectid: effectidTmp,
-  //       effectname: effectnameTmp,
-  //       turns:turnsTmp,
-  //       isExpired:isExpiredTmp
-  //     };
-  //   }),
-  // );
-
   if (!game.settings.get(CONSTANTS.MODULE_NAME, 'useBasicPanelEffects')) {
-    const imagesParsed = await retrieveItemLights(actor, tokenD);
+    const imagesParsed = await retrieveItemLights(actor, token);
     const effectsPanelApp = new EffectsPanelApp(imagesParsed);
-    //await effectsPanelApp.init(actor, tokenD);
     effectsPanelApp.render(true);
   } else {
     // ================================
     // OLD CODE
     //=================================
 
-    const imagesParsed = await retrieveItemLights(actor, tokenD);
+    const imagesParsed = await retrieveItemLights(actor, token);
 
     const wildcardDisplay = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/artSelect.hbs`, {
       tokenId,
       actorId,
+      isGM,
       imagesParsed,
       imageDisplay,
       imageOpacity,
-      isGM,
     });
 
     const is080 = !isNewerVersion('0.8.0', <string>game.data.version);

@@ -595,7 +595,7 @@ export async function checkString(value) {
   }
 }
 
-export async function retrieveItemLights(actor, token): Promise<LightDataHud[]> {
+export async function retrieveItemLights(actor:Actor, token:Token): Promise<LightDataHud[]> {
   // const actor = <Actor>this._actor;
   // const token = <Token>this._token;
 
@@ -638,6 +638,12 @@ export async function retrieveItemLights(actor, token): Promise<LightDataHud[]> 
       let effectnameTmp = '';
       let turnsTmp = 0;
       let isExpiredTmp = false;
+      let remainingSecondsTmp = -1;
+      let labelTmp = '';
+      let _idTmp = '';
+      let flagsTmp = {};
+      let tokenidTmp = '';
+      let actoridTmp = '';
       if (aeAtl.length > 0) {
         const nameToSearch = <string>aeAtl[0].name || aeAtl[0].data.label;
         // const effectFromActor = <ActiveEffect>await API.findEffectByNameOnActor(<string>actor.id, nameToSearch);
@@ -646,19 +652,19 @@ export async function retrieveItemLights(actor, token): Promise<LightDataHud[]> 
         });
         // Check if someone has delete the active effect but the item with the ATL changes is still on inventory
         if (!effectFromActor) {
-          info(`No active effect found on token ${token.name} with name ${nameToSearch}`);
+          info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
           aeAtl[0].data.transfer = false;
-          await API.addActiveEffectOnToken(<string>token.id, aeAtl[0].data);
+          await API.addActiveEffectOnToken(<string>token.document.id, aeAtl[0].data);
           // ???
-          effectFromActor = <ActiveEffect>token.actor?.data.effects.find((ae: ActiveEffect) => {
+          effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
             return isStringEquals(nameToSearch, ae.data.label);
           });
         }
         if(!effectFromActor){
-          warn(`No active effect found on token ${token.name} with name ${nameToSearch}`);
+          warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
           return new LightDataHud();
         }
-        const applied = await API.hasEffectAppliedOnToken(<string>token.id, nameToSearch, true);
+        const applied = await API.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
         // If the active effect is disabled or is supressed
         // const isDisabled = aeAtl[0].data.disabled || false;
         // const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
@@ -672,10 +678,19 @@ export async function retrieveItemLights(actor, token): Promise<LightDataHud[]> 
         }
         effectidTmp = <string>effectFromActor.id;
         effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
+        tokenidTmp = <string>token.id;
+        actoridTmp = <string>actor.id;
         // ADDED
-        const remainingSeconds = _getSecondsRemaining(effectFromActor.data.duration);
+        remainingSecondsTmp = _getSecondsRemaining(effectFromActor.data.duration);
         turnsTmp = <number>effectFromActor.data.duration.turns;
-        isExpiredTmp = remainingSeconds < 0;
+        isExpiredTmp = remainingSecondsTmp < 0;
+        labelTmp = effectFromActor.data.label;
+        _idTmp = <string>effectFromActor.data._id;
+        flagsTmp = effectFromActor.data?.flags || {};
+        // Little trick if
+        if(!effectFromActor.data?.flags?.convenientDescription){
+          flagsTmp['convenientDescription'] = item.data.name;
+        }
       }
       if (!suppressedTmp) {
         appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
@@ -688,7 +703,7 @@ export async function retrieveItemLights(actor, token): Promise<LightDataHud[]> 
       }
 
       return <LightDataHud>{
-        route: im,
+        icon: im,
         name: item.name,
         applied: appliedTmp,
         disabled: disabledTmp,
@@ -702,8 +717,15 @@ export async function retrieveItemLights(actor, token): Promise<LightDataHud[]> 
         itemname: item.name,
         effectid: effectidTmp,
         effectname: effectnameTmp,
+        tokenid: tokenidTmp,
+        actorid: actoridTmp,
+        // Added for dfred panel
+        remainingSeconds: remainingSecondsTmp,
         turns: turnsTmp,
         isExpired: isExpiredTmp,
+        label: labelTmp,
+        _id: _idTmp,
+        flags: flagsTmp
       };
     }),
   );

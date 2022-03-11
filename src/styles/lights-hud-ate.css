@@ -294,3 +294,19 @@
 .lights-hud-ate-effect-panel .effect-item .icon .badge.expired {
   color: orange;
 }
+
+.lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-lightbulb {
+  color: green;
+}
+
+.lights-hud-ate-effect-panel .effect-item .icon .badge.far.fa-lightbulb {
+  color: red;
+}
+
+.lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-exclamation-triangle {
+  color: yellow;
+}
+
+.lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-eye {
+  color: purple;
+}

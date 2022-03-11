@@ -26,11 +26,11 @@
 
                 {{#if ../imageDisplay}}
                     {{#if image.img}}
-                        <img class="lights-hud-ate-button-image" src="{{image.route}}"
+                        <img class="lights-hud-ate-button-image" src="{{image.icon}}"
                             alt="{{image.name}}"
-                            data-token-id="{{../tokenId}}"
-                            data-actor-id="{{../actorId}}"
-                            data-name="{{image.route}}"
+                            data-token-id="{{image.tokenid}}"
+                            data-actor-id="{{image.actorid}}"
+                            data-icon="{{image.icon}}"
                             data-item-id="{{image.itemid}}"
                             data-item-name="{{image.itemname}}"
                             data-effect-id="{{image.effectid}}"
@@ -44,11 +44,11 @@
                         </img>
                     {{/if}}
                     {{#if image.vid}}
-                        <video class="lights-hud-ate-button-image" src="{{image.route}}"
+                        <video class="lights-hud-ate-button-image" src="{{image.icon}}"
                             alt="{{image.name}}"
-                            data-token-id="{{../tokenId}}"
-                            data-actor-id="{{../actorId}}"
-                            data-name="{{image.route}}"
+                            data-token-id="{{image.tokenid}}"
+                            data-actor-id="{{image.actorid}}"
+                            data-icon="{{image.icon}}"
                             data-item-id="{{image.itemid}}"
                             data-item-name="{{image.itemname}}"
                             data-effect-id="{{image.effectid}}"
@@ -63,10 +63,10 @@
                     {{/if}}
                     {{#unless image.type}}
                         <span class="lights-hud-ate-button-image"
-                            alt="{{image.label}}"
-                            data-token-id="{{../tokenId}}"
-                            data-actor-id="{{../actorId}}"
-                            data-name="{{image.route}}"
+                            alt="{{image.name}}"
+                            data-token-id="{{image.tokenid}}"
+                            data-actor-id="{{image.actorid}}"
+                            data-icon="{{image.icon}}"
                             data-item-id="{{image.itemid}}"
                             data-item-name="{{image.itemname}}"
                             data-effect-id="{{image.effectid}}"
@@ -75,7 +75,7 @@
                             data-disabled="{{image.disabled}}"
                             data-suppressed="{{image.suppressed}}"
                             data-temporary="{{image.isTemporary}}"
-                            data-passive="{{image.passive}}">{{image.path}}</span>
+                            data-passive="{{image.passive}}">{{image.icon}}</span>
                     {{/unless}}
 
                     {{#if image.suppressed}}
@@ -95,9 +95,9 @@
                 {{else}}
                     <span class="lights-hud-ate-button-image-text"
                         alt="{{image.label}}"
-                        data-token-id="{{../tokenId}}"
-                        data-actor-id="{{../actorId}}"
-                        data-name="{{image.route}}"
+                        data-token-id="{{image.tokenid}}"
+                        data-actor-id="{{image.actorid}}"
+                        data-icon="{{image.icon}}"
                         data-item-id="{{image.itemid}}"
                         data-item-name="{{image.itemname}}"
                         data-effect-id="{{image.effectid}}"

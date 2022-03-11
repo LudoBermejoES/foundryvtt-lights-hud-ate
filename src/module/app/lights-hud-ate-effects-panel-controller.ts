@@ -32,6 +32,9 @@ export default class EffectsPanelController {
     return {
       enabledEffects: this._enabledEffects,
       disabledEffects: this._disabledEffects,
+      tokenId: this._token?.id,
+      actorId: this._actor?.id,
+      isGM: game.user?.isGM
     };
   }
 
@@ -50,6 +53,7 @@ export default class EffectsPanelController {
 
   //   if (!actor) return [];
 
+  //   const ligthseffects = []
   //   return actor.effects
   //     .map((effect:ActiveEffect) => {
   //       //@ts-ignore
