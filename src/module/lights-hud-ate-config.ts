@@ -5,7 +5,7 @@ import CONSTANTS from './constants';
 import Effect from './effects/effect';
 import EffectInterface from './effects/effect-interface';
 import {
-  checkString,
+  checkNumberFromString,
   dialogWarning,
   i18n,
   i18nFormat,
@@ -217,14 +217,4 @@ function retrieveDataFromHtml(html): LightDataDialog | undefined {
   lightDataDialog.actorName = <string>currentActor.name;
   lightDataDialog.tokenName = <string>currentToken.name;
   return lightDataDialog;
-}
-
-// TODO consider handling rounds/seconds/turns based on whatever is defined for the effect rather than do conversions
-function _getSecondsRemaining(duration) {
-  if (duration.seconds || duration.rounds) {
-    const seconds = duration.seconds ?? duration.rounds * (CONFIG.time?.roundTime ?? 6);
-    return duration.startTime + seconds - game.time.worldTime;
-  } else {
-    return Infinity;
-  }
 }

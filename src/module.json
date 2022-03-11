@@ -47,8 +47,9 @@
       "path": "./lang/en.json"
     }
   ],
+  "scripts": ["module/lib/dd.min.js"],
   "esmodules": ["./main.js"],
-  "styles": ["/styles/lights-hud-ate.css"],
+  "styles": ["styles/lights-hud-ate.css", "styles/dd.css"],
   "packs": [],
   "minimumCoreVersion": "9",
   "compatibleCoreVersion": "9",

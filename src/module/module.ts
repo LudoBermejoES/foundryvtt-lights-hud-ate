@@ -79,24 +79,5 @@ const module = {
     //   return;
     // }
     addLightsHUDButtons(app, html, data);
-
-    // Adjustable vision
-    // let tokenHUDButton = GetTokenHUDButtonHTML(data._id);
-    // const tokenId = <string>data._id;
-    // const token = <Token>canvas.tokens?.controlled.find(t => t.data._id == tokenId);
-    // const tokenHUDButtonTemplate = $(`<div class="control-icon avtoggle"><i class="lights-hud-ate-adjustableVision-eye"></i></div>`);
-    // const $tokenHUDButton = tokenHUDButtonTemplate;
-    // $tokenHUDButton.toggleClass("active", <boolean>token.data.document?.getFlag(CONSTANTS.MODULE_NAME, LightHUDFlags.useAltVision) || false);
-    // const tokenHUDButton = $tokenHUDButton
-    // html.find(".col.left").prepend(tokenHUDButton);
-
-    // html.find(".col.left").on("click", ".control-icon.avtoggle", (event) => {
-    //   //TokenHUDButtonOnClick(data._id, tokenHUDButton)
-    //   const selected = !token.data.document?.getFlag(CONSTANTS.MODULE_NAME, LightHUDFlags.useAltVision);
-
-    //   //ToggleTokenHUDActive(selected);
-    //   $('.lights-hud-ate-adjustableVision-eye').parent().toggleClass("active", selected);
-    //   token.document.setFlag(CONSTANTS.MODULE_NAME, LightHUDFlags.useAltVision, selected);
-    // });
   },
 };

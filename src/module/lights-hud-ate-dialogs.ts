@@ -2,7 +2,7 @@ import { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/f
 import API from './api';
 import CONSTANTS from './constants';
 import {
-  checkString,
+  checkNumberFromString,
   dialogWarning,
   i18n,
   i18nFormat,
@@ -39,17 +39,17 @@ export function presetDialog(applyChanges: boolean): Dialog {
       </div>
       <div class="form-group">
         <label>Vision Type:</label>
-        <select id="vision-type" name="vision-type">
+        <select id="vision-type" name="vision-type" is="ms-dropdown-ligthhudate">
           ${API.VISIONS.map((vision) => {
-            return `\t<option value=${vision.id}>${i18n(vision.name)}</option>`;
+            return `\t<option data-image="${vision.img}" value=${vision.id}>${i18n(vision.name)}</option>`;
           }).join('\n')}
         </select>
       </div>
       <div class="form-group">
         <label>Light Source:</label>
-        <select id="light-source" name="light-source">
+        <select id="light-source" name="light-source" is="ms-dropdown-ligthhudate">
           ${API.LIGHTS.map((lightSource) => {
-            return `\t<option value=${lightSource.id}>${i18n(lightSource.name)}</option>`;
+            return `\t<option data-image="${lightSource.img}" value=${lightSource.id}>${i18n(lightSource.name)}</option>`;
           }).join('\n')}
         </select>
       </div>
@@ -495,27 +495,27 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
       if (applyChanges) {
         const id = <string>html.find('#name')[0].name || randomID();
         const effectName = <string>html.find('#name')[0].value || '';
-        const height = <number>await checkString(html.find('#height')[0].value);
-        const width = <number>await checkString(html.find('#width')[0].value);
-        const scale = <number>await checkString(html.find('#scale')[0].value);
-        const dimLight = <number>await checkString(html.find('#dim')[0].value);
-        const brightLight = <number>await checkString(html.find('#bright')[0].value);
-        const dimSight = <number>await checkString(html.find('#dimSight')[0].value);
-        const brightSight = <number>await checkString(html.find('#brightSight')[0].value);
+        const height = <number>await checkNumberFromString(html.find('#height')[0].value);
+        const width = <number>await checkNumberFromString(html.find('#width')[0].value);
+        const scale = <number>await checkNumberFromString(html.find('#scale')[0].value);
+        const dimLight = <number>await checkNumberFromString(html.find('#dim')[0].value);
+        const brightLight = <number>await checkNumberFromString(html.find('#bright')[0].value);
+        const dimSight = <number>await checkNumberFromString(html.find('#dimSight')[0].value);
+        const brightSight = <number>await checkNumberFromString(html.find('#brightSight')[0].value);
         const lightColor = <string>html.find('#color')[0].value;
-        const sightAngle = <number>await checkString(html.find('#sightAngle')[0].value);
-        const lightAlpha = <number>await checkString(html.find('#alpha')[0].value);
-        const lightAngle = <number>await checkString(html.find('#angle')[0].value);
+        const sightAngle = <number>await checkNumberFromString(html.find('#sightAngle')[0].value);
+        const lightAlpha = <number>await checkNumberFromString(html.find('#alpha')[0].value);
+        const lightAngle = <number>await checkNumberFromString(html.find('#angle')[0].value);
         const lightAnimationType = <string>html.find('#animationType')[0].value;
-        const lightAnimationSpeed = <number>await checkString(html.find('#animationSpeed')[0].value);
-        const lightAnimationIntensity = <number>await checkString(html.find('#animationIntensity')[0].value);
+        const lightAnimationSpeed = <number>await checkNumberFromString(html.find('#animationSpeed')[0].value);
+        const lightAnimationIntensity = <number>await checkNumberFromString(html.find('#animationIntensity')[0].value);
         const lightAnimationReverse = <boolean>html.find('#animationIntensity').is(':checked');
-        const coloration = <number>await checkString(html.find('#lightColoration')[0].value);
-        const luminosity = <number>await checkString(html.find('#lightLuminosity')[0].value);
+        const coloration = <number>await checkNumberFromString(html.find('#lightColoration')[0].value);
+        const luminosity = <number>await checkNumberFromString(html.find('#lightLuminosity')[0].value);
         const gradual = <boolean>html.find('#lightGradual').is(':checked');
-        const saturation = <number>await checkString(html.find('#lightSaturation')[0].value);
-        const contrast = <number>await checkString(html.find('#lightContrast')[0].value);
-        const shadows = <number>await checkString(html.find('#lightShadows')[0].value);
+        const saturation = <number>await checkNumberFromString(html.find('#lightSaturation')[0].value);
+        const contrast = <number>await checkNumberFromString(html.find('#lightContrast')[0].value);
+        const shadows = <number>await checkNumberFromString(html.find('#lightShadows')[0].value);
         const vision = dimSight > 0 || brightSight > 0 ? true : false;
 
         const applyAsAtlAteEffect = <boolean>html.find('#apply-as-atl-ate').is(':checked') ?? false;

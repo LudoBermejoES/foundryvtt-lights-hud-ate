@@ -16,9 +16,8 @@
 
 A Foundry VTT module that displays on the HUD config of the token all the available lighting items on the token/actor, with some [ATE](https://github.com/kandashi/Active-Token-Lighting) effect, so you can light a torch or turn of without modify the token configuration and you can set with [Times up](https://gitlab.com/tposney/times-up) and [Dae](https://gitlab.com/tposney/dae) time and condition of the vision and light effect on the token.
 
-This project is born like a fusion of two other modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/) and [ATE](https://github.com/kandashi/Active-Token-Lighting), but then i rewriting everything so now is just a new module inspired form these other module. Remember to support these authors if you feel generous on their patreon or kofi account.
+This project is born like a fusion of these modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/), [ATE](https://github.com/kandashi/Active-Token-Lighting) and [DFreds Effects Panel](https://github.com/DFreds/dfreds-effects-panel), but then i rewriting everything so many times now is just a new module inspired form these other module. Remember to support these authors if you feel generous on their patreon or kofi account.
 
-**NOTE:** I will release this only after ATE has fixed some issue.
 
 ![imggif](./wiki/assets/first_release_tutorial_left.gif)
 
@@ -220,9 +219,13 @@ Any issues, bugs, or feature requests are always welcome to be reported directly
 - [Image dropdown](https://github.com/marghoobsuleman/ms-Dropdown) with [MIT](https://github.com/marghoobsuleman/ms-Dropdown/blob/master/MIT-LICENSE.txt)
 - Some icons are retrieve from the [Dnd5e system](https://gitlab.com/foundrynet/dnd5e) with [MIT](https://gitlab.com/foundrynet/dnd5e/-/blob/master/LICENSE.txt)
 - Some icons are retrieve from the [Pf2 system](https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/) with [GPLv2](https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/-/blob/master/LICENSE)
-- [warpgate](https://github.com/trioderegion/warpgate) with [GPL-3.0 License](https://github.com/trioderegion/warpgate/blob/master/LICENSE), but is under the the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/) so it should be fine to use the MIT license here.
+- [warpgate](https://github.com/trioderegion/warpgate) with [GPL-3.0 License](https://github.com/trioderegion/warpgate/blob/master/LICENSE), but is under the the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/) so it should be fine to use the MIT license here and i just use the api don't actually copy and paste any code.
 - [Adjustable Vision](https://github.com/nevets0423/adjustable-vision) with [???]
 - [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects) with [MIT](https://github.com/DFreds/dfreds-convenient-effects/blob/main/LICENSE)
+- [DFreds Effects Panel](https://github.com/DFreds/dfreds-effects-panel) with [MIT](https://github.com/DFreds/dfreds-effects-panel/blob/main/LICENSE)
+- [Image dropdown](https://github.com/marghoobsuleman/ms-Dropdown) with [MIT](https://github.com/marghoobsuleman/ms-Dropdown/blob/master/MIT-LICENSE.txt)
+- Some icons are retrieve from the [Dnd5e system](https://gitlab.com/foundrynet/dnd5e) with [MIT](https://gitlab.com/foundrynet/dnd5e/-/blob/master/LICENSE.txt)
+- Some icons are retrieve from the [Pf2 system](https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/) with [GPLv2](https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/-/blob/master/LICENSE)
 
 This package is under an [MIT license](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
 
@@ -245,3 +248,4 @@ Thanks to anyone who helps me with this code! I appreciate the user community's 
 - [warpgate](https://github.com/trioderegion/warpgate) ty to [trioderegion](https://github.com/trioderegion)
 - [Adjustable Vision](https://github.com/nevets0423/adjustable-vision) ty to [nevets0423](https://github.com/nevets0423)
 - [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects) ty to [DFreds](https://github.com/DFreds)
+- [DFreds Effects Panel](https://github.com/DFreds/dfreds-effects-panel) ty to [DFreds](https://github.com/DFreds)

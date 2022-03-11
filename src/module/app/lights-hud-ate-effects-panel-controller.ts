@@ -4,7 +4,7 @@ import { info, isStringEquals, warn } from '../lib/lib';
 import { canvas, game } from '../settings';
 import EffectsPanelApp from './lights-hud-ate-effects-panel-app';
 import API from '../api';
-import { confirmDialogATLEffectItem } from '../lights-hud-ate-dialogs';
+import { confirmDialogATLEffectItem, confirmDialogDropTheTorch, customATLDialog, presetDialog } from '../lights-hud-ate-dialogs';
 
 export default class EffectsPanelController {
   _viewMvc: EffectsPanelApp;
@@ -106,6 +106,13 @@ export default class EffectsPanelController {
     //     this.passiveEffectsRightClickBehavior
     //   );
     // }
+
+    // MOD 4535992
+    const lightDataDialog = this.retrieveDataFromHtml(this);
+    if (lightDataDialog) {
+      confirmDialogDropTheTorch(lightDataDialog).render(true);
+    }
+    // END MOD 4535992
   }
 
   // async _handleEffectChange(effect, rightClickBehavior) {
@@ -135,12 +142,35 @@ export default class EffectsPanelController {
     const actor = this._actor;
     const effect = actor?.effects.get($target.attr('data-effect-id') ?? '');
 
-    if (!effect) return;
+    // if (!effect) return;
 
     // MOD 4535992
-    const lightDataDialog = this.retrieveDataFromHtml(event.currentTarget);
-    if (!lightDataDialog) return;
-    confirmDialogATLEffectItem(lightDataDialog).render(true);
+    if (!effect){
+      const macroPreset = <string>$target.attr('data-button-macro-preset') ?? '';
+      const macroCustom =  <string>$target.attr('data-button-macro-custom') ?? '';
+      if(macroPreset){
+        const actorId = <string>$(this).attr('data-actor-id');
+        const tokenId = <string>$(this).attr('data-token-id');
+        // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings.
+        // This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
+        const applyChanges = false;
+        presetDialog(applyChanges).render(true);
+      }else if(macroCustom){
+        const actorId = <string>$(this).attr('data-actor-id');
+        const tokenId = <string>$(this).attr('data-token-id');
+        // A macro for the Foundry virtual tabletop that lets a user configure their token's vision and lighting settings.
+        // This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
+        const applyChanges = false;
+        //customDialog(applyChanges).render(true);
+        customATLDialog(applyChanges).render(true);
+      }else{
+        return;
+      }
+    }else{
+      const lightDataDialog = this.retrieveDataFromHtml(event.currentTarget);
+      if (!lightDataDialog) return;
+      confirmDialogATLEffectItem(lightDataDialog).render(true);
+    }
     // END MOD 4535992
   }
 

@@ -107,17 +107,6 @@ export const registerSettings = function (): void {
     type: Boolean,
   });
 
-  // DEPRECATED TO DANGEROUS
-
-  // game.settings.register(CONSTANTS.MODULE_NAME, 'toggleDelete', {
-  //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.toggleDelete.name`),
-  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.toggleDelete.hint`),
-  //   config: true,
-  //   scope: 'world',
-  //   default: false,
-  //   type: Boolean,
-  // });
-
   // ===================================================================
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {

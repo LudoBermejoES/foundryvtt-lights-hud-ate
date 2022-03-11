@@ -5,12 +5,13 @@
   "lights-hud-ate.settings.position.choice.right": "Right",
   "lights-hud-ate.settings.position.choice.top": "Top",
   "lights-hud-ate.settings.position.choice.bottom": "Bottom",
+
+  "lights-hud-ate.settings.useBasicPanelEffects.name": "Use basic panel effects",
+  "lights-hud-ate.settings.useBasicPanelEffects.hint": "Use the basic panel effect prepared from 4535992 on the first beta release instead the more beautiful done from Dfreds",
   "lights-hud-ate.settings.imageDisplay.name": "Display as Image?",
-  "lights-hud-ate.settings.imageDisplay.hint": "Disable to display wildcard options as a list of their filenames in the HUD.",
+  "lights-hud-ate.settings.imageDisplay.hint": "Make sense only with 'Use basic panel effects' checked. Disable to display wildcard options as a list of their filenames in the HUD.",
   "lights-hud-ate.settings.opacity.name": "Opacity of token preview",
-  "lights-hud-ate.settings.opacity.hint": "Configure the opacity of the token previews in the HUD before hovering on them.",
-  "lights-hud-ate.settings.toggleDelete.name": "Always delete the active effect instead of disable",
-  "lights-hud-ate.settings.toggleDelete.hint": "Instead of disabling some effects and deleting others, always delete a temporary effect toggled from the hud.",
+  "lights-hud-ate.settings.opacity.hint": "Make sense only with 'Use basic panel effects' checked. Configure the opacity of the token previews in the HUD before hovering on them.",
   "lights-hud-ate.settings.rollItem.name": "Roll the item when enable the active effect ?",
   "lights-hud-ate.settings.rollItem.hint": "When you left click on a light hud element if the active effect is not already enabled it will ask to roll the item.",
 

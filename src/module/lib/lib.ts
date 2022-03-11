@@ -574,7 +574,6 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   const tokenData2: TokenData = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
   tokenData2.actorId = <string>actor.data._id;
   tokenData2.actorLink = true;
-  // tokenData2.vision = false; // TODO we use this only for light ?
 
   const atlEffects = item.effects.filter((entity) => {
     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
@@ -587,7 +586,7 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   return tokenData2;
 }
 
-export async function checkString(value) {
+export async function checkNumberFromString(value) {
   if (value === '') {
     return '';
   } else {

@@ -65,37 +65,6 @@
                 <i class="badge far fa-lightbulb"></i>
             {{/if}}
         </div>
-        <!--
-        <div
-          class="icon"
-          data-effect-id="{{effect._id}}"
-          data-token-id="{{effect.tokenid}}"
-          data-actor-id="{{effect.actorid}}"
-          data-icon="{{effect.icon}}"
-          data-item-id="{{effect.itemid}}"
-          data-item-name="{{effect.itemname}}"
-          data-effect-id-2="{{effect.effectid}}"
-          data-effect-name="{{effect.effectname}}"
-          data-applied="{{effect.applied}}"
-          data-disabled="{{effect.disabled}}"
-          data-suppressed="{{effect.suppressed}}"
-          data-temporary="{{effect.isTemporary}}"
-          data-passive="{{effect.passive}}"
-        >
-            {{#if effect.img}}
-                <img src="{{effect.icon}}"
-                    alt="{{effect.name}}" />
-            {{/if}}
-            {{#if effect.vid}}
-                <video src="{{effect.icon}}"
-                    alt="{{effect.name}}" autoplay loop>
-                </video>
-            {{/if}}
-            {{#unless effect.type}}
-                <span alt="{{effect.name}}">{{effect.icon}}</span>
-            {{/unless}}
-        </div>
-        -->
       </div>
     {{/each}}
     {{#if
@@ -181,10 +150,12 @@
 </section>
 {{#if isGM}}
 <section class="lights-hud-ate-effect-panel">
-    <button class="lights-hud-ate-button-macro-preset"
+    <button
+        data-button-macro-preset="true"
         data-token-id="{{tokenId}}"
         data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-preset"}}</button>
-    <button class="lights-hud-ate-button-macro-custom"
+    <button
+        data-button-macro-custom="true"
         data-token-id="{{tokenId}}"
         data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-custom"}}</button>
 </section>
