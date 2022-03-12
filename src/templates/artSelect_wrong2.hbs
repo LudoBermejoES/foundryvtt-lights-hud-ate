@@ -3,12 +3,12 @@
         style="color: aliceblue; background: aliceblue;"
         width="36" height="36" title="{{localize 'lights-hud-ate.windows.art-select.title' }}" />
 
-    <div class="lights-hud-ate-selector-wrap {{#unless imageDisplay}}list{{/unless}}">
+    <div class="lights-hud-ate-effect-panel lights-hud-ate-selector-wrap {{#unless imageDisplay}}list{{/unless}}">
     {{!-- {{#if imagesParsed}} --}}
     {{#each imagesParsed as |effect|}}
+    {{!-- <div class="effect-item"> --}}
         {{#if effect.type}}
-            <!-- NOTE: if remove control icon images are small -->
-            <button oncontextmenu="javascript:return false;" class="lights-hud-ate-button-select control-icon icon {{#unless ../imageDisplay}}list{{/unless}}
+            <button oncontextmenu="javascript:return false;" class="lights-hud-ate-button-select icon {{#unless ../imageDisplay}}list{{/unless}}
                 {{#if effect.applied}}
                     {{#if effect.passive}}
                         {{#if effect.applied}}
@@ -140,6 +140,7 @@
                 {{/if}}
             </button>
         {{/if}}
+    {{!-- </div> --}}
     {{/each}}
     {{!-- {{else}}
     <div>
@@ -147,12 +148,16 @@
     </div>
     {{/if}} --}}
     {{#if isGM}}
-            <button class="lights-hud-ate-button-macro-preset"
+        {{!-- <div class="effect-item"> --}}
+            <button class="lights-hud-ate-button-macro-preset lights-hud-ate-button-select icon {{#unless ../imageDisplay}}list{{/unless}}"
                 data-token-id="{{tokenId}}"
                 data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-preset"}}</button>
-            <button class="lights-hud-ate-button-macro-custom"
+        {{!-- </div> --}}
+        {{!-- <div class="effect-item"> --}}
+            <button class="lights-hud-ate-button-macro-custom lights-hud-ate-button-select icon {{#unless ../imageDisplay}}list{{/unless}}"
                 data-token-id="{{tokenId}}"
                 data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-custom"}}</button>
+        {{!-- </div> --}}
     {{/if}}
     </div>
 </div>

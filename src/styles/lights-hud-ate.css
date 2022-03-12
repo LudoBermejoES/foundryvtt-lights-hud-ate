@@ -18,7 +18,7 @@
 
 #token-hud .lights-hud-ate-selector-wrap.active {
   visibility: visible;
-  display: grid;
+  /* display: grid; */
 }
 #token-hud .lights-hud-ate-button-select {
   max-width: 300px;
@@ -29,6 +29,7 @@
   padding: 0 !important;
   margin: 0 !important;
   line-height: 0 !important;
+  border: none;
 }
 
 #token-hud .lights-hud-ate-button-select:hover .lights-hud-ate-button-image {
@@ -61,6 +62,19 @@
   /* opacity: 0.7 !important; */
   color: #ccc;
 }
+
+/*
+#token-hud .lights-hud-ate-button-disabled video {
+  opacity: 1 !important;
+  filter: grayscale(100%);
+}
+
+#token-hud .lights-hud-ate-button-disabled-passive span,
+#token-hud .lights-hud-ate-button-disabled-passive img,
+#token-hud .lights-hud-ate-button-disabled-passive video {
+  opacity: 1 !important;
+}
+*/
 
 .token-sheet .lights-hud-ate-default {
   display: none;
@@ -100,6 +114,7 @@
   pointer-events: none;
 }
 */
+/*
 .lights-hud-ate-button-icon-text.applied.fas.fa-lightbulb {
   color: green;
   text-shadow: 0 0 8px green;
@@ -165,18 +180,8 @@
   color: lightblue;
   pointer-events: none;
 }
+*/
 
-#token-hud .lights-hud-ate-button-disabled video {
-  opacity: 1 !important;
-  filter: grayscale(100%);
-}
-
-#token-hud .lights-hud-ate-button-disabled-passive span,
-#token-hud .lights-hud-ate-button-disabled-passive img,
-#token-hud .lights-hud-ate-button-disabled-passive video {
-  opacity: 1 !important;
-  /* filter: grayscale(100%); */
-}
 
 .lights-hud-ate-sub-group {
   margin-left: 20px !important;
@@ -185,7 +190,7 @@
 /** ================= */
 /** additional 2      */
 /** ================= */
-/*
+
 .lights-hud-ate-tags {
   display: flex;
   flex-wrap: wrap;
@@ -226,7 +231,7 @@
   background-color: #666;
   color: #fff;
 }
-
+/*
 .lights-hud-ate-effect-panel {
   position: fixed;
   right: 310px;
@@ -237,12 +242,16 @@
   margin-right: 0;
   width: 42px;
 }
+
+*/
+/*
 .lights-hud-ate-effect-panel .effect-item {
   display: flex;
   justify-content: flex-end;
   height: 46px;
   margin-bottom: 4px;
 }
+*/
 .lights-hud-ate-effect-panel .effect-item:hover .effect-info {
   display: block;
 }
@@ -285,6 +294,7 @@
   margin-left: 3px;
   margin-right: -2px;
 }
+/*
 .lights-hud-ate-effect-panel .effect-item .icon {
   align-items: center;
   background-repeat: no-repeat;
@@ -300,44 +310,60 @@
   position: relative;
   width: 42px;
 }
+
 .lights-hud-ate-effect-panel .effect-item .disabled.icon {
   filter: grayscale(0.8);
 }
-.lights-hud-ate-effect-panel .effect-item .icon .badge {
+*/
+.lights-hud-ate-effect-panel .effect-item .icon .badge,
+.lights-hud-ate-selector-wrap .icon .badge{
   bottom: 1px;
   color: #fff;
   display: inline-block;
   left: 1px;
-  position: absolute;
+  /* position: absolute; */
   text-shadow: 0px 0px 2px black;
 }
-.lights-hud-ate-effect-panel .effect-item .icon .badge.unlimited {
+
+.lights-hud-ate-effect-panel .effect-item .icon .badge.unlimited,
+.lights-hud-ate-selector-wrap .icon .badge.unlimited {
   color: lightblue;
 }
-.lights-hud-ate-effect-panel .effect-item .icon .badge.expired {
+
+.lights-hud-ate-effect-panel .effect-item .icon .badge.expired,
+.lights-hud-ate-selector-wrap .icon .badge.expired {
   color: orange;
 }
 
-.lights-hud-ate-effect-panel .effect-item .icon .badge.applied.fas.fa-lightbulb {
+.lights-hud-ate-effect-panel .effect-item .icon .badge.unlimited.fas.fa-infinity,
+.lights-hud-ate-selector-wrap .icon .badge.unlimited.fas.fa-infinity {
+  color: lightblue;
+}
+
+.lights-hud-ate-effect-panel .effect-item .icon .badge.expired.fas.fa-clock,
+.lights-hud-ate-selector-wrap .icon .badge.expired.fas.fa-clock {
+  color: orange;
+}
+
+.lights-hud-ate-effect-panel .effect-item .icon .badge.applied.fas.fa-lightbulb,
+.lights-hud-ate-selector-wrap .icon .badge.applied.fas.fa-lightbulb {
   color: green;
   text-shadow: 0 0 8px green;
 }
 
-.lights-hud-ate-effect-panel .effect-item .icon .badge.far.fa-lightbulb {
+.lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-lightbulb,
+.lights-hud-ate-selector-wrap .icon .badge.fas.fa-lightbulb {
   color: red;
   text-shadow: 0 0 8px red;
 }
 
-.lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-lightbulb {
-  color: red;
-  text-shadow: 0 0 8px red;
-}
-
-.lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-exclamation-triangle {
+.lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-exclamation-triangle,
+.lights-hud-ate-selector-wrap .icon .badge.fas.fa-exclamation-triangle {
   color: yellow;
 }
 
-.lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-eye {
+.lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-eye,
+.lights-hud-ate-effect-panel .icon .badge.fas.fa-eye {
   color: purple;
 }
-*/
+
