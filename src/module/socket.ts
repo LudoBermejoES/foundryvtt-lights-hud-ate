@@ -25,6 +25,9 @@ export let lightHudAteSocket;
 
 export function registerSocket() {
   debug('Registered lightHudAteSocket');
+  if(lightHudAteSocket){
+    return lightHudAteSocket;
+  }
   //@ts-ignore
   lightHudAteSocket = socketlib.registerModule(CONSTANTS.MODULE_NAME);
 

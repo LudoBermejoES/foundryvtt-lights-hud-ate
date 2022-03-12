@@ -4,6 +4,7 @@ import CONSTANTS from './constants';
 import {
   checkNumberFromString,
   dialogWarning,
+  error,
   i18n,
   i18nFormat,
   prepareTokenDataDropTheTorch,
@@ -1008,12 +1009,16 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
 
           const item = <Item>actor.items.get(lightDataDialog.itemId);
           let actorDropTheTorch: Actor | null = null;
+          let tokenDataDropTheTorch: TokenData | null = null;
+          const tokenId = <string>randomID();
           try {
-            let tokenDataDropTheTorch = <TokenData>(
+            tokenDataDropTheTorch = <TokenData>(
               await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0)
             );
             actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorch.actorId);
             tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorch);
+            // actorDropTheTorch = <Actor>await prepareTokenDataDropTheTorch(item, tokenId, _token?.data?.elevation ?? 0);
+            // tokenDataDropTheTorch = await actor.getTokenData();
             //@ts-ignore
             const posData = await warpgate.crosshairs.show({
               size: Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height) * tokenDataDropTheTorch.scale,
@@ -1032,6 +1037,26 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
               {},
               { duplicates },
             );
+
+            // TODO find a way to add this on the creation onf the token
+            // Added atl effect to created token
+
+            // const token = <Token>canvas.tokens?.placeables.find((t:Token) => {
+            //   return t.id === tokenId;
+            // });
+            // if(!token){
+            //   error(`No token is been created for the drop ATL item , this is probably a bug`)
+            // }else{
+            //   const atlEffects = item.effects.filter((entity) => {
+            //     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+            //   });
+            //   atlEffects.forEach(async (ae: ActiveEffect) => {
+            //     // Make sure is enabled
+            //     ae.data.disabled = false;
+            //     ae.data.transfer = true;
+            //     await API.addActiveEffectOnToken(<string>token.id, ae.data);
+            //   });
+            // }
 
             // 0 = None
             // 1 = Limited

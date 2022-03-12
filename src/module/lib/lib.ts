@@ -5,7 +5,7 @@ import {
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from '../api';
 import CONSTANTS from '../constants';
-import Effect, { Constants } from '../effects/effect';
+import Effect, { Constants, EffectSupport } from '../effects/effect';
 import { getATLEffectsFromItem } from '../lights-hud-ate-config';
 import { LightHUDAteEffectDefinitions } from '../lights-hud-ate-effect-definition';
 import { LightDataHud } from '../lights-hud-ate-models';
@@ -547,7 +547,7 @@ export async function dropTheToken(item: Item, data: { x; y }, type = 'character
 export async function prepareTokenDataDropTheTorch(item: Item, elevation: number, type = 'character') {
   if (!type) {
     error('No type is present');
-    return;
+    return undefined;
   }
   // START CREATION
   let createdType = type;
@@ -560,30 +560,61 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
     actorName = actorName.split('.')[0];
   }
 
-  const actor = <Actor>await Actor.create({
-    name: actorName,
-    type: createdType,
-    img: item.img,
-  });
-  const actorData = foundry.utils.duplicate(actor.data);
-
-  const tokenData = { hidden: false, img: actor.data.img, elevation: elevation };
-
-  // Merge Token data with the default for the Actor
-  //@ts-ignore
-  const tokenData2: TokenData = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
-  tokenData2.actorId = <string>actor.data._id;
-  tokenData2.actorLink = true;
-
+  const actorDataEffects:any[] = [];
   const atlEffects = item.effects.filter((entity) => {
     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
   });
   atlEffects.forEach(async (ae: ActiveEffect) => {
     // Make sure is enabled
     ae.data.disabled = false;
-    await API.addActiveEffectOnToken(<string>actor.token?.id, ae.data);
+    ae.data.transfer = true;
+    //await API.addActiveEffectOnToken(<string>actor.token?.id, ae.data);
+    actorDataEffects.push(ae.data);
   });
+
+  const actor = <Actor>await Actor.create({
+    name: actorName,
+    type: createdType,
+    img: item.img,
+    effects: actorDataEffects,
+    hidden: false,
+    elevation: elevation,
+  });
+
+  const atlActorEffects = actor.effects.filter((entity) => {
+    return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+  });
+  atlActorEffects.forEach(async (ae: ActiveEffect) => {
+    // Make sure is enabled
+    ae.data.disabled = false;
+    ae.data.transfer = true;
+    await API.addActiveEffectOnActor(<string>actor.id, ae.data);
+    await API.toggleEffectFromIdOnActor(<string>actor.id, <string>ae.id, false, true, false);
+  });
+
+  // WTF ???? THIS CONVERT SOME FALSE TO TRUE ????
+  //const actorData = foundry.utils.duplicate(actor.data);
+  const actorData = actor.data;
+
+  const tokenData = { 
+    hidden: false,
+    img: actor.data.img, 
+    elevation: elevation,
+    actorData: actorData,
+    // effects: actorDataEffects
+    actorLink: false
+  };
+
+  // Merge Token data with the default for the Actor
+  //@ts-ignore
+  const tokenData2: TokenData = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
+  // tokenData2.actorId = <string>actor.data._id;
+  // tokenData2.actorLink = false; // if actorless is false
+  // tokenData2.name = actorName;
+  // tokenData2._id = tokenId;
+
   return tokenData2;
+  
 }
 
 export async function checkNumberFromString(value) {
