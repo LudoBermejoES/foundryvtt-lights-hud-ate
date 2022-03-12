@@ -46,14 +46,15 @@ export async function addLightsHUDButtons(app, html, data) {
   // let tokenInfo = new tokenInformations(tokenInfoObject);
   const token = <Token>app.object;
   const tokenD = <TokenDocument>app.object.document;
-  const actor = <Actor>game.actors?.get(data.actorId);
+  const actorId = <string>data.actorData._id || <string>data.actorId;
+  const actor = <Actor>game.actors?.get(actorId);
   if (!actor) {
     info(`No actor id ${data.actorId} founded for the light hud`);
     return;
   }
 
   const tokenId = <string>tokenD.id;
-  const actorId = <string>actor.id;
+  // const actorId = <string>actor.id;
 
   const imageDisplay = <boolean>game.settings.get(CONSTANTS.MODULE_NAME, 'imageDisplay');
   const imageOpacity = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'imageOpacity') / 100;

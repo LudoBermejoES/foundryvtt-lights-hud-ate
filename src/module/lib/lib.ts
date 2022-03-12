@@ -648,6 +648,16 @@ export async function retrieveItemLights(actor: Actor, token: Token): Promise<Li
     }
   });
 
+  // TODO Strange case no item with ATL but we have some active effect
+  // const atlEffects = (<Actor>token.actor).effects.filter((entity) => {
+  //     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+  // });
+  // if (atlEffects.length > 0) {
+  //   const item = game.items.getName("Candy Cane");
+  //   await actor.createEmbeddedDocuments('Item', [item.toObject()])
+  //   lightItems.push(im);
+  // }
+
   // Convert item to LightHudData
   const imagesParsed = await Promise.all(
     lightItems.map(async (item: Item) => {
