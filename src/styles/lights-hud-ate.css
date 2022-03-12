@@ -29,7 +29,7 @@
   padding: 0 !important;
   margin: 0 !important;
   line-height: 0 !important;
-  border: none;
+  /* border: none; da casino con control-icon attivo */
 }
 
 #token-hud .lights-hud-ate-button-select:hover .lights-hud-ate-button-image {
@@ -55,13 +55,15 @@
 #token-hud .lights-hud-ate-button-disabled video {
   opacity: 1 !important;
   filter: grayscale(100%);
-}
-#token-hud .lights-hud-ate-button-disabled span,
-#token-hud .lights-hud-ate-button-disabled:hover img,
-#token-hud .lights-hud-ate-button-disabled:hover video {
-  /* opacity: 0.7 !important; */
   color: #ccc;
 }
+/* #token-hud .lights-hud-ate-button-disabled span,
+#token-hud .lights-hud-ate-button-disabled:hover img,
+#token-hud .lights-hud-ate-button-disabled:hover video {
+  opacity: 0.7 !important;
+  color: #ccc;
+} 
+*/
 
 /*
 #token-hud .lights-hud-ate-button-disabled video {
@@ -91,97 +93,6 @@
 .lights-hud-ate-button-macro-custom {
   background: whitesmoke;
 }
-/*
-.lights-hud-ate-button-icon-text.fas.fa-lightbulb {
-  color: green;
-  text-shadow: 0 0 8px green;
-}
-
-.lights-hud-ate-button-icon.fas.fa-lightbulb {
-  left: 0;
-  color: green;
-  pointer-events: none;
-}
-
-.lights-hud-ate-button-icon-text.far.fa-lightbulb {
-  color: red;
-  text-shadow: 0 0 8px red;
-}
-
-.lights-hud-ate-button-icon.far.fa-lightbulb {
-  left: 0;
-  color: red;
-  pointer-events: none;
-}
-*/
-/*
-.lights-hud-ate-button-icon-text.applied.fas.fa-lightbulb {
-  color: green;
-  text-shadow: 0 0 8px green;
-}
-
-.lights-hud-ate-button-icon.applied.fas.fa-lightbulb {
-  left: 0;
-  color: green;
-  pointer-events: none;
-}
-
-.lights-hud-ate-button-icon-text.fas.fa-lightbulb {
-  color: red;
-  text-shadow: 0 0 8px red;
-}
-
-.lights-hud-ate-button-icon.fas.fa-lightbulb {
-  left: 0;
-  color: red;
-  pointer-events: none;
-}
-
-.lights-hud-ate-button-icon-text.fas.fa-exclamation-triangle {
-  color: yellow;
-  text-shadow: 0 0 8px yellow;
-}
-
-.lights-hud-ate-button-icon.fas.fa-exclamation-triangle {
-  left: 0;
-  color: yellow;
-  pointer-events: none;
-}
-
-.lights-hud-ate-button-icon-text.fas.fa-eye {
-  color: purple;
-  text-shadow: 0 0 8px purple;
-}
-
-.lights-hud-ate-button-icon.fas.fa-eye {
-  left: 0;
-  color: purple;
-  pointer-events: none;
-}
-
-.lights-hud-ate-button-icon-text.fas.fa-clock {
-  color: orange;
-  text-shadow: 0 0 8px orange;
-}
-
-.lights-hud-ate-button-icon.fas.fa-clock {
-  left: 0;
-  color: orange;
-  pointer-events: none;
-}
-
-.lights-hud-ate-button-icon-text.fas.fa-infinity {
-  color: lightblue;
-  text-shadow: 0 0 8px lightblue;
-}
-
-.lights-hud-ate-button-icon.fas.fa-infinity {
-  left: 0;
-  color: lightblue;
-  pointer-events: none;
-}
-*/
-
 
 .lights-hud-ate-sub-group {
   margin-left: 20px !important;
@@ -192,7 +103,7 @@
 /** ================= */
 
 .lights-hud-ate-tags {
-  display: flex;
+  /* display: flex; removed */
   flex-wrap: wrap;
   gap: 2px;
   list-style-type: none;
@@ -252,12 +163,15 @@
   margin-bottom: 4px;
 }
 */
+/*
 .lights-hud-ate-effect-panel .effect-item:hover .effect-info {
   display: block;
 }
+*/
 .lights-hud-ate-effect-panel .effect-item .effect-info {
   background-color: rgba(0, 0, 0, 0.75);
-  display: none;
+  /* display: none; */
+  display: block;
   border-radius: 5px;
   height: 100%;
   margin-right: 0.5em;
@@ -266,22 +180,35 @@
   padding-left: 0.25em;
   padding-bottom: 0.1em;
   padding-top: 0.1em;
+  /* added */
+  max-width: 100px;
+  max-height: 100px;
 }
 .lights-hud-ate-effect-panel .effect-item .effect-info h1 {
   border: none;
   color: #fff;
   font-size: 12px;
+  /* removed
   margin: 0;
   padding: 0;
   text-align: right;
+  */
+  /* added */
+  max-width: 100px;
+  max-height: 100px;
 }
 .lights-hud-ate-effect-panel .effect-item .effect-info h2 {
   border: none;
   color: #fff;
   font-size: 10px;
+  /* removed
   margin: 0;
   padding: 0;
   text-align: right;
+  */
+  /* added */
+  max-width: 100px;
+  max-height: 100px;
 }
 .lights-hud-ate-effect-panel .effect-item .effect-info .tags {
   justify-content: flex-end;
@@ -321,7 +248,7 @@
   color: #fff;
   display: inline-block;
   left: 1px;
-  /* position: absolute; */
+  /* position: absolute; removed */
   text-shadow: 0px 0px 2px black;
 }
 

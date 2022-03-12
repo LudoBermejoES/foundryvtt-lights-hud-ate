@@ -3,12 +3,12 @@
         style="color: aliceblue; background: aliceblue;"
         width="36" height="36" title="{{localize 'lights-hud-ate.windows.art-select.title' }}" />
 
-    <div class="lights-hud-ate-selector-wrap {{#unless imageDisplay}}list{{/unless}}">
+    <div class="lights-hud-ate-effect-panel lights-hud-ate-selector-wrap {{#unless imageDisplay}}list{{/unless}}">
     {{!-- {{#if imagesParsed}} --}}
     {{#each imagesParsed as |effect|}}
         {{#if effect.type}}
             <!-- NOTE: if remove control icon images are small -->
-            <button oncontextmenu="javascript:return false;" class="lights-hud-ate-button-select control-icon icon {{#unless ../imageDisplay}}list{{/unless}}
+            <button oncontextmenu="javascript:return false;" class="lights-hud-ate-button-select effect-item control-icon icon {{#unless ../imageDisplay}}list{{/unless}}
                 {{#if effect.applied}}
                     {{#if effect.passive}}
                         {{#if effect.applied}}
@@ -79,14 +79,24 @@
                             data-passive="{{effect.passive}}">{{effect.icon}}</span>
                     {{/unless}}
 
+                    <div class="effect-info">
+                        {{!-- <h1>{{effect.label}}</h1> --}}
+                        {{#if (canViewEffectDetails)}}
+                        <div class="effect-info-details">
+                            {{#if effect.flags.convenientDescription}}
+                            {{!-- <h2>{{effect.flags.convenientDescription}}</h2> --}}
+                            {{/if}}
+                            <div class="lights-hud-ate-tags">
+                            <div class="tag tag_primary">{{#if effect.isTemporary}} temporary {{else}} passive {{/if}}</div>
+                            <div class="tag tag_secondary">{{remainingTimeLabel effect}}</div>
+                            </div>
+                        </div>
+                        {{/if}}
+                    </div>
+
                     {{#if effect.suppressed}}
                     <i class="badge fas fa-exclamation-triangle"></i>
                     {{/if}}
-                    <!--
-                    {{#if effect.passive}}
-                    <i class="badge fas fa-eye"></i>
-                    {{/if}}
-                    -->
                     {{#if effect.isExpired}}
                     <i class="badge expired fas fa-clock"></i>
                     {{else if effect.isTemporary}}
@@ -100,6 +110,7 @@
                     {{else}}
                     <i class="badge fas fa-lightbulb"></i>
                     {{/if}}
+
                 {{else}}
                     <span class="lights-hud-ate-button-image-text"
                         alt="{{effect.label}}"
@@ -116,14 +127,24 @@
                         data-temporary="{{effect.isTemporary}}"
                         data-passive="{{effect.passive}}">{{effect.name}}</span>
 
+                    <div class="effect-info">
+                        {{!-- <h1>{{effect.label}}</h1> --}}
+                        {{#if (canViewEffectDetails)}}
+                        <div class="effect-info-details">
+                            {{#if effect.flags.convenientDescription}}
+                            {{!-- <h2>{{effect.flags.convenientDescription}}</h2> --}}
+                            {{/if}}
+                            <div class="lights-hud-ate-tags">
+                            <div class="tag tag_primary">{{#if effect.isTemporary}} temporary {{else}} passive {{/if}}</div>
+                            <div class="tag tag_secondary">{{remainingTimeLabel effect}}</div>
+                            </div>
+                        </div>
+                        {{/if}}
+                    </div>
+
                     {{#if effect.suppressed}}
                     <i class="badge fas fa-exclamation-triangle"></i>
                     {{/if}}
-                    <!--
-                    {{#if effect.passive}}
-                    <i class="badge fas fa-eye"></i>
-                    {{/if}}
-                    -->
                     {{#if effect.isExpired}}
                     <i class="badge expired fas fa-clock"></i>
                     {{else if effect.isTemporary}}
@@ -147,10 +168,10 @@
     </div>
     {{/if}} --}}
     {{#if isGM}}
-            <button class="lights-hud-ate-button-macro-preset"
+            <button class="lights-hud-ate-button-macro-preset effect-item"
                 data-token-id="{{tokenId}}"
                 data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-preset"}}</button>
-            <button class="lights-hud-ate-button-macro-custom"
+            <button class="lights-hud-ate-button-macro-custom effect-item"
                 data-token-id="{{tokenId}}"
                 data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-custom"}}</button>
     {{/if}}
