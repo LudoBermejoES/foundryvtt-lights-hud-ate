@@ -155,6 +155,17 @@
   pointer-events: none;
 }
 
+.lights-hud-ate-button-icon-text.fas.fa-infinity {
+  color: lightblue;
+  text-shadow: 0 0 8px lightblue;
+}
+
+.lights-hud-ate-button-icon.fas.fa-infinity {
+  left: 0;
+  color: lightblue;
+  pointer-events: none;
+}
+
 #token-hud .lights-hud-ate-button-disabled video {
   opacity: 1 !important;
   filter: grayscale(100%);

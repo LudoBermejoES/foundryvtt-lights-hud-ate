@@ -1,4 +1,5 @@
 import API from './api';
+import HandlebarHelpers from './app/lights-hud-ate-handlebar-helpers';
 import CONSTANTS from './constants';
 import EffectInterface from './effects/effect-interface';
 import HOOKS from './hooks';
@@ -12,7 +13,7 @@ export const initHooks = async (): Promise<void> => {
 
   // registerLibwrappers();
 
-  // new HandlebarHelpers().registerHelpers();
+  new HandlebarHelpers().registerHelpers();
 
   Hooks.once('socketlib.ready', registerSocket);
 

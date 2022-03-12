@@ -18,7 +18,7 @@
   "license": "",
   "devDependencies": {
     "@league-of-foundry-developers/foundry-vtt-types": "^9.249.4",
-    "@types/jquery": "^3.5.13",
+    "@types/jquery": "^3.5.14",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "@typhonjs-fvtt/eslint-config-foundry.js": "^0.8.0",
@@ -44,7 +44,7 @@
     "gulp-typescript": "^6.0.0-alpha.1",
     "json-stringify-pretty-compact": "^2.0.0",
     "prettier": "^2.5.1",
-    "sass": "^1.49.7",
+    "sass": "^1.49.9",
     "yargs": "^15.4.1"
   },
   "lint-staged": {

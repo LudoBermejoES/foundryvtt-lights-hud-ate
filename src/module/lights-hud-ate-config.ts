@@ -84,7 +84,7 @@ export async function addLightsHUDButtons(app, html, data) {
     imageOpacity,
   });
 
-  const is080 = !isNewerVersion('0.8.0', <string>game.data.version);
+  const is080 = !isNewerVersion('0.8.0', <string>game.version);
 
   html
     .find('div.right')
