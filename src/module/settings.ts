@@ -156,7 +156,7 @@ export const registerSettings = function (): void {
 
   const settings = defaultSettings();
   for (const [name, data] of Object.entries(settings)) {
-    game.settings.register(CONSTANTS.MODULE_NAME, name, data);
+    game.settings.register(CONSTANTS.MODULE_NAME, name, <any>data);
   }
   // for (const [name, data] of Object.entries(otherSettings)) {
   //     game.settings.register(CONSTANTS.MODULE_NAME, name, data);
@@ -216,14 +216,14 @@ function defaultSettings(apply = false) {
       scope: 'world',
       config: false,
       //@ts-ignore
-      default: SYSTEMS.DATA ? SYSTEMS.DATA.LIGHTS : [],
+      default: SYSTEMS.DATA ? <any[]>SYSTEMS.DATA.LIGHTS : <any[]>[],
       type: Array,
     },
     visions: {
       scope: 'world',
       config: false,
       //@ts-ignore
-      default: SYSTEMS.DATA ? SYSTEMS.DATA.VISIONS : [],
+      default: SYSTEMS.DATA ? <any[]>SYSTEMS.DATA.VISIONS : <any[]>[],
       type: Array,
     },
   };
