@@ -562,7 +562,7 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
     actorName = actorName.split('.')[0];
   }
 
-  const actorDataEffects:any[] = [];
+  const actorDataEffects: any[] = [];
   const atlEffects = item.effects.filter((entity) => {
     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
   });
@@ -598,13 +598,13 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   //const actorData = foundry.utils.duplicate(actor.data);
   const actorData = actor.data;
 
-  const tokenData = { 
+  const tokenData = {
     hidden: false,
-    img: actor.data.img, 
+    img: actor.data.img,
     elevation: elevation,
     actorData: actorData,
     // effects: actorDataEffects
-    actorLink: false
+    actorLink: false,
   };
 
   // Merge Token data with the default for the Actor
@@ -616,7 +616,6 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   // tokenData2._id = tokenId;
 
   return tokenData2;
-  
 }
 
 export async function checkNumberFromString(value) {

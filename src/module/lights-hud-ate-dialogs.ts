@@ -1012,9 +1012,7 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
           let tokenDataDropTheTorch: TokenData | null = null;
           const tokenId = <string>randomID();
           try {
-            tokenDataDropTheTorch = <TokenData>(
-              await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0)
-            );
+            tokenDataDropTheTorch = <TokenData>await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0);
             actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorch.actorId);
             tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorch);
             // actorDropTheTorch = <Actor>await prepareTokenDataDropTheTorch(item, tokenId, _token?.data?.elevation ?? 0);

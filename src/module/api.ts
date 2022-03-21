@@ -298,7 +298,7 @@ const API = {
   // ======================
   // Effect Actor Management
   // ======================
-  
+
   async addEffectOnActor(actorId: string, effectName: string, effect: Effect) {
     const result = await this.effectInterface.addEffectOnActor(effectName, <string>actorId, effect);
     return result;
@@ -309,12 +309,12 @@ const API = {
     return result;
   },
 
-  async hasEffectAppliedOnActor(actorId: string, effectName: string, includeDisabled:boolean) {
+  async hasEffectAppliedOnActor(actorId: string, effectName: string, includeDisabled: boolean) {
     const result = await this.effectInterface.hasEffectAppliedOnActor(effectName, <string>actorId, includeDisabled);
     return result;
   },
 
-  async hasEffectAppliedFromIdOnActor(actorId: string, effectId: string, includeDisabled:boolean) {
+  async hasEffectAppliedFromIdOnActor(actorId: string, effectId: string, includeDisabled: boolean) {
     const result = await this.effectInterface.hasEffectAppliedFromIdOnActor(effectId, <string>actorId, includeDisabled);
     return result;
   },
@@ -350,7 +350,7 @@ const API = {
     const result = await this.effectInterface.removeEffectFromIdOnActor(effectId, <string>actorId);
     return result;
   },
-  
+
   // ======================
   // Effect Token Management
   // ======================

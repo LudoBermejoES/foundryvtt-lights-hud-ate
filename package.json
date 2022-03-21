@@ -3,7 +3,7 @@
   "name": "foundryvtt-lights-hud-ate",
   "title": "LightsHUD+ATE",
   "description": "Lights HUD Control + Active Token Effect",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "scripts": {
     "package": "gulp package",
     "build": "gulp build && gulp link",
@@ -17,7 +17,7 @@
   "author": "",
   "license": "",
   "devDependencies": {
-    "@league-of-foundry-developers/foundry-vtt-types": "^9.249.4",
+    "@league-of-foundry-developers/foundry-vtt-types": "^9.255.2",
     "@types/jquery": "^3.5.14",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",

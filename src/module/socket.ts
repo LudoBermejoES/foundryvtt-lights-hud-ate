@@ -25,7 +25,7 @@ export let lightHudAteSocket;
 
 export function registerSocket() {
   debug('Registered lightHudAteSocket');
-  if(lightHudAteSocket){
+  if (lightHudAteSocket) {
     return lightHudAteSocket;
   }
   //@ts-ignore
