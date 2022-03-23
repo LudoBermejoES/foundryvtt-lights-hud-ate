@@ -12,6 +12,7 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
+import API from './module/api';
 import CONSTANTS from './module/constants';
 import { error } from './module/lib/lib';
 import { initHooks, readyHooks, setupHooks } from './module/module';
@@ -81,6 +82,47 @@ Hooks.once('ready', () => {
 });
 
 // Add any additional hooks if necessary
+
+export interface LigthsHudAteModuleData {
+  api: typeof API;
+  socket: any;
+}
+
+/**
+ * Initialization helper, to set API.
+ * @param api to set to game module.
+ */
+export function setApi(api: typeof API): void {
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as LigthsHudAteModuleData;
+  data.api = api;
+}
+
+/**
+ * Returns the set API.
+ * @returns Api from games module.
+ */
+export function getApi(): typeof API {
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as LigthsHudAteModuleData;
+  return data.api;
+}
+
+/**
+ * Initialization helper, to set Socket.
+ * @param socket to set to game module.
+ */
+export function setSocket(socket: any): void {
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as LigthsHudAteModuleData;
+  data.socket = socket;
+}
+
+/*
+ * Returns the set socket.
+ * @returns Socket from games module.
+ */
+export function getSocket() {
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as LigthsHudAteModuleData;
+  return data.socket;
+}
 
 Hooks.once('libChangelogsReady', function () {
   //@ts-ignore

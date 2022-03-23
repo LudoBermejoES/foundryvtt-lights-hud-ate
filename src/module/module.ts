@@ -1,3 +1,4 @@
+import { getApi, setApi } from '../main';
 import API from './api';
 import HandlebarHelpers from './app/lights-hud-ate-handlebar-helpers';
 import CONSTANTS from './constants';
@@ -30,29 +31,14 @@ export const initHooks = async (): Promise<void> => {
       }
     }
   }
-
-  //@ts-ignore
-  window.LightHudAte = {
-    API,
-  };
 };
 
 export const setupHooks = async (): Promise<void> => {
   // setup all the hooks
-
+  API.effectInterface = new EffectInterface(CONSTANTS.MODULE_NAME) as unknown as typeof EffectInterface;
   //@ts-ignore
-  window.LightHudAte.API.effectInterface = new EffectInterface(CONSTANTS.MODULE_NAME);
-  //@ts-ignore
-  window.LightHudAte.API.effectInterface.initialize();
-
-  if (!game[CONSTANTS.MODULE_NAME]) {
-    game[CONSTANTS.MODULE_NAME] = {};
-  }
-  if (!game[CONSTANTS.MODULE_NAME].API) {
-    game[CONSTANTS.MODULE_NAME].API = {};
-  }
-  //@ts-ignore
-  game[CONSTANTS.MODULE_NAME].API = window.LightHudAte.API;
+  API.effectInterface.initialize();
+  setApi(API);
 };
 
 export const readyHooks = async (): Promise<void> => {

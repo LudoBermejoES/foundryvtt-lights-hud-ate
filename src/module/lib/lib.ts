@@ -23,6 +23,10 @@ export function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// ================================
+// Logger utility
+// ================================
+
 // export let debugEnabled = 0;
 // 0 = none, warnings = 1, debug = 2, all = 3
 
@@ -92,6 +96,8 @@ export function dialogWarning(message, icon = 'fas fa-exclamation-triangle') {
     </p>`;
 }
 
+// =========================================================================================
+
 export function cleanUpString(stringToCleanUp: string) {
   // regex expression to match all non-alphanumeric characters in string
   const regex = /[^A-Za-z0-9]/g;
@@ -113,6 +119,28 @@ export function isStringEquals(stringToCheck1: string, stringToCheck2: string, s
     }
   } else {
     return stringToCheck1 === stringToCheck2;
+  }
+}
+
+/**
+ * The duplicate function of foundry keep converting my stirng value to "0"
+ * i don't know why this methos is a brute force solution for avoid that problem
+ */
+export function duplicateExtended(obj: any): any {
+  try {
+    //@ts-ignore
+    if (structuredClone) {
+      //@ts-ignore
+      return structuredClone(obj);
+    } else {
+      // Shallow copy
+      // const newObject = jQuery.extend({}, oldObject);
+      // Deep copy
+      // const newObject = jQuery.extend(true, {}, oldObject);
+      return jQuery.extend(true, {}, obj);
+    }
+  } catch (e) {
+    return duplicate(obj);
   }
 }
 
