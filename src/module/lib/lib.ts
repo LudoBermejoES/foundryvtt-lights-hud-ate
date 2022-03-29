@@ -880,7 +880,7 @@ export async function retrieveItemLights(actor: Actor, token: Token): Promise<Li
       let actoridTmp = '';
       if (aeAtl.length > 0) {
         const nameToSearch = <string>aeAtl[0].name || aeAtl[0].data.label;
-        // const effectFromActor = <ActiveEffect>await API.findEffectByNameOnActor(<string>actor.id, nameToSearch);
+
         let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
           return isStringEquals(nameToSearch, ae.data.label);
         });

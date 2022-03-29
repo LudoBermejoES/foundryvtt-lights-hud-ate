@@ -248,6 +248,18 @@ const API = {
     return result;
   },
 
+  async removeEffectFromIdOnTokenMultipleArr(...inAttributes: any[]) {
+    if (!Array.isArray(inAttributes)) {
+      throw error('removeEffectFromIdOnTokenMultipleArr | inAttributes must be of type array');
+    }
+    const [effectIds, uuid] = inAttributes;
+    const result = await (<EffectInterface>this.effectInterface)._effectHandler.removeEffectFromIdOnTokenMultiple(
+      effectIds,
+      uuid,
+    );
+    return result;
+  },
+
   async toggleEffectFromIdOnTokenArr(...inAttributes) {
     if (!Array.isArray(inAttributes)) {
       throw error('addEffectOnTokenArr | inAttributes must be of type array');
@@ -361,21 +373,13 @@ const API = {
     return result;
   },
 
-  async hasEffectAppliedOnActor(actorId: string, effectName: string, includeDisabled: boolean) {
-    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedOnActor(
-      effectName,
-      <string>actorId,
-      includeDisabled,
-    );
+  async hasEffectAppliedOnActor(actorId: string, effectName: string, includeDisabled:boolean) {
+    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedOnActor(effectName, <string>actorId, includeDisabled);
     return result;
   },
 
-  async hasEffectAppliedFromIdOnActor(actorId: string, effectId: string, includeDisabled: boolean) {
-    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedFromIdOnActor(
-      effectId,
-      <string>actorId,
-      includeDisabled,
-    );
+  async hasEffectAppliedFromIdOnActor(actorId: string, effectId: string, includeDisabled:boolean) {
+    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedFromIdOnActor(effectId, <string>actorId, includeDisabled);
     return result;
   },
 
@@ -475,6 +479,14 @@ const API = {
 
   async removeEffectFromIdOnToken(tokenId: string, effectId: string) {
     const result = await (<EffectInterface>this.effectInterface).removeEffectFromIdOnToken(effectId, <string>tokenId);
+    return result;
+  },
+
+  async removeEffectFromIdOnTokenMultiple(tokenId: string, effectIds: string[]) {
+    const result = await (<EffectInterface>this.effectInterface).removeEffectFromIdOnTokenMultiple(
+      effectIds,
+      <string>tokenId,
+    );
     return result;
   },
 

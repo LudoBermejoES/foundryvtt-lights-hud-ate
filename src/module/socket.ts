@@ -85,6 +85,9 @@ export function registerSocket() {
   lightHudAteSocket.register('addEffectOnToken', (...args) => API.addEffectOnTokenArr(...args));
   lightHudAteSocket.register('removeEffectOnToken', (...args) => API.removeEffectOnTokenArr(...args));
   lightHudAteSocket.register('removeEffectFromIdOnToken', (...args) => API.removeEffectFromIdOnTokenArr(...args));
+  lightHudAteSocket.register('removeEffectFromIdOnTokenMultiple', (...args) =>
+    API.removeEffectFromIdOnTokenMultipleArr(...args),
+  );
   lightHudAteSocket.register('findEffectByNameOnToken', (...args) => API.findEffectByNameOnTokenArr(...args));
   lightHudAteSocket.register('updateEffectFromIdOnToken', (...args) => API.updateEffectFromIdOnTokenArr(...args));
   lightHudAteSocket.register('updateEffectFromNameOnToken', (...args) => API.updateEffectFromNameOnTokenArr(...args));
