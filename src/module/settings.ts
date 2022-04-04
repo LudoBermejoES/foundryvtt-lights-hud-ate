@@ -55,24 +55,9 @@ export const registerSettings = function (): void {
   // OLD SETTINGS TO REMOVE PROBABLY
   // ===========================================================
 
-  // game.settings.register(CONSTANTS.MODULE_NAME, 'position', {
-  //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.name`),
-  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.hint`),
-  //   scope: 'world',
-  //   config: true,
-  //   type: String,
-  //   default: 'left',
-  //   choices: {
-  //     left: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.choice.left`),
-  //     right: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.choice.position.right`),
-  //     top: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.choice.position.top`),
-  //     bottom: i18n(`${CONSTANTS.MODULE_NAME}.settings.position.choice.position.bottom`),
-  //   },
-  // });
-
   // game.settings.register(CONSTANTS.MODULE_NAME, 'useBasicPanelEffects', {
-  //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.name`),
-  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.hint`),
+  //   name: i18n(`${CONSTANTS.MODULE_NAME}.setting.useBasicPanelEffects.name`),
+  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.useBasicPanelEffects.hint`),
   //   config: false,
   //   scope: 'world',
   //   default: true,
@@ -80,8 +65,8 @@ export const registerSettings = function (): void {
   // });
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'imageDisplay', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.imageDisplay.name`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.imageDisplay.hint`),
+    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.name`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.hint`),
     scope: 'world',
     config: true,
     type: Boolean,
@@ -89,8 +74,8 @@ export const registerSettings = function (): void {
   });
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'imageOpacity', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.opacity.name`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.opacity.hint`),
+    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.opacity.name`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.opacity.hint`),
     scope: 'world',
     config: true,
     range: <any>{ min: 0, max: 100, step: 1 },
@@ -99,12 +84,40 @@ export const registerSettings = function (): void {
   });
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'rollItem', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.settings.rollItem.name`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.rollItem.hint`),
+    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.rollItem.name`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.rollItem.hint`),
     config: true,
     scope: 'world',
     default: true,
     type: Boolean,
+  });
+
+  /** Which column should the button be placed on */
+  game.settings.register(CONSTANTS.MODULE_NAME, 'hudColumn', {
+    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudColumn.title`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudColumn.hint`),
+    scope: 'client',
+    config: true,
+    type: String,
+    default: 'Right',
+    choices: <any>{
+      Left: 'Left',
+      Right: 'Right',
+    },
+  });
+
+  /** Whether the button should be placed on the top or bottom of the column */
+  game.settings.register(CONSTANTS.MODULE_NAME, 'hudTopBottom', {
+    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudTopBottom.title`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudTopBottom.hint`),
+    scope: 'client',
+    config: true,
+    type: String,
+    default: 'Bottom',
+    choices: <any>{
+      Top: 'Top',
+      Bottom: 'Bottom',
+    },
   });
 
   // ===================================================================
@@ -268,8 +281,8 @@ function otherSettings(apply = false) {
     },
 
     // useBasicPanelEffects: {
-    //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.name`),
-    //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.useBasicPanelEffects.hint`),
+    //   name: i18n(`${CONSTANTS.MODULE_NAME}.setting.useBasicPanelEffects.name`),
+    //   hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.useBasicPanelEffects.hint`),
     //   config: true,
     //   scope: 'world',
     //   default: false,
@@ -277,8 +290,8 @@ function otherSettings(apply = false) {
     // },
 
     imageDisplay: {
-      name: i18n(`${CONSTANTS.MODULE_NAME}.settings.imageDisplay.name`),
-      hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.imageDisplay.hint`),
+      name: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.name`),
+      hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.hint`),
       scope: 'world',
       config: true,
       type: Boolean,
@@ -286,8 +299,8 @@ function otherSettings(apply = false) {
     },
 
     imageOpacity: {
-      name: i18n(`${CONSTANTS.MODULE_NAME}.settings.opacity.name`),
-      hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.opacity.hint`),
+      name: i18n(`${CONSTANTS.MODULE_NAME}.setting.opacity.name`),
+      hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.opacity.hint`),
       scope: 'world',
       config: true,
       range: <any>{ min: 0, max: 100, step: 1 },
@@ -296,13 +309,39 @@ function otherSettings(apply = false) {
     },
 
     rollItem: {
-      name: i18n(`${CONSTANTS.MODULE_NAME}.settings.rollItem.name`),
-      hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.rollItem.hint`),
+      name: i18n(`${CONSTANTS.MODULE_NAME}.setting.rollItem.name`),
+      hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.rollItem.hint`),
       config: true,
       scope: 'world',
       default: true,
       type: Boolean,
     },
+
+    hudColumn: {
+      name: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudColumn.title`),
+      hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudColumn.hint`),
+      scope: 'client',
+      config: true,
+      type: String,
+      default: 'Right',
+      choices: <any>{
+        Left: 'Left',
+        Right: 'Right',
+      },
+    },
+
+    hudTopBottom: {
+      name: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudTopBottom.title`),
+      hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudTopBottom.hint`),
+      scope: 'client',
+      config: true,
+      type: String,
+      default: 'Bottom',
+      choices: <any>{
+        Top: 'Top',
+        Bottom: 'Bottom',
+      },
+    }
   };
 }
 

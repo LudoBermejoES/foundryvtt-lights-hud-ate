@@ -21,10 +21,14 @@ export async function getToken(documentUuid) {
   return document?.token ?? document;
 }
 
-export function getOwnedTokens():Token[]{
+export function getOwnedTokens(priorityToControlledIfGM: boolean): Token[] {
   const gm = game.user?.isGM;
   if (gm) {
-    return <Token[]>canvas.tokens?.placeables;
+    if (priorityToControlledIfGM) {
+      return <Token[]>canvas.tokens?.controlled;
+    } else {
+      return <Token[]>canvas.tokens?.placeables;
+    }
   }
   let ownedTokens = <Token[]>canvas.tokens?.placeables.filter((token) => token.isOwner && (!token.data.hidden || gm));
   if (ownedTokens.length === 0 || !canvas.tokens?.controlled[0]) {
@@ -759,13 +763,13 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   const atlEffects = item.effects.filter((entity) => {
     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
   });
-  atlEffects.forEach(async (ae: ActiveEffect) => {
+  for(const ae of atlEffects){
     // Make sure is enabled
     ae.data.disabled = false;
     ae.data.transfer = true;
     //await API.addActiveEffectOnToken(<string>actor.token?.id, ae.data);
     actorDataEffects.push(ae.data);
-  });
+  }
 
   const actor = <Actor>await Actor.create({
     name: actorName,
@@ -779,13 +783,13 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   const atlActorEffects = actor.effects.filter((entity) => {
     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
   });
-  atlActorEffects.forEach(async (ae: ActiveEffect) => {
+  for(const ae of atlActorEffects){
     // Make sure is enabled
     ae.data.disabled = false;
     ae.data.transfer = true;
     await API.addActiveEffectOnActor(<string>actor.id, ae.data);
     await API.toggleEffectFromIdOnActor(<string>actor.id, <string>ae.id, false, true, false);
-  });
+  }
 
   // WTF ???? THIS CONVERT SOME FALSE TO TRUE ????
   //const actorData = foundry.utils.duplicate(actor.data);
@@ -832,7 +836,7 @@ export async function retrieveItemLights(actor: Actor, token: Token): Promise<Li
   //const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
   // const spellsItems = ['spell','feat'];
   // For every itemwith a ATL/ATE effect
-  actor.data.items.contents.forEach((im: Item) => {
+  for(const im of actor.data.items.contents){
     // if (im && physicalItems.includes(im.type)) {}
     const atlEffects = im.effects.filter((entity) => {
       return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
@@ -840,7 +844,7 @@ export async function retrieveItemLights(actor: Actor, token: Token): Promise<Li
     if (atlEffects.length > 0) {
       lightItems.push(im);
     }
-  });
+  }
 
   // TODO Strange case no item with ATL but we have some active effect
   // const atlEffects = (<Actor>token.actor).effects.filter((entity) => {

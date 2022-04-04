@@ -85,12 +85,23 @@ export async function addLightsHUDButtons(app, html, data) {
     imageOpacity,
   });
 
-  const is080 = !isNewerVersion('0.8.0', <string>game.version);
+  // const is080 = !isNewerVersion('0.8.0', <string>game.version);
+  const settingHudColClass = <string>game.settings.get(CONSTANTS.MODULE_NAME, 'hudColumn') ?? '.left';
+  const settingHudTopBottomClass = <string>game.settings.get(CONSTANTS.MODULE_NAME, 'hudTopBottom') ?? 'top';
 
-  html
-    .find('div.right')
-    // .find(".col.lights-hud-ate-column-" + position).prepend(tbuttonItemLight)
-    .append(wildcardDisplay)
+  const buttonPos = '.' + settingHudColClass.toLowerCase();
+
+  const col = html.find(buttonPos);
+  if (settingHudTopBottomClass === 'top') {
+    col.prepend(wildcardDisplay);
+  } else {
+    col.append(wildcardDisplay);
+  }
+
+  col
+  // html
+    // .find('div.right')
+    // .append(wildcardDisplay)
     .click((event) => {
       let activeButton, clickedButton, tokenButton;
       for (const button of html.find('div.control-icon')) {
@@ -103,7 +114,7 @@ export async function addLightsHUDButtons(app, html, data) {
         tokenButton.classList.add('active');
 
         html.find('.lights-hud-ate-selector-wrap')[0].classList.add('active');
-        const effectSelector = is080 ? '[data-action="effects"]' : '.effects';
+        const effectSelector = '.effects'; //is080 ? '[data-action="effects"]' : '.effects';
         html.find(`.control-icon${effectSelector}`)[0].classList.remove('active');
         html.find('.status-effects')[0].classList.remove('active');
       } else {
