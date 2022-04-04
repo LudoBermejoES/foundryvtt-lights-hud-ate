@@ -341,7 +341,7 @@ function otherSettings(apply = false) {
         Top: 'Top',
         Bottom: 'Bottom',
       },
-    }
+    },
   };
 }
 

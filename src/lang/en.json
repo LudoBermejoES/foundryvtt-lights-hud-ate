@@ -19,15 +19,12 @@
   "lights-hud-ate.setting.hudTopBottom.name": "HUD Top/Bottom",
   "lights-hud-ate.setting.hudTopBottom.hint": "Where to place the button in the column",
 
-
   "lights-hud-ate.setting.reset.name": "Reset settings to default",
   "lights-hud-ate.setting.reset.label": "Reset Settings To Default",
   "lights-hud-ate.setting.reset.hint": "This will reset all of the settings of back to the active game system's default.",
   "lights-hud-ate.setting.debug.name": "Enable debugging",
   "lights-hud-ate.setting.debug.label": "Prints debug messages to the console",
   "lights-hud-ate.setting.debug.hint": " ",
-
-
 
   "lights-hud-ate.windows.art-select.title": "Select Art",
   "lights-hud-ate.windows.art-select.no-art-found": "No art found",

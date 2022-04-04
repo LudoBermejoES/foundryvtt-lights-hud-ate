@@ -99,7 +99,7 @@ export async function addLightsHUDButtons(app, html, data) {
   }
 
   col
-  // html
+    // html
     // .find('div.right')
     // .append(wildcardDisplay)
     .click((event) => {

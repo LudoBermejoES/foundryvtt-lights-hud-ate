@@ -763,7 +763,7 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   const atlEffects = item.effects.filter((entity) => {
     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
   });
-  for(const ae of atlEffects){
+  for (const ae of atlEffects) {
     // Make sure is enabled
     ae.data.disabled = false;
     ae.data.transfer = true;
@@ -783,7 +783,7 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   const atlActorEffects = actor.effects.filter((entity) => {
     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
   });
-  for(const ae of atlActorEffects){
+  for (const ae of atlActorEffects) {
     // Make sure is enabled
     ae.data.disabled = false;
     ae.data.transfer = true;
@@ -836,7 +836,7 @@ export async function retrieveItemLights(actor: Actor, token: Token): Promise<Li
   //const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
   // const spellsItems = ['spell','feat'];
   // For every itemwith a ATL/ATE effect
-  for(const im of actor.data.items.contents){
+  for (const im of actor.data.items.contents) {
     // if (im && physicalItems.includes(im.type)) {}
     const atlEffects = im.effects.filter((entity) => {
       return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;

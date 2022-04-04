@@ -373,13 +373,21 @@ const API = {
     return result;
   },
 
-  async hasEffectAppliedOnActor(actorId: string, effectName: string, includeDisabled:boolean) {
-    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedOnActor(effectName, <string>actorId, includeDisabled);
+  async hasEffectAppliedOnActor(actorId: string, effectName: string, includeDisabled: boolean) {
+    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedOnActor(
+      effectName,
+      <string>actorId,
+      includeDisabled,
+    );
     return result;
   },
 
-  async hasEffectAppliedFromIdOnActor(actorId: string, effectId: string, includeDisabled:boolean) {
-    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedFromIdOnActor(effectId, <string>actorId, includeDisabled);
+  async hasEffectAppliedFromIdOnActor(actorId: string, effectId: string, includeDisabled: boolean) {
+    const result = await (<EffectInterface>this.effectInterface).hasEffectAppliedFromIdOnActor(
+      effectId,
+      <string>actorId,
+      includeDisabled,
+    );
     return result;
   },
 
