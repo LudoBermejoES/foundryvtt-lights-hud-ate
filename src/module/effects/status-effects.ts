@@ -9,16 +9,16 @@ export default class StatusEffects {
   moduleName: string;
 
   constructor(moduleName) {
-    if (!game[moduleName]) {
-      game[moduleName] = {};
-    }
-    if (!game[moduleName]?.effects) {
-      game[moduleName].effects = {};
-    }
-    if (!game[moduleName].effects.customEffects) {
-      game[moduleName].effects.customEffects = [];
-    }
-    this._customEffects = <Effect[]>game[moduleName].effects.customEffects;
+    // if (!game[moduleName]) {
+    //   game[moduleName] = {};
+    // }
+    // if (!game[moduleName]?.effects) {
+    //   game[moduleName].effects = {};
+    // }
+    // if (!game[moduleName].effects.customEffects) {
+    //   game[moduleName].effects.customEffects = [];
+    // }
+    this._customEffects = [];
     this.moduleName = moduleName;
   }
 
