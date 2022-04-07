@@ -1,6 +1,5 @@
 import CONSTANTS from '../constants';
-import { game } from '../settings';
-import Effect from './effect';
+import type Effect from './effect';
 
 /**
  * Handles the status effects present on the token HUD

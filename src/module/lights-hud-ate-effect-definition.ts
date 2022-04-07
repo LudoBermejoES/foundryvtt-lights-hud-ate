@@ -1,9 +1,4 @@
-import { LightHUDElement, LightHUDPreset } from './lights-hud-ate-models';
-import API from './api';
-import CONSTANTS from './constants';
-import Effect, { Constants } from './effects/effect';
-import { i18n, i18nFormat, warn } from './lib/lib';
-import { canvas, game } from './settings';
+import type Effect from './effects/effect';
 
 /**
  * Defines all of the effect definitions
@@ -38,24 +33,6 @@ export class LightHUDAteEffectDefinitions {
   // ===========================================
   // The source effect
   // =============================================
-
-  // static stealthpassive(number: number) {
-  //   return new Effect({
-  //     name: i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.stealthpassive.name`, { number : number}),
-  //     description: i18nFormat(`${CONSTANTS.MODULE_NAME}.effects.stealthpassive.description`, { number : number}),
-  //     icon: '',
-  //     // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
-  //     transfer: true,
-  //     changes: [
-  //       {
-  //         key: 'data.attributes.senses.stealthpassive',
-  //         mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
-  //         value: number && number > 0 ? `${number}` : `@data.skills.ste.passive`,
-  //         priority: 5,
-  //       },
-  //     ],
-  //   });
-  // }
 
   // static torch() {
   //   const effectSight = API.LIGHTS.find((a: LightHUDElement) => {

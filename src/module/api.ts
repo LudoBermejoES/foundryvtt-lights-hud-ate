@@ -1,13 +1,9 @@
 import CONSTANTS from './constants';
-import { canvas, game } from './settings';
 import { dialogWarning, error, i18n, warn } from './lib/lib';
 import EffectInterface from './effects/effect-interface';
-import EffectHandler from './effects/effect-handler';
-import Effect from './effects/effect';
-import HOOKS from './hooks';
-import { LightHUDAteEffectDefinitions } from './lights-hud-ate-effect-definition';
-import { LightHUDElement, VisionHUDElement } from './lights-hud-ate-models';
-import { ActiveEffectData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import type { LightHUDElement, VisionHUDElement } from './lights-hud-ate-models';
+import type Effect from './effects/effect';
+import type { ActiveEffectData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 const API = {
   effectInterface: EffectInterface,

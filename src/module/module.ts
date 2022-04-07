@@ -6,7 +6,6 @@ import EffectInterface from './effects/effect-interface';
 import HOOKS from './hooks';
 import { debug } from './lib/lib';
 import { addLightsHUDButtons } from './lights-hud-ate-config';
-import { canvas, game } from './settings';
 import { registerSocket } from './socket';
 
 export const initHooks = async (): Promise<void> => {

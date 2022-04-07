@@ -1,15 +1,9 @@
-import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
-import {
-  ActorData,
-  TokenData,
-} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from '../api';
 import CONSTANTS from '../constants';
 import Effect, { Constants, EffectSupport } from '../effects/effect';
 import { getATLEffectsFromItem } from '../lights-hud-ate-config';
 import { LightHUDAteEffectDefinitions } from '../lights-hud-ate-effect-definition';
 import { LightDataHud } from '../lights-hud-ate-models';
-import { canvas, game } from '../settings';
 
 // =============================
 // Module Generic function
@@ -253,7 +247,7 @@ export function getFirstPlayerTokenSelected(): Token | null {
     return null;
     //}
   }
-  return selectedTokens[0];
+  return <Token>selectedTokens[0];
 }
 
 /**
@@ -270,7 +264,7 @@ export function getFirstPlayerToken(): Token | null {
     return null;
   }
   // If exactly one token is selected, take that
-  token = controlled[0];
+  token = <Token>controlled[0];
   if (!token) {
     if (!controlled.length || controlled.length == 0) {
       // If no token is selected use the token of the users character
@@ -664,12 +658,12 @@ export async function dropTheToken(item: Item, data: { x; y }, type = 'character
   // START CREATION
   let createdType = type;
   if (type === 'actorless') {
-    createdType = Object.keys(CONFIG.Actor.typeLabels)[0];
+    createdType = <string>Object.keys(CONFIG.Actor.typeLabels)[0];
   }
 
   let actorName = <string>item.name;
   if (actorName.includes('.')) {
-    actorName = actorName.split('.')[0];
+    actorName = <string>actorName.split('.')[0];
   }
 
   const actor = <Actor>await Actor.create({
@@ -751,12 +745,12 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   // START CREATION
   let createdType = type;
   if (type === 'actorless') {
-    createdType = Object.keys(CONFIG.Actor.typeLabels)[0];
+    createdType = <string>Object.keys(CONFIG.Actor.typeLabels)[0];
   }
 
   let actorName = <string>item.name;
   if (actorName.includes('.')) {
-    actorName = actorName.split('.')[0];
+    actorName = <string>actorName.split('.')[0];
   }
 
   const actorDataEffects: any[] = [];
@@ -862,7 +856,7 @@ export async function retrieveItemLights(actor: Actor, token: Token): Promise<Li
       const im = <string>item.img;
       const split = im.split('/');
       const extensions = im.split('.');
-      const extension = extensions[extensions.length - 1];
+      const extension = <string>extensions[extensions.length - 1];
       const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
       const vid = ['webm', 'mp4', 'm4v'].includes(extension);
       // TODO for now we check if at least one active effect has the atl/ate changes on him
@@ -883,7 +877,8 @@ export async function retrieveItemLights(actor: Actor, token: Token): Promise<Li
       let tokenidTmp = '';
       let actoridTmp = '';
       if (aeAtl.length > 0) {
-        const nameToSearch = <string>aeAtl[0].name || aeAtl[0].data.label;
+        const aeAtl0 = <ActiveEffect>aeAtl[0];
+        const nameToSearch = <string>aeAtl0.name || aeAtl0.data.label;
 
         let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
           return isStringEquals(nameToSearch, ae.data.label);
@@ -891,8 +886,8 @@ export async function retrieveItemLights(actor: Actor, token: Token): Promise<Li
         // Check if someone has delete the active effect but the item with the ATL changes is still on inventory
         if (!effectFromActor) {
           info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
-          aeAtl[0].data.transfer = false;
-          await API.addActiveEffectOnToken(<string>token.document.id, aeAtl[0].data);
+          aeAtl0.data.transfer = false;
+          await API.addActiveEffectOnToken(<string>token.document.id, aeAtl0.data);
           // ???
           effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
             return isStringEquals(nameToSearch, ae.data.label);

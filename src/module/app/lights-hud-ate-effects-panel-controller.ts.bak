@@ -1,7 +1,6 @@
 import { LightDataDialog, LightDataHud } from './../lights-hud-ate-models';
 import CONSTANTS from '../constants';
 import { info, isStringEquals, warn } from '../lib/lib';
-import { canvas, game } from '../settings';
 import EffectsPanelApp from './lights-hud-ate-effects-panel-app';
 import API from '../api';
 import {

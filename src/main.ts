@@ -12,12 +12,11 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
-import API from './module/api';
+import type API from './module/api';
 import CONSTANTS from './module/constants';
 import { error } from './module/lib/lib';
 import { initHooks, readyHooks, setupHooks } from './module/module';
 import { registerSettings } from './module/settings';
-import { canvas, game } from './module/settings';
 
 /* ------------------------------------ */
 /* Initialize module					*/

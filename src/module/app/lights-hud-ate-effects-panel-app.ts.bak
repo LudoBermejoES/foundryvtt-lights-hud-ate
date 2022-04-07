@@ -1,6 +1,5 @@
 import CONSTANTS from '../constants.js';
 import EffectsPanelController from './lights-hud-ate-effects-panel-controller.js';
-import { canvas, game } from '../settings';
 import { LightDataHud } from '../lights-hud-ate-models.js';
 import { getATLEffectsFromItem } from '../lights-hud-ate-config.js';
 import { info, isStringEquals, retrieveItemLights, warn } from '../lib/lib.js';

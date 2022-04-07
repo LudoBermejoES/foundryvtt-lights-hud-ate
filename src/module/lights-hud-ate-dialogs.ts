@@ -1,4 +1,4 @@
-import { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import type { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from './api';
 import CONSTANTS from './constants';
 import {
@@ -19,7 +19,6 @@ import {
   VisionHUDElement,
   VisionHUDPreset,
 } from './lights-hud-ate-models';
-import { canvas, game } from './settings';
 
 export function presetDialog(applyChanges: boolean): Dialog {
   return new Dialog({
@@ -835,7 +834,11 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
 
 function manageActiveEffectATL(actorId, itemId, effectId, isApplied) {
   const actor = <Actor>game.actors?.get(actorId);
-  const tokenId = actor.getActiveTokens()[0].id;
+  if(actor.getActiveTokens().length <= 0){
+    warn(`No token found for the actor with id '${actorId}'`);
+    return;
+  }
+  const tokenId = <string>actor.getActiveTokens()[0]?.id;
   // We roll the item ???
   try {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'rollItem') && !isApplied) {

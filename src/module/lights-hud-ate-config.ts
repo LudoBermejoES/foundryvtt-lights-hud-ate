@@ -30,7 +30,6 @@ import {
   LightHUDElement,
   LightDataDialog,
 } from './lights-hud-ate-models';
-import { canvas, game } from './settings';
 
 export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
   // const atlChanges = effect.data.changes.filter((changes) =>
