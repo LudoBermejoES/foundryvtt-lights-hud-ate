@@ -834,7 +834,7 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
 
 function manageActiveEffectATL(actorId, itemId, effectId, isApplied) {
   const actor = <Actor>game.actors?.get(actorId);
-  if(actor.getActiveTokens().length <= 0){
+  if (actor.getActiveTokens().length <= 0) {
     warn(`No token found for the actor with id '${actorId}'`);
     return;
   }
