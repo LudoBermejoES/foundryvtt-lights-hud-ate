@@ -1,8 +1,4 @@
-import { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
-import API from './api';
 import CONSTANTS from './constants';
-import Effect from './effects/effect';
-import EffectInterface from './effects/effect-interface';
 import {
   checkNumberFromString,
   dialogWarning,
@@ -73,7 +69,7 @@ export async function addLightsHUDButtons(app, html, data) {
   // OLD CODE
   //=================================
 
-  const imagesParsed = await retrieveItemLights(actor, token);
+  const imagesParsed = await retrieveItemLights(token);
 
   const wildcardDisplay = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/artSelect.hbs`, {
     tokenId,
@@ -113,7 +109,7 @@ export async function addLightsHUDButtons(app, html, data) {
         tokenButton.classList.add('active');
 
         html.find('.lights-hud-ate-selector-wrap')[0].classList.add('active');
-        const effectSelector = '.effects'; //is080 ? '[data-action="effects"]' : '.effects';
+        const effectSelector = '[data-action="effects"]'; //is080 ? '[data-action="effects"]' : '.effects';
         html.find(`.control-icon${effectSelector}`)[0].classList.remove('active');
         html.find('.status-effects')[0].classList.remove('active');
       } else {

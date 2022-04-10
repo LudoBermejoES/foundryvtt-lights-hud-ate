@@ -705,7 +705,8 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
         label: i18n(`lights-hud-ate.windows.dialogs.confirm.apply.choice.yes`),
         callback: (html) => {
           manageActiveEffectATL(
-            lightDataDialog.actorId,
+            lightDataDialog.tokenId,
+            // lightDataDialog.actorId,
             lightDataDialog.itemId,
             lightDataDialog.effectId,
             lightDataDialog.isApplied,
@@ -832,17 +833,28 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
   });
 }
 
-function manageActiveEffectATL(actorId, itemId, effectId, isApplied) {
-  const actor = <Actor>game.actors?.get(actorId);
-  if (actor.getActiveTokens().length <= 0) {
-    warn(`No token found for the actor with id '${actorId}'`);
+function manageActiveEffectATL(tokenId, itemId, effectId, isApplied) {
+  //const actor = <Actor>game.actors?.get(actorId);
+  // if (actor.getActiveTokens().length <= 0) {
+  //   warn(`No token found for the actor with id '${actorId}'`);
+  //   return;
+  // }
+  // const tokenId = <string>actor.getActiveTokens()[0]?.id;
+  const token = <Token>canvas.tokens?.placeables.find((t) => {
+    return t.id === tokenId;
+  });
+  if (!token) {
+    warn(`No token found for the token with id '${tokenId}'`, true);
     return;
   }
-  const tokenId = <string>actor.getActiveTokens()[0]?.id;
+  if (!token.actor) {
+    warn(`No actor found for the token with id '${tokenId}'`, true);
+    return;
+  }
   // We roll the item ???
   try {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'rollItem') && !isApplied) {
-      const item = <Item>actor.items.find((entity: Item) => {
+      const item = <Item>token.actor?.items.find((entity: Item) => {
         return <string>entity.id == itemId;
       });
       if (item) {

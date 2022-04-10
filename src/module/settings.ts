@@ -16,15 +16,6 @@ export const registerSettings = function (): void {
   // OLD SETTINGS TO REMOVE PROBABLY
   // ===========================================================
 
-  // game.settings.register(CONSTANTS.MODULE_NAME, 'useBasicPanelEffects', {
-  //   name: i18n(`${CONSTANTS.MODULE_NAME}.setting.useBasicPanelEffects.name`),
-  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.useBasicPanelEffects.hint`),
-  //   config: false,
-  //   scope: 'world',
-  //   default: true,
-  //   type: Boolean,
-  // });
-
   game.settings.register(CONSTANTS.MODULE_NAME, 'imageDisplay', {
     name: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.name`),
     hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.hint`),
@@ -240,15 +231,6 @@ function otherSettings(apply = false) {
       default: false,
       type: Boolean,
     },
-
-    // useBasicPanelEffects: {
-    //   name: i18n(`${CONSTANTS.MODULE_NAME}.setting.useBasicPanelEffects.name`),
-    //   hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.useBasicPanelEffects.hint`),
-    //   config: true,
-    //   scope: 'world',
-    //   default: false,
-    //   type: Boolean,
-    // },
 
     imageDisplay: {
       name: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.name`),

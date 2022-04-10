@@ -60,7 +60,7 @@ export function isGMConnected() {
 }
 
 export function isGMConnectedAndSocketLibEnable() {
-  return isGMConnected() && !game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature');
+  return isGMConnected(); //&& !game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature');
 }
 
 export function wait(ms) {
@@ -817,15 +817,16 @@ export async function checkNumberFromString(value) {
   }
 }
 
-export async function retrieveItemLights(actor: Actor, token: Token): Promise<LightDataHud[]> {
+export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> {
   // const actor = <Actor>this._actor;
   // const token = <Token>this._token;
-
+  const actor = token.actor;
   //const actor = <Actor>canvas.tokens?.controlled[0]?.actor ?? game.user?.character ?? null;
   //const token = <Token>canvas.tokens?.controlled[0] ?? null;
 
-  if (!actor || !token) return [];
-
+  if (!actor || !token) {
+    return [];
+  }
   const lightItems: Item[] = [];
   //const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
   // const spellsItems = ['spell','feat'];

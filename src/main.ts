@@ -128,8 +128,7 @@ Hooks.once('libChangelogsReady', function () {
   libChangelogs.register(
     CONSTANTS.MODULE_NAME,
     `
-  - Rewriting with typescript and update for foundryvtt'
-  - Integration with ATE
+  - Beta ready
   `,
     'minor',
   );

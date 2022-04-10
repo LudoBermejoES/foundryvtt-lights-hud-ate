@@ -16,10 +16,17 @@
 
 A Foundry VTT module that displays on the HUD config of the token all the available lighting items on the token/actor, with some [ATE](https://github.com/kandashi/Active-Token-Lighting) effect, so you can light a torch or turn of without modify the token configuration and you can set with [Times up](https://gitlab.com/tposney/times-up) and [Dae](https://gitlab.com/tposney/dae) time and condition of the vision and light effect on the token.
 
-This project is born like a fusion of the feature of these modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/), [ATE](https://github.com/kandashi/Active-Token-Lighting), but after the initial code i rewriting everything so many times now is just a new module inspired form these other module. Remember to support these authors if you feel generous on their patreon or kofi account.
+This project is born like a fusion of the features of these modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/), [ATE](https://github.com/kandashi/Active-Token-Lighting) and [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects), but after the initial code i rewriting everything so many times now is just a new module inspired form these other modules.
+
+Remember to support these authors if you feel generous on their patreon or kofi account.
 
 ![imggif](./wiki/assets/first_release_tutorial_left.gif)
 
+## What are the differences between LightHUD, DFreds Convenient Effects and LightHUD + ATE?
+
+The module "LightHUD" is more _generic_, not in the wrong sense of the term, but there are simply cases where you want to create custom animations for your torches and lanterns and do not been vincolate 
+
+The module "DFreds Convenient Effects" it lets you add effects related to ligthing and always customize them with ATE, but it is not bound to the objects currently present in the actor and does not take into account things such as limitation of use and consumption of objects.
 
 ## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
 
@@ -66,8 +73,6 @@ This module uses the [warpgate](https://github.com/trioderegion/warpgate) librar
 
 - **HELP WANTED** The token MUST BE LINKED TO A ACTOR,  if anyone can solve this let me know
 - **HELP WANTED** This is just a "fast to make" module maybe someone a little more expert than me with form application and hud layer can do a better form for a better user experience
-- [ATE](https://github.com/kandashi/Active-Token-Lighting) has still some problem with brigthSight and dimSight, and some numeric value, but some PR are been committed to kandashi attention for solve these issues, so i will wait for his review.
-- [ATE] has some problem to manage the toogle of differentATL effects on the same token , i'm trying to help kandashi with some PR about it [Added the token integration instead of being tied to the actor and his prototype token + some minor bug fix](https://github.com/kandashi/Active-Token-Lighting/pull/92)
 - [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) is not been updated for foundryvtt 9 so is not advisable to used right now.
 - The modules is not smart enough to distinct multiple ligthing effect on the same item and is not make sense ? Every item must have only one effect with _ATL changes_ on it (at least for me). If multiple effect with _ATL changes_ are founded on the same item only the first is analyzed from the module, you can use multiple item where each has is own lighting configuration.
 - The [warpgate](https://github.com/trioderegion/warpgate) function `spawnAt` should include a check distance of  spawn so no player drop torch on a very far point of the canvas.

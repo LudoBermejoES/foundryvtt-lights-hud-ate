@@ -1,3 +1,7 @@
+## 0.11.3
+
+- Beta ready
+
 ## 0.11.1-2 [BETA]
 
 - Beta ready
