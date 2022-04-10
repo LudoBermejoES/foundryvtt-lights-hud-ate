@@ -91,7 +91,7 @@ export async function addLightsHUDButtons(app, html, data) {
   const buttonPos = '.' + settingHudColClass.toLowerCase();
 
   const col = html.find(buttonPos);
-  if (settingHudTopBottomClass === 'top') {
+  if (settingHudTopBottomClass.toLowerCase() === 'top') {
     col.prepend(wildcardDisplay);
   } else {
     col.append(wildcardDisplay);
