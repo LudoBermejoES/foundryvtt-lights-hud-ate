@@ -781,8 +781,18 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
     // Make sure is enabled
     ae.data.disabled = false;
     ae.data.transfer = true;
-    await API.addActiveEffectOnActor(<string>actor.id, ae.data);
-    await API.toggleEffectFromIdOnActor(<string>actor.id, <string>ae.id, false, true, false);
+    if (!ae.data.origin) {
+      ae.data.origin = `Actor.${actor.id}`;
+    }
+    // await actor.createEmbeddedDocuments('ActiveEffect', [<Record<string, any>>ae.data]);
+    await ae.update({
+      disabled: false,
+      transfer: true
+    });
+
+    // TODO how can i do this
+    // await API.addActiveEffectOnActor(<string>actor.id, ae.data);
+    // await API.toggleEffectFromIdOnActor(<string>actor.id, <string>ae.id, false, true, false);
   }
 
   // WTF ???? THIS CONVERT SOME FALSE TO TRUE ????

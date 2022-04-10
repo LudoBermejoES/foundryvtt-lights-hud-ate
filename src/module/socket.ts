@@ -74,6 +74,7 @@ export function registerSocket() {
   lightHudAteSocket.register('removeEffectOnActor', (...args) => API.removeEffectOnActorArr(...args));
   lightHudAteSocket.register('removeEffectFromIdOnActor', (...args) => API.removeEffectFromIdOnActorArr(...args));
   lightHudAteSocket.register('findEffectByNameOnActor', (...args) => API.findEffectByNameOnActorArr(...args));
+  lightHudAteSocket.register('addActiveEffectOnActor', (...args) => API.addActiveEffectOnActorArr(...args));
 
   // Token
 

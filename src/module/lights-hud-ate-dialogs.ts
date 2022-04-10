@@ -738,7 +738,20 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
       yes: {
         label: i18n(`lights-hud-ate.windows.dialogs.confirm.dropthetorch.choice.yes`),
         callback: async (html) => {
-          const actor = <Actor>game.actors?.get(lightDataDialog.actorId);
+          // const actor = <Actor>game.actors?.get(lightDataDialog.actorId);
+          const token = canvas.tokens?.placeables.find((t) => {
+            return t.id === lightDataDialog.tokenId;
+          });
+          if (!token) {
+            warn(`No token found for the token with id '${lightDataDialog.tokenId}'`, true);
+            return;
+          }
+          if (!token.actor) {
+            warn(`No actor found for the token with id '${lightDataDialog.tokenId}'`, true);
+            return;
+          }
+          const actor = token?.actor;
+
           // TODO SET UP ANIMATION ?? MAYBE IN SOME FUTURE RELEASE
 
           // const animation = $(event.currentTarget.parentElement.parentElement)
@@ -748,13 +761,13 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
           const duplicates = 1; // number od dropped light
 
           const item = <Item>actor.items.get(lightDataDialog.itemId);
-          let actorDropTheTorch: Actor | null = null;
+          // let actorDropTheTorch: Actor | null = null;
           let tokenDataDropTheTorch: TokenData | null = null;
-          const tokenId = <string>randomID();
+          // const tokenId = <string>randomID();
           try {
-            tokenDataDropTheTorch = <TokenData>await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0);
-            actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorch.actorId);
-            tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorch);
+            const tokenDataDropTheTorchTmp = <TokenData>await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0);
+            // actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorchTmp.actorId);
+            tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorchTmp);
             // actorDropTheTorch = <Actor>await prepareTokenDataDropTheTorch(item, tokenId, _token?.data?.elevation ?? 0);
             // tokenDataDropTheTorch = await actor.getTokenData();
             //@ts-ignore
@@ -802,8 +815,15 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
             // 3 = Owner
 
             // Get the current permission level for the selected token.
-            const currentPermissions = <number>(<Actor>actorDropTheTorch).data.permission.default;
-            (<Actor>actorDropTheTorch).update({ permission: { default: 3 } });
+            // const currentPermissions = <number>(<Actor>actorDropTheTorch).data.permission.default;
+            // (<Actor>actorDropTheTorch).update({ permission: { default: 3 } });
+
+            // const tokenPlaced = <Token>canvas.tokens?.placeables.find((t) => {
+            //   return t.id === tokenDataDropTheTorch?._id;
+            // });
+            // const currentPermissions = <number>tokenPlaced.actor?.data.permission.default;
+            // tokenPlaced.actor?.update({ permission: { default: 3 } });
+            
             // If the current permission level is anything above 'None' then reset it to 'None'
             // if (currentPermissions > 0)
             // {
@@ -815,10 +835,10 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
             //   (<Actor>actorDropTheTorch).update({permission:{default:3}});
             // }
           } finally {
-            if (actorDropTheTorch) {
-              // Remove actor at the end
-              await (<Actor>actorDropTheTorch).delete();
-            }
+            // if (actorDropTheTorch) {
+            //   // Remove actor at the end
+            //   await (<Actor>actorDropTheTorch).delete();
+            // }
           }
         },
       },
