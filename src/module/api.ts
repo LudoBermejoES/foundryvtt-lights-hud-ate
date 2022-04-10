@@ -360,7 +360,10 @@ const API = {
       throw error('addActiveEffectOnActorArr | inAttributes must be of type array');
     }
     const [actorId, activeEffectData] = inAttributes;
-    const result = (<EffectInterface>this.effectInterface)._effectHandler.addActiveEffectOnActor(<string>actorId, activeEffectData);
+    const result = (<EffectInterface>this.effectInterface)._effectHandler.addActiveEffectOnActor(
+      <string>actorId,
+      activeEffectData,
+    );
     return result;
   },
 

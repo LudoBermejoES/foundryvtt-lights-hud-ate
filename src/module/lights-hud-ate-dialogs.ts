@@ -765,7 +765,9 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
           let tokenDataDropTheTorch: TokenData | null = null;
           // const tokenId = <string>randomID();
           try {
-            const tokenDataDropTheTorchTmp = <TokenData>await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0);
+            const tokenDataDropTheTorchTmp = <TokenData>(
+              await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0)
+            );
             // actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorchTmp.actorId);
             tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorchTmp);
             // actorDropTheTorch = <Actor>await prepareTokenDataDropTheTorch(item, tokenId, _token?.data?.elevation ?? 0);
@@ -823,7 +825,7 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
             // });
             // const currentPermissions = <number>tokenPlaced.actor?.data.permission.default;
             // tokenPlaced.actor?.update({ permission: { default: 3 } });
-            
+
             // If the current permission level is anything above 'None' then reset it to 'None'
             // if (currentPermissions > 0)
             // {

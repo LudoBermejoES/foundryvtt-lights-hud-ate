@@ -787,7 +787,7 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
     // await actor.createEmbeddedDocuments('ActiveEffect', [<Record<string, any>>ae.data]);
     await ae.update({
       disabled: false,
-      transfer: true
+      transfer: true,
     });
 
     // TODO how can i do this
@@ -798,6 +798,7 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   // WTF ???? THIS CONVERT SOME FALSE TO TRUE ????
   //const actorData = foundry.utils.duplicate(actor.data);
   const actorData = actor.data;
+  await actorData.update({ permission: { default: 3 } });
 
   const tokenData = {
     hidden: false,
