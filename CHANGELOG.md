@@ -1,3 +1,7 @@
+## 0.11.7
+
+- First release
+
 ## 0.11.4-5-6
 
 - Beta ready
