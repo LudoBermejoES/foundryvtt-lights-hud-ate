@@ -1,3 +1,7 @@
+## 0.11.8
+
+- Little bug fix on the hud template
+
 ## 0.11.7
 
 - First release

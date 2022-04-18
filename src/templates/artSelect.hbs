@@ -160,7 +160,9 @@
                     {{/if}}
 
                     {{!-- {{#if effect.isTemporary}} temporary {{else}} passive {{/if}}  --}}
+                    {{#if effect.isTemporary}}
                     ({{remainingTimeLabel effect}})
+                    {{/if}}
                 {{/if}}
             </button>
         {{/if}}
