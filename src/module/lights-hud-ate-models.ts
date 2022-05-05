@@ -116,7 +116,6 @@ export class LightDataDialog {
 }
 
 export enum LightHUDNoteFlags {
-
   // SUPPORT NO FORM
   INITIAL_DATA = 'initial-data',
   HUD_ENABLED = 'hud-enabled',
@@ -155,5 +154,5 @@ export enum LightHUDNoteFlags {
   LIGHT_GRADUAL = 'light-gradual',
   LIGHT_SATURATION = 'light-saturation',
   LIGHT_CONTRAST = 'light-contrast',
-  LIGHT_SHADOWS = 'light-shadows'
+  LIGHT_SHADOWS = 'light-shadows',
 }

@@ -44,7 +44,6 @@ export class LightHUDAteNote extends FormApplication {
     // Added 2022-05-05
     // TODO INSERIRE I DATI DELLE OPTIONS
 
-
     return data;
   }
 
@@ -84,7 +83,6 @@ export class LightHUDAteNote extends FormApplication {
 
   async _updateObject(event, formData) {
     if (game.user?.isGM) {
-
       const effectIcon = this.entity.data.img || this.entity.data.data.img;
 
       let applyAsAtlEffect = false;
@@ -93,7 +91,7 @@ export class LightHUDAteNote extends FormApplication {
       if (applyAsAtlAte != null && applyAsAtlAte != undefined) {
         applyAsAtlEffect = true;
       } else {
-        applyAsAtlEffect= false;
+        applyAsAtlEffect = false;
       }
 
       const enable = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ENABLE}`];
@@ -103,9 +101,14 @@ export class LightHUDAteNote extends FormApplication {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE, null);
       }
 
-      const lightAnimationIntensity = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ANIMATION_INTENSITY}`];
+      const lightAnimationIntensity =
+        formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ANIMATION_INTENSITY}`];
       if (lightAnimationIntensity != null && lightAnimationIntensity != undefined) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY, lightAnimationIntensity);
+        await this.entity.setFlag(
+          CONSTANTS.MODULE_NAME,
+          LightHUDNoteFlags.ANIMATION_INTENSITY,
+          lightAnimationIntensity,
+        );
       } else {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY, null);
       }
@@ -285,7 +288,7 @@ export class LightHUDAteNote extends FormApplication {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH, null);
       }
 
-      if(applyAsAtlEffect){
+      if (applyAsAtlEffect) {
         const efffectAtlToApply = convertToATLEffect(
           //lockRotation,
           dimSight,
@@ -319,7 +322,7 @@ export class LightHUDAteNote extends FormApplication {
           // name,
           height,
           width,
-          scale
+          scale,
         );
         efffectAtlToApply.customId = <string>this.entity?.id;
 
@@ -375,7 +378,11 @@ export class LightHUDAteNote extends FormApplication {
           }
         }
         if (!noteApp) {
-          noteApp = new LightHUDAteNote(app.object, { submitOnClose: true, closeOnSubmit: false, submitOnUnfocus: true });
+          noteApp = new LightHUDAteNote(app.object, {
+            submitOnClose: true,
+            closeOnSubmit: false,
+            submitOnUnfocus: true,
+          });
         }
         noteApp.render(true);
       });

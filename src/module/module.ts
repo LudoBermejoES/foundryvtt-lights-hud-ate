@@ -77,5 +77,4 @@ const module = {
       LightHUDAteNote._initEntityHook(app, html, data);
     }
   },
-
 };

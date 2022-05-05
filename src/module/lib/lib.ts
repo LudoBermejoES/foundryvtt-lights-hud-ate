@@ -378,7 +378,7 @@ export function convertToATLEffect(
   height: number | null = null,
   width: number | null = null,
   scale: number | null = null,
-){
+) {
   const atlChanges: any = [];
 
   if (height && height > 0) {
@@ -514,15 +514,14 @@ export async function updateTokenLighting(
   width: number | null = null,
   scale: number | null = null,
 ) {
-
   // Store the initial status of illumination for the token to restore if all light sources are extinguished
   const tokenData = token.data;
-  if(game.settings.get(CONSTANTS.MODULE_NAME,'applyOnFlagItem')){
-    if(!token.actor?.getFlag(CONSTANTS.MODULE_NAME,LightHUDNoteFlags.INITIAL_DATA)){
-      await token.actor?.setFlag(CONSTANTS.MODULE_NAME,LightHUDNoteFlags.INITIAL_DATA, await duplicate(tokenData));
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+    if (!token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
+      await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA, await duplicate(tokenData));
     }
-  }else{
-    if(token.actor?.getFlag(CONSTANTS.MODULE_NAME,LightHUDNoteFlags.INITIAL_DATA)){
+  } else {
+    if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
       await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
     }
   }
@@ -658,10 +657,10 @@ export async function updateTokenLighting(
       // name,
       height,
       width,
-      scale
+      scale,
     );
-    efffectAtlToApply.customId = <string>token.actor?.id,
-    await API.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
+    (efffectAtlToApply.customId = <string>token.actor?.id),
+      await API.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
   } else {
     // TODO FIND A BETTER WAY FOR THIS
     if (dimSight == null || dimSight == undefined) {
@@ -769,7 +768,7 @@ export async function updateTokenLighting(
   }
 }
 
-export async function updateTokenLightingFromData(token:Token, tokenData:TokenData){
+export async function updateTokenLightingFromData(token: Token, tokenData: TokenData) {
   await token.document.update({
     // lockRotation: lockRotation,
     vision: tokenData.vision,
@@ -1040,7 +1039,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
     return [];
   }
   const lightItems: Item[] = [];
-  let imagesParsed:LightDataHud[] = [];
+  let imagesParsed: LightDataHud[] = [];
 
   //const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
   // const spellsItems = ['spell','feat'];
@@ -1048,13 +1047,12 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
   for (const im of actor.data.items.contents) {
     // TODO ADD CHECK ONLY FOR PHYSICAL ITEM
     // if (im && physicalItems.includes(im.type)) {}
-    if( game.settings.get(CONSTANTS.MODULE_NAME,'applyOnFlagItem')){
-      if(im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)){
+    if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+      if (im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
         lightItems.push(im);
         continue;
       }
-    }
-    else if(game.settings.get(CONSTANTS.MODULE_NAME,'applyOnATEItem')){
+    } else if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')) {
       const atlEffects = im.effects.filter((entity) => {
         return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
       });
@@ -1168,7 +1166,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       // ========================================================
       // WE CHECK THE FLAG
       // ========================================================
-      else if(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)){
+      else if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
         const applied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) || false;
         disabledTmp = !applied;
         suppressedTmp = false; // always false
@@ -1184,10 +1182,12 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         tokenidTmp = <string>token.id;
         actoridTmp = <string>actor.id;
         // ADDED
-        remainingSecondsTmp = _getSecondsRemaining(temporaryTmp ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) : 0);
+        remainingSecondsTmp = _getSecondsRemaining(
+          temporaryTmp ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) : 0,
+        );
         turnsTmp = 0;
         isExpiredTmp = false;
-        labelTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;;
+        labelTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
         _idTmp = <string>item.id;
         flagsTmp = item.data?.flags || {};
 
@@ -1200,7 +1200,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       // ========================================================
       // DO NOTHING
       // ========================================================
-      else{
+      else {
         return new LightDataHud();
       }
 

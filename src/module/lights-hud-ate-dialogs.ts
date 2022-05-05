@@ -250,7 +250,6 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
     }
   }
 
-
   if (name === undefined) name = '';
   if (light === undefined) light = undefined;
 
@@ -291,73 +290,47 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
     lightTypes += `
       <optgroup label= "Blitz" id="animationType">
         <option value="BlitzFader"
-          ${animation.type === 'BlitzFader'
-          ? 'selected' : ''}>Fader
+          ${animation.type === 'BlitzFader' ? 'selected' : ''}>Fader
         </option>
         <option value="BlitzLightning"
-          ${animation.type === 'BlitzLightning'
-          ? 'selected' : ''}>Lightning (experimental)
+          ${animation.type === 'BlitzLightning' ? 'selected' : ''}>Lightning (experimental)
         </option>
         <option value="BlitzElectric Fault"
-          ${animation.type === 'BlitzElectric Fault'
-          ? 'selected'
-          : ''}>Electrical Fault</option>
+          ${animation.type === 'BlitzElectric Fault' ? 'selected' : ''}>Electrical Fault</option>
         <option value="BlitzSimple Flash"
-          ${animation.type === 'BlitzSimple Flash'
-          ? 'selected'
-          : ''}>Simple Flash
+          ${animation.type === 'BlitzSimple Flash' ? 'selected' : ''}>Simple Flash
         </option>
         <option value="BlitzRBG Flash"
-          ${animation.type === 'BlitzRBG Flash'
-          ? 'selected'
-          : ''}>RGB Flash
+          ${animation.type === 'BlitzRBG Flash' ? 'selected' : ''}>RGB Flash
         </option>
         <option value="BlitzPolice Flash"
-          ${animation.type === 'BlitzPolice Flash'
-          ? 'selected'
-          : ''}>Police Flash
+          ${animation.type === 'BlitzPolice Flash' ? 'selected' : ''}>Police Flash
         </option>
         <option value="BlitzStatic Blur"
-          ${animation.type === 'BlitzStatic Blur'
-          ? 'selected'
-          : ''}>Static Blur
+          ${animation.type === 'BlitzStatic Blur' ? 'selected' : ''}>Static Blur
         </option>
         <option value="BlitzAlternate Torch"
-          ${animation.type === 'BlitzAlternate Torch'
-          ? 'selected'
-          : ''}>Alternate Torch
+          ${animation.type === 'BlitzAlternate Torch' ? 'selected' : ''}>Alternate Torch
         </option>
         <option value="BlitzBlurred Torch"
-          ${animation.type === 'BlitzBlurred Torch'
-          ? 'selected'
-          : ''}>Blurred Torch
+          ${animation.type === 'BlitzBlurred Torch' ? 'selected' : ''}>Blurred Torch
         </option>
         <option value="BlitzGrid Force-Field Colorshift"
-          ${animation.type === 'BlitzGrid Force-Field Colorshift'
-          ? 'selected'
-          : ''}>Grid Force-Field Colorshift
+          ${animation.type === 'BlitzGrid Force-Field Colorshift' ? 'selected' : ''}>Grid Force-Field Colorshift
         </option>
       </optgroup>
       <optgroup label="SecretFire" id="animationType">
         <option value="SecretFireGrid Force-Field"
-          ${animation.type === 'SecretFireGrid Force-Field'
-          ? 'selected'
-          : ''}>Grid Force-Field
+          ${animation.type === 'SecretFireGrid Force-Field' ? 'selected' : ''}>Grid Force-Field
         </option>
         <option value="SecretFireSmoke Patch"
-          ${animation.type === 'SecretFireSmoke Patch'
-          ? 'selected'
-          : ''}>Smoke Patch
+          ${animation.type === 'SecretFireSmoke Patch' ? 'selected' : ''}>Smoke Patch
         </option>
         <option value="SecretFireStar Light"
-          ${animation.type === 'SecretFireStar Light'
-          ? 'selected'
-          : ''}>Star Light
+          ${animation.type === 'SecretFireStar Light' ? 'selected' : ''}>Star Light
         </option>
         <option value="SecretFireStar Light Disco"
-          ${animation.type === 'SecretFireStar Light Disco'
-          ? 'selected'
-          : ''}>Star Light Disco
+          ${animation.type === 'SecretFireStar Light Disco' ? 'selected' : ''}>Star Light Disco
         </option>
       </optgroup>
   `;
@@ -743,7 +716,7 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
       yes: {
         label: i18n(`lights-hud-ate.windows.dialogs.confirm.apply.choice.yes`),
         callback: (html) => {
-          if(lightDataDialog.effectId){
+          if (lightDataDialog.effectId) {
             manageActiveEffectATL(
               lightDataDialog.tokenId,
               // lightDataDialog.actorId,
@@ -751,11 +724,8 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
               lightDataDialog.effectId,
               lightDataDialog.isApplied,
             );
-          }else{
-            manageFlaggedItem(
-              lightDataDialog.tokenId,
-              lightDataDialog.itemId,
-            );
+          } else {
+            manageFlaggedItem(lightDataDialog.tokenId, lightDataDialog.itemId);
           }
         },
       },
@@ -951,7 +921,6 @@ function manageActiveEffectATL(tokenId, itemId, effectId, isApplied) {
   }
 }
 
-
 function manageFlaggedItem(tokenId, itemId) {
   const token = <Token>canvas.tokens?.placeables.find((t) => {
     return t.id === tokenId;
@@ -986,14 +955,13 @@ function manageFlaggedItem(tokenId, itemId) {
       }
     }
   } finally {
-
     applyFlagsOnToken(tokenId, itemId);
 
     item.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED, !isApplied);
   }
 }
 
-function applyFlagsOnToken(tokenId:string, itemId:string){
+function applyFlagsOnToken(tokenId: string, itemId: string) {
   const token = <Token>canvas.tokens?.placeables.find((t) => {
     return t.id === tokenId;
   });
@@ -1007,21 +975,35 @@ function applyFlagsOnToken(tokenId:string, itemId:string){
   const width = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH));
   const scale = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE));
   const dimLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM));
-  const brightLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT));
+  const brightLight = <number>(
+    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT))
+  );
   const dimSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM));
-  const brightSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT));
+  const brightSight = <number>(
+    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT))
+  );
   const lightColor = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR);
   const sightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE));
   const lightAlpha = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA));
   const lightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE));
   const lightAnimationType = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_TYPE);
-  const lightAnimationSpeed = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED));
-  const lightAnimationIntensity = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY));
+  const lightAnimationSpeed = <number>(
+    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED))
+  );
+  const lightAnimationIntensity = <number>(
+    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY))
+  );
   const lightAnimationReverse = <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_REVERSE);
-  const coloration = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION));
-  const luminosity = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY));
+  const coloration = <number>(
+    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION))
+  );
+  const luminosity = <number>(
+    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY))
+  );
   const gradual = <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL);
-  const saturation = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION));
+  const saturation = <number>(
+    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION))
+  );
   const contrast = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST));
   const shadows = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS));
   const vision = dimSight > 0 || brightSight > 0 ? true : false;

@@ -40,9 +40,10 @@ export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
 }
 
 export async function addLightsHUDButtons(app, html, data) {
-
-  if(!game.settings.get(CONSTANTS.MODULE_NAME,'applyOnFlagItem') &&
-      !game.settings.get(CONSTANTS.MODULE_NAME,'applyOnATEItem')){
+  if (
+    !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem') &&
+    !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')
+  ) {
     error(`YOU MUST DECIDE OR LIGHTHUD WITH FLAGS OR LIGHTHUD WITH ATE EFFECTS !!!`);
     return;
   }
@@ -74,15 +75,18 @@ export async function addLightsHUDButtons(app, html, data) {
 
   // CHECK IF ANY LIGHT IS ACTIVE THEN IF APPLY ON FLAG IS TRUE
   let atLeastOneLightIsApplied = false;
-  for(const light of imagesParsed){
-    if(light.applied){
+  for (const light of imagesParsed) {
+    if (light.applied) {
       atLeastOneLightIsApplied = true;
       break;
     }
   }
-  if(!atLeastOneLightIsApplied && game.settings.get(CONSTANTS.MODULE_NAME,'applyOnFlagItem')){
-    if(token.actor?.getFlag(CONSTANTS.MODULE_NAME,LightHUDNoteFlags.INITIAL_DATA)){
-      await updateTokenLightingFromData(token,<TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME,LightHUDNoteFlags.INITIAL_DATA));
+  if (!atLeastOneLightIsApplied && game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+    if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
+      await updateTokenLightingFromData(
+        token,
+        <TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA),
+      );
       await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
     }
   }
