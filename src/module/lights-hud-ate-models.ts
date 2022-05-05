@@ -117,7 +117,13 @@ export class LightDataDialog {
 
 export enum LightHUDNoteFlags {
 
+  // SUPPORT NO FORM
+  INITIAL_DATA = 'initial-data',
+  HUD_ENABLED = 'hud-enabled',
+
+  // SUPPORT
   ENABLE = 'enable',
+  APPLY_AS_ATL_ATE = 'apply-as-atl-ate',
 
   // BASIC SETTINGS
   LOCK_ROTATION = 'lock-rotation',
@@ -125,7 +131,8 @@ export enum LightHUDNoteFlags {
   LIGHT_SOURCE = 'light-source',
 
   // ADVANCED SETTINGS
-  APPLY_AD_ATL_ATE = 'apply-as-atl-ate',
+
+  NAME = 'name',
   DURATION = 'duration',
   HEIGHT = 'height',
   WIDTH = 'width',

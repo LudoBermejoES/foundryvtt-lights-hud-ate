@@ -1,9 +1,10 @@
+import type { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from '../api';
 import CONSTANTS from '../constants';
 import Effect, { Constants, EffectSupport } from '../effects/effect';
 import { getATLEffectsFromItem } from '../lights-hud-ate-config';
 import { LightHUDAteEffectDefinitions } from '../lights-hud-ate-effect-definition';
-import { LightDataHud } from '../lights-hud-ate-models';
+import { LightDataHud, LightHUDElement, LightHUDNoteFlags } from '../lights-hud-ate-models';
 
 // =============================
 // Module Generic function
@@ -343,6 +344,139 @@ export async function rollDependingOnSystem(item: Item) {
   return item.roll();
 }
 
+export function convertToATLEffect(
+  //lockRotation: boolean,
+  dimSight: number,
+  brightSight: number,
+  sightAngle: number,
+  dimLight: number,
+  brightLight: number,
+  lightColor: string,
+  lightAlpha: number,
+  lightAngle: number,
+
+  lightColoration: number | null = null,
+  lightLuminosity: number | null = null,
+  lightGradual: boolean | null = null,
+  lightSaturation: number | null = null,
+  lightContrast: number | null = null,
+  lightShadows: number | null = null,
+
+  lightAnimationType: string | null,
+  lightAnimationSpeed: number | null,
+  lightAnimationIntensity: number | null,
+  lightAnimationReverse: boolean | null,
+
+  // applyAsAtlEffect = false, // rimosso
+  effectName: string | null = null,
+  effectIcon: string | null = null,
+  duration: number | null = null,
+
+  // vision = false,
+  // id: string | null = null,
+  // name: string | null = null,
+  height: number | null = null,
+  width: number | null = null,
+  scale: number | null = null,
+){
+  const atlChanges: any = [];
+
+  if (height && height > 0) {
+    atlChanges.push({
+      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.height'),
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: height,
+    });
+  }
+  if (width && width > 0) {
+    atlChanges.push({
+      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.width'),
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: width,
+    });
+  }
+  if (scale && scale > 0) {
+    atlChanges.push({
+      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.scale'),
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: scale,
+    });
+  }
+  if (dimSight && dimSight > 0) {
+    atlChanges.push({
+      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.dimSight'),
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: dimSight,
+    });
+  }
+  if (brightSight && brightSight > 0) {
+    atlChanges.push({
+      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.brightSight'),
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: brightSight,
+    });
+  }
+  if (dimLight && dimLight > 0) {
+    atlChanges.push({
+      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.dim'),
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: dimLight,
+    });
+  }
+  if (brightLight && brightLight > 0) {
+    atlChanges.push({
+      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.bright'),
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: brightLight,
+    });
+  }
+  if (lightAngle) {
+    atlChanges.push({
+      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.angle'),
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: lightAngle,
+    });
+  }
+  if (lightColor) {
+    atlChanges.push({
+      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.color'),
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: lightColor,
+    });
+  }
+  if (lightAlpha) {
+    atlChanges.push({
+      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.alpha'),
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: lightAlpha,
+    });
+  }
+  if (lightAnimationType && lightAnimationSpeed && lightAnimationIntensity && lightAnimationReverse) {
+    atlChanges.push({
+      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.animation'),
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}, "reverse":${lightAnimationReverse}}`,
+    });
+  } else if (lightAnimationType && lightAnimationSpeed && lightAnimationIntensity) {
+    atlChanges.push({
+      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.animation'),
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}}`,
+    });
+  }
+  const efffectAtlToApply = new Effect({
+    // customId: id || <string>token.actor?.id,
+    customId: undefined, //<string>token.actor?.id,
+    name: <string>effectName,
+    description: ``,
+    // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
+    transfer: true,
+    seconds: duration != null ? <number>duration * 60 : undefined, // minutes to seconds
+    atlChanges: atlChanges,
+  });
+  return efffectAtlToApply;
+}
+
 // Update the relevant light parameters of a token
 export async function updateTokenLighting(
   token: Token,
@@ -380,7 +514,21 @@ export async function updateTokenLighting(
   width: number | null = null,
   scale: number | null = null,
 ) {
+
+  // Store the initial status of illumination for the token to restore if all light sources are extinguished
+  const tokenData = token.data;
+  if(game.settings.get(CONSTANTS.MODULE_NAME,'applyOnFlagItem')){
+    if(!token.actor?.getFlag(CONSTANTS.MODULE_NAME,LightHUDNoteFlags.INITIAL_DATA)){
+      await token.actor?.setFlag(CONSTANTS.MODULE_NAME,LightHUDNoteFlags.INITIAL_DATA, await duplicate(tokenData));
+    }
+  }else{
+    if(token.actor?.getFlag(CONSTANTS.MODULE_NAME,LightHUDNoteFlags.INITIAL_DATA)){
+      await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
+    }
+  }
+
   if (applyAsAtlEffect) {
+    /*
     const atlChanges: any = [];
 
     if (height && height > 0) {
@@ -415,7 +563,7 @@ export async function updateTokenLighting(
       atlChanges.push({
         key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.brightSight'),
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: brightSight && brightSight > 0 ? brightSight : token.data.brightSight,
+        value: brightSight,
       });
     }
     if (dimLight && dimLight > 0) {
@@ -476,6 +624,43 @@ export async function updateTokenLighting(
       seconds: duration != null ? <number>duration * 60 : undefined, // minutes to seconds
       atlChanges: atlChanges,
     });
+    */
+    const efffectAtlToApply = convertToATLEffect(
+      //lockRotation,
+      dimSight,
+      brightSight,
+      sightAngle,
+      dimLight,
+      brightLight,
+      lightColor,
+      lightAlpha,
+      lightAngle,
+
+      lightColoration,
+      lightLuminosity,
+      lightGradual,
+      lightSaturation,
+      lightContrast,
+      lightShadows,
+
+      lightAnimationType,
+      lightAnimationSpeed,
+      lightAnimationIntensity,
+      lightAnimationReverse,
+
+      // applyAsAtlEffect,
+      effectName,
+      effectIcon,
+      duration,
+
+      // vision,
+      // id,
+      // name,
+      height,
+      width,
+      scale
+    );
+    efffectAtlToApply.customId = <string>token.actor?.id,
     await API.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
   } else {
     // TODO FIND A BETTER WAY FOR THIS
@@ -554,23 +739,6 @@ export async function updateTokenLighting(
     token.document.update({
       // lockRotation: lockRotation,
       vision: vision,
-      // dimSight: dimSight,
-      // brightSight: brightSight,
-      // sightAngle: sightAngle,
-      // light: {
-      //   dim: dimLight,
-      //   bright: brightLight,
-      //   angle: lightAngle,
-      //   color: lightColor,
-      //   alpha: lightAlpha,
-      //   animation: {
-      //     type: lightAnimationType,
-      //     speed: lightAnimationSpeed,
-      //     intensity: lightAnimationIntensity,
-      //   },
-      // },
-      // id: id
-      // name: name,
       height: height,
       width: width,
       scale: scale,
@@ -599,6 +767,39 @@ export async function updateTokenLighting(
       sightAngle: sightAngle,
     });
   }
+}
+
+export async function updateTokenLightingFromData(token:Token, tokenData:TokenData){
+  await token.document.update({
+    // lockRotation: lockRotation,
+    vision: tokenData.vision,
+    height: tokenData.height,
+    width: tokenData.width,
+    scale: tokenData.scale,
+    light: {
+      dim: tokenData.light.dim,
+      bright: tokenData.light.bright,
+      color: tokenData.light.color,
+      //@ts-ignore
+      animation: {
+        type: tokenData.light.animation.type,
+        speed: tokenData.light.animation.speed,
+        intensity: tokenData.light.animation.intensity,
+        reverse: tokenData.light.animation.reverse,
+      },
+      alpha: tokenData.light.alpha,
+      angle: tokenData.light.angle,
+      coloration: tokenData.light.coloration,
+      luminosity: tokenData.light.luminosity,
+      gradual: tokenData.light.gradual,
+      saturation: tokenData.light.saturation,
+      contrast: tokenData.light.contrast,
+      shadows: tokenData.light.shadows,
+    },
+    dimSight: tokenData.dimSight,
+    brightSight: tokenData.brightSight,
+    sightAngle: tokenData.sightAngle,
+  });
 }
 
 /**
@@ -820,7 +1021,7 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
   return tokenData2;
 }
 
-export async function checkNumberFromString(value) {
+export function checkNumberFromString(value) {
   if (value === '') {
     return '';
   } else {
@@ -839,16 +1040,28 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
     return [];
   }
   const lightItems: Item[] = [];
+  let imagesParsed:LightDataHud[] = [];
+
   //const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
   // const spellsItems = ['spell','feat'];
   // For every itemwith a ATL/ATE effect
   for (const im of actor.data.items.contents) {
+    // TODO ADD CHECK ONLY FOR PHYSICAL ITEM
     // if (im && physicalItems.includes(im.type)) {}
-    const atlEffects = im.effects.filter((entity) => {
-      return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
-    });
-    if (atlEffects.length > 0) {
-      lightItems.push(im);
+    if( game.settings.get(CONSTANTS.MODULE_NAME,'applyOnFlagItem')){
+      if(im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)){
+        lightItems.push(im);
+        continue;
+      }
+    }
+    else if(game.settings.get(CONSTANTS.MODULE_NAME,'applyOnATEItem')){
+      const atlEffects = im.effects.filter((entity) => {
+        return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+      });
+      if (atlEffects.length > 0) {
+        lightItems.push(im);
+        continue;
+      }
     }
   }
 
@@ -863,7 +1076,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
   // }
 
   // Convert item to LightHudData
-  const imagesParsed = await Promise.all(
+  imagesParsed = await Promise.all(
     lightItems.map(async (item: Item) => {
       const im = <string>item.img;
       const split = im.split('/');
@@ -888,6 +1101,10 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       let flagsTmp = {};
       let tokenidTmp = '';
       let actoridTmp = '';
+
+      // ========================================================
+      // IMPORTANT PRIORITY TO THE ATL EFFECT PRESENT ON THE ITEM
+      // ========================================================
       if (aeAtl.length > 0) {
         const aeAtl0 = <ActiveEffect>aeAtl[0];
         const nameToSearch = <string>aeAtl0.name || aeAtl0.data.label;
@@ -936,15 +1153,55 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         if (!effectFromActor.data?.flags?.convenientDescription) {
           flagsTmp['convenientDescription'] = item.data.name;
         }
-      }
-      if (!suppressedTmp) {
-        appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
-      } else {
-        appliedTmp = !appliedTmp;
-      }
 
-      if (aeAtl.length > 0 && !effectidTmp) {
-        warn(`No ATL active effect found on actor ${token.name} from item ${item.name}`, true);
+        if (!suppressedTmp) {
+          appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+        } else {
+          appliedTmp = !appliedTmp;
+        }
+
+        if (aeAtl.length > 0 && !effectidTmp) {
+          warn(`No ATL active effect found on actor ${token.name} from item ${item.name}`, true);
+          return new LightDataHud();
+        }
+      }
+      // ========================================================
+      // WE CHECK THE FLAG
+      // ========================================================
+      else if(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)){
+        const applied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) || false;
+        disabledTmp = !applied;
+        suppressedTmp = false; // always false
+        temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
+          ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) > 0
+          : false;
+        passiveTmp = !temporaryTmp;
+        if (applied && !disabledTmp && !suppressedTmp) {
+          appliedTmp = true;
+        }
+        effectidTmp = '';
+        effectnameTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
+        tokenidTmp = <string>token.id;
+        actoridTmp = <string>actor.id;
+        // ADDED
+        remainingSecondsTmp = _getSecondsRemaining(temporaryTmp ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) : 0);
+        turnsTmp = 0;
+        isExpiredTmp = false;
+        labelTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;;
+        _idTmp = <string>item.id;
+        flagsTmp = item.data?.flags || {};
+
+        if (!suppressedTmp) {
+          appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+        } else {
+          appliedTmp = !appliedTmp;
+        }
+      }
+      // ========================================================
+      // DO NOTHING
+      // ========================================================
+      else{
+        return new LightDataHud();
       }
 
       return <LightDataHud>{

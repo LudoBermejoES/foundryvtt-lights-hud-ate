@@ -16,6 +16,33 @@ export const registerSettings = function (): void {
   // OLD SETTINGS TO REMOVE PROBABLY
   // ===========================================================
 
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'useOnlyBasic', {
+  //   name: i18n(`${CONSTANTS.MODULE_NAME}.setting.useOnlyBasic.name`),
+  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.useOnlyBasic.hint`),
+  //   scope: 'world',
+  //   config: true,
+  //   type: Boolean,
+  //   default: false,
+  // });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'applyOnATEItem', {
+    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnATEItem.name`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnATEItem.hint`),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'applyOnFlagItem', {
+    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnFlagItem.name`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnFlagItem.hint`),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
   game.settings.register(CONSTANTS.MODULE_NAME, 'imageDisplay', {
     name: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.name`),
     hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.hint`),

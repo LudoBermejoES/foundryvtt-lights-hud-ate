@@ -15,6 +15,7 @@ import {
 import {
   LightDataDialog,
   LightHUDElement,
+  LightHUDNoteFlags,
   LightHUDPreset,
   VisionHUDElement,
   VisionHUDPreset,
@@ -535,31 +536,31 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
       if (applyChanges) {
         const id = <string>html.find('#name')[0].name || randomID();
         const effectName = <string>html.find('#name')[0].value || '';
-        const height = <number>await checkNumberFromString(html.find('#height')[0].value);
-        const width = <number>await checkNumberFromString(html.find('#width')[0].value);
-        const scale = <number>await checkNumberFromString(html.find('#scale')[0].value);
-        const dimLight = <number>await checkNumberFromString(html.find('#dim')[0].value);
-        const brightLight = <number>await checkNumberFromString(html.find('#bright')[0].value);
-        const dimSight = <number>await checkNumberFromString(html.find('#dimSight')[0].value);
-        const brightSight = <number>await checkNumberFromString(html.find('#brightSight')[0].value);
+        const height = <number>checkNumberFromString(html.find('#height')[0].value);
+        const width = <number>checkNumberFromString(html.find('#width')[0].value);
+        const scale = <number>checkNumberFromString(html.find('#scale')[0].value);
+        const dimLight = <number>checkNumberFromString(html.find('#dim')[0].value);
+        const brightLight = <number>checkNumberFromString(html.find('#bright')[0].value);
+        const dimSight = <number>checkNumberFromString(html.find('#dimSight')[0].value);
+        const brightSight = <number>checkNumberFromString(html.find('#brightSight')[0].value);
         const lightColor = <string>html.find('#color')[0].value;
-        const sightAngle = <number>await checkNumberFromString(html.find('#sightAngle')[0].value);
-        const lightAlpha = <number>await checkNumberFromString(html.find('#alpha')[0].value);
-        const lightAngle = <number>await checkNumberFromString(html.find('#angle')[0].value);
+        const sightAngle = <number>checkNumberFromString(html.find('#sightAngle')[0].value);
+        const lightAlpha = <number>checkNumberFromString(html.find('#alpha')[0].value);
+        const lightAngle = <number>checkNumberFromString(html.find('#angle')[0].value);
         const lightAnimationType = <string>html.find('#animationType')[0].value;
-        const lightAnimationSpeed = <number>await checkNumberFromString(html.find('#animationSpeed')[0].value);
-        const lightAnimationIntensity = <number>await checkNumberFromString(html.find('#animationIntensity')[0].value);
+        const lightAnimationSpeed = <number>checkNumberFromString(html.find('#animationSpeed')[0].value);
+        const lightAnimationIntensity = <number>checkNumberFromString(html.find('#animationIntensity')[0].value);
         const lightAnimationReverse = <boolean>html.find('#animationIntensity').is(':checked');
-        const coloration = <number>await checkNumberFromString(html.find('#lightColoration')[0].value);
-        const luminosity = <number>await checkNumberFromString(html.find('#lightLuminosity')[0].value);
+        const coloration = <number>checkNumberFromString(html.find('#lightColoration')[0].value);
+        const luminosity = <number>checkNumberFromString(html.find('#lightLuminosity')[0].value);
         const gradual = <boolean>html.find('#lightGradual').is(':checked');
-        const saturation = <number>await checkNumberFromString(html.find('#lightSaturation')[0].value);
-        const contrast = <number>await checkNumberFromString(html.find('#lightContrast')[0].value);
-        const shadows = <number>await checkNumberFromString(html.find('#lightShadows')[0].value);
+        const saturation = <number>checkNumberFromString(html.find('#lightSaturation')[0].value);
+        const contrast = <number>checkNumberFromString(html.find('#lightContrast')[0].value);
+        const shadows = <number>checkNumberFromString(html.find('#lightShadows')[0].value);
         const vision = dimSight > 0 || brightSight > 0 ? true : false;
 
         const applyAsAtlAteEffect = <boolean>html.find('#apply-as-atl-ate').is(':checked') ?? false;
-        const duration = <number>html.find('#duration')[0].value;
+        const duration = <number>checkNumberFromString(html.find('#duration')[0].value);
 
         // const tokenData:TokenData = {
         //     name: effectName,
@@ -742,13 +743,20 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
       yes: {
         label: i18n(`lights-hud-ate.windows.dialogs.confirm.apply.choice.yes`),
         callback: (html) => {
-          manageActiveEffectATL(
-            lightDataDialog.tokenId,
-            // lightDataDialog.actorId,
-            lightDataDialog.itemId,
-            lightDataDialog.effectId,
-            lightDataDialog.isApplied,
-          );
+          if(lightDataDialog.effectId){
+            manageActiveEffectATL(
+              lightDataDialog.tokenId,
+              // lightDataDialog.actorId,
+              lightDataDialog.itemId,
+              lightDataDialog.effectId,
+              lightDataDialog.isApplied,
+            );
+          }else{
+            manageFlaggedItem(
+              lightDataDialog.tokenId,
+              lightDataDialog.itemId,
+            );
+          }
         },
       },
       no: {
@@ -911,12 +919,16 @@ function manageActiveEffectATL(tokenId, itemId, effectId, isApplied) {
     warn(`No actor found for the token with id '${tokenId}'`, true);
     return;
   }
+  const item = <Item>token.actor?.items.find((entity: Item) => {
+    return <string>entity.id == itemId;
+  });
+  if (!item) {
+    warn(`No valid item found for the token with id '${tokenId}'`, true);
+    return;
+  }
   // We roll the item ???
   try {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'rollItem') && !isApplied) {
-      const item = <Item>token.actor?.items.find((entity: Item) => {
-        return <string>entity.id == itemId;
-      });
       if (item) {
         // TODO if i need to manage the roll for specific system usually is enough item.roll()
         rollDependingOnSystem(item);
@@ -937,4 +949,209 @@ function manageActiveEffectATL(tokenId, itemId, effectId, isApplied) {
       API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, true, false);
     }
   }
+}
+
+
+function manageFlaggedItem(tokenId, itemId) {
+  const token = <Token>canvas.tokens?.placeables.find((t) => {
+    return t.id === tokenId;
+  });
+  if (!token) {
+    warn(`No token found for the token with id '${tokenId}'`, true);
+    return;
+  }
+  if (!token.actor) {
+    warn(`No actor found for the token with id '${tokenId}'`, true);
+    return;
+  }
+  const item = <Item>token.actor?.items.find((entity: Item) => {
+    return <string>entity.id == itemId;
+  });
+  if (!item) {
+    warn(`No valid item found for the token with id '${tokenId}'`, true);
+    return;
+  }
+  const isApplied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) ?? false;
+  // We roll the item ???
+  try {
+    if (game.settings.get(CONSTANTS.MODULE_NAME, 'rollItem') && !isApplied) {
+      const item = <Item>token.actor?.items.find((entity: Item) => {
+        return <string>entity.id == itemId;
+      });
+      if (item) {
+        // TODO if i need to manage the roll for specific system usually is enough item.roll()
+        rollDependingOnSystem(item);
+      } else {
+        warn(`No item found for the id ${itemId}`, true);
+      }
+    }
+  } finally {
+
+    applyFlagsOnToken(tokenId, itemId);
+
+    item.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED, !isApplied);
+  }
+}
+
+function applyFlagsOnToken(tokenId:string, itemId:string){
+  const token = <Token>canvas.tokens?.placeables.find((t) => {
+    return t.id === tokenId;
+  });
+  const item = <Item>token.actor?.items.find((entity: Item) => {
+    return <string>entity.id == itemId;
+  });
+
+  const id = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || randomID();
+  const effectName = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || '';
+  const height = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT));
+  const width = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH));
+  const scale = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE));
+  const dimLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM));
+  const brightLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT));
+  const dimSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM));
+  const brightSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT));
+  const lightColor = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR);
+  const sightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE));
+  const lightAlpha = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA));
+  const lightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE));
+  const lightAnimationType = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_TYPE);
+  const lightAnimationSpeed = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED));
+  const lightAnimationIntensity = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY));
+  const lightAnimationReverse = <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_REVERSE);
+  const coloration = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION));
+  const luminosity = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY));
+  const gradual = <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL);
+  const saturation = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION));
+  const contrast = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST));
+  const shadows = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS));
+  const vision = dimSight > 0 || brightSight > 0 ? true : false;
+
+  // TODO per adesso e' sempre a false
+  const applyAsAtlAteEffect = false; // <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE) ?? false;
+  const duration = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION));
+
+  const actorId = <string>token.actor?.id;
+  // const tokenId = token.id;
+
+  let alias: string | null = null;
+  if (actorId || tokenId) {
+    if (!alias) {
+      if (token) {
+        alias = <string>token.name;
+      } else {
+        alias = <string>game.actors?.get(actorId)?.name;
+      }
+    }
+  }
+  const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
+
+  // About time configuration
+  if (duration > 0) {
+    if (game.modules.get('about-time')?.active != true) {
+      ui.notifications?.error("About Time isn't loaded");
+    } else {
+      ((backup) => {
+        //@ts-ignore
+        game.Gametime.doIn({ minutes: Math.floor((3 * duration) / 4) }, () => {
+          dialogWarning(`The ${effectName} burns low...`);
+          ChatMessage.create(
+            {
+              user: game.user?.id,
+              content: `The ${effectName} burns low...`,
+              speaker: speaker,
+            },
+            {},
+          );
+        });
+      })(Object.assign({}, token.data));
+      ((backup) => {
+        //@ts-ignore
+        game.Gametime.doIn({ minutes: duration }, () => {
+          dialogWarning(`The ${effectName} burns low...`);
+          ChatMessage.create(
+            {
+              user: game.user?.id,
+              content: `The ${effectName} goes out, leaving you in darkness.`,
+              speaker: speaker,
+            },
+            {},
+          );
+          updateTokenLighting(
+            token,
+            //backup.lockRotation,
+            backup.dimSight,
+            backup.brightSight,
+            backup.sightAngle,
+            backup.light.dim,
+            backup.light.bright,
+            <string>backup.light.color,
+            backup.light.alpha,
+            backup.light.angle,
+
+            backup.light.coloration,
+            backup.light.luminosity,
+            backup.light.gradual,
+            backup.light.saturation,
+            backup.light.contrast,
+            backup.light.shadows,
+
+            <string>backup.light.animation.type,
+            backup.light.animation.speed,
+            backup.light.animation.intensity,
+            backup.light.animation.reverse,
+
+            applyAsAtlAteEffect,
+            effectName,
+            '',
+            duration,
+
+            backup.vision,
+            //id,
+            // backup.name,
+            backup.height,
+            backup.width,
+            backup.scale,
+          );
+        });
+      })(Object.assign({}, token.data));
+    }
+  }
+
+  // Update Token
+  updateTokenLighting(
+    token,
+    //lockRotation,
+    dimSight,
+    brightSight,
+    sightAngle,
+    dimLight,
+    brightLight,
+    lightColor,
+    lightAlpha,
+    lightAngle,
+
+    coloration,
+    luminosity,
+    gradual,
+    saturation,
+    contrast,
+    shadows,
+
+    <string>lightAnimationType,
+    <number>lightAnimationSpeed,
+    <number>lightAnimationIntensity,
+    lightAnimationReverse,
+
+    applyAsAtlAteEffect,
+    effectName,
+    '',
+    duration,
+
+    vision,
+    // token.id,
+    // alias,
+    height,
+    width,
+    scale,
+  );
 }

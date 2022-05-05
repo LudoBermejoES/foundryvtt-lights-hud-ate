@@ -1,7 +1,8 @@
+import type { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs';
 import CONSTANTS from './constants';
 import {
-  checkNumberFromString,
   dialogWarning,
+  error,
   i18n,
   i18nFormat,
   info,
@@ -10,6 +11,7 @@ import {
   retrieveItemLights,
   rollDependingOnSystem,
   updateTokenLighting,
+  updateTokenLightingFromData,
   warn,
 } from './lib/lib';
 import {
@@ -25,6 +27,7 @@ import {
   LightHUDPreset,
   LightHUDElement,
   LightDataDialog,
+  LightHUDNoteFlags,
 } from './lights-hud-ate-models';
 
 export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
@@ -37,6 +40,13 @@ export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
 }
 
 export async function addLightsHUDButtons(app, html, data) {
+
+  if(!game.settings.get(CONSTANTS.MODULE_NAME,'applyOnFlagItem') &&
+      !game.settings.get(CONSTANTS.MODULE_NAME,'applyOnATEItem')){
+    error(`YOU MUST DECIDE OR LIGHTHUD WITH FLAGS OR LIGHTHUD WITH ATE EFFECTS !!!`);
+    return;
+  }
+
   const tokenInfoObject = app.object.data;
   // let tokenInfo = new tokenInformations(tokenInfoObject);
   const token = <Token>app.object;
@@ -56,20 +66,26 @@ export async function addLightsHUDButtons(app, html, data) {
 
   const isGM = game.user?.isGM;
 
-  // if (!game.settings.get(CONSTANTS.MODULE_NAME, 'useBasicPanelEffects')) {
-  //   const imagesParsed = await retrieveItemLights(actor, token);
-  //   const effectsPanelApp = new EffectsPanelApp(imagesParsed);
-  //   effectsPanelApp.render(true);
-  //   html
-  //     .find('div.right')
-  //     // .find(".col.lights-hud-ate-column-" + position).prepend(tbuttonItemLight)
-  //     .append(effectsPanelApp);
-  // } else {
   // ================================
   // OLD CODE
   //=================================
 
   const imagesParsed = await retrieveItemLights(token);
+
+  // CHECK IF ANY LIGHT IS ACTIVE THEN IF APPLY ON FLAG IS TRUE
+  let atLeastOneLightIsApplied = false;
+  for(const light of imagesParsed){
+    if(light.applied){
+      atLeastOneLightIsApplied = true;
+      break;
+    }
+  }
+  if(!atLeastOneLightIsApplied && game.settings.get(CONSTANTS.MODULE_NAME,'applyOnFlagItem')){
+    if(token.actor?.getFlag(CONSTANTS.MODULE_NAME,LightHUDNoteFlags.INITIAL_DATA)){
+      await updateTokenLightingFromData(token,<TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME,LightHUDNoteFlags.INITIAL_DATA));
+      await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
+    }
+  }
 
   const wildcardDisplay = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/artSelect.hbs`, {
     tokenId,
@@ -199,14 +215,17 @@ function retrieveDataFromHtml(html): LightDataDialog | undefined {
       <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-applied') == 'true';
   }
 
+  // NO NEED THIS CAN BE A FLAGGED ITEM
+  // if (!lightDataDialog.effectId) {
+  //   warn(`No active effect id ${lightDataDialog.effectId} founded for the light hud`, true);
+  //   return;
+  // }
+
   if (!lightDataDialog.itemId) {
     warn(`No item id ${lightDataDialog.itemId} founded for the light hud`, true);
     return;
   }
-  if (!lightDataDialog.effectId) {
-    warn(`No active effect id ${lightDataDialog.effectId} founded for the light hud`, true);
-    return;
-  }
+
   if (!lightDataDialog.actorId) {
     warn(`No actor id ${lightDataDialog.actorId} founded for the light hud`, true);
     return;
