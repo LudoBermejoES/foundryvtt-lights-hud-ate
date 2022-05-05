@@ -26,6 +26,12 @@ export class LightHUDElement {
   lightAnimationIntensity: string | null;
 }
 
+export class OptionSelectData {
+  img: string;
+  id:string;
+  name:string;
+}
+
 export class VisionHUDElement {
   id: string;
   name: string;

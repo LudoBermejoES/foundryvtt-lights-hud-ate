@@ -53,6 +53,33 @@ const API = {
     return game.settings.set(CONSTANTS.MODULE_NAME, 'lights', inAttributes);
   },
 
+    /**
+   * Sets the attributes used to track dynamic attributes in this system
+   *
+   * @param {array} inAttributes
+   * @returns {Promise}
+   */
+  async setVisions(inAttributes) {
+    if (!Array.isArray(inAttributes)) {
+      throw error('setVisions | inAttributes must be of type array');
+    }
+    inAttributes.forEach((attribute) => {
+      if (typeof attribute !== 'object') {
+        throw error('setVisions | each entry in the inAttributes array must be of type object');
+      }
+      if (typeof attribute.name !== 'string') {
+        throw error('setVisions | attribute.name must be of type string');
+      }
+      if (typeof attribute.attribute !== 'string') {
+        throw error('setVisions | attribute.path must be of type string');
+      }
+      if (attribute.img && typeof attribute.img !== 'string') {
+        throw error('setVisions | attribute.img must be of type string');
+      }
+    });
+    return game.settings.set(CONSTANTS.MODULE_NAME, 'visions', inAttributes);
+  },
+
   // ======================
   // Effect Management
   // ======================

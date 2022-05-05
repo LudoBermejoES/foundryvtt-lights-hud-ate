@@ -280,14 +280,14 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
     colorationTypes += `<option value="${v.id}" ${coloration === v.id ? 'selected' : ''}>${name}</option>`;
   }
 
-  let lightTypes = `<option value="none">None</option>`;
+  let animationTypes = `<option value="none">None</option>`;
   for (const [k, v] of Object.entries(CONFIG.Canvas.lightAnimations)) {
     const name = game.i18n.localize(v.label);
-    lightTypes += `<option value="${k.toLocaleLowerCase()}" ${animation.type === k ? 'selected' : ''}>${name}</option>`;
+    animationTypes += `<option value="${k.toLocaleLowerCase()}" ${animation.type === k ? 'selected' : ''}>${name}</option>`;
   }
 
   if (game.modules.get('CommunityLighting')?.active) {
-    lightTypes += `
+    animationTypes += `
       <optgroup label= "Blitz" id="animationType">
         <option value="BlitzFader"
           ${animation.type === 'BlitzFader' ? 'selected' : ''}>Fader
@@ -416,7 +416,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
       <div class="form-group lights-hud-ate-sub-group">
           <label>Animation Type</label>
           <div class="form-fields">
-              <select id="animationType" name="animationType" >${lightTypes}</select>
+              <select id="animationType" name="animationType" >${animationTypes}</select>
           </div>
       </div>
       <div class="form-group lights-hud-ate-sub-group">

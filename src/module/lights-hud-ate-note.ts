@@ -1,7 +1,8 @@
 import { convertToATLEffect, i18n, updateTokenLighting } from './lib/lib';
 import CONSTANTS from './constants';
-import { LightHUDNoteFlags } from './lights-hud-ate-models';
+import { LightHUDNoteFlags, OptionSelectData } from './lights-hud-ate-models';
 import { EffectSupport } from './effects/effect';
+import API from './api';
 export class LightHUDAteNote extends FormApplication {
   constructor(object, options) {
     super(object, options);
@@ -42,8 +43,126 @@ export class LightHUDAteNote extends FormApplication {
     data.id = this.entity.id;
 
     // Added 2022-05-05
-    // TODO INSERIRE I DATI DELLE OPTIONS
+    const visions:OptionSelectData[] = [];
+    for(const vision of API.VISIONS){
+      visions.push(
+        {
+          img: vision.img,
+          id: vision.id,
+          name: vision.name
+        }
+      );
+    }
+    data.visions = visions;
 
+    const lights:OptionSelectData[] = [];
+    for(const light of API.LIGHTS){
+      lights.push(
+        {
+          img: light.img,
+          id: light.id,
+          name: light.name
+        }
+      );
+    }
+    data.lights = lights;
+    
+    const colorationTypes:OptionSelectData[] = [];
+    colorationTypes.push(
+      {
+        img: '',
+        id: 'none',
+        name: 'None'
+      }
+    );
+    for (const [k, v] of Object.entries(AdaptiveLightingShader.COLORATION_TECHNIQUES)) {
+      const name = game.i18n.localize(v.label);
+      const id = String(v.id);
+      const img = '';
+      colorationTypes.push(
+        {
+          img: img,
+          id: id,
+          name: name
+        }
+      );
+    }
+    data.colorationTypes = colorationTypes;
+
+    const animationTypes:OptionSelectData[] = [];
+    animationTypes.push(
+      {
+        img: '',
+        id: 'none',
+        name: 'None'
+      }
+    );
+    for (const [k, v] of Object.entries(CONFIG.Canvas.lightAnimations)) {
+      const name = game.i18n.localize(v.label);
+      const id = String(k.toLocaleLowerCase());
+      const img = '';
+
+      animationTypes.push(
+        {
+          img: img,
+          id: id,
+          name: name
+        }
+      );
+    }
+    data.animationTypes = animationTypes;
+
+  // TODO to integrate
+
+  // if (game.modules.get('CommunityLighting')?.active) {
+  //   animationTypes += `
+  //     <optgroup label= "Blitz" id="animationType">
+  //       <option value="BlitzFader"
+  //         ${animation.type === 'BlitzFader' ? 'selected' : ''}>Fader
+  //       </option>
+  //       <option value="BlitzLightning"
+  //         ${animation.type === 'BlitzLightning' ? 'selected' : ''}>Lightning (experimental)
+  //       </option>
+  //       <option value="BlitzElectric Fault"
+  //         ${animation.type === 'BlitzElectric Fault' ? 'selected' : ''}>Electrical Fault</option>
+  //       <option value="BlitzSimple Flash"
+  //         ${animation.type === 'BlitzSimple Flash' ? 'selected' : ''}>Simple Flash
+  //       </option>
+  //       <option value="BlitzRBG Flash"
+  //         ${animation.type === 'BlitzRBG Flash' ? 'selected' : ''}>RGB Flash
+  //       </option>
+  //       <option value="BlitzPolice Flash"
+  //         ${animation.type === 'BlitzPolice Flash' ? 'selected' : ''}>Police Flash
+  //       </option>
+  //       <option value="BlitzStatic Blur"
+  //         ${animation.type === 'BlitzStatic Blur' ? 'selected' : ''}>Static Blur
+  //       </option>
+  //       <option value="BlitzAlternate Torch"
+  //         ${animation.type === 'BlitzAlternate Torch' ? 'selected' : ''}>Alternate Torch
+  //       </option>
+  //       <option value="BlitzBlurred Torch"
+  //         ${animation.type === 'BlitzBlurred Torch' ? 'selected' : ''}>Blurred Torch
+  //       </option>
+  //       <option value="BlitzGrid Force-Field Colorshift"
+  //         ${animation.type === 'BlitzGrid Force-Field Colorshift' ? 'selected' : ''}>Grid Force-Field Colorshift
+  //       </option>
+  //     </optgroup>
+  //     <optgroup label="SecretFire" id="animationType">
+  //       <option value="SecretFireGrid Force-Field"
+  //         ${animation.type === 'SecretFireGrid Force-Field' ? 'selected' : ''}>Grid Force-Field
+  //       </option>
+  //       <option value="SecretFireSmoke Patch"
+  //         ${animation.type === 'SecretFireSmoke Patch' ? 'selected' : ''}>Smoke Patch
+  //       </option>
+  //       <option value="SecretFireStar Light"
+  //         ${animation.type === 'SecretFireStar Light' ? 'selected' : ''}>Star Light
+  //       </option>
+  //       <option value="SecretFireStar Light Disco"
+  //         ${animation.type === 'SecretFireStar Light Disco' ? 'selected' : ''}>Star Light Disco
+  //       </option>
+  //     </optgroup>
+  // `;
+  // }
     return data;
   }
 
@@ -344,14 +463,18 @@ export class LightHUDAteNote extends FormApplication {
   }
 
   static _initEntityHook(app, html, data) {
-    if (!app?.object?.document) {
+    if (!app?.object) {
       return;
     }
     if (game.user?.isGM) {
       const labelTxt = '';
       const labelStyle = '';
       const title = i18n(`${CONSTANTS.MODULE_NAME}.note.label`);
-      const lightHUDEnabled = app.object.document.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE);
+      const lightHUDEnabled = 
+        app.object.document
+        ? app.object.document.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)
+        : app.object.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE);
+      
       // if (game.settings.get(CONSTANTS.MODULE_NAME, 'hideLabel') === false) {
       //   labelTxt = ' ' + title;
       // }
