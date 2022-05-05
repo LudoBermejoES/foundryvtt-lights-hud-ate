@@ -267,7 +267,7 @@ function otherSettings(apply = false) {
       type: Boolean,
       default: true,
     },
-  
+
     applyOnFlagItem: {
       name: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnFlagItem.name`),
       hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnFlagItem.hint`),

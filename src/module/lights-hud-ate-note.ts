@@ -1,4 +1,4 @@
-import { i18n } from './lib/lib';
+import { error, i18n } from './lib/lib';
 import CONSTANTS from './constants';
 import { LightHUDNoteFlags, OptionSelectData } from './lights-hud-ate-models';
 import API from './api';
@@ -150,6 +150,15 @@ export class LightHUDAteNote extends FormApplication {
     //     </optgroup>
     // `;
     // }
+
+    // CONTROL CONFIGURATION
+    const useBasic = getProperty(data, `flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.USE_BASIC}`);
+    const useAdvanced = getProperty(data, `flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.USE_ADVANCED}`);
+
+    if (!useBasic && !useAdvanced) {
+      setProperty(data, `flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.USE_BASIC}`, true);
+    }
+
     return data;
   }
 
@@ -207,192 +216,282 @@ export class LightHUDAteNote extends FormApplication {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE, null);
       }
 
-      const lightAnimationIntensity =
-        formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ANIMATION_INTENSITY}`];
-      if (lightAnimationIntensity != null && lightAnimationIntensity != undefined && lightAnimationIntensity) {
-        await this.entity.setFlag(
-          CONSTANTS.MODULE_NAME,
-          LightHUDNoteFlags.ANIMATION_INTENSITY,
-          lightAnimationIntensity,
-        );
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY, null);
+      const useBasic = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.USE_BASIC}`];
+      const useAdvanced = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.USE_ADVANCED}`];
+
+      if (useAdvanced && useBasic) {
+        error(`You can't enabled both basic and adavnced configuration`, true);
+        throw new Error(`You can't enabled both basic and adavnced configuration`);
       }
 
-      const lightAnimationReverse = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ANIMATION_REVERSE}`];
-      if (lightAnimationReverse != null && lightAnimationReverse != undefined && lightAnimationReverse) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_REVERSE, lightAnimationReverse);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_REVERSE, null);
+      if (!useAdvanced && !useBasic) {
+        error(`You can't disabled both basic and adavnced configuration`, true);
+        throw new Error(`You can't disabled both basic and adavnced configuration`);
       }
 
-      const lightAnimationSpeed = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ANIMATION_SPEED}`];
-      if (lightAnimationSpeed != null && lightAnimationSpeed != undefined && lightAnimationSpeed) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED, lightAnimationSpeed);
+      if (useBasic != null && useBasic != undefined && useBasic) {
+        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC, useBasic);
       } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED, null);
+        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC, null);
       }
 
-      const lightAnimationType = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ANIMATION_TYPE}`];
-      if (lightAnimationType != null && lightAnimationType != undefined && lightAnimationType) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_TYPE, lightAnimationType);
+      if (useAdvanced != null && useAdvanced != undefined && useAdvanced) {
+        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_ADVANCED, useAdvanced);
       } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_TYPE, null);
+        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_ADVANCED, null);
       }
 
-      const duration = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.DURATION}`];
-      if (duration != null && duration != undefined && duration) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION, duration);
+      // ===========================================================================================
+
+      if (useBasic) {
+        const visionType = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.VISION_TYPE}`];
+        if (visionType != null && visionType != undefined && visionType) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.VISION_TYPE, visionType);
+          for (const vision of API.VISIONS) {
+            if (vision.id === visionType) {
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT, vision.brightSight);
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM, vision.dimSight);
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE, vision.sightAngle);
+              break;
+            }
+          }
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.VISION_TYPE, null);
+        }
+
+        const lightSource = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_SOURCE}`];
+        if (lightSource != null && lightSource != undefined && lightSource) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SOURCE, lightSource);
+          for (const light of API.LIGHTS) {
+            if (light.id === lightSource) {
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT, light.brightLight);
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM, light.dimLight);
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA_BASIC, light.lightAlpha);
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE, light.lightAngle);
+              await this.entity.setFlag(
+                CONSTANTS.MODULE_NAME,
+                LightHUDNoteFlags.LIGHT_LUMINOSITY,
+                light.lightAnimationIntensity,
+              );
+              await this.entity.setFlag(
+                CONSTANTS.MODULE_NAME,
+                LightHUDNoteFlags.ANIMATION_SPEED,
+                light.lightAnimationSpeed,
+              );
+              await this.entity.setFlag(
+                CONSTANTS.MODULE_NAME,
+                LightHUDNoteFlags.ANIMATION_TYPE,
+                light.lightAnimationType,
+              );
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR_BASIC, light.lightColor);
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, light.lockRotation);
+              break;
+            }
+          }
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SOURCE, null);
+        }
+
+        const lockRotation = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LOCK_ROTATION}`];
+        if (lockRotation != null && lockRotation != undefined && lockRotation) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, lockRotation);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, null);
+        }
+
+        const lightColorBasic = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_COLOR_BASIC}`];
+        if (lightColorBasic != null && lightColorBasic != undefined && 
+          lightColorBasic != '#000000' && lightColorBasic) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR_BASIC, lightColorBasic);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR_BASIC, null);
+        }
+
+        const lightAlphaBasic = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_ALPHA_BASIC}`];
+        if (lightAlphaBasic != null && lightAlphaBasic != undefined &&
+            lightAlphaBasic > 0 && lightAlphaBasic) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA_BASIC, lightAlphaBasic);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA_BASIC, null);
+        }
+
       } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION, null);
+
+        const lockRotation = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LOCK_ROTATION}`];
+        if (lockRotation != null && lockRotation != undefined && lockRotation) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, lockRotation);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, null);
+        }
+
+        const lightAnimationIntensity =
+          formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ANIMATION_INTENSITY}`];
+        if (lightAnimationIntensity != null && lightAnimationIntensity != undefined && lightAnimationIntensity) {
+          await this.entity.setFlag(
+            CONSTANTS.MODULE_NAME,
+            LightHUDNoteFlags.ANIMATION_INTENSITY,
+            lightAnimationIntensity,
+          );
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY, null);
+        }
+
+        const lightAnimationReverse = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ANIMATION_REVERSE}`];
+        if (lightAnimationReverse != null && lightAnimationReverse != undefined && lightAnimationReverse) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_REVERSE, lightAnimationReverse);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_REVERSE, null);
+        }
+
+        const lightAnimationSpeed = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ANIMATION_SPEED}`];
+        if (lightAnimationSpeed != null && lightAnimationSpeed != undefined && lightAnimationSpeed) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED, lightAnimationSpeed);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED, null);
+        }
+
+        const lightAnimationType = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ANIMATION_TYPE}`];
+        if (lightAnimationType != null && lightAnimationType != undefined && lightAnimationType) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_TYPE, lightAnimationType);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_TYPE, null);
+        }
+
+        const duration = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.DURATION}`];
+        if (duration != null && duration != undefined && duration) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION, duration);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION, null);
+        }
+
+        const height = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.HEIGHT}`];
+        if (height != null && height != undefined && height) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT, height);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT, null);
+        }
+
+        const lightAlpha = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_ALPHA}`];
+        if (lightAlpha != null && lightAlpha != undefined && lightAlpha) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA, lightAlpha);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA, null);
+        }
+
+        const lightAngle = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_ANGLE}`];
+        if (lightAngle != null && lightAngle != undefined && lightAngle) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE, lightAngle);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE, null);
+        }
+
+        const brightLight = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_BRIGHT}`];
+        if (brightLight != null && brightLight != undefined && brightLight) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT, brightLight);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT, null);
+        }
+
+        const lightColor = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_COLOR}`];
+        if (lightColor != null && lightColor != undefined &&
+          lightColor != '#000000' && lightColor) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR, lightColor);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR, null);
+        }
+
+        const lightColoration = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_COLORATION}`];
+        if (lightColoration != null && lightColoration != undefined && lightColoration) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION, lightColoration);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION, null);
+        }
+
+        const lightContrast = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_CONTRAST}`];
+        if (lightContrast != null && lightContrast != undefined && lightContrast) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST, lightContrast);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST, null);
+        }
+
+        const dimLight = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_DIM}`];
+        if (dimLight != null && dimLight != undefined && dimLight) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM, dimLight);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM, null);
+        }
+
+        const lightGradual = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_GRADUAL}`];
+        if (lightGradual != null && lightGradual != undefined && lightGradual) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL, lightGradual);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL, null);
+        }
+
+        const lightLuminosity = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_LUMINOSITY}`];
+        if (lightLuminosity != null && lightLuminosity != undefined && lightLuminosity) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY, lightLuminosity);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY, null);
+        }
+
+        const lightSaturation = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_SATURATION}`];
+        if (lightSaturation != null && lightSaturation != undefined && lightSaturation) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION, lightSaturation);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION, null);
+        }
+
+        const lightShadows = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_SHADOWS}`];
+        if (lightShadows != null && lightShadows != undefined && lightShadows) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS, lightShadows);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS, null);
+        }
+
+        const effectName = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.NAME}`] ?? this.entity.name;
+        if (effectName != null && effectName != undefined && effectName) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME, effectName);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME, null);
+        }
+
+        const scale = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.SCALE}`];
+        if (scale != null && scale != undefined && scale) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE, scale);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE, null);
+        }
+
+        const sightAngle = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.SIGHT_ANGLE}`];
+        if (sightAngle != null && sightAngle != undefined && sightAngle) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE, sightAngle);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE, null);
+        }
+
+        const brightSight = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.SIGHT_BRIGHT}`];
+        if (brightSight != null && brightSight != undefined && brightSight) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT, brightSight);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT, null);
+        }
+
+        const dimSight = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.SIGHT_DIM}`];
+        if (dimSight != null && dimSight != undefined && dimSight) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM, dimSight);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM, null);
+        }
+
+        const width = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.WIDTH}`];
+        if (width != null && width != undefined && width) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH, width);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH, null);
+        }
       }
 
-      const height = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.HEIGHT}`];
-      if (height != null && height != undefined && height) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT, height);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT, null);
-      }
-
-      const lightAlpha = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_ALPHA}`];
-      if (lightAlpha != null && lightAlpha != undefined && lightAlpha) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA, lightAlpha);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA, null);
-      }
-
-      const lightAngle = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_ANGLE}`];
-      if (lightAngle != null && lightAngle != undefined && lightAngle) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE, lightAngle);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE, null);
-      }
-
-      const brightLight = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_BRIGHT}`];
-      if (brightLight != null && brightLight != undefined && brightLight) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT, brightLight);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT, null);
-      }
-
-      const lightColor = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_COLOR}`];
-      if (lightColor != null && lightColor != undefined && lightColor) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR, lightColor);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR, null);
-      }
-
-      const lightColoration = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_COLORATION}`];
-      if (lightColoration != null && lightColoration != undefined && lightColoration) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION, lightColoration);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION, null);
-      }
-
-      const lightContrast = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_CONTRAST}`];
-      if (lightContrast != null && lightContrast != undefined && lightContrast) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST, lightContrast);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST, null);
-      }
-
-      const dimLight = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_DIM}`];
-      if (dimLight != null && dimLight != undefined && dimLight) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM, dimLight);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM, null);
-      }
-
-      const lightGradual = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_GRADUAL}`];
-      if (lightGradual != null && lightGradual != undefined && lightGradual) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL, lightGradual);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL, null);
-      }
-
-      const lightLuminosity = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_LUMINOSITY}`];
-      if (lightLuminosity != null && lightLuminosity != undefined && lightLuminosity) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY, lightLuminosity);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY, null);
-      }
-
-      const lightSaturation = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_SATURATION}`];
-      if (lightSaturation != null && lightSaturation != undefined && lightSaturation) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION, lightSaturation);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION, null);
-      }
-
-      const lightShadows = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_SHADOWS}`];
-      if (lightShadows != null && lightShadows != undefined && lightShadows) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS, lightShadows);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS, null);
-      }
-
-      const lightSource = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_SOURCE}`];
-      if (lightSource != null && lightSource != undefined && lightSource) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SOURCE, lightSource);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SOURCE, null);
-      }
-
-      const lockRotation = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LOCK_ROTATION}`];
-      if (lockRotation != null && lockRotation != undefined && lockRotation) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, lockRotation);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, null);
-      }
-
-      const effectName = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.NAME}`] ?? this.entity.name;
-      if (effectName != null && effectName != undefined && effectName) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME, effectName);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME, null);
-      }
-
-      const scale = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.SCALE}`];
-      if (scale != null && scale != undefined && scale) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE, scale);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE, null);
-      }
-
-      const sightAngle = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.SIGHT_ANGLE}`];
-      if (sightAngle != null && sightAngle != undefined && sightAngle) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE, sightAngle);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE, null);
-      }
-
-      const brightSight = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.SIGHT_BRIGHT}`];
-      if (brightSight != null && brightSight != undefined && brightSight) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT, brightSight);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT, null);
-      }
-
-      const dimSight = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.SIGHT_DIM}`];
-      if (dimSight != null && dimSight != undefined && dimSight) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM, dimSight);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM, null);
-      }
-
-      const visionType = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.VISION_TYPE}`];
-      if (visionType != null && visionType != undefined && visionType) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.VISION_TYPE, visionType);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.VISION_TYPE, null);
-      }
-
-      const width = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.WIDTH}`];
-      if (width != null && width != undefined && width) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH, width);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH, null);
-      }
       /*
       if (applyAsAtlEffect) {
         const efffectAtlToApply = convertToATLEffect(

@@ -8,7 +8,7 @@
 
     <fieldset>
 
-        <legend>LIGHTHUD NOTES AND ACTIVATION</legend>
+        <legend>LIGHTHUD NOTES AND COMMON SETTINGS</legend>
         <!--
         <p>NOTE: These settings are used to create a Light or vision effect on the token configuration when the item is rolled.</p>
         <p>NOTE: You can use this form to create a ATE effect on the item. BUT ONLY IF YOU EXPLICITLY check the Apply as 'ATE/ATL Effect' checkbox</p>
@@ -42,6 +42,17 @@
             </div>
         </div>
         -->
+
+        <div class="form-group stacked">
+            <div class="form-group">
+                <label>Lock rotation:</label>
+                <div class="form-fields">
+                    <input type="checkbox" id="lock-rotation" name="flags.lights-hud-ate.lock-rotation"
+                        value="{{flags.lights-hud-ate.lock-rotation}}"
+                        {{checkedIf flags.lights-hud-ate.lock-rotation}}/>
+                </div>
+            </div>
+        </div>
     </fieldset>
 
     <hr>
@@ -54,14 +65,15 @@
 
         <div class="form-group stacked">
             <div class="form-group">
-                <label>Lock rotation:</label>
+                <label>Use basic configuration ?</label>
                 <div class="form-fields">
-                    <input type="checkbox" id="lock-rotation" name="flags.lights-hud-ate.lock-rotation"
-                        value="{{flags.lights-hud-ate.lock-rotation}}"
-                        {{checkedIf flags.lights-hud-ate.lock-rotation}}/>
+                    <input type="checkbox" name="flags.lights-hud-ate.use-basic"
+                        value="{{flags.lights-hud-ate.use-basic}}"
+                        {{checkedIf flags.lights-hud-ate.use-basic}}/>
                 </div>
             </div>
         </div>
+
         <div class="form-group stacked">
             <div class="form-group">
                 <label>Vision Type:</label>
@@ -86,6 +98,22 @@
                 </div>
             </div>
         </div>
+        <div class="form-group stacked">
+            <div class="form-group">
+                <label>Light Color Basic</label>
+                <div class="form-fields">
+                    <input type="color" id="color-basic" name="flags.lights-hud-ate.color-basic" value="{{flags.lights-hud-ate.color-basic}}">
+                </div>
+            </div>
+        </div>
+        <div class="form-group stacked">
+            <div class="form-group">
+                <label>Color Intensity Basic</label>
+                <div class="form-fields">
+                    <input id="alpha-basic" name="flags.lights-hud-ate.alpha-basic" type="number" min="0" max="1" placeholder="0-1" value="{{flags.lights-hud-ate.alpha-basic}}"></input>
+                </div>
+            </div>
+        </div>
     </fieldset>
 
     {{!-- END PRESET SETTINGS --}}
@@ -97,6 +125,17 @@
 
         <legend>LIGHTHUD+ATE SETTINGS (ADVANCED)</legend>
 
+        <div class="form-group stacked">
+            <div class="form-group">
+                <label>Use advanced configuration ?</label>
+                <div class="form-fields">
+                    <input type="checkbox" name="flags.lights-hud-ate.use-advanced"
+                        value="{{flags.lights-hud-ate.use-advanced}}"
+                        {{checkedIf flags.lights-hud-ate.use-advanced}}/>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <label>Effect Name (Optional)</label>
             <div class="form-fields">
@@ -107,7 +146,7 @@
         <div class="form-group stacked">
             <div class="form-group">
                 <label>Duration in Minutes:</label>
-                <div class="form-fields"></div>
+                <div class="form-fields">
                     <input type="number" id="duration" name="flags.lights-hud-ate.duration" min="0" placeholder="Duration in minutes" value="{{flags.lights-hud-ate.duration}}" />
                 </div>
             </div>
@@ -164,7 +203,7 @@
             </div>
         </div>
         <div class="form-group slim lights-hud-ate-sub-group">
-        <label>Color Intensity</label>
+            <label>Color Intensity</label>
             <div class="form-fields">
                 <input id="alpha" name="flags.lights-hud-ate.alpha" type="number" min="0" max="1" placeholder="0-1" value="{{flags.lights-hud-ate.alpha}}"></input>
             </div>

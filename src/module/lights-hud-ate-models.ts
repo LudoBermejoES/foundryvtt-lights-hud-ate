@@ -129,14 +129,17 @@ export enum LightHUDNoteFlags {
   // SUPPORT
   ENABLE = 'enable',
   APPLY_AS_ATL_ATE = 'apply-as-atl-ate',
+  USE_BASIC = 'use-basic',
+  USE_ADVANCED = 'use-advanced',
 
   // BASIC SETTINGS
-  LOCK_ROTATION = 'lock-rotation',
   VISION_TYPE = 'vision-type',
   LIGHT_SOURCE = 'light-source',
+  LIGHT_COLOR_BASIC = 'color-basic',
+  LIGHT_ALPHA_BASIC = 'alpha-basic',
 
   // ADVANCED SETTINGS
-
+  LOCK_ROTATION = 'lock-rotation',
   NAME = 'name',
   DURATION = 'duration',
   HEIGHT = 'height',
@@ -162,3 +165,20 @@ export enum LightHUDNoteFlags {
   LIGHT_CONTRAST = 'light-contrast',
   LIGHT_SHADOWS = 'light-shadows',
 }
+
+// export const predefinedColors = {
+//   "Candles, Torches" : "#a2642a",
+//   "Fire (orange)": "#7f4a14",
+//   "Fire (yellow)": "#a2642a",
+//   "Daylight (warm)" : "#b79471",
+//   "Daylight (cold)" : "#94a6bc",
+//   "Full Moonlight (warm) ": "#ab9c8c",
+//   "Full Moonlight (cold) ": "#647080",
+//   "Magical Fire / Neon Red" : "#800000",
+//   "Magical Fire (Blue) / Neon Blue ": "#000080",
+//   "Magical Fire (Green) / Neon Green" : "#008000",
+//   "Magical Fire (Purple) / Black Light (Purple)" : "#540080",
+//   "Reflective Gold ": "#f0be35",
+//   "Reflective Water" : "#6dcab4",
+//   "Magma" : "#c27a29"
+// }
