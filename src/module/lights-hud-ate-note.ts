@@ -467,10 +467,6 @@ export class LightHUDAteNote extends FormApplication {
       // if (game.settings.get(CONSTANTS.MODULE_NAME, 'colorLabel') === true && notes) {
       //   labelStyle = "style='color:green;'";
       // }
-      //  const valer = html.find('.lights-hud-ate-interaction-note');
-      //  if(valer.length > 0){
-      //    return;
-      //  }
 
       // const openBtn = $(`<a class="lights-hud-ate-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-gripfire${notes ? '-check' : ''}"></i>${labelTxt}</a>`);
       let openBtn;
@@ -479,7 +475,7 @@ export class LightHUDAteNote extends FormApplication {
           <i class="fas fa-fire"></i>${labelTxt}</a>`);
       } else {
         openBtn = $(`<a class="lights-hud-ate-interaction-note" title="${title}" ${labelStyle} >
-          <i class="fas fa-fire"></i>${labelTxt}</a>`);
+          <i class="fas fa-fire-alt"></i>${labelTxt}</a>`);
       }
       openBtn.click((ev) => {
         let noteApp: any = null;

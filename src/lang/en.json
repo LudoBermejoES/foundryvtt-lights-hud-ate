@@ -17,6 +17,11 @@
   "lights-hud-ate.setting.hudTopBottom.name": "HUD Top/Bottom",
   "lights-hud-ate.setting.hudTopBottom.hint": "Where to place the button in the column",
 
+  "lights-hud-ate.setting.applyOnATEItem.name": "Apply HUD interface on ATE Items",
+  "lights-hud-ate.setting.applyOnATEItem.hint": "Show all actor items with ATE active effect in the HUD interface",
+  "lights-hud-ate.setting.applyOnFlagItem.name": "Apply HUD interface on flagged Items",
+  "lights-hud-ate.setting.applyOnFlagItem.hint": "Show all actor items flagged from this module active effect in the HUD interface",
+
   "lights-hud-ate.setting.reset.name": "Reset settings to default",
   "lights-hud-ate.setting.reset.label": "Reset Settings To Default",
   "lights-hud-ate.setting.reset.hint": "This will reset all of the settings of back to the active game system's default.",

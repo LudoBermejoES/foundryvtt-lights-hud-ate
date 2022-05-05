@@ -294,12 +294,12 @@
 }
 */
 
-.lights-hud-ate-interaction-note-disabled .fa-gripfire {
+.lights-hud-ate-interaction-note .fa-fire-alt {
   color: orangered;
   text-shadow: 0 0 8px orangered;
 }
 
-.lights-hud-ate-interaction-note-enabled .fa-fire {
+.lights-hud-ate-interaction-note .fa-fire {
   color: greenyellow;
   text-shadow: 0 0 8px greenyellow;
 }

@@ -259,6 +259,24 @@ function otherSettings(apply = false) {
       type: Boolean,
     },
 
+    applyOnATEItem: {
+      name: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnATEItem.name`),
+      hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnATEItem.hint`),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: true,
+    },
+  
+    applyOnFlagItem: {
+      name: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnFlagItem.name`),
+      hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnFlagItem.hint`),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    },
+
     imageDisplay: {
       name: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.name`),
       hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.hint`),
