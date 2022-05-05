@@ -62,7 +62,7 @@
 #token-hud .lights-hud-ate-button-disabled:hover video {
   opacity: 0.7 !important;
   color: #ccc;
-} 
+}
 */
 
 /*
@@ -293,3 +293,13 @@
   color: purple;
 }
 */
+
+.lights-hud-ate-interaction-note .fa-gripfire {
+  color: orangered;
+  text-shadow: 0 0 8px orangered;
+}
+
+.lights-hud-ate-interaction-note .fa-fire {
+  color: greenyellow;
+  text-shadow: 0 0 8px greenyellow;
+}

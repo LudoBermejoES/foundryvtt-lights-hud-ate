@@ -115,10 +115,38 @@ export class LightDataDialog {
   isApplied: boolean;
 }
 
-//export enum LightHUDFlags {
-//  altDimDistance = 'altDimDistance',
-//  altBrightDistance = 'altBrightDistance',
-//  dimDistance = 'realDimDistance',
-//  brightDistance = 'realBrightDistance',
-//  useAltVision = 'useAltVision'
-//}
+export enum LightHUDNoteFlags {
+
+  ENABLE = 'enable',
+
+  // BASIC SETTINGS
+  LOCK_ROTATION = 'lock-rotation',
+  VISION_TYPE = 'vision-type',
+  LIGHT_SOURCE = 'light-source',
+
+  // ADVANCED SETTINGS
+  APPLY_AD_ATL_ATE = 'apply-as-atl-ate',
+  DURATION = 'duration',
+  HEIGHT = 'height',
+  WIDTH = 'width',
+  SCALE = 'scale',
+  SIGHT_DIM = 'dim-sight',
+  SIGHT_BRIGHT = 'bright-sight',
+  SIGHT_ANGLE = 'sight-angle',
+  LIGHT_DIM = 'dim',
+  LIGHT_BRIGHT = 'bright',
+  LIGHT_ANGLE = 'angle',
+  LIGHT_COLOR = 'color',
+  LIGHT_ALPHA = 'alpha',
+  ANIMATION_TYPE = 'animation-type',
+  ANIMATION_SPEED = 'animation-speed',
+  ANIMATION_REVERSE = 'animation-reverse',
+  ANIMATION_INTENSITY = 'animation-intensity',
+  // VERY ADVANCED SETTINGS
+  LIGHT_COLORATION = 'light-coloration',
+  LIGHT_LUMINOSITY = 'light-luminosity',
+  LIGHT_GRADUAL = 'light-gradual',
+  LIGHT_SATURATION = 'light-saturation',
+  LIGHT_CONTRAST = 'light-contrast',
+  LIGHT_SHADOWS = 'light-shadows'
+}

@@ -1,3 +1,4 @@
+import { LightHUDAteNote } from './lights-hud-ate-note';
 import { getApi, setApi } from '../main';
 import API from './api';
 import HandlebarHelpers from './app/lights-hud-ate-handlebar-helpers';
@@ -12,7 +13,7 @@ export const initHooks = async (): Promise<void> => {
   // registerSettings();
 
   // registerLibwrappers();
-
+  // registerHandlebarsHelpers();
   new HandlebarHelpers().registerHelpers();
 
   Hooks.once('socketlib.ready', registerSocket);
@@ -51,6 +52,10 @@ export const readyHooks = async (): Promise<void> => {
   Hooks.on('renderTokenHUD', (app, html, data) => {
     module.renderTokenHUD(app, html, data);
   });
+
+  Hooks.on('renderItemSheet', (app, html, data) => {
+    module.renderItemSheet(app, html, data);
+  });
 };
 
 const module = {
@@ -65,4 +70,12 @@ const module = {
     // }
     addLightsHUDButtons(app, html, data);
   },
+  async renderItemSheet(...args) {
+    const [app, html, data] = args;
+    // TODO FOR NOW ONLY GM CAN SEE THIS
+    if (game.user?.isGM) {
+      LightHUDAteNote._initEntityHook(app, html, data);
+    }
+  },
+
 };

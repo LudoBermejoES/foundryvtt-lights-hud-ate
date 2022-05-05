@@ -1,0 +1,248 @@
+<form class="editable flexcol" autocomplete="off">
+
+    {{!-- {{#if isGM}} --}}
+        <header class="sheet-header">
+            <img src="{{img}}" data-edit="img" title="{{name}}" height="64" width="64"/>
+            <h1><input name="name" type="text" value="{{name}}" placeholder="Name" disabled/></h1>
+        </header>
+
+        <p>NOTE: These settings are used to create a Light or vision effect on the token configuration when the item is rolled.</p>
+        <p>NOTE: These settings are used to create a ATE effect on the item. BUT ONLY IF YOU EXPLICITLY check the Apply as 'ATE/ATL Effect' checkbox</p>
+        <p>NOTE: The modules is not smart enough to distinct multiple lighting effect on the same item and is not make sense ? Every item must have only one effect with _ATL changes_ on it (at least for me). If multiple effect with _ATL changes_ are founded on the same item only the first is analyzed from the module, you can use multiple item where each has is own lighting configuration.</p>
+        <p>NOTE: For security reason (human error mostly) no previous ATE effect is removed in automatic, if you have multiple ATE effects on the item you must remove these manually from the effect tab of the item</p>
+
+        <hr>
+
+        <div class="form-group stacked">
+            <div class="form-group">
+                <label>Enable LightHUD for this item ?</label>
+                <div class="form-fields">
+                    <input type="checkbox" name="flags.lights-hud-ate.enable"
+                        value="{{flags.lights-hud-ate.enable}}"
+                        {{checkedIf flags.lights-hud-ate.enable}}/>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group stacked">
+            <div class="form-group">
+                <label>Apply as ATE/ATL Effect on the item ?</label>
+                <div class="form-fields">
+                    <input type="checkbox" id="apply-as-atl-ate" name="flags.lights-hud-ate.apply-as-atl-ate"
+                        value="{{flags.lights-hud-ate.apply-as-atl-ate}}"
+                        {{checkedIf flags.lights-hud-ate.apply-as-atl-ate}}/>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <p>LIGHTHUD SETTINGS (BASIC)</p>
+
+        {{!-- START PRESET SETTINGS --}}
+        <div class="form-group stacked">
+            <div class="form-group">
+                <label>Lock rotation:</label>
+                <div class="form-fields">
+                    <input type="checkbox" id="lock-rotation" name="flags.lights-hud-ate.lock-rotation"
+                        value="{{flags.lights-hud-ate.lock-rotation}}"
+                        {{checkedIf flags.lights-hud-ate.lock-rotation}}/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group stacked">
+            <div class="form-group">
+                <label>Vision Type:</label>
+                <div class="form-fields">
+                    <select id="vision-type" name="flags.lights-hud-ate.vision-type" is="ms-dropdown-ligthhudate">
+                        {{#each visions as |vision|}}
+                            <option data-image="{{vision.img}}" {{#isOptionSelected flags.lights-hud-ate.vision-type}} value="{{vision.id}}" {{/isOptionSelected}}>{{localize vision.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group stacked">
+            <div class="form-group">
+                <label>Light Source:</label>
+                <div class="form-fields">
+                    <select id="light-source" name="flags.lights-hud-ate.light-source" is="ms-dropdown-ligthhudate">
+                        {{#each lights as |lightSource|}}
+                            <option data-image="{{lightSource.img}}" {{#isOptionSelected flags.lights-hud-ate.light-source}} value="{{lightSource.id}}" {{/isOptionSelected}}>{{localize lightSource.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        {{!-- END PRESET SETTINGS --}}
+
+        <hr>
+
+        <p>LIGHTHUD+ATE SETTINGS (ADVANCED)</p>
+
+        {{!-- START ATL SETTINGS ADVANCED --}}
+
+        <div class="form-group">
+            <label>Effect Name (Optional)</label>
+            <div class="form-fields">
+                <input type="text" id="name" name="flags.lights-hud-ate.name" placeholder="" value="{{flags.lights-hud-ate.name}}" />
+            </div>
+        </div>
+
+        <div class="form-group stacked">
+            <div class="form-group">
+                <label>Duration in Minutes:</label>
+                <div class="form-fields"></div>
+                    <input type="number" id="duration" name="flags.lights-hud-ate.duration" min="0" placeholder="Duration in minutes" value="{{flags.lights-hud-ate.duration}}" />
+                </div>
+            </div>
+        </div>
+
+        <h3>Token Data</h3>
+        <div class="form-group slim lights-hud-ate-sub-group">
+            <label>Size</label>
+            <div class="form-fields">
+                    <label>Height</label>
+                    <input id="height" name="flags.lights-hud-ate.height" type="number" value="{{flags.lights-hud-ate.height}}"></input>
+                    <label>Width</label>
+                    <input id="width" name="flags.lights-hud-ate.width" type="number" value="{{flags.lights-hud-ate.width}}"></input>
+                    <label>Scale</label>
+                    <input id="scale" name="flags.lights-hud-ate.scale" type="number" value="{{flags.lights-hud-ate.scale}}"></input>
+
+            </div>
+        </div>
+        <div class="form-group slim lights-hud-ate-sub-group">
+            <label>Vision</label>
+            <div class="form-fields">
+                    <label>Dim</label>
+                    <input id="dimSight" name="flags.lights-hud-ate.dim-sight" type="number" value="{{flags.lights-hud-ate.dim-sight}}"></input>
+                    <label>Bright</label>
+                    <input id="brightSight" name="flags.lights-hud-ate.bright-sight" type="number" value="{{flags.lights-hud-ate.bright-sight}}"></input>
+            </div>
+        </div>
+        <div class="form-group slim lights-hud-ate-sub-group">
+        <label>Vision Angle</label>
+            <div class="form-fields">
+                <input id="sightAngle" name="flags.lights-hud-ate.sight-angle" type="number" min="0" max="360" step="1" value="{{flags.lights-hud-ate.sight-angle}}"></input>
+            </div>
+        </div>
+        <h3>Lighting</h3>
+        <div class="form-group slim lights-hud-ate-sub-group">
+            <label>Light Radius</label>
+            <div class="form-fields ">
+                    <label>Dim</label>
+                    <input id="dim" name="flags.lights-hud-ate.dim" type="number" value="{{dim}}"></input>
+                    <label>Bright</label>
+                    <input id="bright" name="flags.lights-hud-ate.bright" type="number" value="{{bright}}"></input>
+            </div>
+        </div>
+        <div class="form-group slim lights-hud-ate-sub-group">
+            <label>Emission Angle</label>
+            <div class="form-fields">
+                <input id="angle" name="flags.lights-hud-ate.angle" type="number" min="0" max="360" step="1" value="{{flags.lights-hud-ate.angle}}"></input>
+            </div>
+        </div>
+        <div class="form-group slim lights-hud-ate-sub-group">
+            <label>Light Color</label>
+            <div class="form-fields">
+                <input type="color" id="color" name="flags.lights-hud-ate.color" value="{{flags.lights-hud-ate.color}}">
+            </div>
+        </div>
+        <div class="form-group slim lights-hud-ate-sub-group">
+        <label>Color Intensity</label>
+            <div class="form-fields">
+                <input id="alpha" name="flags.lights-hud-ate.alpha" type="number" min="0" max="1" placeholder="0-1" value="{{flags.lights-hud-ate.alpha}}"></input>
+            </div>
+        </div>
+        <h3>Animation</h3>
+        <div class="form-group lights-hud-ate-sub-group">
+            <label>Animation Type</label>
+            <div class="form-fields">
+                <select id="animationType" name="flags.lights-hud-ate.animation-type" is="ms-dropdown-ligthhudate">
+                    {{#each animationTypes as |animationType|}}
+                        <option data-image="{{animationType.img}}" {{#isOptionSelected flags.lights-hud-ate.animation-type}} value="{{animationType.id}}" {{/isOptionSelected}}>{{localize animationType.name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+        <div class="form-group lights-hud-ate-sub-group">
+            <label>Animation Speed</label>
+            <div class="form-fields">
+                <input id="animationSpeed" name="flags.lights-hud-ate.animation-speed" type="range" min="1" max="10" step="1"
+                value="{{flags.lights-hud-ate.animation-speed}}"></input>
+            </div>
+        </div>
+        <div class="form-group lights-hud-ate-sub-group">
+            <label>Reverse Direction</label>
+            <div class="form-fields">
+                <input type="checkbox" id="animationReverse" name="flags.lights-hud-ate.animation-reverse"
+                value="{{flags.lights-hud-ate.animation-reverse}}"
+                {{checkedIf flags.lights-hud-ate.animation-reverse}}/>
+            </div>
+        </div>
+        <div class="form-group lights-hud-ate-sub-group">
+            <label>Animation Intensity</label>
+            <div class="form-fields">
+                <input id="animationIntensity" name="flags.lights-hud-ate.animation-intensity" type="range" min="1" max="10" step="1"
+                value="{{flags.lights-hud-ate.animation-intensity}}"></input>
+            </div>
+        </div>
+        <h3>Advanced Animation</h3>
+        <div class="form-group lights-hud-ate-sub-group">
+            <label>Coloration Technique</label>
+            <div class="form-fields">
+                <select id="lightColoration" name="flags.lights-hud-ate.light-coloration" data-dtype="Number" is="ms-dropdown-ligthhudate">
+                    {{#each colorationTypes as |colorationType|}}
+                        <option data-image="{{colorationType.img}}" {{#isOptionSelected flags.lights-hud-ate.light-coloration}} value="{{colorationType.id}}" {{/isOptionSelected}}>{{localize colorationType.name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group lights-hud-ate-sub-group">
+            <label>Luminosity</label>
+            <div class="form-fields">
+                <input type="range" id="lightLuminosity" name="flags.lights-hud-ate.light-luminosity" value="{{flags.lights-hud-ate.light-luminosity}}" min="-1" max="1" step="0.05">
+                <span class="range-value">0.5</span>
+            </div>
+        </div>
+
+        <div class="form-group lights-hud-ate-sub-group">
+            <label>Gradual Illumination</label>
+            <div class="form-fields">
+                <input type="checkbox" id="lightGradual" name="flags.lights-hud-ate.light-gradual"
+                value="{{flags.lights-hud-ate.light-gradual}}"
+                {{checkedIf flags.lights-hud-ate.light-gradual}}/>
+            </div>
+        </div>
+
+        <div class="form-group lights-hud-ate-sub-group">
+            <label>Background Saturation</label>
+            <div class="form-fields">
+                <input type="range" id="lightSaturation" name="flags.lights-hud-ate.light-saturation" value="{{flags.lights-hud-ate.light-saturation}}" min="-1" max="1" step="0.05">
+            </div>
+        </div>
+
+        <div class="form-group lights-hud-ate-sub-group">
+            <label>Background Contrast</label>
+            <div class="form-fields">
+                <input type="range" id="lightContrast" name="flags.lights-hud-ate.light-contrast" value="{{flags.lights-hud-ate.light-contrast}}" min="-1" max="1" step="0.05">
+            </div>
+        </div>
+
+        <div class="form-group lights-hud-ate-sub-group">
+            <label>Background Shadows</label>
+            <div class="form-fields">
+                <input type="range" id="lightShadows" name="flags.lights-hud-ate.light-shadows" value="{{flags.lights-hud-ate.light-shadows}}" min="0" max="1" step="0.05">
+            </div>
+        </div>
+
+        <footer class="sheet-footer flexrow">
+            <!--
+            <button type="submit"><i class="fas fa-save"></i> {{ localize "buttons.saveMacro" }}</button>
+            <button class="execute" type="button"><i class="fas fa-dice-d20"></i> {{ localize "buttons.executeMacro" }}</button>
+            -->
+        </footer>
+    {{!-- {{/if}} --}}
+</form>

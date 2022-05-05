@@ -28,13 +28,13 @@ export function presetDialog(applyChanges: boolean): Dialog {
       <div class="form-group">
         <label>Apply as ATE/ATL Effect:</label>
         <div class="form-fields">
-          <input type="checkbox" name="apply-as-atl-ate" value="false" onclick="$(this).attr('value', this.checked ? true : false)"/>
+          <input type="checkbox" id="apply-as-atl-ate" name="apply-as-atl-ate" value="false" onclick="$(this).attr('value', this.checked ? true : false)"/>
         </div>
       </div>
       <div class="form-group">
         <label>Lock rotation:</label>
         <div class="form-fields">
-          <input type="checkbox" name="lock-rotation" value="false" onclick="$(this).attr('value', this.checked ? true : false)"/>
+          <input type="checkbox" id="lock-rotation" name="lock-rotation" value="false" onclick="$(this).attr('value', this.checked ? true : false)"/>
         </div>
       </div>
       <div class="form-group">
@@ -249,9 +249,12 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
     }
   }
 
-  if (id === undefined) id = '';
+
   if (name === undefined) name = '';
   if (light === undefined) light = undefined;
+
+  if (!id) id = randomID();
+  if (id === undefined) id = '';
   if (height === undefined) height = '';
   if (width === undefined) width = '';
   if (scale === undefined) scale = '';
@@ -277,7 +280,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
     colorationTypes += `<option value="${v.id}" ${coloration === v.id ? 'selected' : ''}>${name}</option>`;
   }
 
-  let lightTypes = `<option selected value="none"> None</option>`;
+  let lightTypes = `<option value="none">None</option>`;
   for (const [k, v] of Object.entries(CONFIG.Canvas.lightAnimations)) {
     const name = game.i18n.localize(v.label);
     lightTypes += `<option value="${k.toLocaleLowerCase()}" ${animation.type === k ? 'selected' : ''}>${name}</option>`;
@@ -286,58 +289,93 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
   if (game.modules.get('CommunityLighting')?.active) {
     lightTypes += `
       <optgroup label= "Blitz" id="animationType">
-      <option value="BlitzFader" ${animation.type === 'BlitzFader' ? 'selected' : ''}>Fader</option>
-      <option value="BlitzLightning" ${
-        animation.type === 'BlitzLightning' ? 'selected' : ''
-      }>Lightning (expirmental)</option>
-      <option value="BlitzElectric Fault" ${
-        animation.type === 'BlitzElectric Fault' ? 'selected' : ''
-      }>Electrical Fault</option>
-      <option value="BlitzSimple Flash" ${
-        animation.type === 'BlitzSimple Flash' ? 'selected' : ''
-      }>Simple Flash</option>
-      <option value="BlitzRBG Flash" ${animation.type === 'BlitzRBG Flash' ? 'selected' : ''}>RGB Flash</option>
-      <option value="BlitzPolice Flash" ${
-        animation.type === 'BlitzPolice Flash' ? 'selected' : ''
-      }>Police Flash</option>
-      <option value="BlitzStatic Blur" ${animation.type === 'BlitzStatic Blur' ? 'selected' : ''}> Static Blur</option>
-      <option value="BlitzAlternate Torch" ${
-        animation.type === 'BlitzAlternate Torch' ? 'selected' : ''
-      }>Alternate Torch</option>
-      <option value="BlitzBlurred Torch" ${
-        animation.type === 'BlitzBlurred Torch' ? 'selected' : ''
-      }>Blurred Torch</option>
-      <option value="BlitzGrid Force-Field Colorshift" ${
-        animation.type === 'BlitzGrid Force-Field Colorshift' ? 'selected' : ''
-      }>Grid Force-Field Colorshift</option>
+        <option value="BlitzFader"
+          ${animation.type === 'BlitzFader'
+          ? 'selected' : ''}>Fader
+        </option>
+        <option value="BlitzLightning"
+          ${animation.type === 'BlitzLightning'
+          ? 'selected' : ''}>Lightning (experimental)
+        </option>
+        <option value="BlitzElectric Fault"
+          ${animation.type === 'BlitzElectric Fault'
+          ? 'selected'
+          : ''}>Electrical Fault</option>
+        <option value="BlitzSimple Flash"
+          ${animation.type === 'BlitzSimple Flash'
+          ? 'selected'
+          : ''}>Simple Flash
+        </option>
+        <option value="BlitzRBG Flash"
+          ${animation.type === 'BlitzRBG Flash'
+          ? 'selected'
+          : ''}>RGB Flash
+        </option>
+        <option value="BlitzPolice Flash"
+          ${animation.type === 'BlitzPolice Flash'
+          ? 'selected'
+          : ''}>Police Flash
+        </option>
+        <option value="BlitzStatic Blur"
+          ${animation.type === 'BlitzStatic Blur'
+          ? 'selected'
+          : ''}>Static Blur
+        </option>
+        <option value="BlitzAlternate Torch"
+          ${animation.type === 'BlitzAlternate Torch'
+          ? 'selected'
+          : ''}>Alternate Torch
+        </option>
+        <option value="BlitzBlurred Torch"
+          ${animation.type === 'BlitzBlurred Torch'
+          ? 'selected'
+          : ''}>Blurred Torch
+        </option>
+        <option value="BlitzGrid Force-Field Colorshift"
+          ${animation.type === 'BlitzGrid Force-Field Colorshift'
+          ? 'selected'
+          : ''}>Grid Force-Field Colorshift
+        </option>
       </optgroup>
       <optgroup label="SecretFire" id="animationType">
-      <option value="SecretFireGrid Force-Field" ${
-        animation.type === 'SecretFireGrid Force-Field' ? 'selected' : ''
-      }>Grid Force-Field</option>
-      <option value="SecretFireSmoke Patch" ${
-        animation.type === 'SecretFireSmoke Patch' ? 'selected' : ''
-      }>Smoke Patch</option>
-      <option value="SecretFireStar Light" ${
-        animation.type === 'SecretFireStar Light' ? 'selected' : ''
-      }>Star Light</option>
-      <option value="SecretFireStar Light Disco" ${
-        animation.type === 'SecretFireStar Light Disco' ? 'selected' : ''
-      }>Star Light Disco</option>
+        <option value="SecretFireGrid Force-Field"
+          ${animation.type === 'SecretFireGrid Force-Field'
+          ? 'selected'
+          : ''}>Grid Force-Field
+        </option>
+        <option value="SecretFireSmoke Patch"
+          ${animation.type === 'SecretFireSmoke Patch'
+          ? 'selected'
+          : ''}>Smoke Patch
+        </option>
+        <option value="SecretFireStar Light"
+          ${animation.type === 'SecretFireStar Light'
+          ? 'selected'
+          : ''}>Star Light
+        </option>
+        <option value="SecretFireStar Light Disco"
+          ${animation.type === 'SecretFireStar Light Disco'
+          ? 'selected'
+          : ''}>Star Light Disco
+        </option>
       </optgroup>
   `;
   }
+
+  // TODO ma l'id di sotto deve essere sostituito con il name ????
 
   const dialogContent = `
   <form>
       <div class="form-group">
           <label>Effect Name</label>
-          <input id="name" name="${id}" type="text" value="${name}"></input>
+          <div class="form-fields">
+            <input id="name" name="${id}" type="text" value="${name}"></input>
+          </div>
       </div>
       <div class="form-group">
         <label>Apply as ATE/ATL Effect:</label>
         <div class="form-fields">
-          <input type="checkbox" id="apply-as-atl-ate"  name="apply-as-atl-ate" value="false" onclick="$(this).attr('value', this.checked ? true : false)"/>
+          <input type="checkbox" id="apply-as-atl-ate" name="apply-as-atl-ate" value="false" onclick="$(this).attr('value', this.checked ? true : false)"/>
         </div>
       </div>
       <div class="form-group">
@@ -389,8 +427,10 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
           </div>
       </div>
       <div class="form-group slim lights-hud-ate-sub-group">
-          <label for="color">Light Color</label>
-          <input type="color" id="color" name="color" value="${color}">
+          <label>Light Color</label>
+          <div class="form-fields">
+            <input type="color" id="color" name="color" value="${color}">
+          </div>
       </div>
       <div class="form-group slim lights-hud-ate-sub-group">
       <label>Color Intensity</label>
@@ -405,28 +445,26 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
               <select id="animationType" name="animationType" >${lightTypes}</select>
           </div>
       </div>
-      <div class="form-group lights-hud-ate-sub-group" ">
+      <div class="form-group lights-hud-ate-sub-group">
           <label>Animation Speed</label>
           <div class="form-fields">
-              <input id="animationSpeed" name="animationSpeed" type="range" min="1" max="10" step="1" value="${
-                animation?.speed
-              }"></input>
+              <input id="animationSpeed" name="animationSpeed" type="range" min="1" max="10" step="1"
+              value="${animation?.speed}"></input>
           </div>
       </div>
       <div class="form-group lights-hud-ate-sub-group">
           <label>Reverse Direction</label>
           <div class="form-fields">
-              <input type="checkbox" id="animationReverse" name="animationReverse" ${
-                animation?.reverse ? 'checked' : ''
-              } onclick="$(this).attr('value', this.checked ? true : false)">
+              <input type="checkbox" id="animationReverse" name="animationReverse"
+              ${animation?.reverse ? 'checked' : ''}
+              onclick="$(this).attr('value', this.checked ? true : false)">
           </div>
       </div>
       <div class="form-group lights-hud-ate-sub-group">
           <label>Animation Intensity</label>
           <div class="form-fields">
-              <input id="animationIntensity" name="animationIntensity" type="range" min="1" max="10" step="1" value="${
-                animation?.intensity
-              }"></input>
+              <input id="animationIntensity" name="animationIntensity" type="range" min="1" max="10" step="1"
+              value="${animation?.intensity}"></input>
           </div>
       </div>
       <h3>Advanced Animation</h3>
@@ -450,9 +488,9 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
       <div class="form-group lights-hud-ate-sub-group">
           <label>Gradual Illumination</label>
           <div class="form-fields">
-              <input type="checkbox" id="lightGradual" name="lightGradual" ${
-                gradual ? 'checked' : ''
-              } onclick="$(this).attr('value', this.checked ? true : false)">
+              <input type="checkbox" id="lightGradual" name="lightGradual"
+              ${gradual ? 'checked' : ''}
+              onclick="$(this).attr('value', this.checked ? true : false)">
           </div>
       </div>
 
@@ -476,7 +514,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
               <input type="range" id="lightShadows" name="lightShadows" value="${shadows}" min="0" max="1" step="0.05">
           </div>
       </div>
-          `;
+  `;
 
   return new Dialog({
     title: `Token Vision Configuration (Custom)`,

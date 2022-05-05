@@ -17,11 +17,56 @@ export default class HandlebarHelpers {
    * Registers the handlebar helpers
    */
   registerHelpers() {
+
     this._registerCanShowDisabledEffectsHelper();
     this._registerCanShowPassiveEffectsHelper();
     this._registerCanViewEffectDetailsHelper();
     this._registerCanViewEffectsPanelHelper();
     this._registerRemainingTimeLabelHelper();
+
+    this._registerCheckedIfHelper();
+    // this._registerSelectHelper();
+    // this._registerMultiSelectHelper();
+    this._registerOptionsIsSelectedHelper();
+
+  }
+
+  // https://stackoverflow.com/questions/13046401/how-to-set-selected-select-option-in-handlebars-template
+  _registerOptionsIsSelectedHelper(){
+    Handlebars.registerHelper('isOptionSelected', function(value, options) {
+      if(options.fn(this).indexOf(value) >= 1){
+        return `selected='selected'`;
+      }
+    });
+  }
+
+  // https://gist.github.com/LukeChannings/6173ab951d8b1dc4602e
+  _registerMultiSelectHelper(){
+    Handlebars.registerHelper('option', function (selected, option) {
+      if(selected == undefined) {
+          return '';
+      }
+      return selected.indexOf(option) !== -1 ? 'selected' : '';
+    });
+  }
+
+  // https://gist.github.com/LukeChannings/6173ab951d8b1dc4602e
+  _registerSelectHelper(){
+    Handlebars.registerHelper('select', function (value, options) {
+      return options.fn()
+        .split('\n')
+        .map(function (v) {
+          const t = 'value="' + value + '"';
+          return RegExp(t).test(v) ? v.replace(t, t + ' selected="selected"') : v;
+        })
+        .join('\n');
+    });
+  }
+
+  _registerCheckedIfHelper() {
+    Handlebars.registerHelper('checkedIf', function (condition) {
+      return condition ? 'checked' : '';
+    });
   }
 
   _registerCanShowDisabledEffectsHelper() {
