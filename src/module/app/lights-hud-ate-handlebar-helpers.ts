@@ -32,8 +32,12 @@ export default class HandlebarHelpers {
   // https://stackoverflow.com/questions/13046401/how-to-set-selected-select-option-in-handlebars-template
   _registerOptionsIsSelectedHelper() {
     Handlebars.registerHelper('isOptionSelected', function (value, options) {
-      if (options.fn(this).indexOf(value) >= 1) {
-        return `selected='selected'`;
+      const optionValueToCheck = <string>options.fn(this);
+      const currentValue = getProperty(options.data.root, value);
+      if (currentValue && optionValueToCheck.toLowerCase().indexOf(currentValue?.toLowerCase()) >= 1) {
+        return `${optionValueToCheck} selected='selected'`;
+      } else {
+        return `${optionValueToCheck}`;
       }
     });
   }

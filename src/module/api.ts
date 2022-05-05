@@ -53,7 +53,7 @@ const API = {
     return game.settings.set(CONSTANTS.MODULE_NAME, 'lights', inAttributes);
   },
 
-    /**
+  /**
    * Sets the attributes used to track dynamic attributes in this system
    *
    * @param {array} inAttributes

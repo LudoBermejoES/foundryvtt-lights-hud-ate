@@ -28,8 +28,8 @@ export class LightHUDElement {
 
 export class OptionSelectData {
   img: string;
-  id:string;
-  name:string;
+  id: string;
+  name: string;
 }
 
 export class VisionHUDElement {

@@ -1,34 +1,13 @@
 import type { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs';
 import CONSTANTS from './constants';
-import {
-  dialogWarning,
-  error,
-  i18n,
-  i18nFormat,
-  info,
-  isStringEquals,
-  prepareTokenDataDropTheTorch,
-  retrieveItemLights,
-  rollDependingOnSystem,
-  updateTokenLighting,
-  updateTokenLightingFromData,
-  warn,
-} from './lib/lib';
+import { error, info, retrieveItemLights, updateTokenLightingFromData, warn } from './lib/lib';
 import {
   confirmDialogATLEffectItem,
   confirmDialogDropTheTorch,
   customATLDialog,
   presetDialog,
 } from './lights-hud-ate-dialogs';
-import {
-  LightDataHud,
-  VisionHUDElement,
-  VisionHUDPreset,
-  LightHUDPreset,
-  LightHUDElement,
-  LightDataDialog,
-  LightHUDNoteFlags,
-} from './lights-hud-ate-models';
+import { LightDataDialog, LightHUDNoteFlags } from './lights-hud-ate-models';
 
 export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
   // const atlChanges = effect.data.changes.filter((changes) =>
@@ -44,7 +23,7 @@ export async function addLightsHUDButtons(app, html, data) {
     !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem') &&
     !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')
   ) {
-    error(`YOU MUST DECIDE OR LIGHTHUD WITH FLAGS OR LIGHTHUD WITH ATE EFFECTS !!!`);
+    error(`YOU MUST DECIDE OR LIGHTHUD WITH FLAGS OR LIGHTHUD WITH ATE EFFECTS !!!`, true);
     return;
   }
 

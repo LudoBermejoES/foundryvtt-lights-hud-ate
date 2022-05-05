@@ -3,8 +3,6 @@ import API from './api';
 import CONSTANTS from './constants';
 import {
   checkNumberFromString,
-  dialogWarning,
-  error,
   i18n,
   i18nFormat,
   prepareTokenDataDropTheTorch,
@@ -100,6 +98,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
           const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
 
           // About time configuration
+          /*
           if (duration > 0) {
             if (game.modules.get('about-time')?.active != true) {
               ui.notifications?.error("About Time isn't loaded");
@@ -170,6 +169,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
               })(Object.assign({}, token.data));
             }
           }
+          */
 
           // Configure new token vision
           const dimSight = visionIndex.dimSight ?? token.data.dimSight;
@@ -283,7 +283,9 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
   let animationTypes = `<option value="none">None</option>`;
   for (const [k, v] of Object.entries(CONFIG.Canvas.lightAnimations)) {
     const name = game.i18n.localize(v.label);
-    animationTypes += `<option value="${k.toLocaleLowerCase()}" ${animation.type === k ? 'selected' : ''}>${name}</option>`;
+    animationTypes += `<option value="${k.toLocaleLowerCase()}" ${
+      animation.type === k ? 'selected' : ''
+    }>${name}</option>`;
   }
 
   if (game.modules.get('CommunityLighting')?.active) {
@@ -585,6 +587,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
           const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
 
           // About time configuration
+          /*
           if (duration > 0) {
             if (game.modules.get('about-time')?.active != true) {
               ui.notifications?.error("About Time isn't loaded");
@@ -655,6 +658,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
               })(Object.assign({}, token.data));
             }
           }
+          */
 
           // Update Token
           updateTokenLighting(
@@ -956,7 +960,6 @@ function manageFlaggedItem(tokenId, itemId) {
     }
   } finally {
     applyFlagsOnToken(tokenId, itemId);
-
     item.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED, !isApplied);
   }
 }
@@ -969,48 +972,79 @@ function applyFlagsOnToken(tokenId: string, itemId: string) {
     return <string>entity.id == itemId;
   });
 
+  const tokenData = token.data;
+
   const id = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || randomID();
-  const effectName = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || '';
-  const height = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT));
-  const width = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH));
-  const scale = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE));
-  const dimLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM));
+  const effectName = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || tokenData.name;
+  const height =
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT)) || tokenData.height;
+  const width =
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH)) || token.data.width;
+  const scale =
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE)) || tokenData.scale;
+  const dimLight =
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM)) ||
+    tokenData.light.dim;
   const brightLight = <number>(
-    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT))
+    (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT)) ||
+      tokenData.light.bright)
   );
-  const dimSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM));
+  const dimSight =
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM)) ||
+    tokenData.dimSight;
   const brightSight = <number>(
-    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT))
+    (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT)) ||
+      tokenData.brightSight)
   );
-  const lightColor = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR);
-  const sightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE));
-  const lightAlpha = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA));
-  const lightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE));
-  const lightAnimationType = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_TYPE);
+  const lightColor =
+    <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR) || <string>tokenData.light.color;
+  const sightAngle =
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE)) ||
+    tokenData.sightAngle;
+  const lightAlpha =
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA)) ||
+    tokenData.alpha;
+  const lightAngle =
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE)) ||
+    tokenData.sightAngle;
+  const lightAnimationType =
+    <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_TYPE) || tokenData.light.animation.type;
   const lightAnimationSpeed = <number>(
-    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED))
+    (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED)) ||
+      tokenData.light.animation.speed)
   );
   const lightAnimationIntensity = <number>(
-    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY))
+    (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY)) ||
+      tokenData.light.animation.intensity)
   );
-  const lightAnimationReverse = <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_REVERSE);
+  const lightAnimationReverse =
+    <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_REVERSE) ||
+    tokenData.light.animation.reverse;
   const coloration = <number>(
-    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION))
+    (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION)) ||
+      tokenData.light.coloration)
   );
   const luminosity = <number>(
-    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY))
+    (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY)) ||
+      tokenData.light.luminosity)
   );
-  const gradual = <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL);
+  const gradual =
+    <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL) || tokenData.light.gradual;
   const saturation = <number>(
-    checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION))
+    (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION)) ||
+      tokenData.light.saturation)
   );
-  const contrast = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST));
-  const shadows = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS));
+  const contrast =
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST)) ||
+    tokenData.light.contrast;
+  const shadows =
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS)) ||
+    tokenData.light.shadows;
   const vision = dimSight > 0 || brightSight > 0 ? true : false;
 
   // TODO per adesso e' sempre a false
   const applyAsAtlAteEffect = false; // <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE) ?? false;
-  const duration = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION));
+  const duration = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)) || 0;
 
   const actorId = <string>token.actor?.id;
   // const tokenId = token.id;
@@ -1028,6 +1062,7 @@ function applyFlagsOnToken(tokenId: string, itemId: string) {
   const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
 
   // About time configuration
+  /*
   if (duration > 0) {
     if (game.modules.get('about-time')?.active != true) {
       ui.notifications?.error("About Time isn't loaded");
@@ -1098,7 +1133,7 @@ function applyFlagsOnToken(tokenId: string, itemId: string) {
       })(Object.assign({}, token.data));
     }
   }
-
+  */
   // Update Token
   updateTokenLighting(
     token,

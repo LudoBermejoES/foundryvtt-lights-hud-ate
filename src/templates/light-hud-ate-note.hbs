@@ -1,10 +1,14 @@
 <form class="editable flexcol" autocomplete="off">
 
     {{!-- {{#if isGM}} --}}
-        <header class="sheet-header">
-            <img src="{{img}}" data-edit="img" title="{{name}}" height="64" width="64"/>
-            <h1><input name="name" type="text" value="{{name}}" placeholder="Name" disabled/></h1>
-        </header>
+    <header class="sheet-header">
+        <img src="{{imgitem}}" data-edit="img" title="{{nameitem}}" height="64" width="64"/>
+        <h1><input name="nameitem" type="text" value="{{nameitem}}" placeholder="Name" disabled/></h1>
+    </header>
+
+    <fieldset>
+
+        <legend>LIGHTHUD NOTES AND ACTIVATION</legend>
 
         <p>NOTE: These settings are used to create a Light or vision effect on the token configuration when the item is rolled.</p>
         <p>NOTE: You can use this form to create a ATE effect on the item. BUT ONLY IF YOU EXPLICITLY check the Apply as 'ATE/ATL Effect' checkbox</p>
@@ -25,6 +29,7 @@
             </div>
         </div>
 
+        <!--
         <div class="form-group stacked">
             <div class="form-group">
                 <label>Apply as ATE/ATL Effect on the item ?</label>
@@ -35,12 +40,17 @@
                 </div>
             </div>
         </div>
+        -->
+    </fieldset>
 
-        <hr>
+    <hr>
 
-        <p>LIGHTHUD SETTINGS (BASIC)</p>
+    {{!-- START PRESET SETTINGS --}}
+    
+    <fieldset>
+        
+        <legend>LIGHTHUD SETTINGS (BASIC)</legend>
 
-        {{!-- START PRESET SETTINGS --}}
         <div class="form-group stacked">
             <div class="form-group">
                 <label>Lock rotation:</label>
@@ -57,7 +67,7 @@
                 <div class="form-fields">
                     <select id="vision-type" name="flags.lights-hud-ate.vision-type" is="ms-dropdown-ligthhudate">
                         {{#each visions as |vision|}}
-                            <option data-image="{{vision.img}}" {{#isOptionSelected flags.lights-hud-ate.vision-type}} value="{{vision.id}}" {{/isOptionSelected}}>{{localize vision.name}}</option>
+                            <option data-image="{{vision.img}}" {{#isOptionSelected "flags.lights-hud-ate.vision-type"}} value="{{vision.id}}" {{/isOptionSelected}}>{{localize vision.name}}</option>
                         {{/each}}
                     </select>
                 </div>
@@ -69,20 +79,22 @@
                 <div class="form-fields">
                     <select id="light-source" name="flags.lights-hud-ate.light-source" is="ms-dropdown-ligthhudate">
                         {{#each lights as |lightSource|}}
-                            <option data-image="{{lightSource.img}}" {{#isOptionSelected flags.lights-hud-ate.light-source}} value="{{lightSource.id}}" {{/isOptionSelected}}>{{localize lightSource.name}}</option>
+                            <option data-image="{{lightSource.img}}" {{#isOptionSelected "flags.lights-hud-ate.light-source"}} value="{{lightSource.id}}" {{/isOptionSelected}}>{{localize lightSource.name}}</option>
                         {{/each}}
                     </select>
                 </div>
             </div>
         </div>
+    </fieldset>
 
-        {{!-- END PRESET SETTINGS --}}
+    {{!-- END PRESET SETTINGS --}}
 
-        <hr>
+    <hr>
 
-        <p>LIGHTHUD+ATE SETTINGS (ADVANCED)</p>
+    {{!-- START ATL SETTINGS ADVANCED --}}
+    <fieldset>
 
-        {{!-- START ATL SETTINGS ADVANCED --}}
+        <legend>LIGHTHUD+ATE SETTINGS (ADVANCED)</legend>
 
         <div class="form-group">
             <label>Effect Name (Optional)</label>
@@ -162,7 +174,7 @@
             <div class="form-fields">
                 <select id="animationType" name="flags.lights-hud-ate.animation-type" is="ms-dropdown-ligthhudate">
                     {{#each animationTypes as |animationType|}}
-                        <option data-image="{{animationType.img}}" {{#isOptionSelected flags.lights-hud-ate.animation-type}} value="{{animationType.id}}" {{/isOptionSelected}}>{{localize animationType.name}}</option>
+                        <option data-image="{{animationType.img}}" {{#isOptionSelected "flags.lights-hud-ate.animation-type"}} value="{{animationType.id}}" {{/isOptionSelected}}>{{localize animationType.name}}</option>
                     {{/each}}
                 </select>
             </div>
@@ -195,7 +207,7 @@
             <div class="form-fields">
                 <select id="lightColoration" name="flags.lights-hud-ate.light-coloration" data-dtype="Number" is="ms-dropdown-ligthhudate">
                     {{#each colorationTypes as |colorationType|}}
-                        <option data-image="{{colorationType.img}}" {{#isOptionSelected flags.lights-hud-ate.light-coloration}} value="{{colorationType.id}}" {{/isOptionSelected}}>{{localize colorationType.name}}</option>
+                        <option data-image="{{colorationType.img}}" {{#isOptionSelected "flags.lights-hud-ate.light-coloration"}} value="{{colorationType.id}}" {{/isOptionSelected}}>{{localize colorationType.name}}</option>
                     {{/each}}
                 </select>
             </div>
@@ -238,12 +250,12 @@
                 <input type="range" id="lightShadows" name="flags.lights-hud-ate.light-shadows" value="{{flags.lights-hud-ate.light-shadows}}" min="0" max="1" step="0.05">
             </div>
         </div>
-
-        <footer class="sheet-footer flexrow">
-            <!--
-            <button type="submit"><i class="fas fa-save"></i> {{ localize "buttons.saveMacro" }}</button>
-            <button class="execute" type="button"><i class="fas fa-dice-d20"></i> {{ localize "buttons.executeMacro" }}</button>
-            -->
-        </footer>
+    </fieldset>
+    <footer class="sheet-footer flexrow">
+        <!--
+        <button type="submit"><i class="fas fa-save"></i> {{ localize "buttons.saveMacro" }}</button>
+        <button class="execute" type="button"><i class="fas fa-dice-d20"></i> {{ localize "buttons.executeMacro" }}</button>
+        -->
+    </footer>
     {{!-- {{/if}} --}}
 </form>

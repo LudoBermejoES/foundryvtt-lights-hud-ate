@@ -1021,7 +1021,7 @@ export async function prepareTokenDataDropTheTorch(item: Item, elevation: number
 }
 
 export function checkNumberFromString(value) {
-  if (value === '') {
+  if (value === null || value === undefined || value === '') {
     return '';
   } else {
     return Number(value);
@@ -1052,7 +1052,8 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         lightItems.push(im);
         continue;
       }
-    } else if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')) {
+    }
+    if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')) {
       const atlEffects = im.effects.filter((entity) => {
         return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
       });
