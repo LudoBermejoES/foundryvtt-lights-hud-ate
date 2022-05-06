@@ -30,6 +30,14 @@
             </div>
         </div>
 
+        <div class="form-group stacked">
+            <div class="form-group">
+                <label>Effect Name (Optional)</label>
+                <div class="form-fields">
+                    <input type="text" id="name" name="flags.lights-hud-ate.name" placeholder="" value="{{flags.lights-hud-ate.name}}" />
+                </div>
+            </div>
+        </div>
         <!--
         <div class="form-group stacked">
             <div class="form-group">
@@ -42,7 +50,6 @@
             </div>
         </div>
         -->
-
         <div class="form-group stacked">
             <div class="form-group">
                 <label>Lock rotation:</label>
@@ -58,9 +65,9 @@
     <hr>
 
     {{!-- START PRESET SETTINGS --}}
-    
+
     <fieldset>
-        
+
         <legend>LIGHTHUD SETTINGS (BASIC)</legend>
 
         <div class="form-group stacked">
@@ -133,13 +140,6 @@
                         value="{{flags.lights-hud-ate.use-advanced}}"
                         {{checkedIf flags.lights-hud-ate.use-advanced}}/>
                 </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Effect Name (Optional)</label>
-            <div class="form-fields">
-                <input type="text" id="name" name="flags.lights-hud-ate.name" placeholder="" value="{{flags.lights-hud-ate.name}}" />
             </div>
         </div>
 

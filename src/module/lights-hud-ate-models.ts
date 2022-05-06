@@ -135,8 +135,16 @@ export enum LightHUDNoteFlags {
   // BASIC SETTINGS
   VISION_TYPE = 'vision-type',
   LIGHT_SOURCE = 'light-source',
+
+  LIGHT_DIM_BASIC = 'dim-basic',
+  LIGHT_BRIGHT_BASIC = 'bright-basic',
+  LIGHT_ANGLE_BASIC = 'angle-basic',
   LIGHT_COLOR_BASIC = 'color-basic',
   LIGHT_ALPHA_BASIC = 'alpha-basic',
+
+  SIGHT_DIM_BASIC = 'dim-sight-basic',
+  SIGHT_BRIGHT_BASIC = 'bright-sight-basic',
+  SIGHT_ANGLE_BASIC = 'sight-angle-basic',
 
   // ADVANCED SETTINGS
   LOCK_ROTATION = 'lock-rotation',

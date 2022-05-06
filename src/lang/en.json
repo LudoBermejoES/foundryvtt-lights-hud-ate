@@ -7,7 +7,7 @@
   "lights-hud-ate.setting.position.choice.bottom": "Bottom",
 
   "lights-hud-ate.setting.imageDisplay.name": "Display as Image?",
-  "lights-hud-ate.setting.imageDisplay.hint": "Display all the \"ligthing\" items on the actor with images in the HUD.",
+  "lights-hud-ate.setting.imageDisplay.hint": "Display all the \"lighting\" items on the actor with images in the HUD.",
   "lights-hud-ate.setting.opacity.name": "Opacity of token preview",
   "lights-hud-ate.setting.opacity.hint": "MConfigure the opacity of the token previews in the HUD before hovering on them.",
   "lights-hud-ate.setting.rollItem.name": "Roll the item when enable the light/vision ?",
@@ -32,8 +32,8 @@
   "lights-hud-ate.windows.art-select.title": "Select Art",
   "lights-hud-ate.windows.art-select.no-art-found": "No art found",
 
-  "lights-hud-ate.windows.art-select.call-macro-preset": "[GM] Call macro preset",
-  "lights-hud-ate.windows.art-select.call-macro-custom": "[GM] Call macro custom",
+  "lights-hud-ate.windows.art-select.call-macro-preset": "[GM] Fast token configuration",
+  "lights-hud-ate.windows.art-select.call-macro-custom": "[GM] Create custom ATE Effect",
 
   "lights-hud-ate.windows.dialogs.confirm.apply.title": "Confirm the action",
   "lights-hud-ate.windows.dialogs.confirm.apply.content": "Are you sure to {isApplied} the '{effectName}' from item '{itemName}' on actor '{actorName}' (token name is '{tokenName}')?",

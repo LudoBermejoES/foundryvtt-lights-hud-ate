@@ -244,14 +244,19 @@ export class LightHUDAteNote extends FormApplication {
       // ===========================================================================================
 
       if (useBasic) {
+
+        // ======================================================================================
+        // BASIC SETTING
+        // ======================================================================================
+
         const visionType = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.VISION_TYPE}`];
         if (visionType != null && visionType != undefined && visionType) {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.VISION_TYPE, visionType);
           for (const vision of API.VISIONS) {
             if (vision.id === visionType) {
-              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT, vision.brightSight);
-              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM, vision.dimSight);
-              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE, vision.sightAngle);
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT_BASIC, vision.brightSight);
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM_BASIC, vision.dimSight);
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE_BASIC, vision.sightAngle);
               break;
             }
           }
@@ -264,10 +269,10 @@ export class LightHUDAteNote extends FormApplication {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SOURCE, lightSource);
           for (const light of API.LIGHTS) {
             if (light.id === lightSource) {
-              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT, light.brightLight);
-              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM, light.dimLight);
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT_BASIC, light.brightLight);
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM_BASIC, light.dimLight);
               await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA_BASIC, light.lightAlpha);
-              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE, light.lightAngle);
+              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE_BASIC, light.lightAngle);
               await this.entity.setFlag(
                 CONSTANTS.MODULE_NAME,
                 LightHUDNoteFlags.LIGHT_LUMINOSITY,
@@ -292,15 +297,8 @@ export class LightHUDAteNote extends FormApplication {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SOURCE, null);
         }
 
-        const lockRotation = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LOCK_ROTATION}`];
-        if (lockRotation != null && lockRotation != undefined && lockRotation) {
-          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, lockRotation);
-        } else {
-          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, null);
-        }
-
         const lightColorBasic = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_COLOR_BASIC}`];
-        if (lightColorBasic != null && lightColorBasic != undefined && 
+        if (lightColorBasic != null && lightColorBasic != undefined &&
           lightColorBasic != '#000000' && lightColorBasic) {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR_BASIC, lightColorBasic);
         } else {
@@ -317,12 +315,9 @@ export class LightHUDAteNote extends FormApplication {
 
       } else {
 
-        const lockRotation = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LOCK_ROTATION}`];
-        if (lockRotation != null && lockRotation != undefined && lockRotation) {
-          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, lockRotation);
-        } else {
-          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, null);
-        }
+        // ======================================================================================
+        // ADVANCED SETTING
+        // ======================================================================================
 
         const lightAnimationIntensity =
           formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ANIMATION_INTENSITY}`];
@@ -449,13 +444,6 @@ export class LightHUDAteNote extends FormApplication {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS, null);
         }
 
-        const effectName = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.NAME}`] ?? this.entity.name;
-        if (effectName != null && effectName != undefined && effectName) {
-          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME, effectName);
-        } else {
-          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME, null);
-        }
-
         const scale = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.SCALE}`];
         if (scale != null && scale != undefined && scale) {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE, scale);
@@ -490,6 +478,24 @@ export class LightHUDAteNote extends FormApplication {
         } else {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH, null);
         }
+      }
+
+      // ======================================================================================
+      // COMMON SETTING
+      // ======================================================================================
+
+      const effectName = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.NAME}`] ?? this.entity.name;
+      if (effectName != null && effectName != undefined && effectName) {
+        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME, effectName);
+      } else {
+        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME, null);
+      }
+
+      const lockRotation = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LOCK_ROTATION}`];
+      if (lockRotation != null && lockRotation != undefined && lockRotation) {
+        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, lockRotation);
+      } else {
+        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, null);
       }
 
       /*

@@ -14,13 +14,32 @@
 
 ### If you want to buy me a coffee [![alt-text](https://img.shields.io/badge/-Patreon-%23ff424d?style=for-the-badge)](https://www.patreon.com/p4535992)
 
-A Foundry VTT module that displays on the HUD config of the token all the available lighting items on the token/actor, with some [ATE](https://github.com/kandashi/Active-Token-Lighting) effect, so you can light a torch or turn of without modify the token configuration and you can set with [Times up](https://gitlab.com/tposney/times-up) and [Dae](https://gitlab.com/tposney/dae) time and condition of the vision and light effect on the token.
 
 This project is born like a fusion of the features of these modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/), [ATE](https://github.com/kandashi/Active-Token-Lighting) and [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects), but after the initial code i rewriting everything so many times now is just a new module inspired form these other modules.
 
 Remember to support these authors if you feel generous on their patreon or kofi account.
 
-![imggif](./wiki/assets/first_release_tutorial_left.gif)
+A Foundry VTT module that displays on the HUD config of the token all the available lighting and visions items on the token/actor with two modality:
+
+1) The module setting **'Apply HUD interface on ATE Items' (by default is true)** enable some [ATE](https://github.com/kandashi/Active-Token-Lighting) effect, so you can light a torch or turn of without modify the token configuration and you can set with [Times up](https://gitlab.com/tposney/times-up) and [Dae](https://gitlab.com/tposney/dae) time and condition of the vision and light effect on the token.
+
+![imggif1](./wiki/assets/first_release_tutorial_left.gif)
+
+2) The module setting **'Apply HUD interface on flagged Items' (by default is false)** enable some old flag system for replicate the old behavior of LightsHUD, but with a more dynamic and customizable integration or for people who don't like [ATE](https://github.com/kandashi/Active-Token-Lighting) and want a minimal setup starting from a series of presets.
+
+![imggif2]()
+
+## NOTES:
+
+**Although not recommended, both modes can be active** and the interface will show both ATE effect and item objects with module flags activated. The priority of the light and visual effects will always be given to the ATE effects present on the object if there are both the ATE effects and the module flags.
+
+**If both settings are disabled** only the two GM management macros will be viewable on the HUD interface, it can be useful for very minimal games without too many gadgets.
+
+**Which of the two settings should I choose?**
+
+If you are experienced enough with active effects I suggest you use the solution with ATE because under the hood it does a lot of cool things that you can't even imagine.
+
+If you ask me the big difference is that the version with flags has the limitation of not "merging" the abilities, but of overriding to keep active one effect at a time, while ATE does the "merge" trying to give the "best of the bunch".
 
 ## What are the differences between LightHUD, DFreds Convenient Effects and LightHUD + ATE?
 
@@ -71,7 +90,7 @@ This module uses the [warpgate](https://github.com/trioderegion/warpgate) librar
 
 ## Known Issue\Limitation
 
-- **HELP WANTED** The token MUST BE LINKED TO A ACTOR,  if anyone can solve this let me know
+- Internazionalization of the labels (is coming after the bug fixing...)
 - **HELP WANTED** This is just a "fast to make" module maybe someone a little more expert than me with form application and hud layer can do a better form for a better user experience
 - [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) is not been updated for foundryvtt 9 so is not advisable to used right now.
 - The modules is not smart enough to distinct multiple ligthing effect on the same item and is not make sense ? Every item must have only one effect with _ATL changes_ on it (at least for me). If multiple effect with _ATL changes_ are founded on the same item only the first is analyzed from the module, you can use multiple item where each has is own lighting configuration.
