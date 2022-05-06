@@ -20,6 +20,11 @@
   visibility: visible;
   /* display: grid; */
 }
+
+#token-hud .lights-hud-ate-selector-wrap.left {
+  left: 250px;
+}
+
 #token-hud .lights-hud-ate-button-select {
   max-width: 300px;
   overflow-wrap: break-word;

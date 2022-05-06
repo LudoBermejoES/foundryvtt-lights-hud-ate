@@ -514,18 +514,6 @@ export async function updateTokenLighting(
   width: number | null = null,
   scale: number | null = null,
 ) {
-  // Store the initial status of illumination for the token to restore if all light sources are extinguished
-  const tokenData = token.data;
-  if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
-    if (!token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
-      await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA, await duplicate(tokenData));
-    }
-  } else {
-    if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
-      await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
-    }
-  }
-
   if (applyAsAtlEffect) {
     /*
     const atlChanges: any = [];
@@ -1247,4 +1235,137 @@ function _getSecondsRemaining(duration) {
   } else {
     return Infinity;
   }
+}
+
+export async function retrieveItemLightsWithFlagAndDisableThem(token: Token, itemId:string): Promise<void> {
+  const actor = token.actor;
+  if (!actor || !token) {
+    return;
+  }
+  // For every itemwith a ATL/ATE effect
+  for (const im of actor.data.items.contents) {
+    if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+      if (im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE) && 
+        im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) &&
+        im.id != itemId) {
+        await im.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED, false);
+      }
+    }
+  }
+}
+
+export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDataHud[]> {
+  const actor = token.actor;
+  if (!actor || !token) {
+    return [];
+  }
+  const lightItems: Item[] = [];
+  let imagesParsed: LightDataHud[] = [];
+  for (const im of actor.data.items.contents) {
+    if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+      if (im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
+        lightItems.push(im);
+        continue;
+      }
+    }
+  }
+  // Convert item to LightHudData
+  imagesParsed = await Promise.all(
+    lightItems.map(async (item: Item) => {
+      const im = <string>item.img;
+      const split = im.split('/');
+      const extensions = im.split('.');
+      const extension = <string>extensions[extensions.length - 1];
+      const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
+      const vid = ['webm', 'mp4', 'm4v'].includes(extension);
+      // TODO for now we check if at least one active effect has the atl/ate changes on him
+      const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(item) || [];
+      let appliedTmp = false;
+      let disabledTmp = false;
+      let suppressedTmp = false;
+      let temporaryTmp = false;
+      let passiveTmp = false;
+      let effectidTmp = '';
+      let effectnameTmp = '';
+      let turnsTmp = 0;
+      let isExpiredTmp = false;
+      let remainingSecondsTmp = -1;
+      let labelTmp = '';
+      let _idTmp = '';
+      let flagsTmp = {};
+      let tokenidTmp = '';
+      let actoridTmp = '';
+      // ========================================================
+      // WE CHECK THE FLAG
+      // ========================================================
+      if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
+        const applied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) || false;
+        disabledTmp = !applied;
+        suppressedTmp = false; // always false
+        temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
+          ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) > 0
+          : false;
+        passiveTmp = !temporaryTmp;
+        if (applied && !disabledTmp && !suppressedTmp) {
+          appliedTmp = true;
+        }
+        effectidTmp = '';
+        effectnameTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
+        tokenidTmp = <string>token.id;
+        actoridTmp = <string>actor.id;
+        // ADDED
+        remainingSecondsTmp = _getSecondsRemaining(
+          temporaryTmp ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) : 0,
+        );
+        turnsTmp = 0;
+        isExpiredTmp = false;
+        labelTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
+        _idTmp = <string>item.id;
+        flagsTmp = item.data?.flags || {};
+
+        if (!suppressedTmp) {
+          appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+        } else {
+          appliedTmp = !appliedTmp;
+        }
+      }
+      // ========================================================
+      // DO NOTHING
+      // ========================================================
+      else {
+        return new LightDataHud();
+      }
+
+      return <LightDataHud>{
+        icon: im,
+        name: item.name,
+        applied: appliedTmp,
+        disabled: disabledTmp,
+        suppressed: suppressedTmp,
+        isTemporary: temporaryTmp,
+        passive: passiveTmp,
+        img: img,
+        vid: vid,
+        type: img || vid,
+        itemid: item.id,
+        itemname: item.name,
+        effectid: effectidTmp,
+        effectname: effectnameTmp,
+        tokenid: tokenidTmp,
+        actorid: actoridTmp,
+        // Added for dfred panel
+        remainingSeconds: remainingSecondsTmp,
+        turns: turnsTmp,
+        isExpired: isExpiredTmp,
+        label: labelTmp,
+        _id: _idTmp,
+        flags: flagsTmp,
+      };
+    }),
+  );
+
+  const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
+    return i.effectname;
+  });
+  return imagesParsedFilter;
 }

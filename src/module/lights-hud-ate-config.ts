@@ -18,7 +18,7 @@ export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
   return atlEffects;
 }
 
-export async function addLightsHUDButtons(app, html, data) {
+export async function addLightsHUDButtons(app, html:JQuery<HTMLElement>, data) {
   if (
     !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem') &&
     !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')
@@ -52,24 +52,6 @@ export async function addLightsHUDButtons(app, html, data) {
 
   const imagesParsed = await retrieveItemLights(token);
 
-  // CHECK IF ANY LIGHT IS ACTIVE THEN IF APPLY ON FLAG IS TRUE
-  let atLeastOneLightIsApplied = false;
-  for (const light of imagesParsed) {
-    if (light.applied) {
-      atLeastOneLightIsApplied = true;
-      break;
-    }
-  }
-  if (!atLeastOneLightIsApplied && game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
-    if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
-      await updateTokenLightingFromData(
-        token,
-        <TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA),
-      );
-      await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
-    }
-  }
-
   const wildcardDisplay = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/artSelect.hbs`, {
     tokenId,
     actorId,
@@ -80,7 +62,7 @@ export async function addLightsHUDButtons(app, html, data) {
   });
 
   // const is080 = !isNewerVersion('0.8.0', <string>game.version);
-  const settingHudColClass = <string>game.settings.get(CONSTANTS.MODULE_NAME, 'hudColumn') ?? '.left';
+  const settingHudColClass = <string>game.settings.get(CONSTANTS.MODULE_NAME, 'hudColumn') ?? 'left';
   const settingHudTopBottomClass = <string>game.settings.get(CONSTANTS.MODULE_NAME, 'hudTopBottom') ?? 'top';
 
   const buttonPos = '.' + settingHudColClass.toLowerCase();
@@ -106,15 +88,18 @@ export async function addLightsHUDButtons(app, html, data) {
 
       if (clickedButton === tokenButton && activeButton !== tokenButton) {
         tokenButton.classList.add('active');
+        if(settingHudColClass.toLowerCase() === 'left'){
+          (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).style.left = token.width + 150 + "px";
+        }
 
-        html.find('.lights-hud-ate-selector-wrap')[0].classList.add('active');
+        (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).classList.add('active');
         const effectSelector = '[data-action="effects"]'; //is080 ? '[data-action="effects"]' : '.effects';
-        html.find(`.control-icon${effectSelector}`)[0].classList.remove('active');
-        html.find('.status-effects')[0].classList.remove('active');
+        (<HTMLElement>html.find(`.control-icon${effectSelector}`)[0]).classList.remove('active');
+        (<HTMLElement>html.find('.status-effects')[0]).classList.remove('active');
       } else {
         tokenButton.classList.remove('active');
 
-        html.find('.lights-hud-ate-selector-wrap')[0].classList.remove('active');
+        (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).classList.remove('active');
       }
     });
 
@@ -123,7 +108,7 @@ export async function addLightsHUDButtons(app, html, data) {
   const buttonMacroCustom = $(html.find('.lights-hud-ate-button-macro-custom'));
 
   buttons.map((button) => {
-    buttons[button].addEventListener('click', async function (event) {
+    buttons[button]?.addEventListener('click', async function (event) {
       event.preventDefault();
       event.stopPropagation();
       const buttonClick = event.button; // 0 left click
@@ -133,7 +118,7 @@ export async function addLightsHUDButtons(app, html, data) {
         confirmDialogATLEffectItem(lightDataDialog).render(true);
       }
     });
-    buttons[button].addEventListener('contextmenu', async function (event) {
+    buttons[button]?.addEventListener('contextmenu', async function (event) {
       event.preventDefault();
       event.stopPropagation();
       const buttonClick = event.button; // 0 left click

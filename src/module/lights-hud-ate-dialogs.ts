@@ -6,8 +6,11 @@ import {
   i18n,
   i18nFormat,
   prepareTokenDataDropTheTorch,
+  retrieveItemLightsWithFlag,
+  retrieveItemLightsWithFlagAndDisableThem,
   rollDependingOnSystem,
   updateTokenLighting,
+  updateTokenLightingFromData,
   warn,
 } from './lib/lib';
 import {
@@ -944,7 +947,7 @@ async function manageFlaggedItem(tokenId, itemId) {
     warn(`No valid item found for the token with id '${tokenId}'`, true);
     return;
   }
-  const isApplied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) ?? false;
+  const isApplied = <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) ?? false;
   // We roll the item ???
   try {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'rollItem') && !isApplied) {
@@ -959,14 +962,11 @@ async function manageFlaggedItem(tokenId, itemId) {
       }
     }
   } finally {
-    if(!isApplied){
-      applyFlagsOnToken(tokenId, itemId);
-    }
-    await item.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED, !isApplied);
+    applyFlagsOnToken(tokenId, itemId, isApplied);
   }
 }
 
-async function applyFlagsOnToken(tokenId: string, itemId: string) {
+async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied:boolean) {
   const token = <Token>canvas.tokens?.placeables.find((t) => {
     return t.id === tokenId;
   });
@@ -975,6 +975,50 @@ async function applyFlagsOnToken(tokenId: string, itemId: string) {
   });
 
   const tokenData = token.data;
+  
+  // =======================================
+  await retrieveItemLightsWithFlagAndDisableThem(token, <string>item.id);
+
+  // Store the initial status of illumination for the token to restore if all light sources are extinguished
+  // const tokenData = token.data;
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+    if (!token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
+      await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA, await duplicate(tokenData));
+    }
+  } else {
+    if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
+      await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
+    }
+  }
+
+  await item.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED, !isApplied);
+
+  const imagesParsed = await retrieveItemLightsWithFlag(token);
+
+  // CHECK IF ANY LIGHT IS ACTIVE THEN IF APPLY ON FLAG IS TRUE
+  let atLeastOneLightIsApplied = false;
+  for (const light of imagesParsed) {
+    if (light.applied) {
+      atLeastOneLightIsApplied = true;
+      break;
+    }
+  }
+
+  if (!atLeastOneLightIsApplied && game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+    if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
+      await updateTokenLightingFromData(
+        token,
+        <TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA),
+      );
+      await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
+      return;
+    }
+  }
+
+  if(isApplied){
+    return;
+  }
+  // =======================================
 
   const id = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || randomID();
   const effectName = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || tokenData.name;
@@ -1192,6 +1236,7 @@ async function applyFlagsOnToken(tokenId: string, itemId: string) {
     }
   }
   */
+
   // Update Token
   await updateTokenLighting(
     token,
@@ -1229,4 +1274,5 @@ async function applyFlagsOnToken(tokenId: string, itemId: string) {
     width,
     scale,
   );
+
 }
