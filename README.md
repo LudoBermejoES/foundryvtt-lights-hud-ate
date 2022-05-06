@@ -27,7 +27,7 @@ A Foundry VTT module that displays on the HUD config of the token all the availa
 
 2) The module setting **'Apply HUD interface on flagged Items' (by default is false)** enable some old flag system for replicate the old behavior of LightsHUD, but with a more dynamic and customizable integration or for people who don't like [ATE](https://github.com/kandashi/Active-Token-Lighting) and want a minimal setup starting from a series of presets.
 
-![imggif2]()
+![imggif2](./wiki/assets/light_hud_flags.gif)
 
 ## NOTES:
 
@@ -36,7 +36,6 @@ A Foundry VTT module that displays on the HUD config of the token all the availa
 **If both settings are disabled** only the two GM management macros will be viewable on the HUD interface, it can be useful for very minimal games without too many gadgets.
 
 **Which of the two settings should I choose?**
-
 If you are experienced enough with active effects I suggest you use the solution with ATE because under the hood it does a lot of cool things that you can't even imagine.
 
 If you ask me the big difference is that the version with flags has the limitation of not "merging" the abilities, but of overriding to keep active one effect at a time, while ATE does the "merge" trying to give the "best of the bunch".

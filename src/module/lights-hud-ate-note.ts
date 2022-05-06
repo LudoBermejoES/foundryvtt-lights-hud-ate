@@ -244,7 +244,6 @@ export class LightHUDAteNote extends FormApplication {
       // ===========================================================================================
 
       if (useBasic) {
-
         // ======================================================================================
         // BASIC SETTING
         // ======================================================================================
@@ -254,7 +253,11 @@ export class LightHUDAteNote extends FormApplication {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.VISION_TYPE, visionType);
           for (const vision of API.VISIONS) {
             if (vision.id === visionType) {
-              await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT_BASIC, vision.brightSight);
+              await this.entity.setFlag(
+                CONSTANTS.MODULE_NAME,
+                LightHUDNoteFlags.SIGHT_BRIGHT_BASIC,
+                vision.brightSight,
+              );
               await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM_BASIC, vision.dimSight);
               await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE_BASIC, vision.sightAngle);
               break;
@@ -298,23 +301,24 @@ export class LightHUDAteNote extends FormApplication {
         }
 
         const lightColorBasic = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_COLOR_BASIC}`];
-        if (lightColorBasic != null && lightColorBasic != undefined &&
-          lightColorBasic != '#000000' && lightColorBasic) {
+        if (
+          lightColorBasic != null &&
+          lightColorBasic != undefined &&
+          lightColorBasic != '#000000' &&
+          lightColorBasic
+        ) {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR_BASIC, lightColorBasic);
         } else {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR_BASIC, null);
         }
 
         const lightAlphaBasic = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_ALPHA_BASIC}`];
-        if (lightAlphaBasic != null && lightAlphaBasic != undefined &&
-            lightAlphaBasic > 0 && lightAlphaBasic) {
+        if (lightAlphaBasic != null && lightAlphaBasic != undefined && lightAlphaBasic > 0 && lightAlphaBasic) {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA_BASIC, lightAlphaBasic);
         } else {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA_BASIC, null);
         }
-
       } else {
-
         // ======================================================================================
         // ADVANCED SETTING
         // ======================================================================================
@@ -388,8 +392,7 @@ export class LightHUDAteNote extends FormApplication {
         }
 
         const lightColor = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.LIGHT_COLOR}`];
-        if (lightColor != null && lightColor != undefined &&
-          lightColor != '#000000' && lightColor) {
+        if (lightColor != null && lightColor != undefined && lightColor != '#000000' && lightColor) {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR, lightColor);
         } else {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR, null);

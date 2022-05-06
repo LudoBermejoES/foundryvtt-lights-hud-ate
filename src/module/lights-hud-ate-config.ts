@@ -18,7 +18,7 @@ export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
   return atlEffects;
 }
 
-export async function addLightsHUDButtons(app, html:JQuery<HTMLElement>, data) {
+export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) {
   if (
     !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem') &&
     !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')
@@ -88,8 +88,8 @@ export async function addLightsHUDButtons(app, html:JQuery<HTMLElement>, data) {
 
       if (clickedButton === tokenButton && activeButton !== tokenButton) {
         tokenButton.classList.add('active');
-        if(settingHudColClass.toLowerCase() === 'left'){
-          (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).style.left = token.width + 150 + "px";
+        if (settingHudColClass.toLowerCase() === 'left') {
+          (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).style.left = token.width + 150 + 'px';
         }
 
         (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).classList.add('active');

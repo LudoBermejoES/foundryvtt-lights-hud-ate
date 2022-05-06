@@ -1,8 +1,11 @@
 ### 0.11.9
 
-- Disable about time integration from update token for concurrent crash (About time configuration)
-- Add new integration for retrocpmatibility with the old 'LightsHUD'
-- Add new option with no ATE integration, just flags
+- Crash fix: Disable about time integration from update token for concurrent crash (About time configuration)
+- New Feature: Add new integration for retrocpomatibility with the old 'LightsHUD'
+- New Feature: Add new option with no ATE integration, just flags check out the viedo on the readme, this is useful for eveyone hate ATE or active effects in general, but want to replicate the old behaviour of LightHUD in a more dynamic way
+- Bug fix: for when HUD column is set on the left
+- Bug fix: Bunch of bug fix
+- Checkout the README.md for more details
 
 ### 0.11.8
 

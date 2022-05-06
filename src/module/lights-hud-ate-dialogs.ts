@@ -966,7 +966,7 @@ async function manageFlaggedItem(tokenId, itemId) {
   }
 }
 
-async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied:boolean) {
+async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boolean) {
   const token = <Token>canvas.tokens?.placeables.find((t) => {
     return t.id === tokenId;
   });
@@ -975,7 +975,7 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied:bool
   });
 
   const tokenData = token.data;
-  
+
   // =======================================
   await retrieveItemLightsWithFlagAndDisableThem(token, <string>item.id);
 
@@ -1015,7 +1015,7 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied:bool
     }
   }
 
-  if(isApplied){
+  if (isApplied) {
     return;
   }
   // =======================================
@@ -1029,83 +1029,93 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied:bool
   const scale =
     <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE)) || tokenData.scale;
 
-  let brightSight:number|null = null;
-  if(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)){
-    brightSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT_BASIC))
-  }else{
-    brightSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT))
+  let brightSight: number | null = null;
+  if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
+    brightSight = <number>(
+      checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT_BASIC))
+    );
+  } else {
+    brightSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT));
   }
-  if(!brightSight || brightSight === 0){
+  if (!brightSight || brightSight === 0) {
     brightSight = tokenData.brightSight;
   }
 
-  let dimSight:number|null = null;
-  if(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)){
-    dimSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM_BASIC))
-  }else{
-    dimSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM))
+  let dimSight: number | null = null;
+  if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
+    dimSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM_BASIC));
+  } else {
+    dimSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM));
   }
-  if(!dimSight || dimSight === 0){
+  if (!dimSight || dimSight === 0) {
     dimSight = tokenData.dimSight;
   }
 
-  let sightAngle:number|null = null;
-  if(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)){
-    sightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE_BASIC))
-  }else{
-    sightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE))
+  let sightAngle: number | null = null;
+  if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
+    sightAngle = <number>(
+      checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE_BASIC))
+    );
+  } else {
+    sightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE));
   }
-  if(!sightAngle || sightAngle === 0){
+  if (!sightAngle || sightAngle === 0) {
     sightAngle = tokenData.sightAngle;
   }
 
-  let dimLight:number|null = null;
-  if(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)){
-    dimLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM_BASIC))
-  }else{
-    dimLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM))
+  let dimLight: number | null = null;
+  if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
+    dimLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM_BASIC));
+  } else {
+    dimLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM));
   }
-  if(!dimLight || dimLight === 0){
+  if (!dimLight || dimLight === 0) {
     dimLight = tokenData.light.dim;
   }
 
-  let brightLight:number|null = null;
-  if(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)){
-    brightLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT_BASIC))
-  }else{
-    brightLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT))
+  let brightLight: number | null = null;
+  if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
+    brightLight = <number>(
+      checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT_BASIC))
+    );
+  } else {
+    brightLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT));
   }
-  if(!brightLight || brightLight === 0){
+  if (!brightLight || brightLight === 0) {
     brightLight = tokenData.light.bright;
   }
 
-  let lightColor:string|null = null;
-  if(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)){
+  let lightColor: string | null = null;
+  if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
     lightColor = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR_BASIC);
-  }else{
+  } else {
     lightColor = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLOR);
   }
-  if(!lightColor || lightColor === '#000000'){
+  if (!lightColor || lightColor === '#000000') {
     lightColor = <string>tokenData.light.color;
   }
 
-  let lightAlpha:number|null = null;
-  if(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)){
-    lightAlpha = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA_BASIC))
-  }else{
-    lightAlpha = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA))
+  let lightAlpha: number | null = null;
+  if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
+    lightAlpha = <number>(
+      checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA_BASIC))
+    );
+  } else {
+    lightAlpha = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA));
   }
-  if(!lightAlpha || lightAlpha === 0){
+  if (!lightAlpha || lightAlpha === 0) {
     lightAlpha = tokenData.alpha;
   }
 
-  let lightAngle:number|null = null;
-  if(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)){
-    lightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE_BASIC))
-  }else{
-    lightAngle =<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE))
+  let lightAngle: number | null = null;
+  if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
+    lightAngle = <number>(
+      checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE_BASIC))
+    );
+  } else {
+    lightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE));
   }
-  if(!lightAngle || lightAngle === 0){
+  if (!lightAngle || lightAngle === 0) {
     lightAngle = tokenData.sightAngle;
   }
 
@@ -1274,5 +1284,4 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied:bool
     width,
     scale,
   );
-
 }

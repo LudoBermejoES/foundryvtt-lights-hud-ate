@@ -1237,7 +1237,7 @@ function _getSecondsRemaining(duration) {
   }
 }
 
-export async function retrieveItemLightsWithFlagAndDisableThem(token: Token, itemId:string): Promise<void> {
+export async function retrieveItemLightsWithFlagAndDisableThem(token: Token, itemId: string): Promise<void> {
   const actor = token.actor;
   if (!actor || !token) {
     return;
@@ -1245,9 +1245,11 @@ export async function retrieveItemLightsWithFlagAndDisableThem(token: Token, ite
   // For every itemwith a ATL/ATE effect
   for (const im of actor.data.items.contents) {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
-      if (im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE) && 
+      if (
+        im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE) &&
         im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) &&
-        im.id != itemId) {
+        im.id != itemId
+      ) {
         await im.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED, false);
       }
     }
