@@ -513,105 +513,10 @@ export async function updateTokenLighting(
   height: number | null = null,
   width: number | null = null,
   scale: number | null = null,
+
+  isPreset: boolean,
 ) {
   if (applyAsAtlEffect) {
-    /*
-    const atlChanges: any = [];
-
-    if (height && height > 0) {
-      atlChanges.push({
-        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.height'),
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: height,
-      });
-    }
-    if (width && width > 0) {
-      atlChanges.push({
-        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.width'),
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: width,
-      });
-    }
-    if (scale && scale > 0) {
-      atlChanges.push({
-        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.scale'),
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: scale,
-      });
-    }
-    if (dimSight && dimSight > 0) {
-      atlChanges.push({
-        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.dimSight'),
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: dimSight,
-      });
-    }
-    if (brightSight && brightSight > 0) {
-      atlChanges.push({
-        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.brightSight'),
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: brightSight,
-      });
-    }
-    if (dimLight && dimLight > 0) {
-      atlChanges.push({
-        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.dim'),
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: dimLight,
-      });
-    }
-    if (brightLight && brightLight > 0) {
-      atlChanges.push({
-        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.bright'),
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: brightLight,
-      });
-    }
-    if (lightAngle) {
-      atlChanges.push({
-        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.angle'),
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: lightAngle,
-      });
-    }
-    if (lightColor) {
-      atlChanges.push({
-        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.color'),
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: lightColor,
-      });
-    }
-    if (lightAlpha) {
-      atlChanges.push({
-        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.alpha'),
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: lightAlpha,
-      });
-    }
-    if (lightAnimationType && lightAnimationSpeed && lightAnimationIntensity && lightAnimationReverse) {
-      atlChanges.push({
-        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.animation'),
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}, "reverse":${lightAnimationReverse}}`,
-      });
-    } else if (lightAnimationType && lightAnimationSpeed && lightAnimationIntensity) {
-      atlChanges.push({
-        key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.animation'),
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}}`,
-      });
-    }
-    const efffectAtlToApply = new Effect({
-      // customId: id || <string>token.actor?.id,
-      customId: <string>token.actor?.id,
-      name: <string>effectName,
-      description: ``,
-      // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
-      transfer: true,
-      seconds: duration != null ? <number>duration * 60 : undefined, // minutes to seconds
-      atlChanges: atlChanges,
-    });
-    */
     const efffectAtlToApply = convertToATLEffect(
       //lockRotation,
       dimSight,
@@ -730,8 +635,8 @@ export async function updateTokenLighting(
       width: width,
       scale: scale,
       light: {
-        dim: dimLight,
-        bright: brightLight,
+        dim: manageDist(dimLight, isPreset),
+        bright: manageDist(brightLight, isPreset),
         color: lightColor,
         //@ts-ignore
         animation: {
@@ -749,14 +654,14 @@ export async function updateTokenLighting(
         contrast: lightContrast,
         shadows: lightShadows,
       },
-      dimSight: dimSight,
-      brightSight: brightSight,
+      dimSight: manageDist(dimSight, isPreset),
+      brightSight: manageDist(brightSight, isPreset),
       sightAngle: sightAngle,
     });
   }
 }
 
-export async function updateTokenLightingFromData(token: Token, tokenData: TokenData) {
+export async function updateTokenLightingFromData(token: Token, tokenData: TokenData, isPreset: boolean) {
   await token.document.update({
     // lockRotation: lockRotation,
     vision: tokenData.vision,
@@ -764,8 +669,8 @@ export async function updateTokenLightingFromData(token: Token, tokenData: Token
     width: tokenData.width,
     scale: tokenData.scale,
     light: {
-      dim: tokenData.light.dim,
-      bright: tokenData.light.bright,
+      dim: manageDist(tokenData.light.dim, isPreset),
+      bright: manageDist(tokenData.light.bright, isPreset),
       color: tokenData.light.color,
       //@ts-ignore
       animation: {
@@ -783,8 +688,8 @@ export async function updateTokenLightingFromData(token: Token, tokenData: Token
       contrast: tokenData.light.contrast,
       shadows: tokenData.light.shadows,
     },
-    dimSight: tokenData.dimSight,
-    brightSight: tokenData.brightSight,
+    dimSight: manageDist(tokenData.dimSight, isPreset),
+    brightSight: manageDist(tokenData.brightSight, isPreset),
     sightAngle: tokenData.sightAngle,
   });
 }
@@ -1088,7 +993,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       let flagsTmp = {};
       let tokenidTmp = '';
       let actoridTmp = '';
-
+      let isFlagTmp = false;
       // ========================================================
       // IMPORTANT PRIORITY TO THE ATL EFFECT PRESENT ON THE ITEM
       // ========================================================
@@ -1156,6 +1061,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       // WE CHECK THE FLAG
       // ========================================================
       else if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
+        isFlagTmp = true;
         const applied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) || false;
         disabledTmp = !applied;
         suppressedTmp = false; // always false
@@ -1217,6 +1123,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         label: labelTmp,
         _id: _idTmp,
         flags: flagsTmp,
+        isFlag: isFlagTmp,
       };
     }),
   );
@@ -1297,10 +1204,12 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
       let flagsTmp = {};
       let tokenidTmp = '';
       let actoridTmp = '';
+      let isFlagTmp = false;
       // ========================================================
       // WE CHECK THE FLAG
       // ========================================================
       if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
+        isFlagTmp = true;
         const applied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) || false;
         disabledTmp = !applied;
         suppressedTmp = false; // always false
@@ -1362,6 +1271,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
         label: labelTmp,
         _id: _idTmp,
         flags: flagsTmp,
+        isFlag: isFlagTmp,
       };
     }),
   );
@@ -1370,4 +1280,20 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
     return i.effectname;
   });
   return imagesParsedFilter;
+}
+
+export function manageDist(feetInput: number, isPreset: boolean): number {
+  let valueDist = feetInput;
+  if (isPreset && game.ready && game.settings.get(CONSTANTS.MODULE_NAME, 'useMetricSystem')) {
+    valueDist = convertFeetToMeter(valueDist);
+  }
+  return valueDist;
+}
+
+export function convertFeetToMeter(feetInput: number): number {
+  return Math.floor(feetInput / 3.2808);
+}
+
+export function convertMeterToFeet(meterInput: number): number {
+  return Math.floor(meterInput * 3.2808);
 }

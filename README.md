@@ -149,7 +149,7 @@ If you right click on a image/voice of the hud panel we call the [warpgate](http
 
 **NOTE:** For now there is no discrimination on the item you can drop. You can drop a _Torch_, like you can drop a _Light Spell_ , like you can drop your _Darkvision feature_, probably some condition for let drop only physical items
 
-## How can i contribute with my ownt item ?
+## How can i contribute with my own item ?
 
 Anyone can contribute with a custom lighting and vision item, you just need to export the item you created with the ATL effect on it and i will create a compendium, or better open a PR on the official [ATE](https://github.com/kandashi/Active-Token-Lighting) compendium.
 

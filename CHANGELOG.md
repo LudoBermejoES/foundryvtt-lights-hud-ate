@@ -1,3 +1,8 @@
+### 0.11.10
+
+- New Feature: Add module settings 'Use metric system on preset light and vision'
+- New Feature: Add icon Flag on HUD so we can distinct between flag lights and ATE lights
+
 ### 0.11.9
 
 - Crash fix: Disable about time integration from update token for concurrent crash (About time configuration)

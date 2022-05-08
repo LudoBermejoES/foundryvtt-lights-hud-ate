@@ -107,6 +107,7 @@ export class LightDataHud {
   label: string;
   _id: string;
   flags: any;
+  isFlag: boolean;
 }
 
 export class LightDataDialog {

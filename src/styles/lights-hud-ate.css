@@ -292,6 +292,11 @@
 .lights-hud-ate-selector-wrap .icon .badge.fas.fa-exclamation-triangle {
   color: yellow;
 }
+
+.lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-flag,
+.lights-hud-ate-selector-wrap .icon .badge.fas.fa-flag {
+  color: lightcoral;
+}
 /*
 .lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-eye,
 .lights-hud-ate-effect-panel .icon .badge.fas.fa-eye {

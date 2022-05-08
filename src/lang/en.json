@@ -21,6 +21,8 @@
   "lights-hud-ate.setting.applyOnATEItem.hint": "Show all actor items with ATE active effect in the HUD interface",
   "lights-hud-ate.setting.applyOnFlagItem.name": "Apply HUD interface on flagged Items",
   "lights-hud-ate.setting.applyOnFlagItem.hint": "Show all actor items flagged from this module active effect in the HUD interface",
+  "lights-hud-ate.setting.useMetricSystem.name": "Use metric system on preset light and vision",
+  "lights-hud-ate.setting.useMetricSystem.hint": "If enabled the unit distance used on the preset light and vision is converted to metric system",
 
   "lights-hud-ate.setting.reset.name": "Reset settings to default",
   "lights-hud-ate.setting.reset.label": "Reset Settings To Default",

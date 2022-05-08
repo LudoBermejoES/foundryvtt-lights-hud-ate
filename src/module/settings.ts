@@ -99,6 +99,15 @@ export const registerSettings = function (): void {
     },
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'useMetricSystem', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.useMetricSystem.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.useMetricSystem.hint`,
+    scope: 'client',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
   // ===================================================================
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {

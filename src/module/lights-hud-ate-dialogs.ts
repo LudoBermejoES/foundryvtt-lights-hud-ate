@@ -192,6 +192,11 @@ export function presetDialog(applyChanges: boolean): Dialog {
           };
           const lightColor = lightIndex.lightColor ?? <string>token.data.light.color;
           const lightAlpha = lightIndex.lightAlpha ?? <number>token.data.light.alpha;
+
+          const height = null;
+          const width = null;
+          const scale = null;
+          const isPreset = true;
           // Update Token
           await updateTokenLighting(
             token,
@@ -225,9 +230,10 @@ export function presetDialog(applyChanges: boolean): Dialog {
             vision,
             //id,
             // name,
-            // height,
-            // width,
-            // scale,
+            height,
+            width,
+            scale,
+            isPreset,
           );
         }
       }
@@ -537,40 +543,10 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
         const shadows = <number>checkNumberFromString(html.find('#lightShadows')[0].value);
         const vision = dimSight > 0 || brightSight > 0 ? true : false;
 
+        const isPreset = false;
+
         const applyAsAtlAteEffect = <boolean>html.find('#apply-as-atl-ate').is(':checked') ?? false;
         const duration = <number>checkNumberFromString(html.find('#duration')[0].value);
-
-        // const tokenData:TokenData = {
-        //     name: effectName,
-        //     height: height,
-        //     width: width,
-        //     scale: scale,
-        //     light: {
-        //         dim: dimLight,
-        //         bright: brightLight,
-        //         color: lightColor,
-        //         //@ts-ignore
-        //         animation: {
-        //             type: lightAnimationType,
-        //             speed: lightAnimationSpeed,
-        //             intensity: lightAnimationIntensity,
-        //             reverse: lightAnimationReverse
-        //         },
-        //         alpha: lightAlpha,
-        //         angle: lightAngle,
-        //         coloration: coloration,
-        //         luminosity: luminosity,
-        //         gradual: gradual,
-        //         saturation: saturation,
-        //         contrast: contrast,
-        //         shadows: shadows,
-        //     },
-        //     dimSight: dimSight,
-        //     brightSight: brightSight,
-        //     sightAngle: sightAngle,
-
-        //     id: id
-        // }
         //const final = Object.fromEntries(Object.entries(object).filter(([_, v]) => v != ""));
         //ATL.AddPreset(tempName, final)
         for (const token of <Token[]>canvas.tokens?.controlled) {
@@ -699,6 +675,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
             height,
             width,
             scale,
+            isPreset,
           );
         }
       }
@@ -1009,6 +986,7 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
       await updateTokenLightingFromData(
         token,
         <TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA),
+        false,
       );
       await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
       return;
@@ -1154,6 +1132,8 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
     tokenData.light.shadows;
   const vision = dimSight > 0 || brightSight > 0 ? true : false;
 
+  const isPreset = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC) ? true : false;
+
   // TODO per adesso e' sempre a false
   const applyAsAtlAteEffect = false; // <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE) ?? false;
   const duration = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)) || 0;
@@ -1283,5 +1263,6 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
     height,
     width,
     scale,
+    isPreset,
   );
 }
