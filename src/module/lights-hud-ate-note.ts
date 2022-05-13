@@ -40,6 +40,7 @@ export class LightHUDAteNote extends FormApplication {
     data.imgitem = this.entity.img;
     data.nameitem = this.entity.name;
     data.iditem = this.entity.id;
+    // data.isATEActive = game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem') ?? false;
 
     // Added 2022-05-05
     const visions: OptionSelectData[] = [];
@@ -201,13 +202,6 @@ export class LightHUDAteNote extends FormApplication {
       /*
       const effectIcon = this.entity.data.img || this.entity.data.data.img;
       let applyAsAtlEffect = false;
-
-      const applyAsAtlAte = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.APPLY_AS_ATL_ATE}`];
-      if (applyAsAtlAte != null && applyAsAtlAte != undefined) {
-        applyAsAtlEffect = true;
-      } else {
-        applyAsAtlEffect = false;
-      }
       */
       const enable = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ENABLE}`];
       if (enable != null && enable != undefined && enable) {
@@ -486,6 +480,13 @@ export class LightHUDAteNote extends FormApplication {
       // ======================================================================================
       // COMMON SETTING
       // ======================================================================================
+
+      // const applyAsAtlAte = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.APPLY_AS_ATL_ATE}`];
+      // if (applyAsAtlAte != null && applyAsAtlAte != undefined) {
+      //   await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE, applyAsAtlAte);
+      // } else {
+      //   await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE, null);
+      // }
 
       const effectName = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.NAME}`] ?? this.entity.name;
       if (effectName != null && effectName != undefined && effectName) {

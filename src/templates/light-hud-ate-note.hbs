@@ -9,11 +9,6 @@
     <fieldset>
 
         <legend>LIGHTHUD NOTES AND COMMON SETTINGS</legend>
-        <!--
-        <p>NOTE: These settings are used to create a Light or vision effect on the token configuration when the item is rolled.</p>
-        <p>NOTE: You can use this form to create a ATE effect on the item. BUT ONLY IF YOU EXPLICITLY check the Apply as 'ATE/ATL Effect' checkbox</p>
-        <p>NOTE: The modules is not smart enough to distinct multiple lighting effect on the same item and is not make sense ? Every item must have only one effect with _ATL changes_ on it (at least for me). If multiple effect with _ATL changes_ are founded on the same item only the first is analyzed from the module, you can use multiple item where each has is own lighting configuration.</p>
-        -->
         <p>NOTE: For security reason (human error mostly) no previous ATE effect is removed in automatic, if you have multiple ATE effects on the item you must remove these manually from the effect tab of the item</p>
         <p>NOTE: if a configuration with flags and an active effect ate are present at the same time in the current item, the priority goes to the active effect.</p>
 
@@ -39,16 +34,20 @@
             </div>
         </div>
         <!--
-        <div class="form-group stacked">
-            <div class="form-group">
-                <label>Apply as ATE/ATL Effect on the item ?</label>
-                <div class="form-fields">
-                    <input type="checkbox" id="apply-as-atl-ate" name="flags.lights-hud-ate.apply-as-atl-ate"
-                        value="{{flags.lights-hud-ate.apply-as-atl-ate}}"
-                        {{checkedIf flags.lights-hud-ate.apply-as-atl-ate}}/>
+        {{#if isATEActive}}
+            <p>{{localize lights-hud-ate.note.isATEActive.label1}}</p>
+            <p>c{{localize lights-hud-ate.note.isATEActive.label2}}</p>
+            <div class="form-group stacked">
+                <div class="form-group">
+                    <label>Apply as ATE/ATL Effect on the item ?</label>
+                    <div class="form-fields">
+                        <input type="checkbox" id="apply-as-atl-ate" name="flags.lights-hud-ate.apply-as-atl-ate"
+                            value="{{flags.lights-hud-ate.apply-as-atl-ate}}"
+                            {{checkedIf flags.lights-hud-ate.apply-as-atl-ate}}/>
+                    </div>
                 </div>
             </div>
-        </div>
+        {{/if}}
         -->
         <div class="form-group stacked">
             <div class="form-group">

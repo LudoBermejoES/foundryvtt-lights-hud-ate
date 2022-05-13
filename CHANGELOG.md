@@ -1,3 +1,7 @@
+### 0.11.11
+
+- Minor update
+
 ### 0.11.10
 
 - New Feature: Add module settings 'Use metric system on preset light and vision'

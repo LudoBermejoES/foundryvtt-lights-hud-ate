@@ -147,5 +147,9 @@
   "lights-hud-ate.dialogs.systemfound.content": "This system was previously not supported, but in an recent update it was added as a supported system!<br><br>Do you want to load this system's default Item Pile settings?",
   "lights-hud-ate.dialogs.systemfound.confirm": "Apply System Defaults",
 
-  "lights-hud-ate.note.label": "LightHUD Note"
+  "lights-hud-ate.note.label": "LightHUD Note",
+
+  "lights-hud-ate.note.isATEActive.label1": "NOTE: You can use this form to create a ATE effect on the item. BUT ONLY IF YOU EXPLICITLY check the Apply as 'ATE/ATL Effect' checkbox",
+  "lights-hud-ate.note.isATEActive.label2": "NOTE: The modules is not smart enough to distinct multiple lighting effect on the same item and is not make sense ? Every item must have only one effect with _ATL changes_ on it (at least for me). If multiple effect with _ATL changes_ are founded on the same item only the first is analyzed from the module, you can use multiple item where each has is own lighting configuration."
+
 }
