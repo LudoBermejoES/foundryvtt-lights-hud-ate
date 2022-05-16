@@ -1,6 +1,9 @@
 ### 0.11.12
 
-- Add `apply as ATE effcet` to the item dialog
+- Add `apply as ATE effcet` to the item dialog on the item panel dialog
+- Add module settings for show ATE effects applied on the actor and not on the item
+- Some bug fix on the effect management
+
 ### 0.11.11
 
 - Minor update

@@ -2,11 +2,21 @@
   "name": "lights-hud-ate",
   "title": "LightsHUD+ATE",
   "description": "Lights HUD Control + Active Token Effect",
-  "version": "0.11.11",
+  "version": "0.11.12",
   "authors": [
     { "name": "Malekal" },
     { "name": "PhilippeK" },
-    { "name": "p4535992" }
+    {
+      "name": "p4535992",
+      "url": "https://github.com/p4535992",
+      "discord": "",
+      "twitter": "",
+      "patreon": "",
+      "github": "p4535992",
+      "ko-fi": "",
+      "reddit": "",
+      "email": ""
+    }
   ],
   "type": "module",
   "socket": true,
@@ -52,8 +62,8 @@
   "url": "https://github.com/p4535992/foundryvtt-lights-hud-ate",
   "manifest": "https://github.com/p4535992/foundryvtt-lights-hud-ate/releases/latest/download/module.json",
   "download": "https://github.com/p4535992/foundryvtt-lights-hud-ate/releases/latest/download/module.zip",
-  "readme": "https://github.com/p4535992/foundryvtt-lights-hud-ate/blob/v0.11.11/README.md",
-  "changelog": "https://github.com/p4535992/foundryvtt-lights-hud-ate/blob/v0.11.11/changelog.md",
+  "readme": "https://github.com/p4535992/foundryvtt-lights-hud-ate/blob/v0.11.12/README.md",
+  "changelog": "https://github.com/p4535992/foundryvtt-lights-hud-ate/blob/v0.11.12/changelog.md",
   "bugs": "https://github.com/p4535992/foundryvtt-lights-hud-ate/issues",
   "allowBugReporter": true,
   "dependencies": [

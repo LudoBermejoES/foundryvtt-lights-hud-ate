@@ -19,6 +19,8 @@
 
   "lights-hud-ate.setting.applyOnATEItem.name": "Apply HUD interface on ATE Items",
   "lights-hud-ate.setting.applyOnATEItem.hint": "Show all actor items with ATE active effect in the HUD interface",
+  "lights-hud-ate.setting.showATEFromNoItemOrigin.name": "Show ATE from no item",
+  "lights-hud-ate.setting.showATEFromNoItemOrigin.hint": "Show all ATE active effect applied on the actor with no item on the origin in the HUD interface. Attention this can made show duplicate lights and vision",
   "lights-hud-ate.setting.applyOnFlagItem.name": "Apply HUD interface on flagged Items",
   "lights-hud-ate.setting.applyOnFlagItem.hint": "Show all actor items flagged from this module active effect in the HUD interface",
   "lights-hud-ate.setting.useMetricSystem.name": "Use metric system on preset light and vision",

@@ -188,11 +188,11 @@ function retrieveDataFromHtml(html): LightDataDialog | undefined {
   //   warn(`No active effect id ${lightDataDialog.effectId} founded for the light hud`, true);
   //   return;
   // }
-
-  if (!lightDataDialog.itemId) {
-    warn(`No item id ${lightDataDialog.itemId} founded for the light hud`, true);
-    return;
-  }
+  // NO NEED THIS CAN BE A ACTOR AE
+  // if (!lightDataDialog.itemId) {
+  //   warn(`No item id ${lightDataDialog.itemId} founded for the light hud`, true);
+  //   return;
+  // }
 
   if (!lightDataDialog.actorId) {
     warn(`No actor id ${lightDataDialog.actorId} founded for the light hud`, true);

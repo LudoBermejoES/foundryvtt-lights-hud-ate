@@ -480,13 +480,16 @@ export class LightHUDAteNote extends FormApplication {
       // ======================================================================================
       // COMMON SETTING
       // ======================================================================================
-      const effectIcon = this.entity.data.img || this.entity.data.data.img;
+      const effectIcon = this.entity.data.img || this.entity.data.data.img || '';
 
-      const applyAsAtlAte = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.APPLY_AS_ATL_ATE}`];
-      if (applyAsAtlAte != null && applyAsAtlAte != undefined) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE, applyAsAtlAte);
-      } else {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE, null);
+      let applyAsAtlAte = false;
+      if(game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')){
+        applyAsAtlAte = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.APPLY_AS_ATL_ATE}`];
+        if (applyAsAtlAte != null && applyAsAtlAte != undefined) {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE, applyAsAtlAte);
+        } else {
+          await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE, null);
+        }
       }
 
       const effectName = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.NAME}`] ?? this.entity.name;
@@ -672,13 +675,19 @@ export class LightHUDAteNote extends FormApplication {
         efffectAtlToApply.overlay = false;
         //@ts-ignore
         const activeEffectData = <ActiveEffectData>EffectSupport.convertToActiveEffectData(efffectAtlToApply);
-        EffectOwnedItem.createEffectOnOwnedItem(activeEffectData,<Item>this.entity);
+        //EffectOwnedItem.createEffectOnOwnedItem(activeEffectData,<Item>this.entity);
         //await this.entity.createEmbeddedDocuments('ActiveEffect', [activeEffectData]);
+        //await item.update({effects: [new ActiveEffect().toObject()]})
+        await this.entity.update(
+          {
+            effects: [activeEffectData]
+          }
+        );
       }
 
       this.render();
     } else {
-      ui.notifications?.error('You have to be GM to edit LightHUD+ATE Notes.');
+      error('You have to be GM to edit LightHUD+ATE Notes.', true);
     }
   }
 

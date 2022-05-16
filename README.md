@@ -125,6 +125,7 @@ The module is build to show on a left click of the button with the image of a li
 |![lightbulb-solid](./wiki/icons/lightbulb-solid.svg) | The symbol of the **green lightbulb** means the active effect is _enabled_ (or _applied_). |
 |![lightbulb-regular](./wiki/icons/lightbulb-regular.svg) | The symbol of the **red lightbulb** means the active effect is _disabled_ (or _not applied_). |
 |![flag](./wiki/icons/flag-solid.svg) | The symbol of the **coral flag** means the light/vision applied is from the flagged feature not the ATE feature. |
+|![user](./wiki/icons/user-alt-solid.svg) | The symbol of the **blue steel user** means the light/vision applied is from the a ATE effect applied on the actor not the item. |
 
 By default the module it will roll the item associated to the ATL effect, so you can apply other things like consumable feature and apply measure template.
 

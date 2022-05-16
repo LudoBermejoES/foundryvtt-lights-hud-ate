@@ -825,15 +825,13 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
     }
   }
 
-  // TODO Strange case no item with ATL but we have some active effect
-  // const atlEffects = (<Actor>token.actor).effects.filter((entity) => {
-  //     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
-  // });
-  // if (atlEffects.length > 0) {
-  //   const item = game.items.getName("Candy Cane");
-  //   await actor.createEmbeddedDocuments('Item', [item.toObject()])
-  //   lightItems.push(im);
-  // }
+  // Strange case no item with ATL but we have some active effect
+  let actorAtlEffects = <ActiveEffect[]>[];
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'showATEFromNoItemOrigin')) {
+    actorAtlEffects = (<Actor>token.actor).effects.filter((entity) => {
+        return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+    });
+  }
 
   // Convert item to LightHudData
   imagesParsed = await Promise.all(
@@ -862,6 +860,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       let tokenidTmp = '';
       let actoridTmp = '';
       let isFlagTmp = false;
+      const isActorEffectTmp = false;
       // ========================================================
       // IMPORTANT PRIORITY TO THE ATL EFFECT PRESENT ON THE ITEM
       // ========================================================
@@ -992,9 +991,123 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         _id: _idTmp,
         flags: flagsTmp,
         isFlag: isFlagTmp,
+        isActorEffect: isActorEffectTmp,
       };
     }),
   );
+
+  if (actorAtlEffects.length > 0) {
+    for(const aeAtl0 of actorAtlEffects){
+
+      const im = <string>aeAtl0.data.icon || token.data.img || '';
+      const split = im.split('/');
+      const extensions = im.split('.');
+      const extension = <string>extensions[extensions.length - 1];
+      const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
+      const vid = ['webm', 'mp4', 'm4v'].includes(extension);
+
+      let appliedTmp = false;
+      let disabledTmp = false;
+      let suppressedTmp = false;
+      let temporaryTmp = false;
+      let passiveTmp = false;
+      let effectidTmp = '';
+      let effectnameTmp = '';
+      let turnsTmp = 0;
+      let isExpiredTmp = false;
+      let remainingSecondsTmp = -1;
+      let labelTmp = '';
+      let _idTmp = '';
+      let flagsTmp = {};
+      let tokenidTmp = '';
+      let actoridTmp = '';
+      const isFlagTmp = false;
+      const isActorEffectTmp = true;
+      // const aeAtl0 = <ActiveEffect>aeAtl[0];
+      const nameToSearch = <string>aeAtl0.name || aeAtl0.data.label;
+
+      let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
+        return isStringEquals(nameToSearch, ae.data.label);
+      });
+      // Check if someone has delete the active effect but the item with the ATL changes is still on inventory
+      if (!effectFromActor) {
+        info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
+        aeAtl0.data.transfer = false;
+        await API.addActiveEffectOnToken(<string>token.document.id, aeAtl0.data);
+        // ???
+        effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
+          return isStringEquals(nameToSearch, ae.data.label);
+        });
+      }
+      if (!effectFromActor) {
+        warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
+        continue;
+      }
+      const applied = await API.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
+      // If the active effect is disabled or is supressed
+      // const isDisabled = aeAtl[0].data.disabled || false;
+      // const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
+      disabledTmp = effectFromActor.data.disabled || false;
+      //@ts-ignore
+      suppressedTmp = effectFromActor.data.document.isSuppressed || false;
+      temporaryTmp = effectFromActor.isTemporary || false;
+      passiveTmp = !temporaryTmp;
+      if (applied && !disabledTmp && !suppressedTmp) {
+        appliedTmp = true;
+      }
+      effectidTmp = <string>effectFromActor.id;
+      effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
+      tokenidTmp = <string>token.id;
+      actoridTmp = <string>actor.id;
+      // ADDED
+      remainingSecondsTmp = _getSecondsRemaining(effectFromActor.data.duration);
+      turnsTmp = <number>effectFromActor.data.duration.turns;
+      isExpiredTmp = remainingSecondsTmp < 0;
+      labelTmp = effectFromActor.data.label;
+      _idTmp = <string>effectFromActor.data._id;
+      flagsTmp = effectFromActor.data?.flags || {};
+      // Little trick if
+      if (!effectFromActor.data?.flags?.convenientDescription) {
+        flagsTmp['convenientDescription'] = aeAtl0.data.label;
+      }
+
+      if (!suppressedTmp) {
+        appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+      } else {
+        appliedTmp = !appliedTmp;
+      }
+
+      imagesParsed.push(
+        <LightDataHud>{
+          icon: im,
+          name: aeAtl0.data.label,
+          applied: appliedTmp,
+          disabled: disabledTmp,
+          suppressed: suppressedTmp,
+          isTemporary: temporaryTmp,
+          passive: passiveTmp,
+          img: img,
+          vid: vid,
+          type: img || vid,
+          itemid: '',
+          itemname: aeAtl0.data.label,
+          effectid: effectidTmp,
+          effectname: effectnameTmp,
+          tokenid: tokenidTmp,
+          actorid: actoridTmp,
+          // Added for dfred panel
+          remainingSeconds: remainingSecondsTmp,
+          turns: turnsTmp,
+          isExpired: isExpiredTmp,
+          label: labelTmp,
+          _id: _idTmp,
+          flags: flagsTmp,
+          isFlag: isFlagTmp,
+          isActorEffect: isActorEffectTmp,
+        }
+      )
+    }
+  }
 
   const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
     return i.effectname;

@@ -34,6 +34,15 @@ export const registerSettings = function (): void {
     default: true,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'showATEFromNoItemOrigin', {
+    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.showATEFromNoItemOrigin.name`),
+    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.showATEFromNoItemOrigin.hint`),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
   game.settings.register(CONSTANTS.MODULE_NAME, 'applyOnFlagItem', {
     name: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnFlagItem.name`),
     hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnFlagItem.hint`),
