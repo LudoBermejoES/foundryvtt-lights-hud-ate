@@ -873,7 +873,7 @@ async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied) {
     warn(`No actor found for the token with id '${tokenId}'`, true);
     return;
   }
-  if(!itemId && game.settings.get(CONSTANTS.MODULE_NAME, 'showATEFromNoItemOrigin')) {
+  if (!itemId && game.settings.get(CONSTANTS.MODULE_NAME, 'showATEFromNoItemOrigin')) {
     if (isApplied) {
       await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, false, true);
     } else {

@@ -74,7 +74,10 @@ const module = {
     const [app, html, data] = args;
     // TODO FOR NOW ONLY GM CAN SEE THIS
     if (game.user?.isGM) {
-      if(game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem') || game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')){
+      if (
+        game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem') ||
+        game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')
+      ) {
         LightHUDAteNote._initEntityHook(app, html, data);
       }
     }

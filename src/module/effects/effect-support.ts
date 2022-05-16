@@ -522,5 +522,4 @@ export class EffectSupport {
     });
     return efffectAtlToApply;
   }
-
 }

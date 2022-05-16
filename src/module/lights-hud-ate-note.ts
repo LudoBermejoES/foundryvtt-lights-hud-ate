@@ -202,7 +202,6 @@ export class LightHUDAteNote extends FormApplication {
 
   async _updateObject(event, formData) {
     if (game.user?.isGM) {
-
       const enable = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ENABLE}`];
       if (enable != null && enable != undefined && enable) {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE, enable);
@@ -483,7 +482,7 @@ export class LightHUDAteNote extends FormApplication {
       const effectIcon = this.entity.data.img || this.entity.data.data.img || '';
 
       let applyAsAtlAte = false;
-      if(game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')){
+      if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')) {
         applyAsAtlAte = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.APPLY_AS_ATL_ATE}`];
         if (applyAsAtlAte != null && applyAsAtlAte != undefined) {
           await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE, applyAsAtlAte);
@@ -506,16 +505,18 @@ export class LightHUDAteNote extends FormApplication {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LOCK_ROTATION, null);
       }
 
-
       if (applyAsAtlAte) {
-
-        const effectName = <string>this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || this.entity.name;
-        const height =
-          <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT));
-        const width =
-          <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH));
-        const scale =
-          <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE));
+        const effectName =
+          <string>this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || this.entity.name;
+        const height = <number>(
+          checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT))
+        );
+        const width = <number>(
+          checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH))
+        );
+        const scale = <number>(
+          checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE))
+        );
 
         let brightSight: number | null = null;
         if (this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
@@ -523,7 +524,9 @@ export class LightHUDAteNote extends FormApplication {
             checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT_BASIC))
           );
         } else {
-          brightSight = <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT));
+          brightSight = <number>(
+            checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT))
+          );
         }
         // if (!brightSight || brightSight === 0) {
         //   brightSight = tokenData.brightSight;
@@ -531,9 +534,13 @@ export class LightHUDAteNote extends FormApplication {
 
         let dimSight: number | null = null;
         if (this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
-          dimSight = <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM_BASIC));
+          dimSight = <number>(
+            checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM_BASIC))
+          );
         } else {
-          dimSight = <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM));
+          dimSight = <number>(
+            checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM))
+          );
         }
         // if (!dimSight || dimSight === 0) {
         //   dimSight = tokenData.dimSight;
@@ -545,7 +552,9 @@ export class LightHUDAteNote extends FormApplication {
             checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE_BASIC))
           );
         } else {
-          sightAngle = <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE));
+          sightAngle = <number>(
+            checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE))
+          );
         }
         // if (!sightAngle || sightAngle === 0) {
         //   sightAngle = tokenData.sightAngle;
@@ -553,9 +562,13 @@ export class LightHUDAteNote extends FormApplication {
 
         let dimLight: number | null = null;
         if (this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
-          dimLight = <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM_BASIC));
+          dimLight = <number>(
+            checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM_BASIC))
+          );
         } else {
-          dimLight = <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM));
+          dimLight = <number>(
+            checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM))
+          );
         }
         // if (!dimLight || dimLight === 0) {
         //   dimLight = tokenData.light.dim;
@@ -567,7 +580,9 @@ export class LightHUDAteNote extends FormApplication {
             checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT_BASIC))
           );
         } else {
-          brightLight = <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT));
+          brightLight = <number>(
+            checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT))
+          );
         }
         // if (!brightLight || brightLight === 0) {
         //   brightLight = tokenData.light.bright;
@@ -589,7 +604,9 @@ export class LightHUDAteNote extends FormApplication {
             checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA_BASIC))
           );
         } else {
-          lightAlpha = <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA));
+          lightAlpha = <number>(
+            checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA))
+          );
         }
         // if (!lightAlpha || lightAlpha === 0) {
         //   lightAlpha = tokenData.alpha;
@@ -601,37 +618,45 @@ export class LightHUDAteNote extends FormApplication {
             checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE_BASIC))
           );
         } else {
-          lightAngle = <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE));
+          lightAngle = <number>(
+            checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE))
+          );
         }
         // if (!lightAngle || lightAngle === 0) {
         //   lightAngle = tokenData.sightAngle;
         // }
 
-        const lightAnimationType =
-          <string>this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_TYPE);
-        const lightAnimationSpeed =
-          <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED));
-        const lightAnimationIntensity =
-          <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY));
-        const lightAnimationReverse =
-          <boolean>this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_REVERSE);
-        const lightColoration =
-          <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION));
-        const lightLuminosity =
-          <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY));
-        const lightGradual =
-          <boolean>this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL);
-        const lightSaturation =
-          <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION));
-        const lightContrast =
-          <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST));
-        const lightShadows =
-          <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS));
+        const lightAnimationType = <string>this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_TYPE);
+        const lightAnimationSpeed = <number>(
+          checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED))
+        );
+        const lightAnimationIntensity = <number>(
+          checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY))
+        );
+        const lightAnimationReverse = <boolean>(
+          this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_REVERSE)
+        );
+        const lightColoration = <number>(
+          checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION))
+        );
+        const lightLuminosity = <number>(
+          checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY))
+        );
+        const lightGradual = <boolean>this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL);
+        const lightSaturation = <number>(
+          checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION))
+        );
+        const lightContrast = <number>(
+          checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST))
+        );
+        const lightShadows = <number>(
+          checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS))
+        );
 
         const vision = dimSight > 0 || brightSight > 0 ? true : false;
 
-        const duration = <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)) || 0;
-
+        const duration =
+          <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)) || 0;
 
         const efffectAtlToApply = EffectSupport.convertToATLEffect(
           //lockRotation,
@@ -678,11 +703,9 @@ export class LightHUDAteNote extends FormApplication {
         //EffectOwnedItem.createEffectOnOwnedItem(activeEffectData,<Item>this.entity);
         //await this.entity.createEmbeddedDocuments('ActiveEffect', [activeEffectData]);
         //await item.update({effects: [new ActiveEffect().toObject()]})
-        await this.entity.update(
-          {
-            effects: [activeEffectData]
-          }
-        );
+        await this.entity.update({
+          effects: [activeEffectData],
+        });
       }
 
       this.render();

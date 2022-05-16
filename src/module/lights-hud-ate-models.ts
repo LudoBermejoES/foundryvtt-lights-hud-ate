@@ -108,7 +108,7 @@ export class LightDataHud {
   _id: string;
   flags: any;
   isFlag: boolean;
-  isActorEffect:boolean;
+  isActorEffect: boolean;
 }
 
 export class LightDataDialog {

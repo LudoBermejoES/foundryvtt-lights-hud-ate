@@ -1,7 +1,7 @@
-import type { DocumentModificationOptions } from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs";
-import type { ActiveEffectData } from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs";
-import CONSTANTS from "../constants";
-import { error, i18n, info, log } from "../lib/lib";
+import type { DocumentModificationOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
+import type { ActiveEffectData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs';
+import CONSTANTS from '../constants';
+import { error, i18n, info, log } from '../lib/lib';
 
 /**
  * Handles all the logic related to the Active Effect itself
@@ -11,7 +11,7 @@ import { error, i18n, info, log } from "../lib/lib";
  * THIS IS UNSTABLE, BRITTLE, AND NOT MADE FOR USE BEYOND THIS MODULE'S USE CASE
  */
 export class EffectOwnedItem extends ActiveEffect {
-  constructor(effect:ActiveEffectData, owner:Actor) {
+  constructor(effect: ActiveEffectData, owner: Actor) {
     log(`Attempting instantiation of Owned Item Effect ${effect}`);
 
     // manually set the parent
@@ -23,7 +23,7 @@ export class EffectOwnedItem extends ActiveEffect {
   /**
    * Fake Create this effect by instead updating the parent embedded Item document's array of effects.
    */
-  async create(context:DocumentModificationOptions) {
+  async create(context: DocumentModificationOptions) {
     const dataToCreate = <ActiveEffectData>this.toJSON();
 
     log(`Attempting create on Owned Item Effect ${dataToCreate} ${context}`);
@@ -36,12 +36,15 @@ export class EffectOwnedItem extends ActiveEffect {
 
     log(`Updating Parent ${dataToCreate.label}`);
 
-    this.parent?.update({
-      effects: [dataToCreate]
-    }, context);
+    this.parent?.update(
+      {
+        effects: [dataToCreate],
+      },
+      context,
+    );
 
     try {
-      await this._onCreate(dataToCreate, {...context, renderSheet: false}, <string>game.userId);
+      await this._onCreate(dataToCreate, { ...context, renderSheet: false }, <string>game.userId);
     } catch (e) {
       error(e);
     }
@@ -50,7 +53,7 @@ export class EffectOwnedItem extends ActiveEffect {
   /**
    * Fake delete this effect by instead updating the parent embedded Item document's array of effects.
    */
-  async delete(context:DocumentModificationOptions) {
+  async delete(context: DocumentModificationOptions) {
     log(`Attempting delete on Owned Item Effect ${context}`);
 
     try {
@@ -61,18 +64,21 @@ export class EffectOwnedItem extends ActiveEffect {
 
     const effectIdToDelete = <string>this.id;
 
-    const newParentEffects = <ActiveEffect[]>this.parent?.effects.filter(effect => effect.id !== effectIdToDelete);
+    const newParentEffects = <ActiveEffect[]>this.parent?.effects.filter((effect) => effect.id !== effectIdToDelete);
 
     const newParentEffectsData = <ActiveEffectData[]>[];
-    for(const ae of newParentEffects){
+    for (const ae of newParentEffects) {
       newParentEffectsData.push(ae.data);
     }
 
     log(`Updating Parent, delete effect with id ${effectIdToDelete}, new parent effects ${newParentEffectsData}`);
 
-    this.parent?.update({
-      effects: newParentEffectsData
-    }, {...context, recursive: false});
+    this.parent?.update(
+      {
+        effects: newParentEffectsData,
+      },
+      { ...context, recursive: false },
+    );
 
     try {
       await this._onDelete(context, <string>game.userId);
@@ -85,19 +91,19 @@ export class EffectOwnedItem extends ActiveEffect {
   /**
    * Fake Update this Effect Document by instead updating the parent embedded Item document's array of effects.
    */
-  async update(data:ActiveEffectData, context:DocumentModificationOptions = {}) {
+  async update(data: ActiveEffectData, context: DocumentModificationOptions = {}) {
     log(`Attempting update on Owned Item Effect ${data} ${context}`);
 
     const embeddedItem = <Item>this.parent;
     //@ts-ignore
-    if (!(embeddedItem instanceof Item) && (embeddedItem.parent instanceof Actor)) {
+    if (!(embeddedItem instanceof Item) && embeddedItem.parent instanceof Actor) {
       log(`Attempted to update a non owned item effect with the owned Item effect update method ${data} ${context}`);
       return;
     }
 
     const newEffects = <ActiveEffectData[]>embeddedItem.effects.toObject();
 
-    const originalEffectIndex = <number>newEffects.findIndex(effect => effect._id === this.id);
+    const originalEffectIndex = <number>newEffects.findIndex((effect) => effect._id === this.id);
 
     // means somehow we are editing an effect which does not exist on the item
     if (originalEffectIndex < 0) {
@@ -106,11 +112,7 @@ export class EffectOwnedItem extends ActiveEffect {
 
     // merge updates directly into the array of objects
     //@ts-ignore
-    foundry.utils.mergeObject(
-      <ActiveEffectData>newEffects[originalEffectIndex],
-      data,
-      <any>context
-    );
+    foundry.utils.mergeObject(<ActiveEffectData>newEffects[originalEffectIndex], data, <any>context);
 
     const diff = foundry.utils.diffObject(this.data._source, foundry.utils.expandObject(data));
 
@@ -124,8 +126,8 @@ export class EffectOwnedItem extends ActiveEffect {
 
     try {
       await embeddedItem.update({
-        effects: newEffects
-      })
+        effects: newEffects,
+      });
     } catch (e) {
       error(e);
     }
@@ -140,11 +142,11 @@ export class EffectOwnedItem extends ActiveEffect {
     this.sheet?.render();
 
     if (this.data.transfer) {
-      info(i18n(`${CONSTANTS.MODULE_NAME}.effect.not-reflected`),true);
+      info(i18n(`${CONSTANTS.MODULE_NAME}.effect.not-reflected`), true);
     }
 
     if (!this.data.transfer && data.transfer) {
-      info(i18n(`${CONSTANTS.MODULE_NAME}.effect.not-transferred`),true);
+      info(i18n(`${CONSTANTS.MODULE_NAME}.effect.not-transferred`), true);
     }
     return this;
   }
@@ -162,18 +164,20 @@ export class EffectOwnedItem extends ActiveEffect {
 
     log(`Attempting to Transfer an effect with id ${this.uuid} to an Actor ${actor.name}`);
 
-    return ActiveEffect.create({
-      ...this.toJSON(),
-      origin: <string>this.parent?.uuid,
-    }, { parent: actor });
+    return ActiveEffect.create(
+      {
+        ...this.toJSON(),
+        origin: <string>this.parent?.uuid,
+      },
+      { parent: actor },
+    );
   }
 
   /**
    * Gets default duration values from the provided item.
    * Assumes dnd5e data model, falls back to 1 round default.
    */
-  static getDurationFromItem(item:Item, passive:boolean) {
-
+  static getDurationFromItem(item: Item, passive: boolean) {
     if (passive === true) {
       return undefined;
     }
@@ -183,7 +187,6 @@ export class EffectOwnedItem extends ActiveEffect {
     const hasDuration = !!item?.data.data?.duration?.value;
 
     if (hasDuration) {
-
       const duration = <any>{};
 
       // Only for dnd5e for now
@@ -217,12 +220,12 @@ export class EffectOwnedItem extends ActiveEffect {
           break;
       }
 
-      return duration
+      return duration;
     }
 
     return {
-      rounds: 1
-    }
+      rounds: 1,
+    };
   }
 
   // /**
@@ -263,7 +266,7 @@ export class EffectOwnedItem extends ActiveEffect {
   //   }
   // }
 
-  static createEffectOnOwnedItem(effectData:ActiveEffectData, item:Item) {
+  static createEffectOnOwnedItem(effectData: ActiveEffectData, item: Item) {
     const parent = <Actor>item.parent;
 
     if (!parent) {
@@ -277,5 +280,4 @@ export class EffectOwnedItem extends ActiveEffect {
     // or
     //ActiveEffect.create(effectData, item);
   }
-
 }

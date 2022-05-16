@@ -829,7 +829,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
   let actorAtlEffects = <ActiveEffect[]>[];
   if (game.settings.get(CONSTANTS.MODULE_NAME, 'showATEFromNoItemOrigin')) {
     actorAtlEffects = (<Actor>token.actor).effects.filter((entity) => {
-        return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+      return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
     });
   }
 
@@ -997,8 +997,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
   );
 
   if (actorAtlEffects.length > 0) {
-    for(const aeAtl0 of actorAtlEffects){
-
+    for (const aeAtl0 of actorAtlEffects) {
       const im = <string>aeAtl0.data.icon || token.data.img || '';
       const split = im.split('/');
       const extensions = im.split('.');
@@ -1077,35 +1076,33 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         appliedTmp = !appliedTmp;
       }
 
-      imagesParsed.push(
-        <LightDataHud>{
-          icon: im,
-          name: aeAtl0.data.label,
-          applied: appliedTmp,
-          disabled: disabledTmp,
-          suppressed: suppressedTmp,
-          isTemporary: temporaryTmp,
-          passive: passiveTmp,
-          img: img,
-          vid: vid,
-          type: img || vid,
-          itemid: '',
-          itemname: aeAtl0.data.label,
-          effectid: effectidTmp,
-          effectname: effectnameTmp,
-          tokenid: tokenidTmp,
-          actorid: actoridTmp,
-          // Added for dfred panel
-          remainingSeconds: remainingSecondsTmp,
-          turns: turnsTmp,
-          isExpired: isExpiredTmp,
-          label: labelTmp,
-          _id: _idTmp,
-          flags: flagsTmp,
-          isFlag: isFlagTmp,
-          isActorEffect: isActorEffectTmp,
-        }
-      )
+      imagesParsed.push(<LightDataHud>{
+        icon: im,
+        name: aeAtl0.data.label,
+        applied: appliedTmp,
+        disabled: disabledTmp,
+        suppressed: suppressedTmp,
+        isTemporary: temporaryTmp,
+        passive: passiveTmp,
+        img: img,
+        vid: vid,
+        type: img || vid,
+        itemid: '',
+        itemname: aeAtl0.data.label,
+        effectid: effectidTmp,
+        effectname: effectnameTmp,
+        tokenid: tokenidTmp,
+        actorid: actoridTmp,
+        // Added for dfred panel
+        remainingSeconds: remainingSecondsTmp,
+        turns: turnsTmp,
+        isExpired: isExpiredTmp,
+        label: labelTmp,
+        _id: _idTmp,
+        flags: flagsTmp,
+        isFlag: isFlagTmp,
+        isActorEffect: isActorEffectTmp,
+      });
     }
   }
 
