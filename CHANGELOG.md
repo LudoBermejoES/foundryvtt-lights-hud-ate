@@ -1,3 +1,6 @@
+### 0.11.12
+
+- Add `apply as ATE effcet` to the item dialog
 ### 0.11.11
 
 - Minor update

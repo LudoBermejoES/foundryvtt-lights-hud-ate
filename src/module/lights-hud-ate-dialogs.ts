@@ -884,7 +884,6 @@ async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied) {
   try {
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'rollItem') && !isApplied) {
       if (item) {
-        // TODO if i need to manage the roll for specific system usually is enough item.roll()
         rollDependingOnSystem(item);
       } else {
         warn(`No item found for the id ${itemId}`, true);
@@ -932,7 +931,6 @@ async function manageFlaggedItem(tokenId, itemId) {
         return <string>entity.id == itemId;
       });
       if (item) {
-        // TODO if i need to manage the roll for specific system usually is enough item.roll()
         rollDependingOnSystem(item);
       } else {
         warn(`No item found for the id ${itemId}`, true);
@@ -1114,29 +1112,29 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
     (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION)) ||
       tokenData.light.coloration)
   );
-  const luminosity = <number>(
+  const lightLuminosity = <number>(
     (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY)) ||
       tokenData.light.luminosity)
   );
-  const gradual =
+  const lightGradual =
     <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL) || tokenData.light.gradual;
   const saturation = <number>(
     (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION)) ||
       tokenData.light.saturation)
   );
-  const contrast =
+  const lightContrast =
     <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST)) ||
     tokenData.light.contrast;
-  const shadows =
+  const lightShadows =
     <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS)) ||
     tokenData.light.shadows;
   const vision = dimSight > 0 || brightSight > 0 ? true : false;
 
-  const isPreset = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC) ? true : false;
-
-  // TODO per adesso e' sempre a false
-  const applyAsAtlAteEffect = false; // <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE) ?? false;
   const duration = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)) || 0;
+
+  // Support values
+  const isPreset = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC) ? true : false;
+  const applyAsAtlAteEffect = <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE) ?? false;
 
   const actorId = <string>token.actor?.id;
   // const tokenId = token.id;
@@ -1151,10 +1149,10 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
       }
     }
   }
-  const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
 
   // About time configuration
   /*
+  const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
   if (duration > 0) {
     if (game.modules.get('about-time')?.active != true) {
       ui.notifications?.error("About Time isn't loaded");
@@ -1241,11 +1239,11 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
     lightAngle,
 
     coloration,
-    luminosity,
-    gradual,
+    lightLuminosity,
+    lightGradual,
     saturation,
-    contrast,
-    shadows,
+    lightContrast,
+    lightShadows,
 
     <string>lightAnimationType,
     <number>lightAnimationSpeed,

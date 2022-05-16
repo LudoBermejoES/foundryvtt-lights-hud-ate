@@ -31,6 +31,9 @@
   "lights-hud-ate.setting.debug.label": "Prints debug messages to the console",
   "lights-hud-ate.setting.debug.hint": " ",
 
+  "lights-hud-ate.effect.not-reflected": "Item Effect Saved. These changes will not be reflected in the originally transferred Effect.",
+  "lights-hud-ate.effect.not-transferred": "Item Effect Saved. Setting an owned item's effect to Transfer will not automatically transfer the Effect.",
+
   "lights-hud-ate.windows.art-select.title": "Select Art",
   "lights-hud-ate.windows.art-select.no-art-found": "No art found",
 

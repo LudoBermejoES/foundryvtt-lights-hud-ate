@@ -1,7 +1,7 @@
 import type { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from '../api';
 import CONSTANTS from '../constants';
-import Effect, { Constants, EffectSupport } from '../effects/effect';
+import { EffectSupport } from '../effects/effect-support';
 import { getATLEffectsFromItem } from '../lights-hud-ate-config';
 import { LightHUDAteEffectDefinitions } from '../lights-hud-ate-effect-definition';
 import { LightDataHud, LightHUDElement, LightHUDNoteFlags } from '../lights-hud-ate-models';
@@ -326,6 +326,7 @@ export function firstGM() {
 }
 
 /**
+ * TODO if i need to manage the roll for specific system usually is enough item.roll()
  * @href https://github.com/itamarcu/roll-from-compendium/blob/master/scripts/roll-from-compendium.js
  */
 export async function rollDependingOnSystem(item: Item) {
@@ -342,139 +343,6 @@ export async function rollDependingOnSystem(item: Item) {
   // }
   //@ts-ignore
   return item.roll();
-}
-
-export function convertToATLEffect(
-  //lockRotation: boolean,
-  dimSight: number,
-  brightSight: number,
-  sightAngle: number,
-  dimLight: number,
-  brightLight: number,
-  lightColor: string,
-  lightAlpha: number,
-  lightAngle: number,
-
-  lightColoration: number | null = null,
-  lightLuminosity: number | null = null,
-  lightGradual: boolean | null = null,
-  lightSaturation: number | null = null,
-  lightContrast: number | null = null,
-  lightShadows: number | null = null,
-
-  lightAnimationType: string | null,
-  lightAnimationSpeed: number | null,
-  lightAnimationIntensity: number | null,
-  lightAnimationReverse: boolean | null,
-
-  // applyAsAtlEffect = false, // rimosso
-  effectName: string | null = null,
-  effectIcon: string | null = null,
-  duration: number | null = null,
-
-  // vision = false,
-  // id: string | null = null,
-  // name: string | null = null,
-  height: number | null = null,
-  width: number | null = null,
-  scale: number | null = null,
-) {
-  const atlChanges: any = [];
-
-  if (height && height > 0) {
-    atlChanges.push({
-      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.height'),
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: height,
-    });
-  }
-  if (width && width > 0) {
-    atlChanges.push({
-      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.width'),
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: width,
-    });
-  }
-  if (scale && scale > 0) {
-    atlChanges.push({
-      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.scale'),
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: scale,
-    });
-  }
-  if (dimSight && dimSight > 0) {
-    atlChanges.push({
-      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.dimSight'),
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: dimSight,
-    });
-  }
-  if (brightSight && brightSight > 0) {
-    atlChanges.push({
-      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.brightSight'),
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: brightSight,
-    });
-  }
-  if (dimLight && dimLight > 0) {
-    atlChanges.push({
-      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.dim'),
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: dimLight,
-    });
-  }
-  if (brightLight && brightLight > 0) {
-    atlChanges.push({
-      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.bright'),
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: brightLight,
-    });
-  }
-  if (lightAngle) {
-    atlChanges.push({
-      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.angle'),
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: lightAngle,
-    });
-  }
-  if (lightColor) {
-    atlChanges.push({
-      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.color'),
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: lightColor,
-    });
-  }
-  if (lightAlpha) {
-    atlChanges.push({
-      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.alpha'),
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: lightAlpha,
-    });
-  }
-  if (lightAnimationType && lightAnimationSpeed && lightAnimationIntensity && lightAnimationReverse) {
-    atlChanges.push({
-      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.animation'),
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}, "reverse":${lightAnimationReverse}}`,
-    });
-  } else if (lightAnimationType && lightAnimationSpeed && lightAnimationIntensity) {
-    atlChanges.push({
-      key: LightHUDAteEffectDefinitions._createAtlEffectKey('ATL.light.animation'),
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-      value: `{"type": "${lightAnimationType}","speed": ${lightAnimationSpeed},"intensity": ${lightAnimationIntensity}}`,
-    });
-  }
-  const efffectAtlToApply = new Effect({
-    // customId: id || <string>token.actor?.id,
-    customId: undefined, //<string>token.actor?.id,
-    name: <string>effectName,
-    description: ``,
-    // seconds: Constants.SECONDS.IN_EIGHT_HOURS,
-    transfer: true,
-    seconds: duration != null ? <number>duration * 60 : undefined, // minutes to seconds
-    atlChanges: atlChanges,
-  });
-  return efffectAtlToApply;
 }
 
 // Update the relevant light parameters of a token
@@ -517,7 +385,7 @@ export async function updateTokenLighting(
   isPreset: boolean,
 ) {
   if (applyAsAtlEffect) {
-    const efffectAtlToApply = convertToATLEffect(
+    const efffectAtlToApply = EffectSupport.convertToATLEffect(
       //lockRotation,
       dimSight,
       brightSight,
@@ -940,17 +808,17 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
   for (const im of actor.data.items.contents) {
     // TODO ADD CHECK ONLY FOR PHYSICAL ITEM
     // if (im && physicalItems.includes(im.type)) {}
-    if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
-      if (im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
-        lightItems.push(im);
-        continue;
-      }
-    }
     if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')) {
       const atlEffects = im.effects.filter((entity) => {
         return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
       });
       if (atlEffects.length > 0) {
+        lightItems.push(im);
+        continue;
+      }
+    }
+    if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+      if (im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
         lightItems.push(im);
         continue;
       }

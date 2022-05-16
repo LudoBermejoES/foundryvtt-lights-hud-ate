@@ -128,7 +128,7 @@ Hooks.once('libChangelogsReady', function () {
   libChangelogs.register(
     CONSTANTS.MODULE_NAME,
     `
-    - Minor update
+    - Add 'apply as ATE effcet' to the item dialog
     `,
     'minor',
   );

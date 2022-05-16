@@ -124,6 +124,7 @@ The module is build to show on a left click of the button with the image of a li
 |![clock-solid](./wiki/icons/clock-solid.svg) | The symbol of the **orange clock** means the active effect is _temporary and is expired_ like a spell valid only for tot. rounds or seconds, this is usually managed from the [Times up](https://gitlab.com/tposney/times-up) module if installed, this does not prevent the effect from being active or not, only that it will result in the subcategory of temporary effects. |
 |![lightbulb-solid](./wiki/icons/lightbulb-solid.svg) | The symbol of the **green lightbulb** means the active effect is _enabled_ (or _applied_). |
 |![lightbulb-regular](./wiki/icons/lightbulb-regular.svg) | The symbol of the **red lightbulb** means the active effect is _disabled_ (or _not applied_). |
+|![flag](./wiki/icons/flag-solid.svg) | The symbol of the **coral flag** means the light/vision applied is from the flagged feature not the ATE feature. |
 
 By default the module it will roll the item associated to the ATL effect, so you can apply other things like consumable feature and apply measure template.
 
@@ -131,7 +132,7 @@ By default the module it will roll the item associated to the ATL effect, so you
 
 This is useful for fast configuration during the game, but is advisable to always use items with ATL changes on it.
 
-On the hud config of the token **if you are a GM**, you can see on the popout form a couple of buttons 'Call macro preset' and 'Call macro custom', they are a embedded version of the macro [token_vision_config.js](https://github.com/foundry-vtt-community/macros/blob/main/token/token_vision_config.js) and  the variant with about time [token_vision_config_about_time.js](https://github.com/foundry-vtt-community/macros/blob/main/module-specific/token_vision_config_about_time.js) for make the work of the gm more fast when forget to set some vision.
+On the hud config of the token **if you are a GM**, you can see on the popout form a couple of buttons '**[GM] Fast token configuration**' and '**[GM] Create custom ATE Effect**', they are a embedded version of the macro [token_vision_config.js](https://github.com/foundry-vtt-community/macros/blob/main/token/token_vision_config.js) for make the work of the gm more fast when forget to set some vision.
 
 I add two dialog panel one for put the preset one from the current supported system and one for put a custom preset, _no store of these custom is done_, if you want to store a custom lighting or vision it's advisable to create a item and apply [ATE](https://github.com/kandashi/Active-Token-Lighting) effects on it.
 
@@ -154,6 +155,12 @@ If you right click on a image/voice of the hud panel we call the [warpgate](http
 Anyone can contribute with a custom lighting and vision item, you just need to export the item you created with the ATL effect on it and i will create a compendium, or better open a PR on the official [ATE](https://github.com/kandashi/Active-Token-Lighting) compendium.
 
 ![img](./wiki/assets/community_compendium.png)
+
+## API
+
+### Macro to clean up flags on token and actor
+
+`game.modules.get('lights-hud-ate').api.cleanUpTokenSelected()`
 
 # Build
 
