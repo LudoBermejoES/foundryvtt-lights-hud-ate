@@ -1,3 +1,7 @@
+### 0.11.16
+
+- Updated module.json fopr french language
+
 ### 0.11.15
 
 - Add module setting for skip confirmation dialog
