@@ -1,7 +1,7 @@
 import type { ActiveEffectDataProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
 import type { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
 import type { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
-import { duplicateExtended, i18n } from '../lib/lib';
+import { duplicateExtended, i18n, isStringEquals } from '../lib/lib';
 import Effect, { Constants } from './effect';
 
 export class EffectSupport {
@@ -45,13 +45,35 @@ export class EffectSupport {
     });
   }
 
+  static isDuplicateEffectChange(aeKey: string, arrChanges: EffectChangeData[]) {
+    let isDuplicate = false;
+    for (const aec of arrChanges) {
+      if (isStringEquals(aec.key, aeKey)) {
+        isDuplicate = true;
+        break;
+      }
+    }
+    return isDuplicate;
+  }
+
   static _handleIntegrations(effect: Effect): EffectChangeData[] {
-    const arrChanges: EffectChangeData[] = effect?.changes || [];
+    const arrChanges: EffectChangeData[] = [];
+    for (const change of effect?.changes) {
+      if (!change.value) {
+        change.value = '';
+      }
+      arrChanges.push(change);
+    }
 
     if (effect.atlChanges.length > 0) {
       for (const atlChange of effect.atlChanges) {
         if (arrChanges.filter((e) => e.key === atlChange.key).length <= 0) {
-          arrChanges.push(atlChange);
+          if (!EffectSupport.isDuplicateEffectChange(atlChange.key, arrChanges)) {
+            if (!atlChange.value) {
+              atlChange.value = '';
+            }
+            arrChanges.push(atlChange);
+          }
         }
       }
     }
@@ -59,7 +81,12 @@ export class EffectSupport {
     if (effect.tokenMagicChanges.length > 0) {
       for (const tokenMagicChange of effect.tokenMagicChanges) {
         if (arrChanges.filter((e) => e.key === tokenMagicChange.key).length <= 0) {
-          arrChanges.push(tokenMagicChange);
+          if (!EffectSupport.isDuplicateEffectChange(tokenMagicChange.key, arrChanges)) {
+            if (!tokenMagicChange.value) {
+              tokenMagicChange.value = '';
+            }
+            arrChanges.push(tokenMagicChange);
+          }
         }
       }
     }
@@ -67,23 +94,27 @@ export class EffectSupport {
     if (effect.atcvChanges.length > 0) {
       for (const atcvChange of effect.atcvChanges) {
         if (arrChanges.filter((e) => e.key === atcvChange.key).length <= 0) {
-          arrChanges.push(atcvChange);
+          if (!EffectSupport.isDuplicateEffectChange(atcvChange.key, arrChanges)) {
+            if (!atcvChange.value) {
+              atcvChange.value = '';
+            }
+            arrChanges.push(atcvChange);
+          }
         }
       }
     }
     /*
-    if (effect.atlChanges && effect.atlChanges.length > 0) {
-      arrChanges.push(...effect.atlChanges);
+    if (this.atlChanges.length > 0) {
+      arrChanges.push(...this.atlChanges);
     }
 
-    if (effect.tokenMagicChanges && effect.tokenMagicChanges.length > 0) {
-      arrChanges.push(...effect.tokenMagicChanges);
+    if (this.tokenMagicChanges.length > 0) {
+      arrChanges.push(...this.tokenMagicChanges);
     }
 
-    if (effect.atcvChanges && effect.atcvChanges.length > 0) {
-      arrChanges.push(...effect.atcvChanges);
+    if (this.atcvChanges.length > 0) {
+      arrChanges.push(...this.atcvChanges);
     }
-    // arrChanges = EffectSupport.retrieveChangesOrderedByPriority(arrChanges);
     */
     return arrChanges;
   }

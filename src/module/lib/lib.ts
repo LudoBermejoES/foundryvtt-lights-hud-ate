@@ -20,9 +20,20 @@ export function getOwnedTokens(priorityToControlledIfGM: boolean): Token[] {
   const gm = game.user?.isGM;
   if (gm) {
     if (priorityToControlledIfGM) {
-      return <Token[]>canvas.tokens?.controlled;
+      const arr = <Token[]>canvas.tokens?.controlled;
+      if (arr && arr.length > 0) {
+        return arr;
+      } else {
+        return <Token[]>canvas.tokens?.placeables;
+      }
     } else {
       return <Token[]>canvas.tokens?.placeables;
+    }
+  }
+  if (priorityToControlledIfGM) {
+    const arr = <Token[]>canvas.tokens?.controlled;
+    if (arr && arr.length > 0) {
+      return arr;
     }
   }
   let ownedTokens = <Token[]>canvas.tokens?.placeables.filter((token) => token.isOwner && (!token.data.hidden || gm));
@@ -61,7 +72,7 @@ export function isGMConnected() {
 }
 
 export function isGMConnectedAndSocketLibEnable() {
-  return isGMConnected(); //&& !game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature');
+  return isGMConnected(); // && !game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature');
 }
 
 export function wait(ms) {
@@ -166,7 +177,7 @@ export function cleanUpString(stringToCleanUp: string) {
   }
 }
 
-export function isStringEquals(stringToCheck1: string, stringToCheck2: string, startsWith = true): boolean {
+export function isStringEquals(stringToCheck1: string, stringToCheck2: string, startsWith = false): boolean {
   if (stringToCheck1 && stringToCheck2) {
     const s1 = cleanUpString(stringToCheck1) ?? '';
     const s2 = cleanUpString(stringToCheck2) ?? '';

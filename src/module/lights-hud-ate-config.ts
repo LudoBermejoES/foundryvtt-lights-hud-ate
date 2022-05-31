@@ -23,7 +23,7 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
     !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem') &&
     !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')
   ) {
-    error(`YOU MUST DECIDE OR LIGHTHUD WITH FLAGS OR LIGHTHUD WITH ATE EFFECTS !!!`, true);
+    // error(`YOU MUST DECIDE OR LIGHTHUD WITH FLAGS OR LIGHTHUD WITH ATE EFFECTS !!!`, true);
     return;
   }
 

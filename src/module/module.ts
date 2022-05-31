@@ -61,13 +61,12 @@ export const readyHooks = async (): Promise<void> => {
 const module = {
   async renderTokenHUD(...args) {
     const [app, html, data] = args;
-    // TODO WE NEED THIS
-    // if (!game.user?.isGM) {
-    //   return;
-    // }
-    // if (!game.settings.get(CONSTANTS.MODULE_NAME, 'enableHud')) {
-    //   return;
-    // }
+    if (!game.settings.get(CONSTANTS.MODULE_NAME, 'enableHud')) {
+      return;
+    }
+    if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableHudOnlyGM') && !game.user?.isGM) {
+      return;
+    }
     addLightsHUDButtons(app, html, data);
   },
   async renderItemSheet(...args) {

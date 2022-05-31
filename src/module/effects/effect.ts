@@ -1,7 +1,7 @@
 import type { ActiveEffectDataProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
 import type { EffectChangeData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/effectChangeData';
 import type { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
-import { duplicateExtended, i18n } from '../lib/lib';
+import { duplicateExtended, i18n, isStringEquals } from '../lib/lib';
 
 /**
  * Data class for defining an effect
@@ -194,13 +194,35 @@ export default class Effect {
 
   // =============================================
 
+  isDuplicateEffectChange(aeKey: string, arrChanges: EffectChangeData[]) {
+    let isDuplicate = false;
+    for (const aec of arrChanges) {
+      if (isStringEquals(aec.key, aeKey)) {
+        isDuplicate = true;
+        break;
+      }
+    }
+    return isDuplicate;
+  }
+
   _handleIntegrations() {
-    const arrChanges = this?.changes || [];
+    const arrChanges: EffectChangeData[] = [];
+    for (const change of <EffectChangeData[]>this?.changes) {
+      if (!change.value) {
+        change.value = '';
+      }
+      arrChanges.push(change);
+    }
 
     if (this.atlChanges.length > 0) {
       for (const atlChange of this.atlChanges) {
         if (arrChanges.filter((e) => e.key === atlChange.key).length <= 0) {
-          arrChanges.push(atlChange);
+          if (!this.isDuplicateEffectChange(atlChange.key, arrChanges)) {
+            if (!atlChange.value) {
+              atlChange.value = '';
+            }
+            arrChanges.push(atlChange);
+          }
         }
       }
     }
@@ -208,7 +230,12 @@ export default class Effect {
     if (this.tokenMagicChanges.length > 0) {
       for (const tokenMagicChange of this.tokenMagicChanges) {
         if (arrChanges.filter((e) => e.key === tokenMagicChange.key).length <= 0) {
-          arrChanges.push(tokenMagicChange);
+          if (!this.isDuplicateEffectChange(tokenMagicChange.key, arrChanges)) {
+            if (!tokenMagicChange.value) {
+              tokenMagicChange.value = '';
+            }
+            arrChanges.push(tokenMagicChange);
+          }
         }
       }
     }
@@ -216,7 +243,12 @@ export default class Effect {
     if (this.atcvChanges.length > 0) {
       for (const atcvChange of this.atcvChanges) {
         if (arrChanges.filter((e) => e.key === atcvChange.key).length <= 0) {
-          arrChanges.push(atcvChange);
+          if (!this.isDuplicateEffectChange(atcvChange.key, arrChanges)) {
+            if (!atcvChange.value) {
+              atcvChange.value = '';
+            }
+            arrChanges.push(atcvChange);
+          }
         }
       }
     }

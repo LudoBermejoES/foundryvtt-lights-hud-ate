@@ -80,6 +80,24 @@ export const registerSettings = function (): void {
     type: Boolean,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enableHud', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.enableHud.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.enableHud.hint`,
+    scope: 'world',
+    config: true,
+    default: true,
+    type: Boolean,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enableHudOnlyGM', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.enableHudOnlyGM.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.enableHudOnlyGM.hint`,
+    scope: 'world',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
   /** Which column should the button be placed on */
   game.settings.register(CONSTANTS.MODULE_NAME, 'hudColumn', {
     name: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudColumn.name`),
@@ -320,6 +338,24 @@ function otherSettings(apply = false) {
       config: true,
       scope: 'world',
       default: true,
+      type: Boolean,
+    },
+
+    enableHud: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.enableHud.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.enableHud.hint`,
+      scope: 'world',
+      config: true,
+      default: true,
+      type: Boolean,
+    },
+
+    enableHudOnlyGM: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.enableHudOnlyGM.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.enableHudOnlyGM.hint`,
+      scope: 'world',
+      config: true,
+      default: false,
       type: Boolean,
     },
 
