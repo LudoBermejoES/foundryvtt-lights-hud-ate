@@ -1,3 +1,7 @@
+### 0.11.13
+
+- Update langs
+
 ### 0.11.12
 
 - Add `apply as ATE effcet` to the item dialog on the item panel dialog
