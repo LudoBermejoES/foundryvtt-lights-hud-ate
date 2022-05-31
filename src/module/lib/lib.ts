@@ -1286,3 +1286,37 @@ export function convertFeetToMeter(feetInput: number): number {
 export function convertMeterToFeet(meterInput: number): number {
   return Math.floor(meterInput * 3.2808);
 }
+
+// =========================
+
+// export async function patchToggleEffect(wrapped, event, config) {
+//   event.preventDefault();
+//   event.stopPropagation();
+//   const img = event.currentTarget;
+
+//   if (img.dataset.effectUuid) {
+//     return toggleEffectByUuid(img.dataset.effectUuid);
+//   }
+
+//   return wrapped(event, config);
+// }
+
+// export async function toggleEffectByUuid(effectUuid) {
+//   const effect = <ActiveEffect>await fromUuid(effectUuid);
+//   const alwaysDelete = game.settings.get(CONSTANTS.MODULE_NAME, 'tempEffectsAsStatusToggleDelete');
+
+//   // nuke it if it has a statusId
+//   // brittle assumption
+//   // provides an option to always do this
+//   if (effect.getFlag('core', 'statusId') || alwaysDelete) {
+//     const deleted = await effect.delete();
+//     return !!deleted;
+//   }
+
+//   // otherwise toggle its disabled status
+//   const updated = await effect.update({
+//     disabled: !effect.data.disabled,
+//   });
+
+//   return !!updated;
+// }

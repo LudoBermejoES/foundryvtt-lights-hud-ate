@@ -80,6 +80,33 @@ export const registerSettings = function (): void {
     type: Boolean,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'skipDialogLightHUD', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.skipDialogLightHUD.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.skipDialogLightHUD.hint`,
+    scope: 'world',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'tempEffectsAsStatus', {
+  //   name: `${CONSTANTS.MODULE_NAME}.setting.tempEffectsAsStatus.name`,
+  //   hint: `${CONSTANTS.MODULE_NAME}.setting.tempEffectsAsStatus.hint`,
+  //   scope: 'world',
+  //   config: true,
+  //   default: false,
+  //   type: Boolean,
+  // });
+
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'tempEffectsAsStatusToggleDelete', {
+  //   name: `${CONSTANTS.MODULE_NAME}.setting.tempEffectsAsStatusToggleDelete.name`,
+  //   hint: `${CONSTANTS.MODULE_NAME}.setting.tempEffectsAsStatusToggleDelete.hint`,
+  //   scope: 'world',
+  //   config: true,
+  //   default: false,
+  //   type: Boolean,
+  // });
+
   game.settings.register(CONSTANTS.MODULE_NAME, 'enableHud', {
     name: `${CONSTANTS.MODULE_NAME}.setting.enableHud.name`,
     hint: `${CONSTANTS.MODULE_NAME}.setting.enableHud.hint`,
@@ -340,6 +367,33 @@ function otherSettings(apply = false) {
       default: true,
       type: Boolean,
     },
+
+    skipDialogLightHUD: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.skipDialogLightHUD.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.skipDialogLightHUD.hint`,
+      scope: 'world',
+      config: true,
+      default: false,
+      type: Boolean,
+    },
+
+    // tempEffectsAsStatus: {
+    //   name: `${CONSTANTS.MODULE_NAME}.setting.tempEffectsAsStatus.name`,
+    //   hint: `${CONSTANTS.MODULE_NAME}.setting.tempEffectsAsStatus.hint`,
+    //   scope: 'world',
+    //   config: true,
+    //   default: false,
+    //   type: Boolean,
+    // },
+
+    // tempEffectsAsStatusToggleDelete: {
+    //   name: `${CONSTANTS.MODULE_NAME}.setting.tempEffectsAsStatusToggleDelete.name`,
+    //   hint: `${CONSTANTS.MODULE_NAME}.setting.tempEffectsAsStatusToggleDelete.hint`,
+    //   scope: 'world',
+    //   config: true,
+    //   default: false,
+    //   type: Boolean,
+    // },
 
     enableHud: {
       name: `${CONSTANTS.MODULE_NAME}.setting.enableHud.name`,

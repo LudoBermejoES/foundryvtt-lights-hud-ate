@@ -855,7 +855,7 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
   });
 }
 
-async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied) {
+export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied) {
   //const actor = <Actor>game.actors?.get(actorId);
   // if (actor.getActiveTokens().length <= 0) {
   //   warn(`No token found for the actor with id '${actorId}'`);
@@ -912,7 +912,7 @@ async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied) {
   }
 }
 
-async function manageFlaggedItem(tokenId, itemId) {
+export async function manageFlaggedItem(tokenId, itemId) {
   const token = <Token>canvas.tokens?.placeables.find((t) => {
     return t.id === tokenId;
   });

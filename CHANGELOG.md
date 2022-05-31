@@ -1,3 +1,7 @@
+### 0.11.15
+
+- Add module setting for skip confirmation dialog
+
 ### 0.11.14
 
 - Add module settings for hide/show HUD buttons if you just need the module for create ate effects

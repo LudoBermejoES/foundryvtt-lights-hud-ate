@@ -1,10 +1,19 @@
 import type { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs';
 import CONSTANTS from './constants';
-import { error, info, retrieveItemLights, updateTokenLightingFromData, warn } from './lib/lib';
+import {
+  error,
+  info,
+  prepareTokenDataDropTheTorch,
+  retrieveItemLights,
+  updateTokenLightingFromData,
+  warn,
+} from './lib/lib';
 import {
   confirmDialogATLEffectItem,
   confirmDialogDropTheTorch,
   customATLDialog,
+  manageActiveEffectATL,
+  manageFlaggedItem,
   presetDialog,
 } from './lights-hud-ate-dialogs';
 import { LightDataDialog, LightHUDNoteFlags } from './lights-hud-ate-models';
@@ -115,7 +124,21 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
 
       const lightDataDialog = retrieveDataFromHtml(this);
       if (lightDataDialog) {
-        confirmDialogATLEffectItem(lightDataDialog).render(true);
+        if (game.settings.get(CONSTANTS.MODULE_NAME, 'skipDialogLightHUD')) {
+          if (lightDataDialog.effectId) {
+            await manageActiveEffectATL(
+              lightDataDialog.tokenId,
+              // lightDataDialog.actorId,
+              lightDataDialog.itemId,
+              lightDataDialog.effectId,
+              lightDataDialog.isApplied,
+            );
+          } else {
+            await manageFlaggedItem(lightDataDialog.tokenId, lightDataDialog.itemId);
+          }
+        } else {
+          confirmDialogATLEffectItem(lightDataDialog).render(true);
+        }
       }
     });
     buttons[button]?.addEventListener('contextmenu', async function (event) {
@@ -125,7 +148,57 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
 
       const lightDataDialog = retrieveDataFromHtml(this);
       if (lightDataDialog) {
-        confirmDialogDropTheTorch(lightDataDialog).render(true);
+        if (game.settings.get(CONSTANTS.MODULE_NAME, 'skipDialogLightHUD')) {
+          const token = canvas.tokens?.placeables.find((t) => {
+            return t.id === lightDataDialog.tokenId;
+          });
+          if (!token) {
+            warn(`No token found for the token with id '${lightDataDialog.tokenId}'`, true);
+            return;
+          }
+          if (!token.actor) {
+            warn(`No actor found for the token with id '${lightDataDialog.tokenId}'`, true);
+            return;
+          }
+          const actor = token?.actor;
+
+          // TODO SET UP ANIMATION ?? MAYBE IN SOME FUTURE RELEASE
+
+          // const animation = $(event.currentTarget.parentElement.parentElement)
+          // .find(".anim-dropdown")
+          // .val();
+
+          const duplicates = 1; // number od dropped light
+          const item = <Item>actor.items.get(lightDataDialog.itemId);
+          let tokenDataDropTheTorch: TokenData | null = null;
+          const tokenDataDropTheTorchTmp = <TokenData>(
+            await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0)
+          );
+          // actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorchTmp.actorId);
+          tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorchTmp);
+          // actorDropTheTorch = <Actor>await prepareTokenDataDropTheTorch(item, tokenId, _token?.data?.elevation ?? 0);
+          // tokenDataDropTheTorch = await actor.getTokenData();
+          //@ts-ignore
+          const posData = await warpgate.crosshairs.show({
+            size: Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height) * tokenDataDropTheTorch.scale,
+            icon: `modules/${CONSTANTS.MODULE_NAME}/assets/black-hole-bolas.webp`,
+            label: `Drop the ${lightDataDialog.itemName}`,
+          });
+
+          //get custom data macro
+          const customTokenData = {};
+
+          //@ts-ignore
+          await warpgate.spawnAt(
+            { x: posData.x, y: posData.y },
+            tokenDataDropTheTorch,
+            customTokenData || {},
+            {},
+            { duplicates },
+          );
+        } else {
+          confirmDialogDropTheTorch(lightDataDialog).render(true);
+        }
       }
     });
   });

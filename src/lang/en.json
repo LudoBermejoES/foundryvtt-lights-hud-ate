@@ -16,7 +16,7 @@
   "lights-hud-ate.setting.enableHud.name": "CV HUD element",
   "lights-hud-ate.setting.enableHud.hint": "If checked it will enable the hud button for apply lights and visions",
   "lights-hud-ate.setting.enableHudOnlyGM.name": "CV HUD element ONLY GM",
-  "lights-hud-ate.setting.enableHudOnlyGM.hint": "If checked it will enable the hud button for apply lights and visions, but only for GM's",
+  "lights-hud-ate.setting.enableHudOnlyGM.hint": "If 'CV HUD element' is enabled, will enable the hud button for apply lights and visions, but only for GM's",
   "lights-hud-ate.setting.hudColumn.name": "HUD Column",
   "lights-hud-ate.setting.hudColumn.hint": "Which HUD column to place the button in",
   "lights-hud-ate.setting.hudTopBottom.name": "HUD Top/Bottom",
@@ -30,6 +30,13 @@
   "lights-hud-ate.setting.applyOnFlagItem.hint": "Show all actor items flagged from this module active effect in the HUD interface",
   "lights-hud-ate.setting.useMetricSystem.name": "Use metric system on preset light and vision",
   "lights-hud-ate.setting.useMetricSystem.hint": "If enabled the unit distance used on the preset light and vision is converted to metric system",
+  "lights-hud-ate.setting.skipDialogLightHUD.name": "Skip confirmation dialog from LightHUD",
+  "lights-hud-ate.setting.skipDialogLightHUD.hint": "If enabled no dialog will pop out when click on lights and vision on the LightHUD",
+
+  "lights-hud-ate.setting.tempEffectsAsStatus.name": "Temporary Effects as Token Statuses",
+  "lights-hud-ate.setting.tempEffectsAsStatus.hint": "When a token has a temporary active effect active, display that active effect icon in the Status Effects HUD element.",
+  "lights-hud-ate.setting.tempEffectsAsStatusToggleDelete.name": "Temporary Effects as Token Statuses: Always delete instead of disable",
+  "lights-hud-ate.setting.tempEffectsAsStatusToggleDelete.hint": "If 'Temporary Effects as Token Statuses' is enabled, instead of disabling some effects and deleting others, always delete a temporary effect toggled from the status menu.",
 
   "lights-hud-ate.setting.reset.name": "Reset settings to default",
   "lights-hud-ate.setting.reset.label": "Reset Settings To Default",
