@@ -1,3 +1,7 @@
+### 0.11.17
+
+- Just a fixing relase manifest ????? for some people ?
+
 ### 0.11.16
 
 - Updated module.json fopr french language
