@@ -91,10 +91,10 @@ const module = {
     //   ${filteredEffects
     //     .map(
     //       (effect) =>
-    //         `<img class="effect-control active" 
-    //         data-effect-uuid="${effect.uuid}" 
-    //         src="${effect.data.icon}" 
-    //         title="${effect.data.label}" 
+    //         `<img class="effect-control active"
+    //         data-effect-uuid="${effect.uuid}"
+    //         src="${effect.data.icon}"
+    //         title="${effect.data.label}"
     //         data-status-id="${effect.uuid}" />`,
     //     )
     //     .join('')}

@@ -1,3 +1,7 @@
+### 0.11.18
+
+- Update effects utilities
+
 ### 0.11.17
 
 - Just a fixing relase manifest ????? for some people ?
