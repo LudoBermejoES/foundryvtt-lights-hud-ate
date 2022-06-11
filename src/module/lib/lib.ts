@@ -1,7 +1,14 @@
-import type { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import type EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
+import type {
+  ActorData,
+  TokenData,
+} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from '../api';
 import CONSTANTS from '../constants';
+import type Effect from '../effects/effect';
+import type { EffectActions } from '../effects/effect-models';
 import { EffectSupport } from '../effects/effect-support';
+import FoundryHelpers from '../effects/foundry-helpers';
 import { getATLEffectsFromItem } from '../lights-hud-ate-config';
 import { LightHUDAteEffectDefinitions } from '../lights-hud-ate-effect-definition';
 import { LightDataHud, LightHUDElement, LightHUDNoteFlags } from '../lights-hud-ate-models';
@@ -1286,37 +1293,3 @@ export function convertFeetToMeter(feetInput: number): number {
 export function convertMeterToFeet(meterInput: number): number {
   return Math.floor(meterInput * 3.2808);
 }
-
-// =========================
-
-// export async function patchToggleEffect(wrapped, event, config) {
-//   event.preventDefault();
-//   event.stopPropagation();
-//   const img = event.currentTarget;
-
-//   if (img.dataset.effectUuid) {
-//     return toggleEffectByUuid(img.dataset.effectUuid);
-//   }
-
-//   return wrapped(event, config);
-// }
-
-// export async function toggleEffectByUuid(effectUuid) {
-//   const effect = <ActiveEffect>await fromUuid(effectUuid);
-//   const alwaysDelete = game.settings.get(CONSTANTS.MODULE_NAME, 'tempEffectsAsStatusToggleDelete');
-
-//   // nuke it if it has a statusId
-//   // brittle assumption
-//   // provides an option to always do this
-//   if (effect.getFlag('core', 'statusId') || alwaysDelete) {
-//     const deleted = await effect.delete();
-//     return !!deleted;
-//   }
-
-//   // otherwise toggle its disabled status
-//   const updated = await effect.update({
-//     disabled: !effect.data.disabled,
-//   });
-
-//   return !!updated;
-// }

@@ -1,6 +1,8 @@
 import type { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from './api';
 import CONSTANTS from './constants';
+import { EffectActions } from './effects/effect-models';
+import { EffectSupport } from './effects/effect-support';
 import {
   checkNumberFromString,
   i18n,
@@ -875,9 +877,11 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
   }
   if (!itemId && game.settings.get(CONSTANTS.MODULE_NAME, 'showATEFromNoItemOrigin')) {
     if (isApplied) {
-      await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, false, true);
+      // await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, false, true);
+      await API.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, false, true);
     } else {
-      await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, true, false);
+      // await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, true, false);
+      await API.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, true, false);
     }
     return;
   }
@@ -899,15 +903,11 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
     }
   } finally {
     if (isApplied) {
-      // const atlEffectsS = obj.effects.filter((entity: ActiveEffect) => {
-      //   return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
-      // });
-      // const effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
-      //   return effectId == ae.id;
-      // });
-      await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, false, true);
+      // await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, false, true);
+      await API.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, false, true);
     } else {
-      await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, true, false);
+      // await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, true, false);
+      await API.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, true, false);
     }
   }
 }

@@ -99,6 +99,15 @@ export function registerSocket() {
   lightHudAteSocket.register('updateActiveEffectFromNameOnToken', (...args) =>
     API.updateActiveEffectFromNameOnTokenArr(...args),
   );
+  lightHudAteSocket.register('onManageActiveEffectFromEffectId', (...args) =>
+    API.onManageActiveEffectFromEffectIdArr(...args),
+  );
+  lightHudAteSocket.register('onManageActiveEffectFromEffect', (...args) =>
+    API.onManageActiveEffectFromEffectArr(...args),
+  );
+  lightHudAteSocket.register('onManageActiveEffectFromActiveEffect', (...args) =>
+    API.onManageActiveEffectFromActiveEffectArr(...args),
+  );
 
   setSocket(lightHudAteSocket);
   return lightHudAteSocket;
