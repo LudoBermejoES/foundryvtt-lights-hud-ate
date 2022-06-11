@@ -1037,7 +1037,7 @@ export default class EffectHandler {
       });
     }
     debug(
-      `END Effect Handler 'toggleEffectFromIdOnToken' : [effetcName=${effect.name},tokenName=${token.name},alwaysDelete=${alwaysDelete},forceEnabled=${forceEnabled},forceDisabled=${forceDisabled}]`,
+      `END Effect Handler 'toggleEffectFromIdOnToken' : [effectName=${effect.name},tokenName=${token.name},alwaysDelete=${alwaysDelete},forceEnabled=${forceEnabled},forceDisabled=${forceDisabled}]`,
     );
     return !!updated;
   }
