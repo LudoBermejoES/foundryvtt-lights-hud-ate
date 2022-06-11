@@ -1,3 +1,7 @@
+### 0.11.20
+
+- Bug fix (again): Of strange behaviour autoapplied effect with DAE flags ???
+
 ### 0.11.19
 
 - Bug fix (maybe): Of strange behaviour autoapplied effect with DAE flags ???

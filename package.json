@@ -3,7 +3,7 @@
   "name": "foundryvtt-lights-hud-ate",
   "title": "LightsHUD+ATE",
   "description": "Lights HUD Control + Active Token Effect",
-  "version": "0.11.19",
+  "version": "0.11.20",
   "scripts": {
     "package": "gulp package",
     "build": "gulp build && gulp link",
