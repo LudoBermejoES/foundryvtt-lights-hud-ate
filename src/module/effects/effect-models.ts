@@ -3,4 +3,5 @@ export enum EffectActions {
   edit = 'edit',
   delete = 'delete',
   toogle = 'toggle',
+  update = 'update',
 }

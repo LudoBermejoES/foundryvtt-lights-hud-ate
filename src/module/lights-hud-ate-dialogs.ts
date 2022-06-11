@@ -1,4 +1,8 @@
-import type { TokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import type EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
+import type {
+  ActorData,
+  TokenData,
+} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from './api';
 import CONSTANTS from './constants';
 import { EffectActions } from './effects/effect-models';
@@ -876,6 +880,8 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
     return;
   }
   if (!itemId && game.settings.get(CONSTANTS.MODULE_NAME, 'showATEFromNoItemOrigin')) {
+    const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.data.effects;
+    const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?.data?._id == effectId);
     if (isApplied) {
       // await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, false, true);
       await API.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, false, true);
@@ -902,6 +908,8 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
       }
     }
   } finally {
+    const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.data.effects;
+    const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?.data?._id == effectId);
     if (isApplied) {
       // await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, false, true);
       await API.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, false, true);

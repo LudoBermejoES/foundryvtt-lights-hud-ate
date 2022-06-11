@@ -18,6 +18,25 @@ import {
 } from './lights-hud-ate-dialogs';
 import { LightDataDialog, LightHUDNoteFlags } from './lights-hud-ate-models';
 
+// export function getATLEffectsFromItem(actor: Actor, item: Item): ActiveEffect[] {
+//   // const atlChanges = effect.data.changes.filter((changes) =>
+//   //     changes.key.startsWith('ATL')
+//   // );
+//   const im = <Item>actor.data.items.contents.find((i: Item) => {
+//     return i.id === item.id;
+//   });
+//   if (!im) {
+//     const atlEffects =
+//       item.effects.filter((entity) => !!entity.data.changes.find((effect) => effect.key.includes('ATL'))) ?? [];
+//     return atlEffects;
+//   } else {
+//     const atlEffects = im.effects.filter((entity) => {
+//       return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+//     });
+//     return atlEffects;
+//   }
+// }
+
 export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
   // const atlChanges = effect.data.changes.filter((changes) =>
   //     changes.key.startsWith('ATL')

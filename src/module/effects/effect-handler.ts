@@ -1333,29 +1333,76 @@ export default class EffectHandler {
     isTemporary?: boolean,
     isDisabled?: boolean,
   ) {
-    if (!activeEffect && effectActions != 'create') {
-      warn(`Can't retrieve effect`);
-      return;
-    }
     switch (effectActions) {
-      case 'create': {
-        return owner.createEmbeddedDocuments('ActiveEffect', [
-          {
-            label: game.i18n.localize('DND5E.EffectNew'),
-            icon: 'icons/svg/aura.svg',
-            origin: owner.uuid,
-            'duration.rounds': isTemporary ? 1 : undefined,
-            disabled: isDisabled,
-          },
-        ]);
+      case 'update': {
+        if (!activeEffect) {
+          warn(`Can't retrieve effect to update`);
+          return;
+        }
+        if (owner instanceof Actor) {
+          const actor = owner;
+          if (!(<ActiveEffect>activeEffect).data.origin) {
+            const origin = `Actor.${actor?.id}`;
+            setProperty(<ActiveEffectData>activeEffect?.data, 'origin', origin);
+          }
+          return await actor?.updateEmbeddedDocuments('ActiveEffect', [<any>activeEffect?.data]);
+        } else if (owner instanceof Item) {
+          const item = owner;
+          return await item.update({
+            effects: [activeEffect?.data],
+          });
+        }
+        return;
       }
+      case 'create': {
+        if (!activeEffect) {
+          warn(`Can't retrieve effect to create`);
+          return;
+        }
+        if (owner instanceof Actor) {
+          const actor = owner;
+          if (!(<ActiveEffect>activeEffect).data.origin) {
+            const origin = `Actor.${actor?.id}`;
+            setProperty(<ActiveEffectData>activeEffect?.data, 'origin', origin);
+          }
+          return await actor?.createEmbeddedDocuments('ActiveEffect', [<any>activeEffect?.data]);
+        } else if (owner instanceof Item) {
+          const item = owner;
+          return await item.update({
+            effects: [activeEffect?.data],
+          });
+        }
+        return;
+      }
+      // case 'create': {
+      //   return owner.createEmbeddedDocuments('ActiveEffect', [
+      //     {
+      //       label: game.i18n.localize('DND5E.EffectNew'),
+      //       icon: 'icons/svg/aura.svg',
+      //       origin: owner.uuid,
+      //       'duration.rounds': isTemporary ? 1 : undefined,
+      //       disabled: isDisabled,
+      //     },
+      //   ]);
+      // }
       case 'edit': {
+        if (!activeEffect) {
+          warn(`Can't retrieve effect to edit`);
+          return;
+        }
         return activeEffect?.sheet?.render(true);
       }
       case 'delete': {
+        if (!activeEffect) {
+          warn(`Can't retrieve effect to delete`);
+          return;
+        }
         return activeEffect?.delete();
       }
       case 'toggle': {
+        if (!activeEffect) {
+          warn(`Can't retrieve effect to toogle`);
+        }
         if (activeEffect?.getFlag('core', 'statusId') || alwaysDelete) {
           const deleted = await activeEffect?.delete();
           return !!deleted;

@@ -885,7 +885,8 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       if (aeAtl.length > 0) {
         const aeAtl0 = <ActiveEffect>aeAtl[0];
         const nameToSearch = <string>aeAtl0.name || aeAtl0.data.label;
-
+        // TODO How this is work ???
+        // let effectFromActor = aeAtl0;
         let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
           return isStringEquals(nameToSearch, ae.data.label);
         });
@@ -903,6 +904,10 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
           warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
           return new LightDataHud();
         }
+        effectidTmp = <string>effectFromActor.id;
+        effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
+        _idTmp = <string>effectFromActor.data._id;
+
         const applied = await API.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
         // If the active effect is disabled or is supressed
         // const isDisabled = aeAtl[0].data.disabled || false;
@@ -910,23 +915,23 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         disabledTmp = effectFromActor.data.disabled || false;
         //@ts-ignore
         suppressedTmp = effectFromActor.data.document.isSuppressed || false;
-        temporaryTmp = effectFromActor.isTemporary || false;
+        temporaryTmp = aeAtl0.isTemporary || false;
         passiveTmp = !temporaryTmp;
         if (applied && !disabledTmp && !suppressedTmp) {
           appliedTmp = true;
         }
-        effectidTmp = <string>effectFromActor.id;
-        effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
         tokenidTmp = <string>token.id;
         actoridTmp = <string>actor.id;
         // ADDED
-        remainingSecondsTmp = _getSecondsRemaining(effectFromActor.data.duration);
-        turnsTmp = <number>effectFromActor.data.duration.turns;
+        remainingSecondsTmp = _getSecondsRemaining(aeAtl0.data.duration);
+        turnsTmp = <number>aeAtl0.data.duration.turns;
         isExpiredTmp = remainingSecondsTmp < 0;
-        labelTmp = effectFromActor.data.label;
-        _idTmp = <string>effectFromActor.data._id;
-        flagsTmp = effectFromActor.data?.flags || {};
+        labelTmp = aeAtl0.data.label;
+        flagsTmp = aeAtl0.data?.flags || {};
         // Little trick if
+        if (!aeAtl0.data?.flags?.convenientDescription) {
+          flagsTmp['convenientDescription'] = item.data.name;
+        }
         if (!effectFromActor.data?.flags?.convenientDescription) {
           flagsTmp['convenientDescription'] = item.data.name;
         }
@@ -1042,7 +1047,8 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       const isActorEffectTmp = true;
       // const aeAtl0 = <ActiveEffect>aeAtl[0];
       const nameToSearch = <string>aeAtl0.name || aeAtl0.data.label;
-
+      // TODO How this is work ???
+      // let effectFromActor = aeAtl0;
       let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
         return isStringEquals(nameToSearch, ae.data.label);
       });
@@ -1060,6 +1066,10 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
         continue;
       }
+      effectidTmp = <string>effectFromActor.id;
+      effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
+      _idTmp = <string>effectFromActor.data._id;
+
       const applied = await API.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
       // If the active effect is disabled or is supressed
       // const isDisabled = aeAtl[0].data.disabled || false;
@@ -1067,25 +1077,25 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       disabledTmp = effectFromActor.data.disabled || false;
       //@ts-ignore
       suppressedTmp = effectFromActor.data.document.isSuppressed || false;
-      temporaryTmp = effectFromActor.isTemporary || false;
+      temporaryTmp = aeAtl0.isTemporary || false;
       passiveTmp = !temporaryTmp;
       if (applied && !disabledTmp && !suppressedTmp) {
         appliedTmp = true;
       }
-      effectidTmp = <string>effectFromActor.id;
-      effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
       tokenidTmp = <string>token.id;
       actoridTmp = <string>actor.id;
       // ADDED
-      remainingSecondsTmp = _getSecondsRemaining(effectFromActor.data.duration);
-      turnsTmp = <number>effectFromActor.data.duration.turns;
+      remainingSecondsTmp = _getSecondsRemaining(aeAtl0.data.duration);
+      turnsTmp = <number>aeAtl0.data.duration.turns;
       isExpiredTmp = remainingSecondsTmp < 0;
-      labelTmp = effectFromActor.data.label;
-      _idTmp = <string>effectFromActor.data._id;
-      flagsTmp = effectFromActor.data?.flags || {};
+      labelTmp = aeAtl0.data.label;
+      flagsTmp = aeAtl0.data?.flags || {};
       // Little trick if
-      if (!effectFromActor.data?.flags?.convenientDescription) {
+      if (!aeAtl0.data?.flags?.convenientDescription) {
         flagsTmp['convenientDescription'] = aeAtl0.data.label;
+      }
+      if (!effectFromActor.data?.flags?.convenientDescription) {
+        flagsTmp['convenientDescription'] = effectFromActor.data.label;
       }
 
       if (!suppressedTmp) {
@@ -1184,7 +1194,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
       const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
       const vid = ['webm', 'mp4', 'm4v'].includes(extension);
       // TODO for now we check if at least one active effect has the atl/ate changes on him
-      const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(item) || [];
+      // const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(actor, item) || [];
       let appliedTmp = false;
       let disabledTmp = false;
       let suppressedTmp = false;
