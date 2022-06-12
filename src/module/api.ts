@@ -727,7 +727,7 @@ const API = {
           info(`Cleaned up token '${token.name}'`, true);
         }
         const items = <Item[]>token.actor?.items.contents;
-        for(const item of items){
+        for (const item of items) {
           const p = getProperty(item, `data.flags.${CONSTANTS.MODULE_NAME}`);
           for (const key in p) {
             const senseOrConditionIdKey = key;
@@ -752,7 +752,7 @@ const API = {
           info(`Cleaned up actor '${token.name}'`, true);
         }
         const items = token.actor.items.contents;
-        for(const item of items){
+        for (const item of items) {
           const p = getProperty(item, `data.flags.${CONSTANTS.MODULE_NAME}`);
           for (const key in p) {
             const senseOrConditionIdKey = key;

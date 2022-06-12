@@ -82,7 +82,7 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
   //=================================
 
   const imagesParsed = await retrieveItemLights(token);
-  if(game.settings.get(CONSTANTS.MODULE_NAME, 'enableLightHUDOldInterface')){
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableLightHUDOldInterface')) {
     const imagesParsed2 = await retrieveItemLightsStatic(token);
     imagesParsed.push(...imagesParsed2);
   }
@@ -125,7 +125,10 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
         tokenButton.classList.add('active');
         if (settingHudColClass.toLowerCase() === 'left') {
           // (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).style.left = token.width + 150 + 'px';
-          const offsetLeft = (token.width / token.data.scale) + (token.width / (token.data.scale * 2)) + (token.width/(token.data.scale * 2));
+          const offsetLeft =
+            token.width / token.data.scale +
+            token.width / (token.data.scale * 2) +
+            token.width / (token.data.scale * 2);
           (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).style.left = token.width / 2 + offsetLeft + 'px';
         }
 
@@ -161,9 +164,9 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
               lightDataDialog.effectId,
               lightDataDialog.isApplied,
             );
-          } else if(lightDataDialog.isflag){
+          } else if (lightDataDialog.isflag) {
             await manageFlaggedItem(lightDataDialog.tokenId, lightDataDialog.itemId);
-          } else if(lightDataDialog.isflaglight){
+          } else if (lightDataDialog.isflaglight) {
             await manageFlaggedActorLightsStatic(lightDataDialog.tokenId, lightDataDialog.itemId);
           }
         } else {
@@ -276,13 +279,15 @@ function retrieveDataFromHtml(html): LightDataDialog | undefined {
     lightDataDialog.effectName = <string>$(html).find('.lights-hud-ate-button-image').attr('data-effect-name');
     lightDataDialog.isApplied = <string>$(html).find('.lights-hud-ate-button-image').attr('data-applied') == 'true';
 
-    lightDataDialog.disabled=<string>$(html).find('.lights-hud-ate-button-image').attr('data-disabled') == 'true';
-    lightDataDialog.suppressed=<string>$(html).find('.lights-hud-ate-button-image').attr('data-suppressed') == 'true';
-    lightDataDialog.temporary=<string>$(html).find('.lights-hud-ate-button-image').attr('data-temporary') == 'true';
-    lightDataDialog.passive=<string>$(html).find('.lights-hud-ate-button-image').attr('data-passive') == 'true';
-    lightDataDialog.isflag=<string>$(html).find('.lights-hud-ate-button-image').attr('data-isflag') == 'true';
-    lightDataDialog.isactoreffect=<string>$(html).find('.lights-hud-ate-button-image').attr('data-isactoreffect') == 'true';
-    lightDataDialog.isflaglight=<string>$(html).find('.lights-hud-ate-button-image').attr('data-isflaglight') == 'true';
+    lightDataDialog.disabled = <string>$(html).find('.lights-hud-ate-button-image').attr('data-disabled') == 'true';
+    lightDataDialog.suppressed = <string>$(html).find('.lights-hud-ate-button-image').attr('data-suppressed') == 'true';
+    lightDataDialog.temporary = <string>$(html).find('.lights-hud-ate-button-image').attr('data-temporary') == 'true';
+    lightDataDialog.passive = <string>$(html).find('.lights-hud-ate-button-image').attr('data-passive') == 'true';
+    lightDataDialog.isflag = <string>$(html).find('.lights-hud-ate-button-image').attr('data-isflag') == 'true';
+    lightDataDialog.isactoreffect =
+      <string>$(html).find('.lights-hud-ate-button-image').attr('data-isactoreffect') == 'true';
+    lightDataDialog.isflaglight =
+      <string>$(html).find('.lights-hud-ate-button-image').attr('data-isflaglight') == 'true';
   } else {
     lightDataDialog.actorId = <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-actor-id');
     lightDataDialog.tokenId = <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-token-id');
@@ -292,14 +297,19 @@ function retrieveDataFromHtml(html): LightDataDialog | undefined {
     lightDataDialog.effectName = <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-effect-name');
     lightDataDialog.isApplied =
       <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-applied') == 'true';
-    
-    lightDataDialog.disabled=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-disabled') == 'true';
-    lightDataDialog.suppressed=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-suppressed') == 'true';
-    lightDataDialog.temporary=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-temporary') == 'true';
-    lightDataDialog.passive=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-passive') == 'true';
-    lightDataDialog.isflag=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-isflag') == 'true';
-    lightDataDialog.isactoreffect=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-isactoreffect') == 'true';
-    lightDataDialog.isflaglight=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-isflaglight') == 'true';
+
+    lightDataDialog.disabled =
+      <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-disabled') == 'true';
+    lightDataDialog.suppressed =
+      <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-suppressed') == 'true';
+    lightDataDialog.temporary =
+      <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-temporary') == 'true';
+    lightDataDialog.passive = <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-passive') == 'true';
+    lightDataDialog.isflag = <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-isflag') == 'true';
+    lightDataDialog.isactoreffect =
+      <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-isactoreffect') == 'true';
+    lightDataDialog.isflaglight =
+      <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-isflaglight') == 'true';
   }
 
   // NO NEED THIS CAN BE A FLAGGED ITEM

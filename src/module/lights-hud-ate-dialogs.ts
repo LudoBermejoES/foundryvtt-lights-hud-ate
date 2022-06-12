@@ -716,9 +716,9 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
               lightDataDialog.effectId,
               lightDataDialog.isApplied,
             );
-          } else if(lightDataDialog.isflag) {
+          } else if (lightDataDialog.isflag) {
             await manageFlaggedItem(lightDataDialog.tokenId, lightDataDialog.itemId);
-          } else if(lightDataDialog.isflaglight) {
+          } else if (lightDataDialog.isflaglight) {
             await manageFlaggedActorLightsStatic(lightDataDialog.tokenId, lightDataDialog.itemId);
           }
         },
@@ -973,10 +973,10 @@ export async function manageFlaggedActorLightsStatic(tokenId, itemId) {
     warn(`No actor found for the token with id '${tokenId}'`, true);
     return;
   }
-  const isApplied = <boolean>token.actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED+"_"+itemId) ?? false;
+  const isApplied =
+    <boolean>token.actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + '_' + itemId) ?? false;
   applyFlagsOnTokenLightsStatic(tokenId, itemId, isApplied);
 }
-
 
 async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, isApplied: boolean) {
   const token = <Token>canvas.tokens?.placeables.find((t) => {
@@ -993,24 +993,19 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
 
   // Store the initial status of illumination for the token to restore if all light sources are extinguished
   // const tokenData = token.data;
-  // if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
-  //   if (!token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
-  //     await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA, await duplicate(tokenData));
-  //   }
-  // } else {
-  //   if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
-  //     await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
-  //   }
-  // }
-  if (!token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
-    await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA, await duplicate(tokenData));
-  }else {
-    await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableLightHUDOldInterface')) {
+    if (!token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
+      await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA, await duplicate(tokenData));
+    }
+  } else {
+    if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
+      await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
+    }
   }
 
-  await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED+"_"+itemId, !isApplied);
+  await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + '_' + itemId, !isApplied);
 
-  const imagesParsed = await retrieveItemLightsWithFlagLightsStatic(token,isApplied);
+  const imagesParsed = await retrieveItemLightsWithFlagLightsStatic(token, isApplied);
 
   // CHECK IF ANY LIGHT IS ACTIVE THEN IF APPLY ON FLAG IS TRUE
   let atLeastOneLightIsApplied = false;
@@ -1021,12 +1016,14 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
     }
   }
 
-  if (!atLeastOneLightIsApplied && game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+  if (!atLeastOneLightIsApplied && 
+    isApplied && 
+    game.settings.get(CONSTANTS.MODULE_NAME, 'enableLightHUDOldInterface')) {
     if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
       await updateTokenLightingFromData(
         token,
         <TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA),
-        false,
+        false, // TODO is preset is always false ?
       );
       await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
       return;
@@ -1164,12 +1161,14 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
     }
   }
 
-  if (!atLeastOneLightIsApplied && game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+  if (!atLeastOneLightIsApplied && 
+    isApplied && 
+    game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
     if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
       await updateTokenLightingFromData(
         token,
         <TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA),
-        false,
+        false, // TODO is preset is always false ?
       );
       await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
       return;

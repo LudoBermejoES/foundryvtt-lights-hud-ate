@@ -456,7 +456,7 @@ function otherSettings(apply = false) {
       default: false,
       type: Boolean,
     },
-  
+
     enableLightHUDOldInterface: {
       name: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.name`,
       hint: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.hint`,
@@ -464,8 +464,7 @@ function otherSettings(apply = false) {
       config: true,
       default: false,
       type: Boolean,
-    }
-
+    },
   };
 }
 

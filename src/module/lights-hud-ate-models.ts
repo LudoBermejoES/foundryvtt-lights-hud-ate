@@ -113,7 +113,7 @@ export class LightDataHud {
   flags: any;
   isflag: boolean;
   isactoreffect: boolean;
-  isflaglight:boolean;
+  isflaglight: boolean;
 }
 
 export class LightDataDialog {
@@ -132,7 +132,7 @@ export class LightDataDialog {
   passive: boolean;
   isflag: boolean;
   isactoreffect: boolean;
-  isflaglight:boolean;
+  isflaglight: boolean;
 }
 
 export enum LightHUDNoteFlags {

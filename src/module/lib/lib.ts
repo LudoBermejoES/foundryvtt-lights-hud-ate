@@ -811,12 +811,11 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
   if (!actor || !token) {
     return [];
   }
-  const lightItems: LightHUDElement[] = API.LIGHTS.filter((light)=>{
-    return light.id != LightHUDPreset.NONE &&
-      light.id != LightHUDPreset.NO_CHANGE
+  const lightItems: LightHUDElement[] = API.LIGHTS.filter((light) => {
+    return light.id != LightHUDPreset.NONE && light.id != LightHUDPreset.NO_CHANGE;
   });
   let imagesParsed: LightDataHud[] = [];
-  
+
   // Convert item to LightHudData
   imagesParsed = await Promise.all(
     lightItems.map(async (lightHUDElement: LightHUDElement) => {
@@ -844,8 +843,9 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
       const isFlagTmp = false;
       const isActorEffectTmp = false;
       const isFlagLigthTmp = true;
-      
-      const applied = actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED+"_"+lightHUDElement.id) || false;
+
+      const applied =
+        actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + '_' + lightHUDElement.id) || false;
       disabledTmp = !applied;
       suppressedTmp = false; // always false
       // temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
@@ -861,9 +861,8 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
       tokenidTmp = <string>token.id;
       actoridTmp = <string>actor.id;
       // ADDED
-      remainingSecondsTmp = lightHUDElement.isTemporary && lightHUDElement.duration >  0 
-        ? _getSecondsRemaining(temporaryTmp) 
-        : 0;
+      remainingSecondsTmp =
+        lightHUDElement.isTemporary && lightHUDElement.duration > 0 ? _getSecondsRemaining(lightHUDElement.duration) : 0;
       turnsTmp = 0;
       isExpiredTmp = false;
       labelTmp = lightHUDElement.name;
@@ -1131,7 +1130,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         flags: flagsTmp,
         isflag: isFlagTmp,
         isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLigthTmp
+        isflaglight: isFlagLigthTmp,
       };
     }),
   );
@@ -1253,7 +1252,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         flags: flagsTmp,
         isflag: isFlagTmp,
         isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLigthTmp
+        isflaglight: isFlagLigthTmp,
       });
     }
   }
@@ -1270,17 +1269,31 @@ function _getSecondsRemaining(duration) {
     const seconds = duration.seconds ?? duration.rounds * (CONFIG.time?.roundTime ?? 6);
     return duration.startTime + seconds - game.time.worldTime;
   } else {
-    return Infinity;
+    if (is_real_number(duration)) {
+      const seconds = duration;
+      return game.time.worldTime + seconds - game.time.worldTime;
+    } else {
+      return Infinity;
+    }
   }
 }
 
-export async function retrieveItemLightsWithFlagAndDisableThemLightsStatic(token: Token, itemId: string): Promise<void> {
+export async function retrieveItemLightsWithFlagAndDisableThemLightsStatic(
+  token: Token,
+  itemId: string,
+): Promise<void> {
   const actor = token.actor;
   if (!actor || !token) {
     return;
   }
-  if (actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED+"_"+itemId)) {
-    await actor.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED, false);
+  const p = getProperty(actor, `data.flags.${CONSTANTS.MODULE_NAME}`);
+  for (const key in p) {
+    const senseOrConditionIdKey = key;
+    const senseOrConditionValue = <any>p[key];
+    if(senseOrConditionIdKey.startsWith(LightHUDNoteFlags.HUD_ENABLED + '_') &&
+      senseOrConditionIdKey != LightHUDNoteFlags.HUD_ENABLED + '_' + itemId){
+      await actor.unsetFlag(CONSTANTS.MODULE_NAME, senseOrConditionIdKey);
+    }
   }
 }
 
@@ -1303,14 +1316,16 @@ export async function retrieveItemLightsWithFlagAndDisableThem(token: Token, ite
   }
 }
 
-export async function retrieveItemLightsWithFlagLightsStatic(token: Token, isApplied:boolean): Promise<LightDataHud[]> {
+export async function retrieveItemLightsWithFlagLightsStatic(
+  token: Token,
+  isApplied: boolean,
+): Promise<LightDataHud[]> {
   const actor = token.actor;
   if (!actor || !token) {
     return [];
   }
-  const lightItems: LightHUDElement[] = API.LIGHTS.filter((light)=>{
-    return light.id != LightHUDPreset.NONE &&
-      light.id != LightHUDPreset.NO_CHANGE
+  const lightItems: LightHUDElement[] = API.LIGHTS.filter((light) => {
+    return light.id != LightHUDPreset.NONE && light.id != LightHUDPreset.NO_CHANGE;
   });
   let imagesParsed: LightDataHud[] = [];
   // Convert item to LightHudData
@@ -1356,9 +1371,8 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token, isApp
       tokenidTmp = <string>token.id;
       actoridTmp = <string>actor.id;
       // ADDED
-      remainingSecondsTmp = lightHUDElement.isTemporary && lightHUDElement.duration >  0 
-        ? _getSecondsRemaining(temporaryTmp) 
-        : 0;
+      remainingSecondsTmp =
+        lightHUDElement.isTemporary && lightHUDElement.duration > 0 ? _getSecondsRemaining(temporaryTmp) : 0;
       turnsTmp = 0;
       isExpiredTmp = false;
       labelTmp = lightHUDElement.name;
@@ -1398,7 +1412,7 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token, isApp
         flags: flagsTmp,
         isflag: isFlagTmp,
         isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLigthTmp
+        isflaglight: isFlagLigthTmp,
       };
     }),
   );
@@ -1522,7 +1536,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
         flags: flagsTmp,
         isflag: isFlagTmp,
         isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLigthTmp
+        isflaglight: isFlagLigthTmp,
       };
     }),
   );
