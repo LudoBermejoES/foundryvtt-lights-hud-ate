@@ -726,6 +726,16 @@ const API = {
           }
           info(`Cleaned up token '${token.name}'`, true);
         }
+        const items = <Item[]>token.actor?.items.contents;
+        for(const item of items){
+          const p = getProperty(item, `data.flags.${CONSTANTS.MODULE_NAME}`);
+          for (const key in p) {
+            const senseOrConditionIdKey = key;
+            const senseOrConditionValue = <any>p[key];
+            await item.unsetFlag(CONSTANTS.MODULE_NAME, senseOrConditionIdKey);
+          }
+          info(`Cleaned up item '${item.name}'`, true);
+        }
       } else {
         warn(`No token found on the canvas for id '${token.id}'`, true);
       }
@@ -740,6 +750,16 @@ const API = {
             await token.actor.unsetFlag(CONSTANTS.MODULE_NAME, senseOrConditionIdKey);
           }
           info(`Cleaned up actor '${token.name}'`, true);
+        }
+        const items = token.actor.items.contents;
+        for(const item of items){
+          const p = getProperty(item, `data.flags.${CONSTANTS.MODULE_NAME}`);
+          for (const key in p) {
+            const senseOrConditionIdKey = key;
+            const senseOrConditionValue = <any>p[key];
+            await item.unsetFlag(CONSTANTS.MODULE_NAME, senseOrConditionIdKey);
+          }
+          info(`Cleaned up item '${item.name}'`, true);
         }
       } else {
         warn(`No token found on the canvas for id '${token.id}'`, true);

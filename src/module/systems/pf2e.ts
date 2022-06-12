@@ -16,6 +16,8 @@ export default {
       lightAnimationType: null,
       lightAnimationSpeed: null,
       lightAnimationIntensity: null,
+      isTemporary: false,
+      duration: -1,
     },
     {
       id: LightHUDPreset.NONE,
@@ -30,6 +32,8 @@ export default {
       lightAnimationType: 'none',
       lightAnimationSpeed: null,
       lightAnimationIntensity: null,
+      isTemporary: false,
+      duration: -1,
     },
     {
       id: LightHUDPreset.CANDLE,
@@ -44,6 +48,8 @@ export default {
       lightAnimationType: 'torch',
       lightAnimationSpeed: 2,
       lightAnimationIntensity: 2,
+      isTemporary: true,
+      duration: 3600,
     },
     {
       id: LightHUDPreset.LAMP,
@@ -58,6 +64,8 @@ export default {
       lightAnimationType: 'torch',
       lightAnimationSpeed: 2,
       lightAnimationIntensity: 2,
+      isTemporary: true,
+      duration: 21600,
     },
     {
       id: LightHUDPreset.LANTERN_BULLSEYE,
@@ -72,6 +80,8 @@ export default {
       lightAnimationType: 'torch',
       lightAnimationSpeed: 2,
       lightAnimationIntensity: 2,
+      isTemporary: true,
+      duration: 21600,
     },
     {
       id: LightHUDPreset.LANTERN_HOODED_DIM,
@@ -86,6 +96,8 @@ export default {
       lightAnimationType: 'torch',
       lightAnimationSpeed: 2,
       lightAnimationIntensity: 2,
+      isTemporary: true,
+      duration: 21600,
     },
     {
       id: LightHUDPreset.LANTERN_HOODED_BRIGHT,
@@ -100,6 +112,8 @@ export default {
       lightAnimationType: 'torch',
       lightAnimationSpeed: 2,
       lightAnimationIntensity: 2,
+      isTemporary: true,
+      duration: 21600,
     },
     {
       id: LightHUDPreset.TORCH,
@@ -114,6 +128,8 @@ export default {
       lightAnimationType: 'torch',
       lightAnimationSpeed: 2,
       lightAnimationIntensity: 2,
+      isTemporary: true,
+      duration: 3600,
     },
   ],
   VISIONS: <VisionHUDElement[]>[
@@ -124,6 +140,8 @@ export default {
       dimSight: null,
       brightSight: null,
       sightAngle: null,
+      isTemporary: false,
+      duration: -1,
     },
     {
       id: VisionHUDPreset.NONE,
@@ -132,6 +150,8 @@ export default {
       dimSight: 0,
       brightSight: 0,
       sightAngle: 360,
+      isTemporary: false,
+      duration: -1,
     },
     {
       id: VisionHUDPreset.SELF,
@@ -140,6 +160,8 @@ export default {
       dimSight: 5,
       brightSight: 0,
       sightAngle: 360,
+      isTemporary: false,
+      duration: -1,
     },
     {
       id: VisionHUDPreset.DARKVISION_30,
@@ -148,6 +170,8 @@ export default {
       dimSight: 30,
       brightSight: 0,
       sightAngle: 360,
+      isTemporary: false,
+      duration: -1,
     },
     {
       id: VisionHUDPreset.DARKVISION_60,
@@ -156,6 +180,8 @@ export default {
       dimSight: 60,
       brightSight: 0,
       sightAngle: 360,
+      isTemporary: false,
+      duration: -1,
     },
     {
       id: VisionHUDPreset.DARKVISION_90,
@@ -164,6 +190,8 @@ export default {
       dimSight: 90,
       brightSight: 0,
       sightAngle: 360,
+      isTemporary: false,
+      duration: -1,
     },
     {
       id: VisionHUDPreset.DARKVISION_120,
@@ -172,6 +200,8 @@ export default {
       dimSight: 120,
       brightSight: 0,
       sightAngle: 360,
+      isTemporary: false,
+      duration: -1,
     },
     {
       id: VisionHUDPreset.DARKVISION_150,
@@ -180,6 +210,8 @@ export default {
       dimSight: 150,
       brightSight: 0,
       sightAngle: 360,
+      isTemporary: false,
+      duration: -1,
     },
     {
       id: VisionHUDPreset.DARKVISION_180,
@@ -188,6 +220,8 @@ export default {
       dimSight: 180,
       brightSight: 0,
       sightAngle: 360,
+      isTemporary: false,
+      duration: -1,
     },
     {
       id: VisionHUDPreset.LOW_LIGHT_VISION,
@@ -196,6 +230,8 @@ export default {
       dimSight: 0,
       brightSight: 60,
       sightAngle: 360,
+      isTemporary: false,
+      duration: -1,
     },
   ],
 };

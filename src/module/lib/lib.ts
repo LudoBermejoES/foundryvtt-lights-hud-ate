@@ -11,7 +11,7 @@ import { EffectSupport } from '../effects/effect-support';
 import FoundryHelpers from '../effects/foundry-helpers';
 import { getATLEffectsFromItem } from '../lights-hud-ate-config';
 import { LightHUDAteEffectDefinitions } from '../lights-hud-ate-effect-definition';
-import { LightDataHud, LightHUDElement, LightHUDNoteFlags } from '../lights-hud-ate-models';
+import { LightDataHud, LightHUDElement, LightHUDNoteFlags, LightHUDPreset } from '../lights-hud-ate-models';
 
 // =============================
 // Module Generic function
@@ -806,6 +806,112 @@ export function checkNumberFromString(value) {
     return Number(value);
   }
 }
+export async function retrieveItemLightsStatic(token: Token): Promise<LightDataHud[]> {
+  const actor = token.actor;
+  if (!actor || !token) {
+    return [];
+  }
+  const lightItems: LightHUDElement[] = API.LIGHTS.filter((light)=>{
+    return light.id != LightHUDPreset.NONE &&
+      light.id != LightHUDPreset.NO_CHANGE
+  });
+  let imagesParsed: LightDataHud[] = [];
+  
+  // Convert item to LightHudData
+  imagesParsed = await Promise.all(
+    lightItems.map(async (lightHUDElement: LightHUDElement) => {
+      const im = <string>lightHUDElement.img;
+      const split = im.split('/');
+      const extensions = im.split('.');
+      const extension = <string>extensions[extensions.length - 1];
+      const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
+      const vid = ['webm', 'mp4', 'm4v'].includes(extension);
+      let appliedTmp = false;
+      let disabledTmp = false;
+      let suppressedTmp = false;
+      let temporaryTmp = false;
+      let passiveTmp = false;
+      let effectidTmp = '';
+      let effectnameTmp = '';
+      let turnsTmp = 0;
+      let isExpiredTmp = false;
+      let remainingSecondsTmp = -1;
+      let labelTmp = '';
+      let _idTmp = '';
+      let flagsTmp = {};
+      let tokenidTmp = '';
+      let actoridTmp = '';
+      const isFlagTmp = false;
+      const isActorEffectTmp = false;
+      const isFlagLigthTmp = true;
+      
+      const applied = actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED+"_"+lightHUDElement.id) || false;
+      disabledTmp = !applied;
+      suppressedTmp = false; // always false
+      // temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
+      //   ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) > 0
+      //   : false;
+      temporaryTmp = lightHUDElement.isTemporary;
+      passiveTmp = !temporaryTmp;
+      if (applied && !disabledTmp && !suppressedTmp) {
+        appliedTmp = true;
+      }
+      effectidTmp = '';
+      effectnameTmp = lightHUDElement.name;
+      tokenidTmp = <string>token.id;
+      actoridTmp = <string>actor.id;
+      // ADDED
+      remainingSecondsTmp = lightHUDElement.isTemporary && lightHUDElement.duration >  0 
+        ? _getSecondsRemaining(temporaryTmp) 
+        : 0;
+      turnsTmp = 0;
+      isExpiredTmp = false;
+      labelTmp = lightHUDElement.name;
+      _idTmp = <string>lightHUDElement.id;
+      // TODO filter this
+      flagsTmp = actor.data?.flags || {};
+
+      if (!suppressedTmp) {
+        appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+      } else {
+        appliedTmp = !appliedTmp;
+      }
+
+      return <LightDataHud>{
+        icon: im,
+        name: lightHUDElement.name,
+        applied: appliedTmp,
+        disabled: disabledTmp,
+        suppressed: suppressedTmp,
+        isTemporary: temporaryTmp,
+        passive: passiveTmp,
+        img: img,
+        vid: vid,
+        type: img || vid,
+        itemid: lightHUDElement.id,
+        itemname: lightHUDElement.name,
+        effectid: effectidTmp,
+        effectname: effectnameTmp,
+        tokenid: tokenidTmp,
+        actorid: actoridTmp,
+        // Added for dfred panel
+        remainingSeconds: remainingSecondsTmp,
+        turns: turnsTmp,
+        isExpired: isExpiredTmp,
+        label: labelTmp,
+        _id: _idTmp,
+        flags: flagsTmp,
+        isflag: isFlagTmp,
+        isactoreffect: isActorEffectTmp,
+        isflaglight: isFlagLigthTmp,
+      };
+    }),
+  );
+  const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
+    return i.effectname;
+  });
+  return imagesParsedFilter;
+}
 
 export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> {
   // const actor = <Actor>this._actor;
@@ -878,11 +984,14 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       let tokenidTmp = '';
       let actoridTmp = '';
       let isFlagTmp = false;
-      const isActorEffectTmp = false;
+      let isActorEffectTmp = false;
+      const isFlagLigthTmp = false;
       // ========================================================
       // IMPORTANT PRIORITY TO THE ATL EFFECT PRESENT ON THE ITEM
       // ========================================================
       if (aeAtl.length > 0) {
+        isFlagTmp = false;
+        isActorEffectTmp = true;
         const aeAtl0 = <ActiveEffect>aeAtl[0];
         const nameToSearch = <string>aeAtl0.name || aeAtl0.data.label;
         // TODO How this is work ???
@@ -957,6 +1066,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       // ========================================================
       else if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
         isFlagTmp = true;
+        isActorEffectTmp = false;
         const applied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) || false;
         disabledTmp = !applied;
         suppressedTmp = false; // always false
@@ -979,6 +1089,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         isExpiredTmp = false;
         labelTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
         _idTmp = <string>item.id;
+        // TODO filter this
         flagsTmp = item.data?.flags || {};
 
         if (!suppressedTmp) {
@@ -1018,8 +1129,9 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         label: labelTmp,
         _id: _idTmp,
         flags: flagsTmp,
-        isFlag: isFlagTmp,
-        isActorEffect: isActorEffectTmp,
+        isflag: isFlagTmp,
+        isactoreffect: isActorEffectTmp,
+        isflaglight: isFlagLigthTmp
       };
     }),
   );
@@ -1050,6 +1162,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       let actoridTmp = '';
       const isFlagTmp = false;
       const isActorEffectTmp = true;
+      const isFlagLigthTmp = false;
       // const aeAtl0 = <ActiveEffect>aeAtl[0];
       const nameToSearch = <string>aeAtl0.name || aeAtl0.data.label;
       // TODO How this is work ???
@@ -1138,8 +1251,9 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         label: labelTmp,
         _id: _idTmp,
         flags: flagsTmp,
-        isFlag: isFlagTmp,
-        isActorEffect: isActorEffectTmp,
+        isflag: isFlagTmp,
+        isactoreffect: isActorEffectTmp,
+        isflaglight: isFlagLigthTmp
       });
     }
   }
@@ -1160,6 +1274,16 @@ function _getSecondsRemaining(duration) {
   }
 }
 
+export async function retrieveItemLightsWithFlagAndDisableThemLightsStatic(token: Token, itemId: string): Promise<void> {
+  const actor = token.actor;
+  if (!actor || !token) {
+    return;
+  }
+  if (actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED+"_"+itemId)) {
+    await actor.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED, false);
+  }
+}
+
 export async function retrieveItemLightsWithFlagAndDisableThem(token: Token, itemId: string): Promise<void> {
   const actor = token.actor;
   if (!actor || !token) {
@@ -1177,6 +1301,112 @@ export async function retrieveItemLightsWithFlagAndDisableThem(token: Token, ite
       }
     }
   }
+}
+
+export async function retrieveItemLightsWithFlagLightsStatic(token: Token, isApplied:boolean): Promise<LightDataHud[]> {
+  const actor = token.actor;
+  if (!actor || !token) {
+    return [];
+  }
+  const lightItems: LightHUDElement[] = API.LIGHTS.filter((light)=>{
+    return light.id != LightHUDPreset.NONE &&
+      light.id != LightHUDPreset.NO_CHANGE
+  });
+  let imagesParsed: LightDataHud[] = [];
+  // Convert item to LightHudData
+  imagesParsed = await Promise.all(
+    lightItems.map(async (lightHUDElement: LightHUDElement) => {
+      const im = <string>lightHUDElement.img;
+      const split = im.split('/');
+      const extensions = im.split('.');
+      const extension = <string>extensions[extensions.length - 1];
+      const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
+      const vid = ['webm', 'mp4', 'm4v'].includes(extension);
+      // TODO for now we check if at least one active effect has the atl/ate changes on him
+      // const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(actor, item) || [];
+      let appliedTmp = false;
+      let disabledTmp = false;
+      let suppressedTmp = false;
+      let temporaryTmp = false;
+      let passiveTmp = false;
+      let effectidTmp = '';
+      let effectnameTmp = '';
+      let turnsTmp = 0;
+      let isExpiredTmp = false;
+      let remainingSecondsTmp = -1;
+      let labelTmp = '';
+      let _idTmp = '';
+      let flagsTmp = {};
+      let tokenidTmp = '';
+      let actoridTmp = '';
+      const isFlagTmp = false;
+      const isActorEffectTmp = false;
+      const isFlagLigthTmp = true;
+
+      const applied = isApplied || false;
+      disabledTmp = !applied;
+      suppressedTmp = false; // always false
+      temporaryTmp = lightHUDElement.isTemporary;
+      passiveTmp = !temporaryTmp;
+      if (applied && !disabledTmp && !suppressedTmp) {
+        appliedTmp = true;
+      }
+      effectidTmp = '';
+      effectnameTmp = lightHUDElement.name;
+      tokenidTmp = <string>token.id;
+      actoridTmp = <string>actor.id;
+      // ADDED
+      remainingSecondsTmp = lightHUDElement.isTemporary && lightHUDElement.duration >  0 
+        ? _getSecondsRemaining(temporaryTmp) 
+        : 0;
+      turnsTmp = 0;
+      isExpiredTmp = false;
+      labelTmp = lightHUDElement.name;
+      _idTmp = <string>lightHUDElement.id;
+      // TODO filter this
+      flagsTmp = token.actor?.data?.flags || {};
+
+      if (!suppressedTmp) {
+        appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+      } else {
+        appliedTmp = !appliedTmp;
+      }
+
+      return <LightDataHud>{
+        icon: im,
+        name: lightHUDElement.name,
+        applied: appliedTmp,
+        disabled: disabledTmp,
+        suppressed: suppressedTmp,
+        isTemporary: temporaryTmp,
+        passive: passiveTmp,
+        img: img,
+        vid: vid,
+        type: img || vid,
+        itemid: lightHUDElement.id,
+        itemname: lightHUDElement.name,
+        effectid: effectidTmp,
+        effectname: effectnameTmp,
+        tokenid: tokenidTmp,
+        actorid: actoridTmp,
+        // Added for dfred panel
+        remainingSeconds: remainingSecondsTmp,
+        turns: turnsTmp,
+        isExpired: isExpiredTmp,
+        label: labelTmp,
+        _id: _idTmp,
+        flags: flagsTmp,
+        isflag: isFlagTmp,
+        isactoreffect: isActorEffectTmp,
+        isflaglight: isFlagLigthTmp
+      };
+    }),
+  );
+
+  const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
+    return i.effectname;
+  });
+  return imagesParsedFilter;
 }
 
 export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDataHud[]> {
@@ -1221,6 +1451,8 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
       let tokenidTmp = '';
       let actoridTmp = '';
       let isFlagTmp = false;
+      const isActorEffectTmp = false;
+      const isFlagLigthTmp = false;
       // ========================================================
       // WE CHECK THE FLAG
       // ========================================================
@@ -1248,6 +1480,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
         isExpiredTmp = false;
         labelTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
         _idTmp = <string>item.id;
+        // TODO filter this
         flagsTmp = item.data?.flags || {};
 
         if (!suppressedTmp) {
@@ -1287,7 +1520,9 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
         label: labelTmp,
         _id: _idTmp,
         flags: flagsTmp,
-        isFlag: isFlagTmp,
+        isflag: isFlagTmp,
+        isactoreffect: isActorEffectTmp,
+        isflaglight: isFlagLigthTmp
       };
     }),
   );

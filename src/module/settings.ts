@@ -162,6 +162,15 @@ export const registerSettings = function (): void {
     type: Boolean,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enableLightHUDOldInterface', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.hint`,
+    scope: 'world',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
   // ===================================================================
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {
@@ -438,6 +447,25 @@ function otherSettings(apply = false) {
         Bottom: 'Bottom',
       },
     },
+
+    useMetricSystem: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.useMetricSystem.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.useMetricSystem.hint`,
+      scope: 'client',
+      config: true,
+      default: false,
+      type: Boolean,
+    },
+  
+    enableLightHUDOldInterface: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.hint`,
+      scope: 'world',
+      config: true,
+      default: false,
+      type: Boolean,
+    }
+
   };
 }
 

@@ -38,6 +38,10 @@
   "lights-hud-ate.setting.tempEffectsAsStatusToggleDelete.name": "Temporary Effects as Token Statuses: Always delete instead of disable",
   "lights-hud-ate.setting.tempEffectsAsStatusToggleDelete.hint": "If 'Temporary Effects as Token Statuses' is enabled, instead of disabling some effects and deleting others, always delete a temporary effect toggled from the status menu.",
 
+
+  "lights-hud-ate.setting.enableLightHUDOldInterface.name": "Enable LightHUD Old Interface",
+  "lights-hud-ate.setting.enableLightHUDOldInterface.hint": "For people who want the literaly 1:1 same interface of the old LightsHUD you can enable this. Usually this will work better with 'Apply HUD interface on ATE Items' and 'Apply HUD interface on flagged Items' module setting disabled, but they can kind work togheter",
+
   "lights-hud-ate.setting.reset.name": "Reset settings to default",
   "lights-hud-ate.setting.reset.label": "Reset Settings To Default",
   "lights-hud-ate.setting.reset.hint": "This will reset all of the settings of back to the active game system's default.",

@@ -14,6 +14,8 @@ import {
   prepareTokenDataDropTheTorch,
   retrieveItemLightsWithFlag,
   retrieveItemLightsWithFlagAndDisableThem,
+  retrieveItemLightsWithFlagAndDisableThemLightsStatic,
+  retrieveItemLightsWithFlagLightsStatic,
   rollDependingOnSystem,
   updateTokenLighting,
   updateTokenLightingFromData,
@@ -697,8 +699,8 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
     // } the active effect '${effectName}' on actor '${actorname}' (token name is '${tokenName}')?</h2><div>`,
     content: `<div><h2>${i18nFormat(`lights-hud-ate.windows.dialogs.confirm.apply.content`, {
       isApplied: lightDataDialog.isApplied ? 'disabled' : 'enabled',
-      effectName: lightDataDialog.effectName,
-      itemName: lightDataDialog.itemName,
+      effectName: i18n(lightDataDialog.effectName),
+      itemName: i18n(lightDataDialog.itemName),
       actorName: lightDataDialog.actorName,
       tokenName: lightDataDialog.tokenName,
     })}</h2><div>`,
@@ -706,7 +708,7 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
       yes: {
         label: i18n(`lights-hud-ate.windows.dialogs.confirm.apply.choice.yes`),
         callback: async (html) => {
-          if (lightDataDialog.effectId) {
+          if (lightDataDialog.isactoreffect) {
             await manageActiveEffectATL(
               lightDataDialog.tokenId,
               // lightDataDialog.actorId,
@@ -714,8 +716,10 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
               lightDataDialog.effectId,
               lightDataDialog.isApplied,
             );
-          } else {
+          } else if(lightDataDialog.isflag) {
             await manageFlaggedItem(lightDataDialog.tokenId, lightDataDialog.itemId);
+          } else if(lightDataDialog.isflaglight) {
+            await manageFlaggedActorLightsStatic(lightDataDialog.tokenId, lightDataDialog.itemId);
           }
         },
       },
@@ -957,6 +961,171 @@ export async function manageFlaggedItem(tokenId, itemId) {
   }
 }
 
+export async function manageFlaggedActorLightsStatic(tokenId, itemId) {
+  const token = <Token>canvas.tokens?.placeables.find((t) => {
+    return t.id === tokenId;
+  });
+  if (!token) {
+    warn(`No token found for the token with id '${tokenId}'`, true);
+    return;
+  }
+  if (!token.actor) {
+    warn(`No actor found for the token with id '${tokenId}'`, true);
+    return;
+  }
+  const isApplied = <boolean>token.actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED+"_"+itemId) ?? false;
+  applyFlagsOnTokenLightsStatic(tokenId, itemId, isApplied);
+}
+
+
+async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, isApplied: boolean) {
+  const token = <Token>canvas.tokens?.placeables.find((t) => {
+    return t.id === tokenId;
+  });
+  const lightHUDElement = <LightHUDElement>API.LIGHTS.find((entity: LightHUDElement) => {
+    return <string>entity.id == itemId;
+  });
+
+  const tokenData = token.data;
+
+  // =======================================
+  await retrieveItemLightsWithFlagAndDisableThemLightsStatic(token, <string>lightHUDElement.id);
+
+  // Store the initial status of illumination for the token to restore if all light sources are extinguished
+  // const tokenData = token.data;
+  // if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+  //   if (!token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
+  //     await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA, await duplicate(tokenData));
+  //   }
+  // } else {
+  //   if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
+  //     await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
+  //   }
+  // }
+  if (!token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
+    await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA, await duplicate(tokenData));
+  }else {
+    await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
+  }
+
+  await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED+"_"+itemId, !isApplied);
+
+  const imagesParsed = await retrieveItemLightsWithFlagLightsStatic(token,isApplied);
+
+  // CHECK IF ANY LIGHT IS ACTIVE THEN IF APPLY ON FLAG IS TRUE
+  let atLeastOneLightIsApplied = false;
+  for (const light of imagesParsed) {
+    if (light.applied) {
+      atLeastOneLightIsApplied = true;
+      break;
+    }
+  }
+
+  if (!atLeastOneLightIsApplied && game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+    if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
+      await updateTokenLightingFromData(
+        token,
+        <TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA),
+        false,
+      );
+      await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
+      return;
+    }
+  }
+
+  if (isApplied) {
+    return;
+  }
+  // =======================================
+
+  const id = <string>lightHUDElement.id || randomID();
+  const effectName = lightHUDElement.name || tokenData.name;
+  const height = tokenData.height;
+  const width = token.data.width;
+  const scale = tokenData.scale;
+
+  const brightSight: number | null = tokenData.brightSight;
+  const dimSight: number | null = tokenData.dimSight;
+  const sightAngle: number | null = tokenData.sightAngle;
+
+  const dimLight: number | null = lightHUDElement.dimLight || tokenData.light.dim;
+  const brightLight: number | null = lightHUDElement.brightLight || tokenData.light.bright;
+  const lightColor: string | null = lightHUDElement.lightColor || tokenData.light.color || '#000000';
+  const lightAlpha: number | null = lightHUDElement.lightAlpha || tokenData.light.angle;
+  const lightAngle: number | null = lightHUDElement.lightAngle;
+  const lightAnimationType = lightHUDElement.lightAnimationType || tokenData.light.animation.type;
+  const lightAnimationSpeed = lightHUDElement.lightAnimationSpeed || tokenData.light.animation.speed;
+  const lightAnimationIntensity = lightHUDElement.lightAnimationIntensity || tokenData.light.animation.intensity;
+
+  const lightAnimationReverse = tokenData.light.animation.reverse;
+  const coloration = tokenData.light.coloration;
+  const lightLuminosity = tokenData.light.luminosity;
+  const lightGradual = tokenData.light.gradual;
+  const saturation = tokenData.light.saturation;
+  const lightContrast = tokenData.light.contrast;
+  const lightShadows = tokenData.light.shadows;
+  const vision = dimSight > 0 || brightSight > 0 ? true : false;
+
+  const duration = lightHUDElement.duration || 0;
+
+  // Support values
+  const isPreset = true;
+  const applyAsAtlAteEffect = false;
+
+  const actorId = <string>token.actor?.id;
+  // const tokenId = token.id;
+
+  let alias: string | null = null;
+  if (actorId || tokenId) {
+    if (!alias) {
+      if (token) {
+        alias = <string>token.name;
+      } else {
+        alias = <string>game.actors?.get(actorId)?.name;
+      }
+    }
+  }
+
+  // Update Token
+  await updateTokenLighting(
+    token,
+    //lockRotation,
+    dimSight,
+    brightSight,
+    sightAngle,
+    dimLight,
+    brightLight,
+    lightColor,
+    lightAlpha,
+    <number>lightAngle,
+
+    coloration,
+    lightLuminosity,
+    lightGradual,
+    saturation,
+    lightContrast,
+    lightShadows,
+
+    <string>lightAnimationType,
+    <number>lightAnimationSpeed,
+    <number>lightAnimationIntensity,
+    lightAnimationReverse,
+
+    applyAsAtlAteEffect,
+    effectName,
+    '',
+    duration,
+
+    vision,
+    // token.id,
+    // alias,
+    height,
+    width,
+    scale,
+    isPreset,
+  );
+}
+
 async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boolean) {
   const token = <Token>canvas.tokens?.placeables.find((t) => {
     return t.id === tokenId;
@@ -1108,7 +1277,7 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
     lightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE));
   }
   if (!lightAngle || lightAngle === 0) {
-    lightAngle = tokenData.sightAngle;
+    lightAngle = tokenData.light.angle;
   }
 
   const lightAnimationType =

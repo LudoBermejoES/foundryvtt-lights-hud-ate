@@ -41,6 +41,9 @@
                             data-suppressed="{{effect.suppressed}}"
                             data-temporary="{{effect.isTemporary}}"
                             data-passive="{{effect.passive}}"
+                            data-isflag="{{effect.isflag}}"
+                            data-isactoreffect="{{effect.isactoreffect}}"
+                            data-isflaglight="{{effect.isflaglight}}"
                             style="opacity:{{../imageOpacity}};" />
 
                     {{/if}}
@@ -59,6 +62,9 @@
                             data-suppressed="{{effect.suppressed}}"
                             data-temporary="{{effect.isTemporary}}"
                             data-passive="{{effect.passive}}"
+                            data-isflag="{{effect.isflag}}"
+                            data-isactoreffect="{{effect.isactoreffect}}"
+                            data-isflaglight="{{effect.isflaglight}}"
                             style="opacity:{{../imageOpacity}};" autoplay loop>
                         </video>
                     {{/if}}
@@ -76,7 +82,10 @@
                             data-disabled="{{effect.disabled}}"
                             data-suppressed="{{effect.suppressed}}"
                             data-temporary="{{effect.isTemporary}}"
-                            data-passive="{{effect.passive}}">{{effect.icon}}</span>
+                            data-passive="{{effect.passive}}"
+                            data-isflag="{{effect.isflag}}"
+                            data-isactoreffect="{{effect.isactoreffect}}"
+                            data-isflaglight="{{effect.isflaglight}}">{{effect.icon}}</span>
                     {{/unless}}
 
                     <div class="effect-info">
@@ -104,10 +113,14 @@
                     <i class="badge expired fas fa-clock"></i>
                     {{else if effect.isTemporary}}
                     <i class="badge fas fa-clock"></i>
-                    {{else if effect.isFlag}}
-                    <i class="badge fas fa-flag"></i>
                     {{else}}
                     <i class="badge unlimited fas fa-infinity"></i>
+                    {{/if}}
+
+                    {{#if effect.isflag}}
+                    <i class="badge fas fa-flag"></i>
+                    {{else if effect.isflaglight}}
+                    <i class="badge fas fa-sun"></i>
                     {{/if}}
 
                     {{#if effect.applied}}
@@ -130,7 +143,10 @@
                         data-disabled="{{effect.disabled}}"
                         data-suppressed="{{effect.suppressed}}"
                         data-temporary="{{effect.isTemporary}}"
-                        data-passive="{{effect.passive}}">{{effect.name}}</span>
+                        data-passive="{{effect.passive}}"
+                        data-isflag="{{effect.isflag}}"
+                        data-isactoreffect="{{effect.isactoreffect}}"
+                        data-isflaglight="{{effect.isflaglight}}">{{effect.name}}</span>
                     {{!-- 
                     <div class="effect-info">
                         <h1>{{effect.label}}</h1>
@@ -157,10 +173,14 @@
                     <i class="badge expired fas fa-clock"></i>
                     {{else if effect.isTemporary}}
                     <i class="badge fas fa-clock"></i>
-                    {{else if effect.isFlag}}
-                    <i class="badge fas fa-flag"></i>
                     {{else}}
                     <i class="badge unlimited fas fa-infinity"></i>
+                    {{/if}}
+
+                    {{#if effect.isFlag}}
+                    <i class="badge fas fa-flag"></i>
+                    {{else if effect.isflaglight}}
+                    <i class="badge fas fa-sun"></i>
                     {{/if}}
 
                     {{#if effect.applied}}

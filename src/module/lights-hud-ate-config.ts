@@ -5,6 +5,7 @@ import {
   info,
   prepareTokenDataDropTheTorch,
   retrieveItemLights,
+  retrieveItemLightsStatic,
   updateTokenLightingFromData,
   warn,
 } from './lib/lib';
@@ -13,6 +14,7 @@ import {
   confirmDialogDropTheTorch,
   customATLDialog,
   manageActiveEffectATL,
+  manageFlaggedActorLightsStatic,
   manageFlaggedItem,
   presetDialog,
 } from './lights-hud-ate-dialogs';
@@ -49,7 +51,8 @@ export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
 export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) {
   if (
     !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem') &&
-    !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')
+    !game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem') &&
+    !game.settings.get(CONSTANTS.MODULE_NAME, 'enableLightHUDOldInterface')
   ) {
     // error(`YOU MUST DECIDE OR LIGHTHUD WITH FLAGS OR LIGHTHUD WITH ATE EFFECTS !!!`, true);
     return;
@@ -79,6 +82,10 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
   //=================================
 
   const imagesParsed = await retrieveItemLights(token);
+  if(game.settings.get(CONSTANTS.MODULE_NAME, 'enableLightHUDOldInterface')){
+    const imagesParsed2 = await retrieveItemLightsStatic(token);
+    imagesParsed.push(...imagesParsed2);
+  }
 
   const wildcardDisplay = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/artSelect.hbs`, {
     tokenId,
@@ -146,7 +153,7 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
       const lightDataDialog = retrieveDataFromHtml(this);
       if (lightDataDialog) {
         if (game.settings.get(CONSTANTS.MODULE_NAME, 'skipDialogLightHUD')) {
-          if (lightDataDialog.effectId) {
+          if (lightDataDialog.isactoreffect) {
             await manageActiveEffectATL(
               lightDataDialog.tokenId,
               // lightDataDialog.actorId,
@@ -154,8 +161,10 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
               lightDataDialog.effectId,
               lightDataDialog.isApplied,
             );
-          } else {
+          } else if(lightDataDialog.isflag){
             await manageFlaggedItem(lightDataDialog.tokenId, lightDataDialog.itemId);
+          } else if(lightDataDialog.isflaglight){
+            await manageFlaggedActorLightsStatic(lightDataDialog.tokenId, lightDataDialog.itemId);
           }
         } else {
           confirmDialogATLEffectItem(lightDataDialog).render(true);
@@ -266,6 +275,14 @@ function retrieveDataFromHtml(html): LightDataDialog | undefined {
     lightDataDialog.effectId = <string>$(html).find('.lights-hud-ate-button-image').attr('data-effect-id');
     lightDataDialog.effectName = <string>$(html).find('.lights-hud-ate-button-image').attr('data-effect-name');
     lightDataDialog.isApplied = <string>$(html).find('.lights-hud-ate-button-image').attr('data-applied') == 'true';
+
+    lightDataDialog.disabled=<string>$(html).find('.lights-hud-ate-button-image').attr('data-disabled') == 'true';
+    lightDataDialog.suppressed=<string>$(html).find('.lights-hud-ate-button-image').attr('data-suppressed') == 'true';
+    lightDataDialog.temporary=<string>$(html).find('.lights-hud-ate-button-image').attr('data-temporary') == 'true';
+    lightDataDialog.passive=<string>$(html).find('.lights-hud-ate-button-image').attr('data-passive') == 'true';
+    lightDataDialog.isflag=<string>$(html).find('.lights-hud-ate-button-image').attr('data-isflag') == 'true';
+    lightDataDialog.isactoreffect=<string>$(html).find('.lights-hud-ate-button-image').attr('data-isactoreffect') == 'true';
+    lightDataDialog.isflaglight=<string>$(html).find('.lights-hud-ate-button-image').attr('data-isflaglight') == 'true';
   } else {
     lightDataDialog.actorId = <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-actor-id');
     lightDataDialog.tokenId = <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-token-id');
@@ -275,6 +292,14 @@ function retrieveDataFromHtml(html): LightDataDialog | undefined {
     lightDataDialog.effectName = <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-effect-name');
     lightDataDialog.isApplied =
       <string>$(html).find('.lights-hud-ate-button-image-text').attr('data-applied') == 'true';
+    
+    lightDataDialog.disabled=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-disabled') == 'true';
+    lightDataDialog.suppressed=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-suppressed') == 'true';
+    lightDataDialog.temporary=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-temporary') == 'true';
+    lightDataDialog.passive=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-passive') == 'true';
+    lightDataDialog.isflag=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-isflag') == 'true';
+    lightDataDialog.isactoreffect=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-isactoreffect') == 'true';
+    lightDataDialog.isflaglight=<string>$(html).find('.lights-hud-ate-button-image-text').attr('data-isflaglight') == 'true';
   }
 
   // NO NEED THIS CAN BE A FLAGGED ITEM

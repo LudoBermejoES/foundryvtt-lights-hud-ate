@@ -24,6 +24,8 @@ export class LightHUDElement {
   lightAnimationType: string | null;
   lightAnimationSpeed: string | null;
   lightAnimationIntensity: string | null;
+  isTemporary: boolean;
+  duration: number;
 }
 
 export class OptionSelectData {
@@ -39,6 +41,8 @@ export class VisionHUDElement {
   dimSight: number | null;
   brightSight: number | null;
   sightAngle: number | null;
+  isTemporary: boolean;
+  duration: number;
 }
 
 export enum VisionHUDPreset {
@@ -107,8 +111,9 @@ export class LightDataHud {
   label: string;
   _id: string;
   flags: any;
-  isFlag: boolean;
-  isActorEffect: boolean;
+  isflag: boolean;
+  isactoreffect: boolean;
+  isflaglight:boolean;
 }
 
 export class LightDataDialog {
@@ -121,6 +126,13 @@ export class LightDataDialog {
   itemName: string;
   effectName: string;
   isApplied: boolean;
+  disabled: boolean;
+  suppressed: boolean;
+  temporary: boolean;
+  passive: boolean;
+  isflag: boolean;
+  isactoreffect: boolean;
+  isflaglight:boolean;
 }
 
 export enum LightHUDNoteFlags {
