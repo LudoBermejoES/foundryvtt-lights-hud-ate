@@ -1,3 +1,7 @@
+### 0.11.21
+
+- Bug fix: Auto applied effect when is not present on the actor data, ty to @jtracey for point out the problem
+
 ### 0.11.20
 
 - Bug fix (again): Of strange behaviour autoapplied effect with DAE flags ???
