@@ -117,7 +117,9 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
       if (clickedButton === tokenButton && activeButton !== tokenButton) {
         tokenButton.classList.add('active');
         if (settingHudColClass.toLowerCase() === 'left') {
-          (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).style.left = token.width + 150 + 'px';
+          // (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).style.left = token.width + 150 + 'px';
+          const offsetLeft = (token.width / token.data.scale) + (token.width / (token.data.scale * 2)) + (token.width/(token.data.scale * 2));
+          (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).style.left = token.width / 2 + offsetLeft + 'px';
         }
 
         (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).classList.add('active');
