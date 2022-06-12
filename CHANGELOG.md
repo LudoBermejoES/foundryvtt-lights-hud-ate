@@ -1,3 +1,10 @@
+### 0.11.23
+
+- Prepared a basic integration for emulate the old lighthud behaviour
+- Add module settings to not autoapply efffect when removed from the effect panel
+- Some bug fix here and there
+- Add name on the template
+
 ### 0.11.22
 
 - Solved the strange issue of disabled active feccte during the creation

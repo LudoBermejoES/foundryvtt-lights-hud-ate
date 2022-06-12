@@ -1016,9 +1016,11 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
     }
   }
 
-  if (!atLeastOneLightIsApplied && 
-    isApplied && 
-    game.settings.get(CONSTANTS.MODULE_NAME, 'enableLightHUDOldInterface')) {
+  if (
+    !atLeastOneLightIsApplied &&
+    isApplied &&
+    game.settings.get(CONSTANTS.MODULE_NAME, 'enableLightHUDOldInterface')
+  ) {
     if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
       await updateTokenLightingFromData(
         token,
@@ -1161,9 +1163,7 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
     }
   }
 
-  if (!atLeastOneLightIsApplied && 
-    isApplied && 
-    game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
+  if (!atLeastOneLightIsApplied && isApplied && game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
     if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
       await updateTokenLightingFromData(
         token,

@@ -862,7 +862,9 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
       actoridTmp = <string>actor.id;
       // ADDED
       remainingSecondsTmp =
-        lightHUDElement.isTemporary && lightHUDElement.duration > 0 ? _getSecondsRemaining(lightHUDElement.duration) : 0;
+        lightHUDElement.isTemporary && lightHUDElement.duration > 0
+          ? _getSecondsRemaining(lightHUDElement.duration)
+          : 0;
       turnsTmp = 0;
       isExpiredTmp = false;
       labelTmp = lightHUDElement.name;
@@ -878,7 +880,7 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
 
       return <LightDataHud>{
         icon: im,
-        name: lightHUDElement.name,
+        name: i18n(lightHUDElement.name),
         applied: appliedTmp,
         disabled: disabledTmp,
         suppressed: suppressedTmp,
@@ -888,16 +890,16 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
         vid: vid,
         type: img || vid,
         itemid: lightHUDElement.id,
-        itemname: lightHUDElement.name,
+        itemname: i18n(lightHUDElement.name),
         effectid: effectidTmp,
-        effectname: effectnameTmp,
+        effectname: i18n(effectnameTmp),
         tokenid: tokenidTmp,
         actorid: actoridTmp,
         // Added for dfred panel
         remainingSeconds: remainingSecondsTmp,
         turns: turnsTmp,
         isExpired: isExpiredTmp,
-        label: labelTmp,
+        label: i18n(labelTmp),
         _id: _idTmp,
         flags: flagsTmp,
         isflag: isFlagTmp,
@@ -1290,8 +1292,10 @@ export async function retrieveItemLightsWithFlagAndDisableThemLightsStatic(
   for (const key in p) {
     const senseOrConditionIdKey = key;
     const senseOrConditionValue = <any>p[key];
-    if(senseOrConditionIdKey.startsWith(LightHUDNoteFlags.HUD_ENABLED + '_') &&
-      senseOrConditionIdKey != LightHUDNoteFlags.HUD_ENABLED + '_' + itemId){
+    if (
+      senseOrConditionIdKey.startsWith(LightHUDNoteFlags.HUD_ENABLED + '_') &&
+      senseOrConditionIdKey != LightHUDNoteFlags.HUD_ENABLED + '_' + itemId
+    ) {
       await actor.unsetFlag(CONSTANTS.MODULE_NAME, senseOrConditionIdKey);
     }
   }
@@ -1388,7 +1392,7 @@ export async function retrieveItemLightsWithFlagLightsStatic(
 
       return <LightDataHud>{
         icon: im,
-        name: lightHUDElement.name,
+        name: i18n(lightHUDElement.name),
         applied: appliedTmp,
         disabled: disabledTmp,
         suppressed: suppressedTmp,
@@ -1398,16 +1402,16 @@ export async function retrieveItemLightsWithFlagLightsStatic(
         vid: vid,
         type: img || vid,
         itemid: lightHUDElement.id,
-        itemname: lightHUDElement.name,
+        itemname: i18n(lightHUDElement.name),
         effectid: effectidTmp,
-        effectname: effectnameTmp,
+        effectname: i18n(effectnameTmp),
         tokenid: tokenidTmp,
         actorid: actoridTmp,
         // Added for dfred panel
         remainingSeconds: remainingSecondsTmp,
         turns: turnsTmp,
         isExpired: isExpiredTmp,
-        label: labelTmp,
+        label: i18n(labelTmp),
         _id: _idTmp,
         flags: flagsTmp,
         isflag: isFlagTmp,

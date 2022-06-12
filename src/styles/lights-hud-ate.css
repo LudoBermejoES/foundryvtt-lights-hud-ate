@@ -138,6 +138,7 @@
 .lights-hud-ate-tags .tag_tertiary.tag {
   background-color: hsl(0, 70%, 28.4%);
   color: #fff;
+  max-width: 60px;
 }
 .lights-hud-ate-tags .tag_alt.tag {
   background-color: #786452;
