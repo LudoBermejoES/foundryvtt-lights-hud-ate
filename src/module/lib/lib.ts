@@ -893,14 +893,17 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         // Check if someone has delete the active effect but the item with the ATL changes is still on inventory
         if (!effectFromActor) {
           info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
-          setProperty(aeAtl0.data,`transfer`,false);
-          setProperty(aeAtl0.data,`disabled`,true);
-          await API.addActiveEffectOnToken(<string>token.document.id, aeAtl0.data);
+          // setProperty(aeAtl0.data,`transfer`,false);
+          // setProperty(aeAtl0.data,`disabled`,true);
+          const activeEffectDataToUpdate = aeAtl0.toObject();
+          activeEffectDataToUpdate.transfer = false;
+          activeEffectDataToUpdate.disabled = true;
+          await API.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
           // ???
           effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
             return isStringEquals(nameToSearch, ae.data.label);
           });
-          await API.toggleEffectFromIdOnToken(<string>token.document.id, <string>effectFromActor.id, false, false, true);
+          // await API.toggleEffectFromIdOnToken(<string>token.document.id, <string>effectFromActor.id, false, false, true);
         }
         if (!effectFromActor) {
           warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
@@ -1057,14 +1060,17 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       // Check if someone has delete the active effect but the item with the ATL changes is still on inventory
       if (!effectFromActor) {
         info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
-        setProperty(aeAtl0.data,`transfer`,false);
-        setProperty(aeAtl0.data,`disabled`,true);
-        await API.addActiveEffectOnToken(<string>token.document.id, aeAtl0.data);
+        // setProperty(aeAtl0.data,`transfer`,false);
+        // setProperty(aeAtl0.data,`disabled`,true);
+        const activeEffectDataToUpdate = aeAtl0.toObject();
+        activeEffectDataToUpdate.transfer = false;
+        activeEffectDataToUpdate.disabled = true;
+        await API.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
         // ???
         effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
           return isStringEquals(nameToSearch, ae.data.label);
         });
-        await API.toggleEffectFromIdOnToken(<string>token.document.id, <string>effectFromActor.id, false, false, true);
+        // await API.toggleEffectFromIdOnToken(<string>token.document.id, <string>effectFromActor.id, false, false, true);
       }
       if (!effectFromActor) {
         warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);

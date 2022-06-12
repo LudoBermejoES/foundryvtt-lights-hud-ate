@@ -1,3 +1,7 @@
+### 0.11.22
+
+- Solved the strange issue of disabled active feccte during the creation
+
 ### 0.11.21
 
 - Bug fix: Auto applied effect when is not present on the actor data, ty to @jtracey for point out the problem
