@@ -842,7 +842,7 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
       let actoridTmp = '';
       const isFlagTmp = false;
       const isActorEffectTmp = false;
-      const isFlagLigthTmp = true;
+      const isFlagLightTmp = true;
 
       const applied =
         actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + '_' + lightHUDElement.id) || false;
@@ -904,7 +904,7 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
         flags: flagsTmp,
         isflag: isFlagTmp,
         isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLigthTmp,
+        isflaglight: isFlagLightTmp,
       };
     }),
   );
@@ -986,7 +986,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       let actoridTmp = '';
       let isFlagTmp = false;
       let isActorEffectTmp = false;
-      const isFlagLigthTmp = false;
+      const isFlagLightTmp = false;
       // ========================================================
       // IMPORTANT PRIORITY TO THE ATL EFFECT PRESENT ON THE ITEM
       // ========================================================
@@ -1001,13 +1001,14 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
           return isStringEquals(nameToSearch, ae.data.label);
         });
         // Check if someone has delete the active effect but the item with the ATL changes is still on inventory
-        if (!effectFromActor) {
+        if (!effectFromActor && game.settings.get(CONSTANTS.MODULE_NAME,'autoApplyEffectIfNotPresentOnActor')) {
           info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
           // setProperty(aeAtl0.data,`transfer`,false);
           // setProperty(aeAtl0.data,`disabled`,true);
           const activeEffectDataToUpdate = aeAtl0.toObject();
           activeEffectDataToUpdate.transfer = false;
           activeEffectDataToUpdate.disabled = true;
+          activeEffectDataToUpdate.origin = aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
           await API.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
           // ???
           effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
@@ -1132,7 +1133,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         flags: flagsTmp,
         isflag: isFlagTmp,
         isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLigthTmp,
+        isflaglight: isFlagLightTmp,
       };
     }),
   );
@@ -1163,7 +1164,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       let actoridTmp = '';
       const isFlagTmp = false;
       const isActorEffectTmp = true;
-      const isFlagLigthTmp = false;
+      const isFlagLightTmp = false;
       // const aeAtl0 = <ActiveEffect>aeAtl[0];
       const nameToSearch = <string>aeAtl0.name || aeAtl0.data.label;
       // TODO How this is work ???
@@ -1172,13 +1173,14 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         return isStringEquals(nameToSearch, ae.data.label);
       });
       // Check if someone has delete the active effect but the item with the ATL changes is still on inventory
-      if (!effectFromActor) {
+      if (!effectFromActor && game.settings.get(CONSTANTS.MODULE_NAME,'autoApplyEffectIfNotPresentOnActor')) {
         info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
         // setProperty(aeAtl0.data,`transfer`,false);
         // setProperty(aeAtl0.data,`disabled`,true);
         const activeEffectDataToUpdate = aeAtl0.toObject();
         activeEffectDataToUpdate.transfer = false;
         activeEffectDataToUpdate.disabled = true;
+        activeEffectDataToUpdate.origin = aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
         await API.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
         // ???
         effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
@@ -1254,7 +1256,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         flags: flagsTmp,
         isflag: isFlagTmp,
         isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLigthTmp,
+        isflaglight: isFlagLightTmp,
       });
     }
   }
@@ -1360,7 +1362,7 @@ export async function retrieveItemLightsWithFlagLightsStatic(
       let actoridTmp = '';
       const isFlagTmp = false;
       const isActorEffectTmp = false;
-      const isFlagLigthTmp = true;
+      const isFlagLightTmp = true;
 
       const applied = isApplied || false;
       disabledTmp = !applied;
@@ -1416,7 +1418,7 @@ export async function retrieveItemLightsWithFlagLightsStatic(
         flags: flagsTmp,
         isflag: isFlagTmp,
         isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLigthTmp,
+        isflaglight: isFlagLightTmp,
       };
     }),
   );
@@ -1470,7 +1472,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
       let actoridTmp = '';
       let isFlagTmp = false;
       const isActorEffectTmp = false;
-      const isFlagLigthTmp = false;
+      const isFlagLightTmp = false;
       // ========================================================
       // WE CHECK THE FLAG
       // ========================================================
@@ -1540,7 +1542,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
         flags: flagsTmp,
         isflag: isFlagTmp,
         isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLigthTmp,
+        isflaglight: isFlagLightTmp,
       };
     }),
   );

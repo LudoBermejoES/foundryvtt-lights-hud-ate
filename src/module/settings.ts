@@ -162,6 +162,15 @@ export const registerSettings = function (): void {
     type: Boolean,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'autoApplyEffectIfNotPresentOnActor', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.autoApplyEffectIfNotPresentOnActor.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.autoApplyEffectIfNotPresentOnActor.hint`,
+    scope: 'world',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
   game.settings.register(CONSTANTS.MODULE_NAME, 'enableLightHUDOldInterface', {
     name: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.name`,
     hint: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.hint`,
@@ -452,6 +461,15 @@ function otherSettings(apply = false) {
       name: `${CONSTANTS.MODULE_NAME}.setting.useMetricSystem.name`,
       hint: `${CONSTANTS.MODULE_NAME}.setting.useMetricSystem.hint`,
       scope: 'client',
+      config: true,
+      default: false,
+      type: Boolean,
+    },
+
+    autoApplyEffectIfNotPresentOnActor: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.autoApplyEffectIfNotPresentOnActor.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.autoApplyEffectIfNotPresentOnActor.hint`,
+      scope: 'world',
       config: true,
       default: false,
       type: Boolean,

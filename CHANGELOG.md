@@ -1,3 +1,8 @@
+### 0.11.24
+
+- Add module setitng "Auto apply effect if not present on actor"
+- Bug fix : [effects being auto created when I right click on token](https://github.com/p4535992/foundryvtt-lights-hud-ate/issues/12)
+
 ### 0.11.23
 
 - Prepared a basic integration for emulate the old lighthud behaviour
