@@ -29,6 +29,10 @@ A Foundry VTT module that displays on the HUD config of the token all the availa
 
 ![imggif2](./wiki/assets/light_hud_flags.gif)
 
+3) The module setting **'Enable LightHUD Old Interface' (by default is false)** fFor people who want the literally 1:1 same interface of the old LightsHUD you can enable this. Usually this will work better with 'Apply HUD interface on ATE Items' and 'Apply HUD interface on flagged Items' module setting disabled, but they can kind work together
+
+![imggif3](./wiki/assets/light_hud_flags_old.gif)
+
 ## NOTES:
 
 **Although not recommended, both modes can be active** and the interface will show both ATE effect and item objects with module flags activated. The priority of the light and visual effects will always be given to the ATE effects present on the object if there are both the ATE effects and the module flags.

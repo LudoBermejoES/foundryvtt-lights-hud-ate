@@ -1001,14 +1001,15 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
           return isStringEquals(nameToSearch, ae.data.label);
         });
         // Check if someone has delete the active effect but the item with the ATL changes is still on inventory
-        if (!effectFromActor && game.settings.get(CONSTANTS.MODULE_NAME,'autoApplyEffectIfNotPresentOnActor')) {
+        if (!effectFromActor && game.settings.get(CONSTANTS.MODULE_NAME, 'autoApplyEffectIfNotPresentOnActor')) {
           info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
           // setProperty(aeAtl0.data,`transfer`,false);
           // setProperty(aeAtl0.data,`disabled`,true);
           const activeEffectDataToUpdate = aeAtl0.toObject();
           activeEffectDataToUpdate.transfer = false;
           activeEffectDataToUpdate.disabled = true;
-          activeEffectDataToUpdate.origin = aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
+          activeEffectDataToUpdate.origin =
+            aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
           await API.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
           // ???
           effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
@@ -1173,14 +1174,15 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         return isStringEquals(nameToSearch, ae.data.label);
       });
       // Check if someone has delete the active effect but the item with the ATL changes is still on inventory
-      if (!effectFromActor && game.settings.get(CONSTANTS.MODULE_NAME,'autoApplyEffectIfNotPresentOnActor')) {
+      if (!effectFromActor && game.settings.get(CONSTANTS.MODULE_NAME, 'autoApplyEffectIfNotPresentOnActor')) {
         info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
         // setProperty(aeAtl0.data,`transfer`,false);
         // setProperty(aeAtl0.data,`disabled`,true);
         const activeEffectDataToUpdate = aeAtl0.toObject();
         activeEffectDataToUpdate.transfer = false;
         activeEffectDataToUpdate.disabled = true;
-        activeEffectDataToUpdate.origin = aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
+        activeEffectDataToUpdate.origin =
+          aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
         await API.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
         // ???
         effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
@@ -1322,14 +1324,12 @@ export async function retrieveItemLightsWithFlagAndDisableThem(token: Token, ite
   }
 }
 
-export async function retrieveItemLightsWithFlagLightsStatic(
-  token: Token,
-  isApplied: boolean,
-): Promise<LightDataHud[]> {
+export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Promise<LightDataHud[]> {
   const actor = token.actor;
   if (!actor || !token) {
     return [];
   }
+
   const lightItems: LightHUDElement[] = API.LIGHTS.filter((light) => {
     return light.id != LightHUDPreset.NONE && light.id != LightHUDPreset.NO_CHANGE;
   });
@@ -1363,7 +1363,9 @@ export async function retrieveItemLightsWithFlagLightsStatic(
       const isFlagTmp = false;
       const isActorEffectTmp = false;
       const isFlagLightTmp = true;
-
+      const isApplied = <boolean>(
+        actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + '_' + lightHUDElement.id)
+      );
       const applied = isApplied || false;
       disabledTmp = !applied;
       suppressedTmp = false; // always false

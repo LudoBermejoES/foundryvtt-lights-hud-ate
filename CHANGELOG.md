@@ -1,3 +1,7 @@
+### 0.11.25
+
+- Add integration for replicate the old lgithd hud 1:1
+
 ### 0.11.24
 
 - Add module setitng "Auto apply effect if not present on actor"

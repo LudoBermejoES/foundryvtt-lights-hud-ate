@@ -721,6 +721,14 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
           } else if (lightDataDialog.isflaglight) {
             await manageFlaggedActorLightsStatic(lightDataDialog.tokenId, lightDataDialog.itemId);
           }
+          // If open we force the close of the panel after the update
+          //$('.lights-hud-ate-selector-wrap').remove();
+          // $('.lights-hud-ate-selector-wrap')[0]?.classList.remove('active');
+          // $('[data-action=lights-hud-ate-selector]')[0]?.classList.remove('active');
+          const token = canvas.tokens?.placeables.find((t) =>{
+            return t.id === lightDataDialog.tokenId;
+          });
+          token?.release();
         },
       },
       no: {
@@ -1003,9 +1011,14 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
     }
   }
 
-  await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + '_' + itemId, !isApplied);
+  // await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + '_' + itemId, !isApplied);
+  if (!isApplied) {
+    await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + '_' + itemId, true);
+  } else {
+    await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + '_' + itemId);
+  }
 
-  const imagesParsed = await retrieveItemLightsWithFlagLightsStatic(token, isApplied);
+  const imagesParsed = await retrieveItemLightsWithFlagLightsStatic(token);
 
   // CHECK IF ANY LIGHT IS ACTIVE THEN IF APPLY ON FLAG IS TRUE
   let atLeastOneLightIsApplied = false;
@@ -1037,7 +1050,7 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
   }
   // =======================================
 
-  const id = <string>lightHUDElement.id || randomID();
+  const id = <string>lightHUDElement.id;
   const effectName = lightHUDElement.name || tokenData.name;
   const height = tokenData.height;
   const width = token.data.width;
@@ -1180,7 +1193,7 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
   }
   // =======================================
 
-  const id = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || randomID();
+  const id = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME);
   const effectName = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || tokenData.name;
   const height =
     <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT)) || tokenData.height;

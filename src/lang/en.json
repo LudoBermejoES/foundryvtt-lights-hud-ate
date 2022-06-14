@@ -41,8 +41,8 @@
   "lights-hud-ate.setting.enableLightHUDOldInterface.name": "Enable LightHUD Old Interface",
   "lights-hud-ate.setting.enableLightHUDOldInterface.hint": "For people who want the literally 1:1 same interface of the old LightsHUD you can enable this. Usually this will work better with 'Apply HUD interface on ATE Items' and 'Apply HUD interface on flagged Items' module setting disabled, but they can kind work together",
 
-  "lights-hud-ate.setting.autoApplyEffectIfNotPresentOnActor.name":"Auto apply effect if not present on actor",
-  "lights-hud-ate.setting.autoApplyEffectIfNotPresentOnActor.hint":"If enabled this setting will automatically applied a retrieve effect on a item but absent on the actor, this is usually useful for force the player to not remove some effect and force the gm to go every time to apply the 'transferToActor' feature on the item",
+  "lights-hud-ate.setting.autoApplyEffectIfNotPresentOnActor.name": "Auto apply effect if not present on actor",
+  "lights-hud-ate.setting.autoApplyEffectIfNotPresentOnActor.hint": "If enabled this setting will automatically applied a retrieve effect on a item but absent on the actor, this is usually useful for force the player to not remove some effect and force the gm to go every time to apply the 'transferToActor' feature on the item",
 
   "lights-hud-ate.setting.reset.name": "Reset settings to default",
   "lights-hud-ate.setting.reset.label": "Reset Settings To Default",

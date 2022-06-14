@@ -132,14 +132,14 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
           (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).style.left = token.width / 2 + offsetLeft + 'px';
         }
 
-        (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).classList.add('active');
+        (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0])?.classList.add('active');
         const effectSelector = '[data-action="effects"]'; //is080 ? '[data-action="effects"]' : '.effects';
         (<HTMLElement>html.find(`.control-icon${effectSelector}`)[0]).classList.remove('active');
         (<HTMLElement>html.find('.status-effects')[0]).classList.remove('active');
       } else {
         tokenButton.classList.remove('active');
 
-        (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).classList.remove('active');
+        (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0])?.classList.remove('active');
       }
     });
 
@@ -169,6 +169,14 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
           } else if (lightDataDialog.isflaglight) {
             await manageFlaggedActorLightsStatic(lightDataDialog.tokenId, lightDataDialog.itemId);
           }
+          // If open we force the close of the panel after the update
+          //$('.lights-hud-ate-selector-wrap').remove();
+          // $('.lights-hud-ate-selector-wrap')[0]?.classList.remove('active');
+          // $('[data-action=lights-hud-ate-selector]')[0]?.classList.remove('active');
+          const token = canvas.tokens?.placeables.find((t) =>{
+            return t.id === lightDataDialog.tokenId;
+          });
+          token?.release();
         } else {
           confirmDialogATLEffectItem(lightDataDialog).render(true);
         }
