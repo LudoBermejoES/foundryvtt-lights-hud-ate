@@ -1,3 +1,7 @@
+### 0.11.26
+
+- Little bug fix on socketLib
+
 ### 0.11.25
 
 - Add integration for replicate the old lgithd hud 1:1

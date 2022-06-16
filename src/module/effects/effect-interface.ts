@@ -837,19 +837,19 @@ export default class EffectInterface {
     isDisabled?: boolean,
     withSocket = true,
   ) {
-    if (withSocket && isGMConnectedAndSocketLibEnable()) {
-      return this._socket.executeAsGM(
-        'onManageActiveEffectFromEffectId',
-        effectActions,
-        owner,
-        effectId,
-        alwaysDelete,
-        forceEnabled,
-        forceDisabled,
-        isTemporary,
-        isDisabled,
-      );
-    } else {
+    // if (withSocket && isGMConnectedAndSocketLibEnable()) {
+    //   return this._socket.executeAsGM(
+    //     'onManageActiveEffectFromEffectId',
+    //     effectActions,
+    //     owner,
+    //     effectId,
+    //     alwaysDelete,
+    //     forceEnabled,
+    //     forceDisabled,
+    //     isTemporary,
+    //     isDisabled,
+    //   );
+    // } else {
       return this._effectHandler.onManageActiveEffectFromEffectId(
         effectActions,
         owner,
@@ -860,7 +860,7 @@ export default class EffectInterface {
         isTemporary,
         isDisabled,
       );
-    }
+    // }
   }
 
   /**
@@ -880,19 +880,19 @@ export default class EffectInterface {
     isDisabled?: boolean,
     withSocket = true,
   ) {
-    if (withSocket && isGMConnectedAndSocketLibEnable()) {
-      return this._socket.executeAsGM(
-        'onManageActiveEffectFromEffect',
-        effectActions,
-        owner,
-        effect,
-        alwaysDelete,
-        forceEnabled,
-        forceDisabled,
-        isTemporary,
-        isDisabled,
-      );
-    } else {
+    // if (withSocket && isGMConnectedAndSocketLibEnable()) {
+    //   return this._socket.executeAsGM(
+    //     'onManageActiveEffectFromEffect',
+    //     effectActions,
+    //     owner,
+    //     effect,
+    //     alwaysDelete,
+    //     forceEnabled,
+    //     forceDisabled,
+    //     isTemporary,
+    //     isDisabled,
+    //   );
+    // } else {
       return this._effectHandler.onManageActiveEffectFromEffect(
         effectActions,
         owner,
@@ -903,7 +903,7 @@ export default class EffectInterface {
         isTemporary,
         isDisabled,
       );
-    }
+    // }
   }
 
   /**
@@ -923,19 +923,19 @@ export default class EffectInterface {
     isDisabled?: boolean,
     withSocket = true,
   ) {
-    if (withSocket && isGMConnectedAndSocketLibEnable()) {
-      return this._socket.executeAsGM(
-        'onManageActiveEffectFromActiveEffect',
-        effectActions,
-        owner,
-        activeEffect,
-        alwaysDelete,
-        forceEnabled,
-        forceDisabled,
-        isTemporary,
-        isDisabled,
-      );
-    } else {
+    // if (withSocket && isGMConnectedAndSocketLibEnable()) {
+    //   return this._socket.executeAsGM(
+    //     'onManageActiveEffectFromActiveEffect',
+    //     effectActions,
+    //     owner,
+    //     activeEffect,
+    //     alwaysDelete,
+    //     forceEnabled,
+    //     forceDisabled,
+    //     isTemporary,
+    //     isDisabled,
+    //   );
+    // } else {
       return this._effectHandler.onManageActiveEffectFromActiveEffect(
         effectActions,
         owner,
@@ -946,6 +946,6 @@ export default class EffectInterface {
         isTemporary,
         isDisabled,
       );
-    }
+    // }
   }
 }
