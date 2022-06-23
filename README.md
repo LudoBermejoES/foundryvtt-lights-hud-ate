@@ -98,6 +98,7 @@ This module uses the [warpgate](https://github.com/trioderegion/warpgate) librar
 - [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) is not been updated for foundryvtt 9 so is not advisable to used right now.
 - The modules is not smart enough to distinct multiple ligthing effect on the same item and is not make sense ? Every item must have only one effect with _ATL changes_ on it (at least for me). If multiple effect with _ATL changes_ are founded on the same item only the first is analyzed from the module, you can use multiple item where each has is own lighting configuration.
 - The [warpgate](https://github.com/trioderegion/warpgate) function `spawnAt` should include a check distance of  spawn so no player drop torch on a very far point of the canvas.
+- The properties _height,width,scale,_ cna be modififed only with the ATL integration for my sanity
 
 ## Supported Systems
 

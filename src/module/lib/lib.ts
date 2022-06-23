@@ -517,9 +517,10 @@ export async function updateTokenLighting(
     token.document.update({
       // lockRotation: lockRotation,
       vision: vision,
-      height: height,
-      width: width,
-      scale: scale,
+      // REMOVED ONLY ATL CAN CHANGE THESE
+      // height: height,
+      // width: width,
+      // scale: scale,
       light: {
         dim: manageDist(dimLight, isPreset),
         bright: manageDist(brightLight, isPreset),
