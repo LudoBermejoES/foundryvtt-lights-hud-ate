@@ -173,7 +173,7 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
           //$('.lights-hud-ate-selector-wrap').remove();
           // $('.lights-hud-ate-selector-wrap')[0]?.classList.remove('active');
           // $('[data-action=lights-hud-ate-selector]')[0]?.classList.remove('active');
-          const token = canvas.tokens?.placeables.find((t) =>{
+          const token = canvas.tokens?.placeables.find((t) => {
             return t.id === lightDataDialog.tokenId;
           });
           token?.release();

@@ -1,3 +1,7 @@
+### 0.11.28
+
+- Update effects api
+
 ### 0.11.27
 
 - Remove update of height,width, scale for not atl effect
