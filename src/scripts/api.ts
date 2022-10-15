@@ -7,7 +7,7 @@ import type { ActiveEffectData } from '@league-of-foundry-developers/foundry-vtt
 import type { EffectActions } from './effects/effect-models';
 
 const API = {
-  effectInterface: EffectInterface,
+  // effectInterface: EffectInterface,
 
   /**
    * The attributes used to track dynamic attributes in this system

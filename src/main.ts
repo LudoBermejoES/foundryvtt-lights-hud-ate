@@ -12,11 +12,11 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
-import type API from './module/api';
-import CONSTANTS from './module/constants';
-import { error } from './module/lib/lib';
-import { initHooks, readyHooks, setupHooks } from './module/module';
-import { registerSettings } from './module/settings';
+import type API from './scripts/api';
+import CONSTANTS from './scripts/constants';
+import { error } from './scripts/lib/lib';
+import { initHooks, readyHooks, setupHooks } from './scripts/module';
+import { registerSettings } from './scripts/settings';
 
 /* ------------------------------------ */
 /* Initialize module					*/
@@ -76,12 +76,6 @@ Hooks.once('ready', () => {
     if (game.modules.get('warpgate')) word = 'activate';
     throw error(`Requires the 'warpgate' module. Please ${word} it.`);
   }
-  if (!game.modules.get('warpgate')?.active && game.user?.isGM) {
-    let word = 'install and activate';
-    if (game.modules.get('warpgate')) word = 'activate';
-    throw error(`Requires the 'warpgate' module. Please ${word} it.`);
-  }
-
   readyHooks();
 });
 
