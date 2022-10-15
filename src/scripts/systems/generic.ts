@@ -1,6 +1,6 @@
-import type { LightHUDElement, VisionHUDElement } from '../lights-hud-ate-models';
+import type { LightHUDElement, VisionHUDElement } from "../lights-hud-ate-models";
 
 export default {
-  LIGHTS: <LightHUDElement[]>[],
-  VISIONS: <VisionHUDElement[]>[],
+	LIGHTS: <LightHUDElement[]>[],
+	VISIONS: <VisionHUDElement[]>[],
 };

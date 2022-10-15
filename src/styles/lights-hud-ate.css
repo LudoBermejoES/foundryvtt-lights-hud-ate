@@ -1,66 +1,66 @@
 #token-hud .lights-hud-ate-selector-wrap {
-  position: absolute;
-  left: 75px;
-  visibility: hidden;
-  top: 50%;
-  transform: translate(0%, -50%);
-  width: max-content;
-  max-width: 355px;
-  max-height: 350px;
-  text-align: start;
-  grid-template-columns: 100px 100px 100px;
-  overflow-y: auto;
+	position: absolute;
+	left: 75px;
+	visibility: hidden;
+	top: 50%;
+	transform: translate(0%, -50%);
+	width: max-content;
+	max-width: 355px;
+	max-height: 350px;
+	text-align: start;
+	grid-template-columns: 100px 100px 100px;
+	overflow-y: auto;
 }
 #token-hud .lights-hud-ate-selector-wrap.list {
-  grid-template-columns: unset !important;
-  max-width: 450px;
+	grid-template-columns: unset !important;
+	max-width: 450px;
 }
 
 #token-hud .lights-hud-ate-selector-wrap.active {
-  visibility: visible;
-  /* display: grid; */
+	visibility: visible;
+	/* display: grid; */
 }
 
 #token-hud .lights-hud-ate-selector-wrap.left {
-  left: 250px;
+	left: 250px;
 }
 
 #token-hud .lights-hud-ate-button-select {
-  max-width: 300px;
-  overflow-wrap: break-word;
-  padding-top: 0;
-  padding-bottom: 0;
-  width: max-content !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  line-height: 0 !important;
-  /* border: none; da casino con control-icon attivo */
+	max-width: 300px;
+	overflow-wrap: break-word;
+	padding-top: 0;
+	padding-bottom: 0;
+	width: max-content !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	line-height: 0 !important;
+	/* border: none; da casino con control-icon attivo */
 }
 
 #token-hud .lights-hud-ate-button-select:hover .lights-hud-ate-button-image {
-  opacity: 1 !important;
+	opacity: 1 !important;
 }
 
 #token-hud .lights-hud-ate-button-select.list {
-  max-width: 440px;
-  width: 100% !important;
-  margin: 8px 0px !important;
-  line-height: 40px !important;
+	max-width: 440px;
+	width: 100% !important;
+	margin: 8px 0px !important;
+	line-height: 40px !important;
 }
 
 #token-hud .lights-hud-ate-button-image {
-  width: 100px;
-  height: 100px;
-  margin: 2px;
-  object-fit: contain;
+	width: 100px;
+	height: 100px;
+	margin: 2px;
+	object-fit: contain;
 }
 
 #token-hud .lights-hud-ate-button-disabled span,
 #token-hud .lights-hud-ate-button-disabled img,
 #token-hud .lights-hud-ate-button-disabled video {
-  opacity: 1 !important;
-  filter: grayscale(100%);
-  color: #ccc;
+	opacity: 1 !important;
+	filter: grayscale(100%);
+	color: #ccc;
 }
 /* #token-hud .lights-hud-ate-button-disabled span,
 #token-hud .lights-hud-ate-button-disabled:hover img,
@@ -84,10 +84,10 @@
 */
 
 .token-sheet .lights-hud-ate-default {
-  display: none;
+	display: none;
 }
 .token-sheet .lights-hud-ate-default.active {
-  display: block;
+	display: block;
 }
 
 /** ============ */
@@ -96,11 +96,11 @@
 
 .lights-hud-ate-button-macro-preset,
 .lights-hud-ate-button-macro-custom {
-  background: whitesmoke;
+	background: whitesmoke;
 }
 
 .lights-hud-ate-sub-group {
-  margin-left: 20px !important;
+	margin-left: 20px !important;
 }
 
 /** ================= */
@@ -108,45 +108,45 @@
 /** ================= */
 
 .lights-hud-ate-tags {
-  /* display: flex; removed */
-  flex-wrap: wrap;
-  gap: 2px;
-  list-style-type: none;
-  margin-bottom: 2px;
+	/* display: flex; removed */
+	flex-wrap: wrap;
+	gap: 2px;
+	list-style-type: none;
+	margin-bottom: 2px;
 }
 .lights-hud-ate-tags .tag {
-  text-rendering: optimizeLegibility;
-  background-color: hsl(235, 28.5%, 37.8%);
-  border-radius: 2px;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.5);
-  color: #fff;
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  line-height: 1;
-  padding: 3px 4px;
-  text-transform: uppercase;
+	text-rendering: optimizeLegibility;
+	background-color: hsl(235, 28.5%, 37.8%);
+	border-radius: 2px;
+	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+	color: #fff;
+	font-size: 9px;
+	font-weight: 500;
+	letter-spacing: 0.05em;
+	line-height: 1;
+	padding: 3px 4px;
+	text-transform: uppercase;
 }
 .lights-hud-ate-tags .tag_primary.tag {
-  background-color: hsl(235, 28.5%, 37.8%);
-  color: #fff;
+	background-color: hsl(235, 28.5%, 37.8%);
+	color: #fff;
 }
 .lights-hud-ate-tags .tag_secondary.tag {
-  background-color: hsl(13, 39%, 53.7%);
-  color: #fff;
+	background-color: hsl(13, 39%, 53.7%);
+	color: #fff;
 }
 .lights-hud-ate-tags .tag_tertiary.tag {
-  background-color: hsl(0, 70%, 28.4%);
-  color: #fff;
-  max-width: 60px;
+	background-color: hsl(0, 70%, 28.4%);
+	color: #fff;
+	max-width: 60px;
 }
 .lights-hud-ate-tags .tag_alt.tag {
-  background-color: #786452;
-  color: #fff;
+	background-color: #786452;
+	color: #fff;
 }
 .lights-hud-ate-tags .tag_material.tag {
-  background-color: #666;
-  color: #fff;
+	background-color: #666;
+	color: #fff;
 }
 /*
 .lights-hud-ate-effect-panel {
@@ -175,56 +175,56 @@
 }
 */
 .lights-hud-ate-effect-panel .effect-item .effect-info {
-  background-color: rgba(0, 0, 0, 0.75);
-  /* display: none; */
-  display: block;
-  border-radius: 5px;
-  height: 100%;
-  margin-right: 0.5em;
-  margin-left: 0.5em;
-  padding-right: 0.25em;
-  padding-left: 0.25em;
-  padding-bottom: 0.1em;
-  padding-top: 0.1em;
-  /* added */
-  max-height: 100px;
+	background-color: rgba(0, 0, 0, 0.75);
+	/* display: none; */
+	display: block;
+	border-radius: 5px;
+	height: 100%;
+	margin-right: 0.5em;
+	margin-left: 0.5em;
+	padding-right: 0.25em;
+	padding-left: 0.25em;
+	padding-bottom: 0.1em;
+	padding-top: 0.1em;
+	/* added */
+	max-height: 100px;
 }
 .lights-hud-ate-effect-panel .effect-item .effect-info h1 {
-  border: none;
-  color: #fff;
-  font-size: 12px;
-  /* removed
+	border: none;
+	color: #fff;
+	font-size: 12px;
+	/* removed
   margin: 0;
   padding: 0;
   text-align: right;
   */
-  /* added */
-  max-width: 100px;
-  max-height: 100px;
+	/* added */
+	max-width: 100px;
+	max-height: 100px;
 }
 .lights-hud-ate-effect-panel .effect-item .effect-info h2 {
-  border: none;
-  color: #fff;
-  font-size: 10px;
-  /* removed
+	border: none;
+	color: #fff;
+	font-size: 10px;
+	/* removed
   margin: 0;
   padding: 0;
   text-align: right;
   */
-  /* added */
-  max-width: 100px;
-  max-height: 100px;
+	/* added */
+	max-width: 100px;
+	max-height: 100px;
 }
 .lights-hud-ate-effect-panel .effect-item .effect-info .tags {
-  justify-content: flex-end;
+	justify-content: flex-end;
 }
 .lights-hud-ate-effect-panel .effect-item .effect-info .tags .tag {
-  margin-bottom: 0;
+	margin-bottom: 0;
 }
 .lights-hud-ate-effect-panel .effect-item .effect-info .tags .tag + .tag,
 .lights-hud-ate-effect-panel .effect-item .effect-info .tags .tag:first-child {
-  margin-left: 3px;
-  margin-right: -2px;
+	margin-left: 3px;
+	margin-right: -2px;
 }
 /*
 .lights-hud-ate-effect-panel .effect-item .icon {
@@ -249,59 +249,59 @@
 */
 .lights-hud-ate-effect-panel .effect-item .icon .badge,
 .lights-hud-ate-selector-wrap .icon .badge {
-  bottom: 1px;
-  color: #fff;
-  display: inline-block;
-  left: 1px;
-  /* position: absolute; removed */
-  text-shadow: 0px 0px 2px black;
+	bottom: 1px;
+	color: #fff;
+	display: inline-block;
+	left: 1px;
+	/* position: absolute; removed */
+	text-shadow: 0px 0px 2px black;
 }
 
 .lights-hud-ate-effect-panel .effect-item .icon .badge.unlimited,
 .lights-hud-ate-selector-wrap .icon .badge.unlimited {
-  color: lightblue;
+	color: lightblue;
 }
 
 .lights-hud-ate-effect-panel .effect-item .icon .badge.expired,
 .lights-hud-ate-selector-wrap .icon .badge.expired {
-  color: orange;
+	color: orange;
 }
 
 .lights-hud-ate-effect-panel .effect-item .icon .badge.unlimited.fas.fa-infinity,
 .lights-hud-ate-selector-wrap .icon .badge.unlimited.fas.fa-infinity {
-  color: lightblue;
+	color: lightblue;
 }
 
 .lights-hud-ate-effect-panel .effect-item .icon .badge.expired.fas.fa-clock,
 .lights-hud-ate-selector-wrap .icon .badge.expired.fas.fa-clock {
-  color: orange;
+	color: orange;
 }
 
 .lights-hud-ate-effect-panel .effect-item .icon .badge.applied.fas.fa-lightbulb,
 .lights-hud-ate-selector-wrap .icon .badge.applied.fas.fa-lightbulb {
-  color: green;
-  text-shadow: 0 0 8px green;
+	color: green;
+	text-shadow: 0 0 8px green;
 }
 
 .lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-lightbulb,
 .lights-hud-ate-selector-wrap .icon .badge.fas.fa-lightbulb {
-  color: red;
-  text-shadow: 0 0 8px red;
+	color: red;
+	text-shadow: 0 0 8px red;
 }
 
 .lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-exclamation-triangle,
 .lights-hud-ate-selector-wrap .icon .badge.fas.fa-exclamation-triangle {
-  color: yellow;
+	color: yellow;
 }
 
 .lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-flag,
 .lights-hud-ate-selector-wrap .icon .badge.fas.fa-flag {
-  color: lightcoral;
+	color: lightcoral;
 }
 
 .lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-user-alt,
 .lights-hud-ate-selector-wrap .icon .badge.fas.fa-user-alt {
-  color: lightskyblue;
+	color: lightskyblue;
 }
 /*
 .lights-hud-ate-effect-panel .effect-item .icon .badge.fas.fa-eye,
@@ -311,11 +311,11 @@
 */
 
 .lights-hud-ate-interaction-note .fa-fire-alt {
-  color: orangered;
-  text-shadow: 0 0 8px orangered;
+	color: orangered;
+	text-shadow: 0 0 8px orangered;
 }
 
 .lights-hud-ate-interaction-note .fa-fire {
-  color: greenyellow;
-  text-shadow: 0 0 8px greenyellow;
+	color: greenyellow;
+	text-shadow: 0 0 8px greenyellow;
 }

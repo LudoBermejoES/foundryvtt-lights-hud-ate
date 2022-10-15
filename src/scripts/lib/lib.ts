@@ -1,99 +1,99 @@
-import type EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
+import type EmbeddedCollection from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs";
 import type {
-  ActorData,
-  TokenData,
-} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
-import API from '../api';
-import CONSTANTS from '../constants';
-import { getATLEffectsFromItem } from '../lights-hud-ate-config';
-import { LightHUDAteEffectDefinitions } from '../lights-hud-ate-effect-definition';
-import { LightDataHud, LightHUDElement, LightHUDNoteFlags, LightHUDPreset } from '../lights-hud-ate-models';
-import { aemlApi } from '../module';
+	ActorData,
+	TokenData,
+} from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs";
+import API from "../api";
+import CONSTANTS from "../constants";
+import { getATLEffectsFromItem } from "../lights-hud-ate-config";
+import { LightHUDAteEffectDefinitions } from "../lights-hud-ate-effect-definition";
+import { LightDataHud, LightHUDElement, LightHUDNoteFlags, LightHUDPreset } from "../lights-hud-ate-models";
+import { aemlApi } from "../module";
 
 // =============================
 // Module Generic function
 // =============================
 
 export async function getToken(documentUuid) {
-  const document = await fromUuid(documentUuid);
-  //@ts-ignore
-  return document?.token ?? document;
+	const document = await fromUuid(documentUuid);
+	//@ts-ignore
+	return document?.token ?? document;
 }
 
 export function getOwnedTokens(priorityToControlledIfGM: boolean): Token[] {
-  const gm = game.user?.isGM;
-  if (gm) {
-    if (priorityToControlledIfGM) {
-      const arr = <Token[]>canvas.tokens?.controlled;
-      if (arr && arr.length > 0) {
-        return arr;
-      } else {
-        return <Token[]>canvas.tokens?.placeables;
-      }
-    } else {
-      return <Token[]>canvas.tokens?.placeables;
-    }
-  }
-  if (priorityToControlledIfGM) {
-    const arr = <Token[]>canvas.tokens?.controlled;
-    if (arr && arr.length > 0) {
-      return arr;
-    }
-  }
-  let ownedTokens = <Token[]>canvas.tokens?.placeables.filter((token) => token.isOwner && (!token.data.hidden || gm));
-  if (ownedTokens.length === 0 || !canvas.tokens?.controlled[0]) {
-    ownedTokens = <Token[]>(
-      canvas.tokens?.placeables.filter((token) => (token.observer || token.isOwner) && (!token.data.hidden || gm))
-    );
-  }
-  return ownedTokens;
+	const gm = game.user?.isGM;
+	if (gm) {
+		if (priorityToControlledIfGM) {
+			const arr = <Token[]>canvas.tokens?.controlled;
+			if (arr && arr.length > 0) {
+				return arr;
+			} else {
+				return <Token[]>canvas.tokens?.placeables;
+			}
+		} else {
+			return <Token[]>canvas.tokens?.placeables;
+		}
+	}
+	if (priorityToControlledIfGM) {
+		const arr = <Token[]>canvas.tokens?.controlled;
+		if (arr && arr.length > 0) {
+			return arr;
+		}
+	}
+	let ownedTokens = <Token[]>canvas.tokens?.placeables.filter((token) => token.isOwner && (!token.data.hidden || gm));
+	if (ownedTokens.length === 0 || !canvas.tokens?.controlled[0]) {
+		ownedTokens = <Token[]>(
+			canvas.tokens?.placeables.filter((token) => (token.observer || token.isOwner) && (!token.data.hidden || gm))
+		);
+	}
+	return ownedTokens;
 }
 
 export function is_UUID(inId) {
-  return typeof inId === 'string' && (inId.match(/\./g) || []).length && !inId.endsWith('.');
+	return typeof inId === "string" && (inId.match(/\./g) || []).length && !inId.endsWith(".");
 }
 
 export function getUuid(target) {
-  // If it's an actor, get its TokenDocument
-  // If it's a token, get its Document
-  // If it's a TokenDocument, just use it
-  // Otherwise fail
-  const document = getDocument(target);
-  return document?.uuid ?? false;
+	// If it's an actor, get its TokenDocument
+	// If it's a token, get its Document
+	// If it's a TokenDocument, just use it
+	// Otherwise fail
+	const document = getDocument(target);
+	return document?.uuid ?? false;
 }
 
 export function getDocument(target) {
-  if (target instanceof foundry.abstract.Document) return target;
-  return target?.document;
+	if (target instanceof foundry.abstract.Document) return target;
+	return target?.document;
 }
 
 export function is_real_number(inNumber) {
-  return !isNaN(inNumber) && typeof inNumber === 'number' && isFinite(inNumber);
+	return !isNaN(inNumber) && typeof inNumber === "number" && isFinite(inNumber);
 }
 
 export function isGMConnected() {
-  return !!Array.from(<Users>game.users).find((user) => user.isGM && user.active);
+	return !!Array.from(<Users>game.users).find((user) => user.isGM && user.active);
 }
 
 export function isGMConnectedAndSocketLibEnable() {
-  return isGMConnected(); // && !game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature');
+	return isGMConnected(); // && !game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature');
 }
 
 export function wait(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export function isActiveGM(user) {
-  return user.active && user.isGM;
+	return user.active && user.isGM;
 }
 
 export function getActiveGMs() {
-  return game.users?.filter(isActiveGM);
+	return game.users?.filter(isActiveGM);
 }
 
 export function isResponsibleGM() {
-  if (!game.user?.isGM) return false;
-  return !getActiveGMs()?.some((other) => other.data._id < <string>game.user?.data._id);
+	if (!game.user?.isGM) return false;
+	return !getActiveGMs()?.some((other) => other.data._id < <string>game.user?.data._id);
 }
 
 // ================================
@@ -103,56 +103,56 @@ export function isResponsibleGM() {
 // export let debugEnabled = 0;
 // 0 = none, warnings = 1, debug = 2, all = 3
 
-export function debug(msg, args = '') {
-  if (game.settings.get(CONSTANTS.MODULE_NAME, 'debug')) {
-    console.log(`DEBUG | ${CONSTANTS.MODULE_NAME} | ${msg}`, args);
-  }
-  return msg;
+export function debug(msg, args = "") {
+	if (game.settings.get(CONSTANTS.MODULE_NAME, "debug")) {
+		console.log(`DEBUG | ${CONSTANTS.MODULE_NAME} | ${msg}`, args);
+	}
+	return msg;
 }
 
 export function log(message) {
-  message = `${CONSTANTS.MODULE_NAME} | ${message}`;
-  console.log(message.replace('<br>', '\n'));
-  return message;
+	message = `${CONSTANTS.MODULE_NAME} | ${message}`;
+	console.log(message.replace("<br>", "\n"));
+	return message;
 }
 
 export function notify(message) {
-  message = `${CONSTANTS.MODULE_NAME} | ${message}`;
-  ui.notifications?.notify(message);
-  console.log(message.replace('<br>', '\n'));
-  return message;
+	message = `${CONSTANTS.MODULE_NAME} | ${message}`;
+	ui.notifications?.notify(message);
+	console.log(message.replace("<br>", "\n"));
+	return message;
 }
 
 export function info(info, notify = false) {
-  info = `${CONSTANTS.MODULE_NAME} | ${info}`;
-  if (notify) ui.notifications?.info(info);
-  console.log(info.replace('<br>', '\n'));
-  return info;
+	info = `${CONSTANTS.MODULE_NAME} | ${info}`;
+	if (notify) ui.notifications?.info(info);
+	console.log(info.replace("<br>", "\n"));
+	return info;
 }
 
 export function warn(warning, notify = false) {
-  warning = `${CONSTANTS.MODULE_NAME} | ${warning}`;
-  if (notify) ui.notifications?.warn(warning);
-  console.warn(warning.replace('<br>', '\n'));
-  return warning;
+	warning = `${CONSTANTS.MODULE_NAME} | ${warning}`;
+	if (notify) ui.notifications?.warn(warning);
+	console.warn(warning.replace("<br>", "\n"));
+	return warning;
 }
 
 export function error(error, notify = true) {
-  error = `${CONSTANTS.MODULE_NAME} | ${error}`;
-  if (notify) ui.notifications?.error(error);
-  return new Error(error.replace('<br>', '\n'));
+	error = `${CONSTANTS.MODULE_NAME} | ${error}`;
+	if (notify) ui.notifications?.error(error);
+	return new Error(error.replace("<br>", "\n"));
 }
 
 export function timelog(message): void {
-  warn(Date.now(), message);
+	warn(Date.now(), message);
 }
 
 export const i18n = (key: string): string => {
-  return game.i18n.localize(key)?.trim();
+	return game.i18n.localize(key)?.trim();
 };
 
 export const i18nFormat = (key: string, data = {}): string => {
-  return game.i18n.format(key, data)?.trim();
+	return game.i18n.format(key, data)?.trim();
 };
 
 // export const setDebugLevel = (debugText: string): void => {
@@ -161,8 +161,8 @@ export const i18nFormat = (key: string, data = {}): string => {
 //   if (debugEnabled >= 3) CONFIG.debug.hooks = true;
 // };
 
-export function dialogWarning(message, icon = 'fas fa-exclamation-triangle') {
-  return `<p class="${CONSTANTS.MODULE_NAME}-dialog">
+export function dialogWarning(message, icon = "fas fa-exclamation-triangle") {
+	return `<p class="${CONSTANTS.MODULE_NAME}-dialog">
         <i style="font-size:3rem;" class="${icon}"></i><br><br>
         <strong style="font-size:1.2rem;">${CONSTANTS.MODULE_NAME}</strong>
         <br><br>${message}
@@ -172,27 +172,27 @@ export function dialogWarning(message, icon = 'fas fa-exclamation-triangle') {
 // =========================================================================================
 
 export function cleanUpString(stringToCleanUp: string) {
-  // regex expression to match all non-alphanumeric characters in string
-  const regex = /[^A-Za-z0-9]/g;
-  if (stringToCleanUp) {
-    return i18n(stringToCleanUp).replace(regex, '').toLowerCase();
-  } else {
-    return stringToCleanUp;
-  }
+	// regex expression to match all non-alphanumeric characters in string
+	const regex = /[^A-Za-z0-9]/g;
+	if (stringToCleanUp) {
+		return i18n(stringToCleanUp).replace(regex, "").toLowerCase();
+	} else {
+		return stringToCleanUp;
+	}
 }
 
 export function isStringEquals(stringToCheck1: string, stringToCheck2: string, startsWith = false): boolean {
-  if (stringToCheck1 && stringToCheck2) {
-    const s1 = cleanUpString(stringToCheck1) ?? '';
-    const s2 = cleanUpString(stringToCheck2) ?? '';
-    if (startsWith) {
-      return s1.startsWith(s2) || s2.startsWith(s1);
-    } else {
-      return s1 === s2;
-    }
-  } else {
-    return stringToCheck1 === stringToCheck2;
-  }
+	if (stringToCheck1 && stringToCheck2) {
+		const s1 = cleanUpString(stringToCheck1) ?? "";
+		const s2 = cleanUpString(stringToCheck2) ?? "";
+		if (startsWith) {
+			return s1.startsWith(s2) || s2.startsWith(s1);
+		} else {
+			return s1 === s2;
+		}
+	} else {
+		return stringToCheck1 === stringToCheck2;
+	}
 }
 
 /**
@@ -200,21 +200,21 @@ export function isStringEquals(stringToCheck1: string, stringToCheck2: string, s
  * i don't know why this methos is a brute force solution for avoid that problem
  */
 export function duplicateExtended(obj: any): any {
-  try {
-    //@ts-ignore
-    if (structuredClone) {
-      //@ts-ignore
-      return structuredClone(obj);
-    } else {
-      // Shallow copy
-      // const newObject = jQuery.extend({}, oldObject);
-      // Deep copy
-      // const newObject = jQuery.extend(true, {}, oldObject);
-      return jQuery.extend(true, {}, obj);
-    }
-  } catch (e) {
-    return duplicate(obj);
-  }
+	try {
+		//@ts-ignore
+		if (structuredClone) {
+			//@ts-ignore
+			return structuredClone(obj);
+		} else {
+			// Shallow copy
+			// const newObject = jQuery.extend({}, oldObject);
+			// Deep copy
+			// const newObject = jQuery.extend(true, {}, oldObject);
+			return jQuery.extend(true, {}, obj);
+		}
+	} catch (e) {
+		return duplicate(obj);
+	}
 }
 
 // =========================================================================================
@@ -226,7 +226,7 @@ export function duplicateExtended(obj: any): any {
  * @returns
  */
 export function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O): K[] {
-  return Object.keys(obj).filter((k) => Number.isNaN(+k)) as K[];
+	return Object.keys(obj).filter((k) => Number.isNaN(+k)) as K[];
 }
 
 /**
@@ -236,34 +236,34 @@ export function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O):
  * @param prop
  */
 export function mergeByProperty(target: any[], source: any[], prop: any) {
-  for (const sourceElement of source) {
-    const targetElement = target.find((targetElement) => {
-      return sourceElement[prop] === targetElement[prop];
-    });
-    targetElement ? Object.assign(targetElement, sourceElement) : target.push(sourceElement);
-  }
-  return target;
+	for (const sourceElement of source) {
+		const targetElement = target.find((targetElement) => {
+			return sourceElement[prop] === targetElement[prop];
+		});
+		targetElement ? Object.assign(targetElement, sourceElement) : target.push(sourceElement);
+	}
+	return target;
 }
 
 /**
  * Returns the first selected token
  */
 export function getFirstPlayerTokenSelected(): Token | null {
-  // Get first token ownted by the player
-  const selectedTokens = <Token[]>canvas.tokens?.controlled;
-  if (selectedTokens.length > 1) {
-    //iteractionFailNotification(i18n("foundryvtt-arms-reach.warningNoSelectMoreThanOneToken"));
-    return null;
-  }
-  if (!selectedTokens || selectedTokens.length == 0) {
-    //if(game.user.character.data.token){
-    //  //@ts-ignore
-    //  return game.user.character.data.token;
-    //}else{
-    return null;
-    //}
-  }
-  return <Token>selectedTokens[0];
+	// Get first token ownted by the player
+	const selectedTokens = <Token[]>canvas.tokens?.controlled;
+	if (selectedTokens.length > 1) {
+		//iteractionFailNotification(i18n("foundryvtt-arms-reach.warningNoSelectMoreThanOneToken"));
+		return null;
+	}
+	if (!selectedTokens || selectedTokens.length == 0) {
+		//if(game.user.character.data.token){
+		//  //@ts-ignore
+		//  return game.user.character.data.token;
+		//}else{
+		return null;
+		//}
+	}
+	return <Token>selectedTokens[0];
 }
 
 /**
@@ -271,58 +271,60 @@ export function getFirstPlayerTokenSelected(): Token | null {
  * note: ex getSelectedOrOwnedToken
  */
 export function getFirstPlayerToken(): Token | null {
-  // Get controlled token
-  let token: Token;
-  const controlled: Token[] = <Token[]>canvas.tokens?.controlled;
-  // Do nothing if multiple tokens are selected
-  if (controlled.length && controlled.length > 1) {
-    //iteractionFailNotification(i18n("foundryvtt-arms-reach.warningNoSelectMoreThanOneToken"));
-    return null;
-  }
-  // If exactly one token is selected, take that
-  token = <Token>controlled[0];
-  if (!token) {
-    if (!controlled.length || controlled.length == 0) {
-      // If no token is selected use the token of the users character
-      token = <Token>canvas.tokens?.placeables.find((token) => token.data._id === game.user?.character?.data?._id);
-    }
-    // If no token is selected use the first owned token of the users character you found
-    if (!token) {
-      token = <Token>canvas.tokens?.ownedTokens[0];
-    }
-  }
-  return token;
+	// Get controlled token
+	let token: Token;
+	const controlled: Token[] = <Token[]>canvas.tokens?.controlled;
+	// Do nothing if multiple tokens are selected
+	if (controlled.length && controlled.length > 1) {
+		//iteractionFailNotification(i18n("foundryvtt-arms-reach.warningNoSelectMoreThanOneToken"));
+		return null;
+	}
+	// If exactly one token is selected, take that
+	token = <Token>controlled[0];
+	if (!token) {
+		if (!controlled.length || controlled.length == 0) {
+			// If no token is selected use the token of the users character
+			token = <Token>(
+				canvas.tokens?.placeables.find((token) => token.data._id === game.user?.character?.data?._id)
+			);
+		}
+		// If no token is selected use the first owned token of the users character you found
+		if (!token) {
+			token = <Token>canvas.tokens?.ownedTokens[0];
+		}
+	}
+	return token;
 }
 
 function getElevationToken(token: Token): number {
-  const base = token.document.data;
-  return getElevationPlaceableObject(base);
+	const base = token.document.data;
+	return getElevationPlaceableObject(base);
 }
 
 function getElevationWall(wall: Wall): number {
-  const base = wall.document.data;
-  return getElevationPlaceableObject(base);
+	const base = wall.document.data;
+	return getElevationPlaceableObject(base);
 }
 
 function getElevationPlaceableObject(placeableObject: any): number {
-  let base = placeableObject;
-  if (base.document) {
-    base = base.document.data;
-  }
-  const base_elevation =
-    //@ts-ignore
-    typeof _levels !== 'undefined' &&
-    //@ts-ignore
-    _levels?.advancedLOS &&
-    (placeableObject instanceof Token || placeableObject instanceof TokenDocument)
-      ? //@ts-ignore
-        _levels.getTokenLOSheight(placeableObject)
-      : base.elevation ??
-        base.flags['levels']?.elevation ??
-        base.flags['levels']?.rangeBottom ??
-        base.flags['wallHeight']?.wallHeightBottom ??
-        0;
-  return base_elevation;
+	let base = placeableObject;
+	if (base.document) {
+		base = base.document.data;
+	}
+	const base_elevation =
+		//@ts-ignore
+		typeof _levels !== "undefined" &&
+		//@ts-ignore
+		_levels?.advancedLOS &&
+		(placeableObject instanceof Token || placeableObject instanceof TokenDocument)
+			? //@ts-ignore
+			  _levels.getTokenLOSheight(placeableObject)
+			: base.elevation ??
+			  base.flags["levels"]?.elevation ??
+			  base.flags["levels"]?.rangeBottom ??
+			  base.flags["wallHeight"]?.wallHeightBottom ??
+			  0;
+	return base_elevation;
 }
 
 // =============================
@@ -333,11 +335,11 @@ function getElevationPlaceableObject(placeableObject: any): number {
  * Returns the first GM id.
  */
 export function firstGM() {
-  const gmId = Array.from(<Users>game.users).find((user) => user.isGM && user.active)?.id;
-  if (!gmId) {
-    ui.notifications?.error('No GM available for Dancing Lights!');
-  }
-  return gmId;
+	const gmId = Array.from(<Users>game.users).find((user) => user.isGM && user.active)?.id;
+	if (!gmId) {
+		ui.notifications?.error("No GM available for Dancing Lights!");
+	}
+	return gmId;
 }
 
 /**
@@ -345,237 +347,237 @@ export function firstGM() {
  * @href https://github.com/itamarcu/roll-from-compendium/blob/master/scripts/roll-from-compendium.js
  */
 export async function rollDependingOnSystem(item: Item) {
-  // if (game.system.id === 'pf2e') {
-  //   if (item.type === 'spell') {
-  //     return pf2eCastSpell(item, actor, dummyActor)
-  //   } else {
-  //     return pf2eItemToMessage(item)
-  //   }
-  // }
-  // if (game.system.id === 'dnd5e') {
-  //   const actorHasItem = !!actor.items.get(item.id)
-  //   return dnd5eRollItem(item, actor, actorHasItem)
-  // }
-  //@ts-ignore
-  return item.roll();
+	// if (game.system.id === 'pf2e') {
+	//   if (item.type === 'spell') {
+	//     return pf2eCastSpell(item, actor, dummyActor)
+	//   } else {
+	//     return pf2eItemToMessage(item)
+	//   }
+	// }
+	// if (game.system.id === 'dnd5e') {
+	//   const actorHasItem = !!actor.items.get(item.id)
+	//   return dnd5eRollItem(item, actor, actorHasItem)
+	// }
+	//@ts-ignore
+	return item.roll();
 }
 
 // Update the relevant light parameters of a token
 export async function updateTokenLighting(
-  token: Token,
-  //lockRotation: boolean,
-  dimSight: number,
-  brightSight: number,
-  sightAngle: number,
-  dimLight: number,
-  brightLight: number,
-  lightColor: string,
-  lightAlpha: number,
-  lightAngle: number,
+	token: Token,
+	//lockRotation: boolean,
+	dimSight: number,
+	brightSight: number,
+	sightAngle: number,
+	dimLight: number,
+	brightLight: number,
+	lightColor: string,
+	lightAlpha: number,
+	lightAngle: number,
 
-  lightColoration: number | null = null,
-  lightLuminosity: number | null = null,
-  lightGradual: boolean | null = null,
-  lightSaturation: number | null = null,
-  lightContrast: number | null = null,
-  lightShadows: number | null = null,
+	lightColoration: number | null = null,
+	lightLuminosity: number | null = null,
+	lightGradual: boolean | null = null,
+	lightSaturation: number | null = null,
+	lightContrast: number | null = null,
+	lightShadows: number | null = null,
 
-  lightAnimationType: string | null,
-  lightAnimationSpeed: number | null,
-  lightAnimationIntensity: number | null,
-  lightAnimationReverse: boolean | null,
+	lightAnimationType: string | null,
+	lightAnimationSpeed: number | null,
+	lightAnimationIntensity: number | null,
+	lightAnimationReverse: boolean | null,
 
-  applyAsAtlEffect = false,
-  effectName: string | null = null,
-  effectIcon: string | null = null,
-  duration: number | null = null,
+	applyAsAtlEffect = false,
+	effectName: string | null = null,
+	effectIcon: string | null = null,
+	duration: number | null = null,
 
-  vision = false,
-  // id: string | null = null,
-  // name: string | null = null,
-  height: number | null = null,
-  width: number | null = null,
-  scale: number | null = null,
+	vision = false,
+	// id: string | null = null,
+	// name: string | null = null,
+	height: number | null = null,
+	width: number | null = null,
+	scale: number | null = null,
 
-  isPreset: boolean,
+	isPreset: boolean
 ) {
-  if (applyAsAtlEffect) {
-    const efffectAtlToApply = await aemlApi.convertToATLEffect(
-      //lockRotation,
-      dimSight,
-      brightSight,
-      sightAngle,
-      dimLight,
-      brightLight,
-      lightColor,
-      lightAlpha,
-      lightAngle,
+	if (applyAsAtlEffect) {
+		const efffectAtlToApply = await aemlApi.convertToATLEffect(
+			//lockRotation,
+			dimSight,
+			brightSight,
+			sightAngle,
+			dimLight,
+			brightLight,
+			lightColor,
+			lightAlpha,
+			lightAngle,
 
-      lightColoration,
-      lightLuminosity,
-      lightGradual,
-      lightSaturation,
-      lightContrast,
-      lightShadows,
+			lightColoration,
+			lightLuminosity,
+			lightGradual,
+			lightSaturation,
+			lightContrast,
+			lightShadows,
 
-      lightAnimationType,
-      lightAnimationSpeed,
-      lightAnimationIntensity,
-      lightAnimationReverse,
+			lightAnimationType,
+			lightAnimationSpeed,
+			lightAnimationIntensity,
+			lightAnimationReverse,
 
-      // applyAsAtlEffect,
-      effectName,
-      effectIcon,
-      duration,
+			// applyAsAtlEffect,
+			effectName,
+			effectIcon,
+			duration,
 
-      // vision,
-      // id,
-      // name,
-      height,
-      width,
-      scale,
-    );
-    (efffectAtlToApply.customId = <string>token.actor?.id),
-      await aemlApi.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
-  } else {
-    // TODO FIND A BETTER WAY FOR THIS
-    if (dimSight == null || dimSight == undefined) {
-      dimSight = token.data.dimSight;
-    }
-    if (brightSight == null || brightSight == undefined) {
-      brightSight = token.data.brightSight;
-    }
-    if (sightAngle == null || sightAngle == undefined) {
-      sightAngle = token.data.sightAngle;
-    }
+			// vision,
+			// id,
+			// name,
+			height,
+			width,
+			scale
+		);
+		(efffectAtlToApply.customId = <string>token.actor?.id),
+			await aemlApi.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
+	} else {
+		// TODO FIND A BETTER WAY FOR THIS
+		if (dimSight == null || dimSight == undefined) {
+			dimSight = token.data.dimSight;
+		}
+		if (brightSight == null || brightSight == undefined) {
+			brightSight = token.data.brightSight;
+		}
+		if (sightAngle == null || sightAngle == undefined) {
+			sightAngle = token.data.sightAngle;
+		}
 
-    // if (lockRotation == null || lockRotation == undefined) {
-    //   lockRotation = token.data.lockRotation;
-    // }
+		// if (lockRotation == null || lockRotation == undefined) {
+		//   lockRotation = token.data.lockRotation;
+		// }
 
-    if (dimLight == null || dimLight == undefined) {
-      dimLight = token.data.light.dim;
-    }
-    if (brightLight == null || brightLight == undefined) {
-      brightLight = token.data.light.bright;
-    }
-    if (lightColor == null || lightColor == undefined) {
-      lightColor = <string>token.data.light.color;
-    }
-    if (lightAlpha == null || lightAlpha == undefined) {
-      lightAlpha = token.data.light.alpha;
-    }
-    if (lightAngle == null || lightAngle == undefined) {
-      lightAngle = token.data.light.angle;
-    }
+		if (dimLight == null || dimLight == undefined) {
+			dimLight = token.data.light.dim;
+		}
+		if (brightLight == null || brightLight == undefined) {
+			brightLight = token.data.light.bright;
+		}
+		if (lightColor == null || lightColor == undefined) {
+			lightColor = <string>token.data.light.color;
+		}
+		if (lightAlpha == null || lightAlpha == undefined) {
+			lightAlpha = token.data.light.alpha;
+		}
+		if (lightAngle == null || lightAngle == undefined) {
+			lightAngle = token.data.light.angle;
+		}
 
-    if (lightColoration == null || lightColoration == undefined) {
-      lightColoration = token.data.light.angle;
-    }
-    if (lightLuminosity == null || lightLuminosity == undefined) {
-      lightLuminosity = token.data.light.angle;
-    }
-    if (lightGradual == null || lightGradual == undefined) {
-      lightGradual = token.data.light.gradual;
-    }
-    if (lightSaturation == null || lightSaturation == undefined) {
-      lightSaturation = token.data.light.saturation;
-    }
-    if (lightContrast == null || lightContrast == undefined) {
-      lightContrast = token.data.light.contrast;
-    }
-    if (lightShadows == null || lightShadows == undefined) {
-      lightShadows = token.data.light.shadows;
-    }
+		if (lightColoration == null || lightColoration == undefined) {
+			lightColoration = token.data.light.angle;
+		}
+		if (lightLuminosity == null || lightLuminosity == undefined) {
+			lightLuminosity = token.data.light.angle;
+		}
+		if (lightGradual == null || lightGradual == undefined) {
+			lightGradual = token.data.light.gradual;
+		}
+		if (lightSaturation == null || lightSaturation == undefined) {
+			lightSaturation = token.data.light.saturation;
+		}
+		if (lightContrast == null || lightContrast == undefined) {
+			lightContrast = token.data.light.contrast;
+		}
+		if (lightShadows == null || lightShadows == undefined) {
+			lightShadows = token.data.light.shadows;
+		}
 
-    if (lightAnimationType == null || lightAnimationType == undefined) {
-      lightAnimationType = <string>token.data.light.animation.type;
-    }
-    if (lightAnimationSpeed == null || lightAnimationSpeed == undefined) {
-      lightAnimationSpeed = token.data.light.animation.speed;
-    }
-    if (lightAnimationIntensity == null || lightAnimationIntensity == undefined) {
-      lightAnimationIntensity = token.data.light.animation.intensity;
-    }
-    if (lightAnimationReverse == null || lightAnimationReverse == undefined) {
-      lightAnimationReverse = token.data.light.animation.reverse;
-    }
+		if (lightAnimationType == null || lightAnimationType == undefined) {
+			lightAnimationType = <string>token.data.light.animation.type;
+		}
+		if (lightAnimationSpeed == null || lightAnimationSpeed == undefined) {
+			lightAnimationSpeed = token.data.light.animation.speed;
+		}
+		if (lightAnimationIntensity == null || lightAnimationIntensity == undefined) {
+			lightAnimationIntensity = token.data.light.animation.intensity;
+		}
+		if (lightAnimationReverse == null || lightAnimationReverse == undefined) {
+			lightAnimationReverse = token.data.light.animation.reverse;
+		}
 
-    if (height == null || height == undefined) {
-      height = token.data.height;
-    }
-    if (width == null || width == undefined) {
-      width = token.data.width;
-    }
-    if (scale == null || scale == undefined) {
-      scale = token.data.scale;
-    }
+		if (height == null || height == undefined) {
+			height = token.data.height;
+		}
+		if (width == null || width == undefined) {
+			width = token.data.width;
+		}
+		if (scale == null || scale == undefined) {
+			scale = token.data.scale;
+		}
 
-    token.document.update({
-      // lockRotation: lockRotation,
-      vision: vision,
-      // REMOVED ONLY ATL CAN CHANGE THESE
-      // height: height,
-      // width: width,
-      // scale: scale,
-      light: {
-        dim: manageDist(dimLight, isPreset),
-        bright: manageDist(brightLight, isPreset),
-        color: lightColor,
-        //@ts-ignore
-        animation: {
-          type: lightAnimationType,
-          speed: lightAnimationSpeed,
-          intensity: lightAnimationIntensity,
-          reverse: lightAnimationReverse,
-        },
-        alpha: lightAlpha,
-        angle: lightAngle,
-        coloration: lightColoration,
-        luminosity: lightLuminosity,
-        gradual: lightGradual,
-        saturation: lightSaturation,
-        contrast: lightContrast,
-        shadows: lightShadows,
-      },
-      dimSight: manageDist(dimSight, isPreset),
-      brightSight: manageDist(brightSight, isPreset),
-      sightAngle: sightAngle,
-    });
-  }
+		token.document.update({
+			// lockRotation: lockRotation,
+			vision: vision,
+			// REMOVED ONLY ATL CAN CHANGE THESE
+			// height: height,
+			// width: width,
+			// scale: scale,
+			light: {
+				dim: manageDist(dimLight, isPreset),
+				bright: manageDist(brightLight, isPreset),
+				color: lightColor,
+				//@ts-ignore
+				animation: {
+					type: lightAnimationType,
+					speed: lightAnimationSpeed,
+					intensity: lightAnimationIntensity,
+					reverse: lightAnimationReverse,
+				},
+				alpha: lightAlpha,
+				angle: lightAngle,
+				coloration: lightColoration,
+				luminosity: lightLuminosity,
+				gradual: lightGradual,
+				saturation: lightSaturation,
+				contrast: lightContrast,
+				shadows: lightShadows,
+			},
+			dimSight: manageDist(dimSight, isPreset),
+			brightSight: manageDist(brightSight, isPreset),
+			sightAngle: sightAngle,
+		});
+	}
 }
 
 export async function updateTokenLightingFromData(token: Token, tokenData: TokenData, isPreset: boolean) {
-  await token.document.update({
-    // lockRotation: lockRotation,
-    vision: tokenData.vision,
-    height: tokenData.height,
-    width: tokenData.width,
-    scale: tokenData.scale,
-    light: {
-      dim: manageDist(tokenData.light.dim, isPreset),
-      bright: manageDist(tokenData.light.bright, isPreset),
-      color: tokenData.light.color,
-      //@ts-ignore
-      animation: {
-        type: tokenData.light.animation.type,
-        speed: tokenData.light.animation.speed,
-        intensity: tokenData.light.animation.intensity,
-        reverse: tokenData.light.animation.reverse,
-      },
-      alpha: tokenData.light.alpha,
-      angle: tokenData.light.angle,
-      coloration: tokenData.light.coloration,
-      luminosity: tokenData.light.luminosity,
-      gradual: tokenData.light.gradual,
-      saturation: tokenData.light.saturation,
-      contrast: tokenData.light.contrast,
-      shadows: tokenData.light.shadows,
-    },
-    dimSight: manageDist(tokenData.dimSight, isPreset),
-    brightSight: manageDist(tokenData.brightSight, isPreset),
-    sightAngle: tokenData.sightAngle,
-  });
+	await token.document.update({
+		// lockRotation: lockRotation,
+		vision: tokenData.vision,
+		height: tokenData.height,
+		width: tokenData.width,
+		scale: tokenData.scale,
+		light: {
+			dim: manageDist(tokenData.light.dim, isPreset),
+			bright: manageDist(tokenData.light.bright, isPreset),
+			color: tokenData.light.color,
+			//@ts-ignore
+			animation: {
+				type: tokenData.light.animation.type,
+				speed: tokenData.light.animation.speed,
+				intensity: tokenData.light.animation.intensity,
+				reverse: tokenData.light.animation.reverse,
+			},
+			alpha: tokenData.light.alpha,
+			angle: tokenData.light.angle,
+			coloration: tokenData.light.coloration,
+			luminosity: tokenData.light.luminosity,
+			gradual: tokenData.light.gradual,
+			saturation: tokenData.light.saturation,
+			contrast: tokenData.light.contrast,
+			shadows: tokenData.light.shadows,
+		},
+		dimSight: manageDist(tokenData.dimSight, isPreset),
+		brightSight: manageDist(tokenData.brightSight, isPreset),
+		sightAngle: tokenData.sightAngle,
+	});
 }
 
 /**
@@ -583,130 +585,130 @@ export async function updateTokenLightingFromData(token: Token, tokenData: Token
  * data : {x, y} , le coordinate dove costruire il token
  * type : string , di solito `character` ,lista dei tipi accettati da Dnd5e [actorless,character,npc,vehicle]
  */
-export async function dropTheToken(item: Item, data: { x; y }, type = 'character') {
-  // if (!Array.isArray(inAttributes)) {
-  //   throw Error('deleteAndcreateToken | inAttributes must be of type array');
-  // }
-  // const [actor, data, type, scene] = inAttributes;
-  // if (!actor) {
-  //   error('No actor is present');
-  //   return;
-  // }
-  // if (!scene) {
-  //   error('No scene is present');
-  //   return;
-  // }
-  if (!type) {
-    error('No type is present');
-    return;
-  }
-  if (!data) {
-    error('No data is present');
-    return;
-  }
-  if (data.x == undefined || data.x == null || isNaN(data.x)) {
-    error('No data.x is present');
-    return;
-  }
-  if (data.y == undefined || data.y == null || isNaN(data.y)) {
-    error('No data.y is present');
-    return;
-  }
-  // Before anything delete all token linked to that actor
-  // from the scene currenlty loaded
-  // BE AWARE IF YOU PUT THE WRONG ACTOR YOU REMOVE ALL THE TOKEN ASSOCIATED
-  // TO THAT ACTOR AND WHERE THE CURRENT USER IS OWNER
-  //const tokensToDelete = canvas.tokens.controlled.filter(token => token.owner).map(token => ({
-  // const tokensToDelete = scene.tokens.contents
-  //   .filter((token) => token.isOwner)
-  //   .map((token) => ({
-  //     id: token.id,
-  //     sceneId: scene.id, //token.scene.id,
-  //     actorId: token.actor?.id === actor.id ? token.actor?.id : undefined,
-  //   }));
-  // await Promise.all(
-  //   tokensToDelete.map(async ({ id, sceneId, actorId }) => {
-  //     if (actorId) {
-  //       game.scenes?.get(sceneId)?.deleteEmbeddedDocuments('Token', [id]);
-  //     }
-  //   }),
-  // );
+export async function dropTheToken(item: Item, data: { x; y }, type = "character") {
+	// if (!Array.isArray(inAttributes)) {
+	//   throw Error('deleteAndcreateToken | inAttributes must be of type array');
+	// }
+	// const [actor, data, type, scene] = inAttributes;
+	// if (!actor) {
+	//   error('No actor is present');
+	//   return;
+	// }
+	// if (!scene) {
+	//   error('No scene is present');
+	//   return;
+	// }
+	if (!type) {
+		error("No type is present");
+		return;
+	}
+	if (!data) {
+		error("No data is present");
+		return;
+	}
+	if (data.x == undefined || data.x == null || isNaN(data.x)) {
+		error("No data.x is present");
+		return;
+	}
+	if (data.y == undefined || data.y == null || isNaN(data.y)) {
+		error("No data.y is present");
+		return;
+	}
+	// Before anything delete all token linked to that actor
+	// from the scene currenlty loaded
+	// BE AWARE IF YOU PUT THE WRONG ACTOR YOU REMOVE ALL THE TOKEN ASSOCIATED
+	// TO THAT ACTOR AND WHERE THE CURRENT USER IS OWNER
+	//const tokensToDelete = canvas.tokens.controlled.filter(token => token.owner).map(token => ({
+	// const tokensToDelete = scene.tokens.contents
+	//   .filter((token) => token.isOwner)
+	//   .map((token) => ({
+	//     id: token.id,
+	//     sceneId: scene.id, //token.scene.id,
+	//     actorId: token.actor?.id === actor.id ? token.actor?.id : undefined,
+	//   }));
+	// await Promise.all(
+	//   tokensToDelete.map(async ({ id, sceneId, actorId }) => {
+	//     if (actorId) {
+	//       game.scenes?.get(sceneId)?.deleteEmbeddedDocuments('Token', [id]);
+	//     }
+	//   }),
+	// );
 
-  // START CREATION
-  let createdType = type;
-  if (type === 'actorless') {
-    createdType = <string>Object.keys(CONFIG.Actor.typeLabels)[0];
-  }
+	// START CREATION
+	let createdType = type;
+	if (type === "actorless") {
+		createdType = <string>Object.keys(CONFIG.Actor.typeLabels)[0];
+	}
 
-  let actorName = <string>item.name;
-  if (actorName.includes('.')) {
-    actorName = <string>actorName.split('.')[0];
-  }
+	let actorName = <string>item.name;
+	if (actorName.includes(".")) {
+		actorName = <string>actorName.split(".")[0];
+	}
 
-  const actor = <Actor>await Actor.create({
-    name: actorName,
-    type: createdType,
-    img: item.img,
-  });
-  const actorData = foundry.utils.duplicate(actor.data);
+	const actor = <Actor>await Actor.create({
+		name: actorName,
+		type: createdType,
+		img: item.img,
+	});
+	const actorData = foundry.utils.duplicate(actor.data);
 
-  // Prepare Token data specific to this placement
-  const td = actor.data.token;
-  const hg = <number>canvas.dimensions?.size / 2;
-  data.x -= td.width * hg;
-  data.y -= td.height * hg;
+	// Prepare Token data specific to this placement
+	const td = actor.data.token;
+	const hg = <number>canvas.dimensions?.size / 2;
+	data.x -= td.width * hg;
+	data.y -= td.height * hg;
 
-  // Snap the dropped position and validate that it is in-bounds
-  // NOTE THE HIDDEN
-  const tokenData = { x: data.x, y: data.y, hidden: false, img: actor.data.img };
-  // Snap to grid
-  foundry.utils.mergeObject(tokenData, canvas.grid?.getSnappedPosition(data.x, data.y, 1));
-  if (!canvas.grid?.hitArea.contains(tokenData.x, tokenData.y)) {
-    // warn('End scene:' + scene.name);
-    return undefined;
-  }
-  // Get the Token image
-  // if ( actorData.token.randomImg ) {
-  //     let images = await actor.getTokenImages();
-  //     images = images.filter(i => (images.length === 1) || !(i === this._lastWildcard));
-  //     const image = images[Math.floor(Math.random() * images.length)];
-  //     tokenData.img = this._lastWildcard = image;
-  // }
+	// Snap the dropped position and validate that it is in-bounds
+	// NOTE THE HIDDEN
+	const tokenData = { x: data.x, y: data.y, hidden: false, img: actor.data.img };
+	// Snap to grid
+	foundry.utils.mergeObject(tokenData, canvas.grid?.getSnappedPosition(data.x, data.y, 1));
+	if (!canvas.grid?.hitArea.contains(tokenData.x, tokenData.y)) {
+		// warn('End scene:' + scene.name);
+		return undefined;
+	}
+	// Get the Token image
+	// if ( actorData.token.randomImg ) {
+	//     let images = await actor.getTokenImages();
+	//     images = images.filter(i => (images.length === 1) || !(i === this._lastWildcard));
+	//     const image = images[Math.floor(Math.random() * images.length)];
+	//     tokenData.img = this._lastWildcard = image;
+	// }
 
-  // Merge Token data with the default for the Actor
-  //@ts-ignore
-  const tokenData2: TokenData = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
-  tokenData2.actorId = <string>actor.data._id;
-  tokenData2.actorLink = true;
+	// Merge Token data with the default for the Actor
+	//@ts-ignore
+	const tokenData2: TokenData = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
+	tokenData2.actorId = <string>actor.data._id;
+	tokenData2.actorLink = true;
 
-  const atlEffects = item.effects.filter((entity) => {
-    return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
-  });
-  await Promise.all(
-    atlEffects.map(async (ae: ActiveEffect) => {
-      // Make sure is enabled
-      ae.data.disabled = false;
-      await aemlApi.addActiveEffectOnToken(<string>actor.token?.id, ae.data);
-    }),
-  );
+	const atlEffects = item.effects.filter((entity) => {
+		return entity.data.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+	});
+	await Promise.all(
+		atlEffects.map(async (ae: ActiveEffect) => {
+			// Make sure is enabled
+			ae.data.disabled = false;
+			await aemlApi.addActiveEffectOnToken(<string>actor.token?.id, ae.data);
+		})
+	);
 
-  // Submit the Token creation request and activate the Tokens layer (if not already active)
-  canvas.getLayerByEmbeddedName('Token')?.activate();
-  //@ts-ignore
-  await canvas.scene?.createEmbeddedDocuments('Token', [tokenData2], {});
-  // await scene?.createEmbeddedDocuments('Token', [tokenData2], {});
+	// Submit the Token creation request and activate the Tokens layer (if not already active)
+	canvas.getLayerByEmbeddedName("Token")?.activate();
+	//@ts-ignore
+	await canvas.scene?.createEmbeddedDocuments("Token", [tokenData2], {});
+	// await scene?.createEmbeddedDocuments('Token', [tokenData2], {});
 
-  // delete actor if it's actorless
-  if (type === 'actorless') {
-    actor.delete();
-  }
+	// delete actor if it's actorless
+	if (type === "actorless") {
+		actor.delete();
+	}
 
-  // FINALLY RECOVER THE TOKEN
-  const token = canvas.tokens?.placeables.find((token) => {
-    return token.document.actor?.id === actor.id;
-  });
-  // warn('End scene:' + scene.name);
-  return token;
+	// FINALLY RECOVER THE TOKEN
+	const token = canvas.tokens?.placeables.find((token) => {
+		return token.document.actor?.id === actor.id;
+	});
+	// warn('End scene:' + scene.name);
+	return token;
 }
 
 /**
@@ -714,857 +716,860 @@ export async function dropTheToken(item: Item, data: { x; y }, type = 'character
  * data : {x, y} , le coordinate dove costruire il token
  * type : string , di solito `character` ,lista dei tipi accettati da Dnd5e [actorless,character,npc,vehicle]
  */
-export async function prepareTokenDataDropTheTorch(item: Item, elevation: number, type = 'character') {
-  if (!type) {
-    error('No type is present');
-    return undefined;
-  }
-  // START CREATION
-  let createdType = type;
-  if (type === 'actorless') {
-    createdType = <string>Object.keys(CONFIG.Actor.typeLabels)[0];
-  }
+export async function prepareTokenDataDropTheTorch(item: Item, elevation: number, type = "character") {
+	if (!type) {
+		error("No type is present");
+		return undefined;
+	}
+	// START CREATION
+	let createdType = type;
+	if (type === "actorless") {
+		createdType = <string>Object.keys(CONFIG.Actor.typeLabels)[0];
+	}
 
-  let actorName = <string>item.name;
-  if (actorName.includes('.')) {
-    actorName = <string>actorName.split('.')[0];
-  }
+	let actorName = <string>item.name;
+	if (actorName.includes(".")) {
+		actorName = <string>actorName.split(".")[0];
+	}
 
-  const actorDataEffects: any[] = [];
-  const atlEffects = item.effects.filter((entity) => {
-    return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
-  });
-  for (const ae of atlEffects) {
-    // Make sure is enabled
-    ae.data.disabled = false;
-    ae.data.transfer = true;
-    //await API.addActiveEffectOnToken(<string>actor.token?.id, ae.data);
-    actorDataEffects.push(ae.data);
-  }
+	const actorDataEffects: any[] = [];
+	const atlEffects = item.effects.filter((entity) => {
+		return entity.data.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+	});
+	for (const ae of atlEffects) {
+		// Make sure is enabled
+		ae.data.disabled = false;
+		ae.data.transfer = true;
+		//await API.addActiveEffectOnToken(<string>actor.token?.id, ae.data);
+		actorDataEffects.push(ae.data);
+	}
 
-  const actor = <Actor>await Actor.create({
-    name: actorName,
-    type: createdType,
-    img: item.img,
-    effects: actorDataEffects,
-    hidden: false,
-    elevation: elevation,
-  });
+	const actor = <Actor>await Actor.create({
+		name: actorName,
+		type: createdType,
+		img: item.img,
+		effects: actorDataEffects,
+		hidden: false,
+		elevation: elevation,
+	});
 
-  const atlActorEffects = actor.effects.filter((entity) => {
-    return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
-  });
-  for (const ae of atlActorEffects) {
-    // Make sure is enabled
-    ae.data.disabled = false;
-    ae.data.transfer = true;
-    if (!ae.data.origin) {
-      ae.data.origin = `Actor.${actor.id}`;
-    }
-    // await actor.createEmbeddedDocuments('ActiveEffect', [<Record<string, any>>ae.data]);
-    await ae.update({
-      disabled: false,
-      transfer: true,
-    });
+	const atlActorEffects = actor.effects.filter((entity) => {
+		return entity.data.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+	});
+	for (const ae of atlActorEffects) {
+		// Make sure is enabled
+		ae.data.disabled = false;
+		ae.data.transfer = true;
+		if (!ae.data.origin) {
+			ae.data.origin = `Actor.${actor.id}`;
+		}
+		// await actor.createEmbeddedDocuments('ActiveEffect', [<Record<string, any>>ae.data]);
+		await ae.update({
+			disabled: false,
+			transfer: true,
+		});
 
-    // TODO how can i do this
-    // await API.addActiveEffectOnActor(<string>actor.id, ae.data);
-    // await API.toggleEffectFromIdOnActor(<string>actor.id, <string>ae.id, false, true, false);
-  }
+		// TODO how can i do this
+		// await API.addActiveEffectOnActor(<string>actor.id, ae.data);
+		// await API.toggleEffectFromIdOnActor(<string>actor.id, <string>ae.id, false, true, false);
+	}
 
-  // WTF ???? THIS CONVERT SOME FALSE TO TRUE ????
-  //const actorData = foundry.utils.duplicate(actor.data);
-  const actorData = actor.data;
-  await actorData.update({ permission: { default: 3 } });
+	// WTF ???? THIS CONVERT SOME FALSE TO TRUE ????
+	//const actorData = foundry.utils.duplicate(actor.data);
+	const actorData = actor.data;
+	await actorData.update({ permission: { default: 3 } });
 
-  const tokenData = {
-    hidden: false,
-    img: actor.data.img,
-    elevation: elevation,
-    actorData: actorData,
-    // effects: actorDataEffects
-    actorLink: false,
-  };
+	const tokenData = {
+		hidden: false,
+		img: actor.data.img,
+		elevation: elevation,
+		actorData: actorData,
+		// effects: actorDataEffects
+		actorLink: false,
+	};
 
-  // Merge Token data with the default for the Actor
-  //@ts-ignore
-  const tokenData2: TokenData = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
-  // tokenData2.actorId = <string>actor.data._id;
-  // tokenData2.actorLink = false; // if actorless is false
-  // tokenData2.name = actorName;
-  // tokenData2._id = tokenId;
+	// Merge Token data with the default for the Actor
+	//@ts-ignore
+	const tokenData2: TokenData = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
+	// tokenData2.actorId = <string>actor.data._id;
+	// tokenData2.actorLink = false; // if actorless is false
+	// tokenData2.name = actorName;
+	// tokenData2._id = tokenId;
 
-  return tokenData2;
+	return tokenData2;
 }
 
 export function checkNumberFromString(value) {
-  if (value === null || value === undefined || value === '') {
-    return '';
-  } else {
-    return Number(value);
-  }
+	if (value === null || value === undefined || value === "") {
+		return "";
+	} else {
+		return Number(value);
+	}
 }
 export async function retrieveItemLightsStatic(token: Token): Promise<LightDataHud[]> {
-  const actor = token.actor;
-  if (!actor || !token) {
-    return [];
-  }
-  const lightItems: LightHUDElement[] = API.LIGHTS.filter((light) => {
-    return light.id != LightHUDPreset.NONE && light.id != LightHUDPreset.NO_CHANGE;
-  });
-  let imagesParsed: LightDataHud[] = [];
+	const actor = token.actor;
+	if (!actor || !token) {
+		return [];
+	}
+	const lightItems: LightHUDElement[] = API.LIGHTS.filter((light) => {
+		return light.id != LightHUDPreset.NONE && light.id != LightHUDPreset.NO_CHANGE;
+	});
+	let imagesParsed: LightDataHud[] = [];
 
-  // Convert item to LightHudData
-  imagesParsed = await Promise.all(
-    lightItems.map(async (lightHUDElement: LightHUDElement) => {
-      const im = <string>lightHUDElement.img;
-      const split = im.split('/');
-      const extensions = im.split('.');
-      const extension = <string>extensions[extensions.length - 1];
-      const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
-      const vid = ['webm', 'mp4', 'm4v'].includes(extension);
-      let appliedTmp = false;
-      let disabledTmp = false;
-      let suppressedTmp = false;
-      let temporaryTmp = false;
-      let passiveTmp = false;
-      let effectidTmp = '';
-      let effectnameTmp = '';
-      let turnsTmp = 0;
-      let isExpiredTmp = false;
-      let remainingSecondsTmp = -1;
-      let labelTmp = '';
-      let _idTmp = '';
-      let flagsTmp = {};
-      let tokenidTmp = '';
-      let actoridTmp = '';
-      const isFlagTmp = false;
-      const isActorEffectTmp = false;
-      const isFlagLightTmp = true;
+	// Convert item to LightHudData
+	imagesParsed = await Promise.all(
+		lightItems.map(async (lightHUDElement: LightHUDElement) => {
+			const im = <string>lightHUDElement.img;
+			const split = im.split("/");
+			const extensions = im.split(".");
+			const extension = <string>extensions[extensions.length - 1];
+			const img = ["jpg", "jpeg", "png", "svg", "webp"].includes(extension);
+			const vid = ["webm", "mp4", "m4v"].includes(extension);
+			let appliedTmp = false;
+			let disabledTmp = false;
+			let suppressedTmp = false;
+			let temporaryTmp = false;
+			let passiveTmp = false;
+			let effectidTmp = "";
+			let effectnameTmp = "";
+			let turnsTmp = 0;
+			let isExpiredTmp = false;
+			let remainingSecondsTmp = -1;
+			let labelTmp = "";
+			let _idTmp = "";
+			let flagsTmp = {};
+			let tokenidTmp = "";
+			let actoridTmp = "";
+			const isFlagTmp = false;
+			const isActorEffectTmp = false;
+			const isFlagLightTmp = true;
 
-      const applied =
-        actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + '_' + lightHUDElement.id) || false;
-      disabledTmp = !applied;
-      suppressedTmp = false; // always false
-      // temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
-      //   ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) > 0
-      //   : false;
-      temporaryTmp = lightHUDElement.isTemporary;
-      passiveTmp = !temporaryTmp;
-      if (applied && !disabledTmp && !suppressedTmp) {
-        appliedTmp = true;
-      }
-      effectidTmp = '';
-      effectnameTmp = lightHUDElement.name;
-      tokenidTmp = <string>token.id;
-      actoridTmp = <string>actor.id;
-      // ADDED
-      remainingSecondsTmp =
-        lightHUDElement.isTemporary && lightHUDElement.duration > 0
-          ? _getSecondsRemaining(lightHUDElement.duration)
-          : 0;
-      turnsTmp = 0;
-      isExpiredTmp = false;
-      labelTmp = lightHUDElement.name;
-      _idTmp = <string>lightHUDElement.id;
-      // TODO filter this
-      flagsTmp = actor.data?.flags || {};
+			const applied =
+				actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + "_" + lightHUDElement.id) || false;
+			disabledTmp = !applied;
+			suppressedTmp = false; // always false
+			// temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
+			//   ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) > 0
+			//   : false;
+			temporaryTmp = lightHUDElement.isTemporary;
+			passiveTmp = !temporaryTmp;
+			if (applied && !disabledTmp && !suppressedTmp) {
+				appliedTmp = true;
+			}
+			effectidTmp = "";
+			effectnameTmp = lightHUDElement.name;
+			tokenidTmp = <string>token.id;
+			actoridTmp = <string>actor.id;
+			// ADDED
+			remainingSecondsTmp =
+				lightHUDElement.isTemporary && lightHUDElement.duration > 0
+					? _getSecondsRemaining(lightHUDElement.duration)
+					: 0;
+			turnsTmp = 0;
+			isExpiredTmp = false;
+			labelTmp = lightHUDElement.name;
+			_idTmp = <string>lightHUDElement.id;
+			// TODO filter this
+			flagsTmp = actor.data?.flags || {};
 
-      if (!suppressedTmp) {
-        appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
-      } else {
-        appliedTmp = !appliedTmp;
-      }
+			if (!suppressedTmp) {
+				appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+			} else {
+				appliedTmp = !appliedTmp;
+			}
 
-      return <LightDataHud>{
-        icon: im,
-        name: i18n(lightHUDElement.name),
-        applied: appliedTmp,
-        disabled: disabledTmp,
-        suppressed: suppressedTmp,
-        isTemporary: temporaryTmp,
-        passive: passiveTmp,
-        img: img,
-        vid: vid,
-        type: img || vid,
-        itemid: lightHUDElement.id,
-        itemname: i18n(lightHUDElement.name),
-        effectid: effectidTmp,
-        effectname: i18n(effectnameTmp),
-        tokenid: tokenidTmp,
-        actorid: actoridTmp,
-        // Added for dfred panel
-        remainingSeconds: remainingSecondsTmp,
-        turns: turnsTmp,
-        isExpired: isExpiredTmp,
-        label: i18n(labelTmp),
-        _id: _idTmp,
-        flags: flagsTmp,
-        isflag: isFlagTmp,
-        isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLightTmp,
-      };
-    }),
-  );
-  const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
-    return i.effectname;
-  });
-  return imagesParsedFilter;
+			return <LightDataHud>{
+				icon: im,
+				name: i18n(lightHUDElement.name),
+				applied: appliedTmp,
+				disabled: disabledTmp,
+				suppressed: suppressedTmp,
+				isTemporary: temporaryTmp,
+				passive: passiveTmp,
+				img: img,
+				vid: vid,
+				type: img || vid,
+				itemid: lightHUDElement.id,
+				itemname: i18n(lightHUDElement.name),
+				effectid: effectidTmp,
+				effectname: i18n(effectnameTmp),
+				tokenid: tokenidTmp,
+				actorid: actoridTmp,
+				// Added for dfred panel
+				remainingSeconds: remainingSecondsTmp,
+				turns: turnsTmp,
+				isExpired: isExpiredTmp,
+				label: i18n(labelTmp),
+				_id: _idTmp,
+				flags: flagsTmp,
+				isflag: isFlagTmp,
+				isactoreffect: isActorEffectTmp,
+				isflaglight: isFlagLightTmp,
+			};
+		})
+	);
+	const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
+		return i.effectname;
+	});
+	return imagesParsedFilter;
 }
 
 export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> {
-  // const actor = <Actor>this._actor;
-  // const token = <Token>this._token;
-  const actor = token.actor;
-  //const actor = <Actor>canvas.tokens?.controlled[0]?.actor ?? game.user?.character ?? null;
-  //const token = <Token>canvas.tokens?.controlled[0] ?? null;
+	// const actor = <Actor>this._actor;
+	// const token = <Token>this._token;
+	const actor = token.actor;
+	//const actor = <Actor>canvas.tokens?.controlled[0]?.actor ?? game.user?.character ?? null;
+	//const token = <Token>canvas.tokens?.controlled[0] ?? null;
 
-  if (!actor || !token) {
-    return [];
-  }
-  const lightItems: Item[] = [];
-  let imagesParsed: LightDataHud[] = [];
+	if (!actor || !token) {
+		return [];
+	}
+	const lightItems: Item[] = [];
+	let imagesParsed: LightDataHud[] = [];
 
-  //const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-  // const spellsItems = ['spell','feat'];
-  // For every itemwith a ATL/ATE effect
-  for (const im of actor.data.items.contents) {
-    // TODO ADD CHECK ONLY FOR PHYSICAL ITEM
-    // if (im && physicalItems.includes(im.type)) {}
-    if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnATEItem')) {
-      const atlEffects = im.effects.filter((entity) => {
-        return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
-      });
-      if (atlEffects.length > 0) {
-        lightItems.push(im);
-        continue;
-      }
-    }
-    if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
-      if (im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
-        lightItems.push(im);
-        continue;
-      }
-    }
-  }
+	//const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+	// const spellsItems = ['spell','feat'];
+	// For every itemwith a ATL/ATE effect
+	for (const im of actor.data.items.contents) {
+		// TODO ADD CHECK ONLY FOR PHYSICAL ITEM
+		// if (im && physicalItems.includes(im.type)) {}
+		if (game.settings.get(CONSTANTS.MODULE_NAME, "applyOnATEItem")) {
+			const atlEffects = im.effects.filter((entity) => {
+				return entity.data.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+			});
+			if (atlEffects.length > 0) {
+				lightItems.push(im);
+				continue;
+			}
+		}
+		if (game.settings.get(CONSTANTS.MODULE_NAME, "applyOnFlagItem")) {
+			if (im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
+				lightItems.push(im);
+				continue;
+			}
+		}
+	}
 
-  // Strange case no item with ATL but we have some active effect
-  let actorAtlEffects = <ActiveEffect[]>[];
-  if (game.settings.get(CONSTANTS.MODULE_NAME, 'showATEFromNoItemOrigin')) {
-    actorAtlEffects = (<Actor>token.actor).effects.filter((entity) => {
-      return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
-    });
-  }
+	// Strange case no item with ATL but we have some active effect
+	let actorAtlEffects = <ActiveEffect[]>[];
+	if (game.settings.get(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin")) {
+		actorAtlEffects = (<Actor>token.actor).effects.filter((entity) => {
+			return entity.data.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+		});
+	}
 
-  // Convert item to LightHudData
-  imagesParsed = await Promise.all(
-    lightItems.map(async (item: Item) => {
-      const im = <string>item.img;
-      const split = im.split('/');
-      const extensions = im.split('.');
-      const extension = <string>extensions[extensions.length - 1];
-      const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
-      const vid = ['webm', 'mp4', 'm4v'].includes(extension);
-      // TODO for now we check if at least one active effect has the atl/ate changes on him
-      const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(item) || [];
-      let appliedTmp = false;
-      let disabledTmp = false;
-      let suppressedTmp = false;
-      let temporaryTmp = false;
-      let passiveTmp = false;
-      let effectidTmp = '';
-      let effectnameTmp = '';
-      let turnsTmp = 0;
-      let isExpiredTmp = false;
-      let remainingSecondsTmp = -1;
-      let labelTmp = '';
-      let _idTmp = '';
-      let flagsTmp = {};
-      let tokenidTmp = '';
-      let actoridTmp = '';
-      let isFlagTmp = false;
-      let isActorEffectTmp = false;
-      const isFlagLightTmp = false;
-      // ========================================================
-      // IMPORTANT PRIORITY TO THE ATL EFFECT PRESENT ON THE ITEM
-      // ========================================================
-      if (aeAtl.length > 0) {
-        isFlagTmp = false;
-        isActorEffectTmp = true;
-        const aeAtl0 = <ActiveEffect>aeAtl[0];
-        const nameToSearch = <string>aeAtl0.name || aeAtl0.data.label;
-        // TODO How this is work ???
-        // let effectFromActor = aeAtl0;
-        let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
-          return isStringEquals(nameToSearch, ae.data.label);
-        });
-        // Check if someone has delete the active effect but the item with the ATL changes is still on inventory
-        if (!effectFromActor && game.settings.get(CONSTANTS.MODULE_NAME, 'autoApplyEffectIfNotPresentOnActor')) {
-          info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
-          // setProperty(aeAtl0.data,`transfer`,false);
-          // setProperty(aeAtl0.data,`disabled`,true);
-          const activeEffectDataToUpdate = aeAtl0.toObject();
-          activeEffectDataToUpdate.transfer = false;
-          activeEffectDataToUpdate.disabled = true;
-          activeEffectDataToUpdate.origin =
-            aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
-          await aemlApi.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
-          // ???
-          effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
-            return isStringEquals(nameToSearch, ae.data.label);
-          });
-          // await API.toggleEffectFromIdOnToken(<string>token.document.id, <string>effectFromActor.id, false, false, true);
-        }
-        if (!effectFromActor) {
-          warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
-          return new LightDataHud();
-        }
-        effectidTmp = <string>effectFromActor.id;
-        effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
-        _idTmp = <string>effectFromActor.data._id;
+	// Convert item to LightHudData
+	imagesParsed = await Promise.all(
+		lightItems.map(async (item: Item) => {
+			const im = <string>item.img;
+			const split = im.split("/");
+			const extensions = im.split(".");
+			const extension = <string>extensions[extensions.length - 1];
+			const img = ["jpg", "jpeg", "png", "svg", "webp"].includes(extension);
+			const vid = ["webm", "mp4", "m4v"].includes(extension);
+			// TODO for now we check if at least one active effect has the atl/ate changes on him
+			const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(item) || [];
+			let appliedTmp = false;
+			let disabledTmp = false;
+			let suppressedTmp = false;
+			let temporaryTmp = false;
+			let passiveTmp = false;
+			let effectidTmp = "";
+			let effectnameTmp = "";
+			let turnsTmp = 0;
+			let isExpiredTmp = false;
+			let remainingSecondsTmp = -1;
+			let labelTmp = "";
+			let _idTmp = "";
+			let flagsTmp = {};
+			let tokenidTmp = "";
+			let actoridTmp = "";
+			let isFlagTmp = false;
+			let isActorEffectTmp = false;
+			const isFlagLightTmp = false;
+			// ========================================================
+			// IMPORTANT PRIORITY TO THE ATL EFFECT PRESENT ON THE ITEM
+			// ========================================================
+			if (aeAtl.length > 0) {
+				isFlagTmp = false;
+				isActorEffectTmp = true;
+				const aeAtl0 = <ActiveEffect>aeAtl[0];
+				const nameToSearch = <string>aeAtl0.name || aeAtl0.data.label;
+				// TODO How this is work ???
+				// let effectFromActor = aeAtl0;
+				let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
+					return isStringEquals(nameToSearch, ae.data.label);
+				});
+				// Check if someone has delete the active effect but the item with the ATL changes is still on inventory
+				if (
+					!effectFromActor &&
+					game.settings.get(CONSTANTS.MODULE_NAME, "autoApplyEffectIfNotPresentOnActor")
+				) {
+					info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
+					// setProperty(aeAtl0.data,`transfer`,false);
+					// setProperty(aeAtl0.data,`disabled`,true);
+					const activeEffectDataToUpdate = aeAtl0.toObject();
+					activeEffectDataToUpdate.transfer = false;
+					activeEffectDataToUpdate.disabled = true;
+					activeEffectDataToUpdate.origin =
+						aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
+					await aemlApi.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
+					// ???
+					effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
+						return isStringEquals(nameToSearch, ae.data.label);
+					});
+					// await API.toggleEffectFromIdOnToken(<string>token.document.id, <string>effectFromActor.id, false, false, true);
+				}
+				if (!effectFromActor) {
+					warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
+					return new LightDataHud();
+				}
+				effectidTmp = <string>effectFromActor.id;
+				effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
+				_idTmp = <string>effectFromActor.data._id;
 
-        const applied = await aemlApi.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
-        // If the active effect is disabled or is supressed
-        // const isDisabled = aeAtl[0].data.disabled || false;
-        // const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
-        disabledTmp = effectFromActor.data.disabled || false;
-        //@ts-ignore
-        suppressedTmp = effectFromActor.data.document.isSuppressed || false;
-        temporaryTmp = aeAtl0.isTemporary || false;
-        passiveTmp = !temporaryTmp;
-        if (applied && !disabledTmp && !suppressedTmp) {
-          appliedTmp = true;
-        }
-        tokenidTmp = <string>token.id;
-        actoridTmp = <string>actor.id;
-        // ADDED
-        remainingSecondsTmp = _getSecondsRemaining(aeAtl0.data.duration);
-        turnsTmp = <number>aeAtl0.data.duration.turns;
-        isExpiredTmp = remainingSecondsTmp < 0;
-        labelTmp = aeAtl0.data.label;
-        flagsTmp = aeAtl0.data?.flags || {};
-        // Little trick if
-        if (!aeAtl0.data?.flags?.convenientDescription) {
-          flagsTmp['convenientDescription'] = item.data.name;
-        }
-        if (!effectFromActor.data?.flags?.convenientDescription) {
-          flagsTmp['convenientDescription'] = item.data.name;
-        }
+				const applied = await aemlApi.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
+				// If the active effect is disabled or is supressed
+				// const isDisabled = aeAtl[0].data.disabled || false;
+				// const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
+				disabledTmp = effectFromActor.data.disabled || false;
+				//@ts-ignore
+				suppressedTmp = effectFromActor.data.document.isSuppressed || false;
+				temporaryTmp = aeAtl0.isTemporary || false;
+				passiveTmp = !temporaryTmp;
+				if (applied && !disabledTmp && !suppressedTmp) {
+					appliedTmp = true;
+				}
+				tokenidTmp = <string>token.id;
+				actoridTmp = <string>actor.id;
+				// ADDED
+				remainingSecondsTmp = _getSecondsRemaining(aeAtl0.data.duration);
+				turnsTmp = <number>aeAtl0.data.duration.turns;
+				isExpiredTmp = remainingSecondsTmp < 0;
+				labelTmp = aeAtl0.data.label;
+				flagsTmp = aeAtl0.data?.flags || {};
+				// Little trick if
+				if (!aeAtl0.data?.flags?.convenientDescription) {
+					flagsTmp["convenientDescription"] = item.data.name;
+				}
+				if (!effectFromActor.data?.flags?.convenientDescription) {
+					flagsTmp["convenientDescription"] = item.data.name;
+				}
 
-        if (!suppressedTmp) {
-          appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
-        } else {
-          appliedTmp = !appliedTmp;
-        }
+				if (!suppressedTmp) {
+					appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+				} else {
+					appliedTmp = !appliedTmp;
+				}
 
-        if (aeAtl.length > 0 && !effectidTmp) {
-          warn(`No ATL active effect found on actor ${token.name} from item ${item.name}`, true);
-          return new LightDataHud();
-        }
-      }
-      // ========================================================
-      // WE CHECK THE FLAG
-      // ========================================================
-      else if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
-        isFlagTmp = true;
-        isActorEffectTmp = false;
-        const applied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) || false;
-        disabledTmp = !applied;
-        suppressedTmp = false; // always false
-        temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
-          ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) > 0
-          : false;
-        passiveTmp = !temporaryTmp;
-        if (applied && !disabledTmp && !suppressedTmp) {
-          appliedTmp = true;
-        }
-        effectidTmp = '';
-        effectnameTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
-        tokenidTmp = <string>token.id;
-        actoridTmp = <string>actor.id;
-        // ADDED
-        remainingSecondsTmp = _getSecondsRemaining(
-          temporaryTmp ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) : 0,
-        );
-        turnsTmp = 0;
-        isExpiredTmp = false;
-        labelTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
-        _idTmp = <string>item.id;
-        // TODO filter this
-        flagsTmp = item.data?.flags || {};
+				if (aeAtl.length > 0 && !effectidTmp) {
+					warn(`No ATL active effect found on actor ${token.name} from item ${item.name}`, true);
+					return new LightDataHud();
+				}
+			}
+			// ========================================================
+			// WE CHECK THE FLAG
+			// ========================================================
+			else if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
+				isFlagTmp = true;
+				isActorEffectTmp = false;
+				const applied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) || false;
+				disabledTmp = !applied;
+				suppressedTmp = false; // always false
+				temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
+					? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) > 0
+					: false;
+				passiveTmp = !temporaryTmp;
+				if (applied && !disabledTmp && !suppressedTmp) {
+					appliedTmp = true;
+				}
+				effectidTmp = "";
+				effectnameTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
+				tokenidTmp = <string>token.id;
+				actoridTmp = <string>actor.id;
+				// ADDED
+				remainingSecondsTmp = _getSecondsRemaining(
+					temporaryTmp ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) : 0
+				);
+				turnsTmp = 0;
+				isExpiredTmp = false;
+				labelTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
+				_idTmp = <string>item.id;
+				// TODO filter this
+				flagsTmp = item.data?.flags || {};
 
-        if (!suppressedTmp) {
-          appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
-        } else {
-          appliedTmp = !appliedTmp;
-        }
-      }
-      // ========================================================
-      // DO NOTHING
-      // ========================================================
-      else {
-        return new LightDataHud();
-      }
+				if (!suppressedTmp) {
+					appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+				} else {
+					appliedTmp = !appliedTmp;
+				}
+			}
+			// ========================================================
+			// DO NOTHING
+			// ========================================================
+			else {
+				return new LightDataHud();
+			}
 
-      return <LightDataHud>{
-        icon: im,
-        name: item.name,
-        applied: appliedTmp,
-        disabled: disabledTmp,
-        suppressed: suppressedTmp,
-        isTemporary: temporaryTmp,
-        passive: passiveTmp,
-        img: img,
-        vid: vid,
-        type: img || vid,
-        itemid: item.id,
-        itemname: item.name,
-        effectid: effectidTmp,
-        effectname: effectnameTmp,
-        tokenid: tokenidTmp,
-        actorid: actoridTmp,
-        // Added for dfred panel
-        remainingSeconds: remainingSecondsTmp,
-        turns: turnsTmp,
-        isExpired: isExpiredTmp,
-        label: labelTmp,
-        _id: _idTmp,
-        flags: flagsTmp,
-        isflag: isFlagTmp,
-        isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLightTmp,
-      };
-    }),
-  );
+			return <LightDataHud>{
+				icon: im,
+				name: item.name,
+				applied: appliedTmp,
+				disabled: disabledTmp,
+				suppressed: suppressedTmp,
+				isTemporary: temporaryTmp,
+				passive: passiveTmp,
+				img: img,
+				vid: vid,
+				type: img || vid,
+				itemid: item.id,
+				itemname: item.name,
+				effectid: effectidTmp,
+				effectname: effectnameTmp,
+				tokenid: tokenidTmp,
+				actorid: actoridTmp,
+				// Added for dfred panel
+				remainingSeconds: remainingSecondsTmp,
+				turns: turnsTmp,
+				isExpired: isExpiredTmp,
+				label: labelTmp,
+				_id: _idTmp,
+				flags: flagsTmp,
+				isflag: isFlagTmp,
+				isactoreffect: isActorEffectTmp,
+				isflaglight: isFlagLightTmp,
+			};
+		})
+	);
 
-  if (actorAtlEffects.length > 0) {
-    for (const aeAtl0 of actorAtlEffects) {
-      const im = <string>aeAtl0.data.icon || token.data.img || '';
-      const split = im.split('/');
-      const extensions = im.split('.');
-      const extension = <string>extensions[extensions.length - 1];
-      const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
-      const vid = ['webm', 'mp4', 'm4v'].includes(extension);
+	if (actorAtlEffects.length > 0) {
+		for (const aeAtl0 of actorAtlEffects) {
+			const im = <string>aeAtl0.data.icon || token.data.img || "";
+			const split = im.split("/");
+			const extensions = im.split(".");
+			const extension = <string>extensions[extensions.length - 1];
+			const img = ["jpg", "jpeg", "png", "svg", "webp"].includes(extension);
+			const vid = ["webm", "mp4", "m4v"].includes(extension);
 
-      let appliedTmp = false;
-      let disabledTmp = false;
-      let suppressedTmp = false;
-      let temporaryTmp = false;
-      let passiveTmp = false;
-      let effectidTmp = '';
-      let effectnameTmp = '';
-      let turnsTmp = 0;
-      let isExpiredTmp = false;
-      let remainingSecondsTmp = -1;
-      let labelTmp = '';
-      let _idTmp = '';
-      let flagsTmp = {};
-      let tokenidTmp = '';
-      let actoridTmp = '';
-      const isFlagTmp = false;
-      const isActorEffectTmp = true;
-      const isFlagLightTmp = false;
-      // const aeAtl0 = <ActiveEffect>aeAtl[0];
-      const nameToSearch = <string>aeAtl0.name || aeAtl0.data.label;
-      // TODO How this is work ???
-      // let effectFromActor = aeAtl0;
-      let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
-        return isStringEquals(nameToSearch, ae.data.label);
-      });
-      // Check if someone has delete the active effect but the item with the ATL changes is still on inventory
-      if (!effectFromActor && game.settings.get(CONSTANTS.MODULE_NAME, 'autoApplyEffectIfNotPresentOnActor')) {
-        info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
-        // setProperty(aeAtl0.data,`transfer`,false);
-        // setProperty(aeAtl0.data,`disabled`,true);
-        const activeEffectDataToUpdate = aeAtl0.toObject();
-        activeEffectDataToUpdate.transfer = false;
-        activeEffectDataToUpdate.disabled = true;
-        activeEffectDataToUpdate.origin =
-          aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
-        await aemlApi.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
-        // ???
-        effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
-          return isStringEquals(nameToSearch, ae.data.label);
-        });
-        // await API.toggleEffectFromIdOnToken(<string>token.document.id, <string>effectFromActor.id, false, false, true);
-      }
-      if (!effectFromActor) {
-        warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
-        continue;
-      }
-      effectidTmp = <string>effectFromActor.id;
-      effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
-      _idTmp = <string>effectFromActor.data._id;
+			let appliedTmp = false;
+			let disabledTmp = false;
+			let suppressedTmp = false;
+			let temporaryTmp = false;
+			let passiveTmp = false;
+			let effectidTmp = "";
+			let effectnameTmp = "";
+			let turnsTmp = 0;
+			let isExpiredTmp = false;
+			let remainingSecondsTmp = -1;
+			let labelTmp = "";
+			let _idTmp = "";
+			let flagsTmp = {};
+			let tokenidTmp = "";
+			let actoridTmp = "";
+			const isFlagTmp = false;
+			const isActorEffectTmp = true;
+			const isFlagLightTmp = false;
+			// const aeAtl0 = <ActiveEffect>aeAtl[0];
+			const nameToSearch = <string>aeAtl0.name || aeAtl0.data.label;
+			// TODO How this is work ???
+			// let effectFromActor = aeAtl0;
+			let effectFromActor = <ActiveEffect>actor.data.effects.find((ae: ActiveEffect) => {
+				return isStringEquals(nameToSearch, ae.data.label);
+			});
+			// Check if someone has delete the active effect but the item with the ATL changes is still on inventory
+			if (!effectFromActor && game.settings.get(CONSTANTS.MODULE_NAME, "autoApplyEffectIfNotPresentOnActor")) {
+				info(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
+				// setProperty(aeAtl0.data,`transfer`,false);
+				// setProperty(aeAtl0.data,`disabled`,true);
+				const activeEffectDataToUpdate = aeAtl0.toObject();
+				activeEffectDataToUpdate.transfer = false;
+				activeEffectDataToUpdate.disabled = true;
+				activeEffectDataToUpdate.origin =
+					aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
+				await aemlApi.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
+				// ???
+				effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
+					return isStringEquals(nameToSearch, ae.data.label);
+				});
+				// await API.toggleEffectFromIdOnToken(<string>token.document.id, <string>effectFromActor.id, false, false, true);
+			}
+			if (!effectFromActor) {
+				warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
+				continue;
+			}
+			effectidTmp = <string>effectFromActor.id;
+			effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
+			_idTmp = <string>effectFromActor.data._id;
 
-      const applied = await aemlApi.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
-      // If the active effect is disabled or is supressed
-      // const isDisabled = aeAtl[0].data.disabled || false;
-      // const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
-      disabledTmp = effectFromActor.data.disabled || false;
-      //@ts-ignore
-      suppressedTmp = effectFromActor.data.document.isSuppressed || false;
-      temporaryTmp = aeAtl0.isTemporary || false;
-      passiveTmp = !temporaryTmp;
-      if (applied && !disabledTmp && !suppressedTmp) {
-        appliedTmp = true;
-      }
-      tokenidTmp = <string>token.id;
-      actoridTmp = <string>actor.id;
-      // ADDED
-      remainingSecondsTmp = _getSecondsRemaining(aeAtl0.data.duration);
-      turnsTmp = <number>aeAtl0.data.duration.turns;
-      isExpiredTmp = remainingSecondsTmp < 0;
-      labelTmp = aeAtl0.data.label;
-      flagsTmp = aeAtl0.data?.flags || {};
-      // Little trick if
-      if (!aeAtl0.data?.flags?.convenientDescription) {
-        flagsTmp['convenientDescription'] = aeAtl0.data.label;
-      }
-      if (!effectFromActor.data?.flags?.convenientDescription) {
-        flagsTmp['convenientDescription'] = effectFromActor.data.label;
-      }
+			const applied = await aemlApi.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
+			// If the active effect is disabled or is supressed
+			// const isDisabled = aeAtl[0].data.disabled || false;
+			// const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
+			disabledTmp = effectFromActor.data.disabled || false;
+			//@ts-ignore
+			suppressedTmp = effectFromActor.data.document.isSuppressed || false;
+			temporaryTmp = aeAtl0.isTemporary || false;
+			passiveTmp = !temporaryTmp;
+			if (applied && !disabledTmp && !suppressedTmp) {
+				appliedTmp = true;
+			}
+			tokenidTmp = <string>token.id;
+			actoridTmp = <string>actor.id;
+			// ADDED
+			remainingSecondsTmp = _getSecondsRemaining(aeAtl0.data.duration);
+			turnsTmp = <number>aeAtl0.data.duration.turns;
+			isExpiredTmp = remainingSecondsTmp < 0;
+			labelTmp = aeAtl0.data.label;
+			flagsTmp = aeAtl0.data?.flags || {};
+			// Little trick if
+			if (!aeAtl0.data?.flags?.convenientDescription) {
+				flagsTmp["convenientDescription"] = aeAtl0.data.label;
+			}
+			if (!effectFromActor.data?.flags?.convenientDescription) {
+				flagsTmp["convenientDescription"] = effectFromActor.data.label;
+			}
 
-      if (!suppressedTmp) {
-        appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
-      } else {
-        appliedTmp = !appliedTmp;
-      }
+			if (!suppressedTmp) {
+				appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+			} else {
+				appliedTmp = !appliedTmp;
+			}
 
-      imagesParsed.push(<LightDataHud>{
-        icon: im,
-        name: aeAtl0.data.label,
-        applied: appliedTmp,
-        disabled: disabledTmp,
-        suppressed: suppressedTmp,
-        isTemporary: temporaryTmp,
-        passive: passiveTmp,
-        img: img,
-        vid: vid,
-        type: img || vid,
-        itemid: '',
-        itemname: aeAtl0.data.label,
-        effectid: effectidTmp,
-        effectname: effectnameTmp,
-        tokenid: tokenidTmp,
-        actorid: actoridTmp,
-        // Added for dfred panel
-        remainingSeconds: remainingSecondsTmp,
-        turns: turnsTmp,
-        isExpired: isExpiredTmp,
-        label: labelTmp,
-        _id: _idTmp,
-        flags: flagsTmp,
-        isflag: isFlagTmp,
-        isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLightTmp,
-      });
-    }
-  }
+			imagesParsed.push(<LightDataHud>{
+				icon: im,
+				name: aeAtl0.data.label,
+				applied: appliedTmp,
+				disabled: disabledTmp,
+				suppressed: suppressedTmp,
+				isTemporary: temporaryTmp,
+				passive: passiveTmp,
+				img: img,
+				vid: vid,
+				type: img || vid,
+				itemid: "",
+				itemname: aeAtl0.data.label,
+				effectid: effectidTmp,
+				effectname: effectnameTmp,
+				tokenid: tokenidTmp,
+				actorid: actoridTmp,
+				// Added for dfred panel
+				remainingSeconds: remainingSecondsTmp,
+				turns: turnsTmp,
+				isExpired: isExpiredTmp,
+				label: labelTmp,
+				_id: _idTmp,
+				flags: flagsTmp,
+				isflag: isFlagTmp,
+				isactoreffect: isActorEffectTmp,
+				isflaglight: isFlagLightTmp,
+			});
+		}
+	}
 
-  const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
-    return i.effectname;
-  });
-  return imagesParsedFilter;
+	const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
+		return i.effectname;
+	});
+	return imagesParsedFilter;
 }
 
 // TODO consider handling rounds/seconds/turns based on whatever is defined for the effect rather than do conversions
 function _getSecondsRemaining(duration) {
-  if (duration.seconds || duration.rounds) {
-    const seconds = duration.seconds ?? duration.rounds * (CONFIG.time?.roundTime ?? 6);
-    return duration.startTime + seconds - game.time.worldTime;
-  } else {
-    if (is_real_number(duration)) {
-      const seconds = duration;
-      return game.time.worldTime + seconds - game.time.worldTime;
-    } else {
-      return Infinity;
-    }
-  }
+	if (duration.seconds || duration.rounds) {
+		const seconds = duration.seconds ?? duration.rounds * (CONFIG.time?.roundTime ?? 6);
+		return duration.startTime + seconds - game.time.worldTime;
+	} else {
+		if (is_real_number(duration)) {
+			const seconds = duration;
+			return game.time.worldTime + seconds - game.time.worldTime;
+		} else {
+			return Infinity;
+		}
+	}
 }
 
 export async function retrieveItemLightsWithFlagAndDisableThemLightsStatic(
-  token: Token,
-  itemId: string,
+	token: Token,
+	itemId: string
 ): Promise<void> {
-  const actor = token.actor;
-  if (!actor || !token) {
-    return;
-  }
-  const p = getProperty(actor, `data.flags.${CONSTANTS.MODULE_NAME}`);
-  for (const key in p) {
-    const senseOrConditionIdKey = key;
-    const senseOrConditionValue = <any>p[key];
-    if (
-      senseOrConditionIdKey.startsWith(LightHUDNoteFlags.HUD_ENABLED + '_') &&
-      senseOrConditionIdKey != LightHUDNoteFlags.HUD_ENABLED + '_' + itemId
-    ) {
-      await actor.unsetFlag(CONSTANTS.MODULE_NAME, senseOrConditionIdKey);
-    }
-  }
+	const actor = token.actor;
+	if (!actor || !token) {
+		return;
+	}
+	const p = getProperty(actor, `data.flags.${CONSTANTS.MODULE_NAME}`);
+	for (const key in p) {
+		const senseOrConditionIdKey = key;
+		const senseOrConditionValue = <any>p[key];
+		if (
+			senseOrConditionIdKey.startsWith(LightHUDNoteFlags.HUD_ENABLED + "_") &&
+			senseOrConditionIdKey != LightHUDNoteFlags.HUD_ENABLED + "_" + itemId
+		) {
+			await actor.unsetFlag(CONSTANTS.MODULE_NAME, senseOrConditionIdKey);
+		}
+	}
 }
 
 export async function retrieveItemLightsWithFlagAndDisableThem(token: Token, itemId: string): Promise<void> {
-  const actor = token.actor;
-  if (!actor || !token) {
-    return;
-  }
-  // For every itemwith a ATL/ATE effect
-  for (const im of actor.data.items.contents) {
-    if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
-      if (
-        im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE) &&
-        im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) &&
-        im.id != itemId
-      ) {
-        await im.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED, false);
-      }
-    }
-  }
+	const actor = token.actor;
+	if (!actor || !token) {
+		return;
+	}
+	// For every itemwith a ATL/ATE effect
+	for (const im of actor.data.items.contents) {
+		if (game.settings.get(CONSTANTS.MODULE_NAME, "applyOnFlagItem")) {
+			if (
+				im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE) &&
+				im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) &&
+				im.id != itemId
+			) {
+				await im.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED, false);
+			}
+		}
+	}
 }
 
 export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Promise<LightDataHud[]> {
-  const actor = token.actor;
-  if (!actor || !token) {
-    return [];
-  }
+	const actor = token.actor;
+	if (!actor || !token) {
+		return [];
+	}
 
-  const lightItems: LightHUDElement[] = API.LIGHTS.filter((light) => {
-    return light.id != LightHUDPreset.NONE && light.id != LightHUDPreset.NO_CHANGE;
-  });
-  let imagesParsed: LightDataHud[] = [];
-  // Convert item to LightHudData
-  imagesParsed = await Promise.all(
-    lightItems.map(async (lightHUDElement: LightHUDElement) => {
-      const im = <string>lightHUDElement.img;
-      const split = im.split('/');
-      const extensions = im.split('.');
-      const extension = <string>extensions[extensions.length - 1];
-      const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
-      const vid = ['webm', 'mp4', 'm4v'].includes(extension);
-      // TODO for now we check if at least one active effect has the atl/ate changes on him
-      // const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(actor, item) || [];
-      let appliedTmp = false;
-      let disabledTmp = false;
-      let suppressedTmp = false;
-      let temporaryTmp = false;
-      let passiveTmp = false;
-      let effectidTmp = '';
-      let effectnameTmp = '';
-      let turnsTmp = 0;
-      let isExpiredTmp = false;
-      let remainingSecondsTmp = -1;
-      let labelTmp = '';
-      let _idTmp = '';
-      let flagsTmp = {};
-      let tokenidTmp = '';
-      let actoridTmp = '';
-      const isFlagTmp = false;
-      const isActorEffectTmp = false;
-      const isFlagLightTmp = true;
-      const isApplied = <boolean>(
-        actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + '_' + lightHUDElement.id)
-      );
-      const applied = isApplied || false;
-      disabledTmp = !applied;
-      suppressedTmp = false; // always false
-      temporaryTmp = lightHUDElement.isTemporary;
-      passiveTmp = !temporaryTmp;
-      if (applied && !disabledTmp && !suppressedTmp) {
-        appliedTmp = true;
-      }
-      effectidTmp = '';
-      effectnameTmp = lightHUDElement.name;
-      tokenidTmp = <string>token.id;
-      actoridTmp = <string>actor.id;
-      // ADDED
-      remainingSecondsTmp =
-        lightHUDElement.isTemporary && lightHUDElement.duration > 0 ? _getSecondsRemaining(temporaryTmp) : 0;
-      turnsTmp = 0;
-      isExpiredTmp = false;
-      labelTmp = lightHUDElement.name;
-      _idTmp = <string>lightHUDElement.id;
-      // TODO filter this
-      flagsTmp = token.actor?.data?.flags || {};
+	const lightItems: LightHUDElement[] = API.LIGHTS.filter((light) => {
+		return light.id != LightHUDPreset.NONE && light.id != LightHUDPreset.NO_CHANGE;
+	});
+	let imagesParsed: LightDataHud[] = [];
+	// Convert item to LightHudData
+	imagesParsed = await Promise.all(
+		lightItems.map(async (lightHUDElement: LightHUDElement) => {
+			const im = <string>lightHUDElement.img;
+			const split = im.split("/");
+			const extensions = im.split(".");
+			const extension = <string>extensions[extensions.length - 1];
+			const img = ["jpg", "jpeg", "png", "svg", "webp"].includes(extension);
+			const vid = ["webm", "mp4", "m4v"].includes(extension);
+			// TODO for now we check if at least one active effect has the atl/ate changes on him
+			// const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(actor, item) || [];
+			let appliedTmp = false;
+			let disabledTmp = false;
+			let suppressedTmp = false;
+			let temporaryTmp = false;
+			let passiveTmp = false;
+			let effectidTmp = "";
+			let effectnameTmp = "";
+			let turnsTmp = 0;
+			let isExpiredTmp = false;
+			let remainingSecondsTmp = -1;
+			let labelTmp = "";
+			let _idTmp = "";
+			let flagsTmp = {};
+			let tokenidTmp = "";
+			let actoridTmp = "";
+			const isFlagTmp = false;
+			const isActorEffectTmp = false;
+			const isFlagLightTmp = true;
+			const isApplied = <boolean>(
+				actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + "_" + lightHUDElement.id)
+			);
+			const applied = isApplied || false;
+			disabledTmp = !applied;
+			suppressedTmp = false; // always false
+			temporaryTmp = lightHUDElement.isTemporary;
+			passiveTmp = !temporaryTmp;
+			if (applied && !disabledTmp && !suppressedTmp) {
+				appliedTmp = true;
+			}
+			effectidTmp = "";
+			effectnameTmp = lightHUDElement.name;
+			tokenidTmp = <string>token.id;
+			actoridTmp = <string>actor.id;
+			// ADDED
+			remainingSecondsTmp =
+				lightHUDElement.isTemporary && lightHUDElement.duration > 0 ? _getSecondsRemaining(temporaryTmp) : 0;
+			turnsTmp = 0;
+			isExpiredTmp = false;
+			labelTmp = lightHUDElement.name;
+			_idTmp = <string>lightHUDElement.id;
+			// TODO filter this
+			flagsTmp = token.actor?.data?.flags || {};
 
-      if (!suppressedTmp) {
-        appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
-      } else {
-        appliedTmp = !appliedTmp;
-      }
+			if (!suppressedTmp) {
+				appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+			} else {
+				appliedTmp = !appliedTmp;
+			}
 
-      return <LightDataHud>{
-        icon: im,
-        name: i18n(lightHUDElement.name),
-        applied: appliedTmp,
-        disabled: disabledTmp,
-        suppressed: suppressedTmp,
-        isTemporary: temporaryTmp,
-        passive: passiveTmp,
-        img: img,
-        vid: vid,
-        type: img || vid,
-        itemid: lightHUDElement.id,
-        itemname: i18n(lightHUDElement.name),
-        effectid: effectidTmp,
-        effectname: i18n(effectnameTmp),
-        tokenid: tokenidTmp,
-        actorid: actoridTmp,
-        // Added for dfred panel
-        remainingSeconds: remainingSecondsTmp,
-        turns: turnsTmp,
-        isExpired: isExpiredTmp,
-        label: i18n(labelTmp),
-        _id: _idTmp,
-        flags: flagsTmp,
-        isflag: isFlagTmp,
-        isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLightTmp,
-      };
-    }),
-  );
+			return <LightDataHud>{
+				icon: im,
+				name: i18n(lightHUDElement.name),
+				applied: appliedTmp,
+				disabled: disabledTmp,
+				suppressed: suppressedTmp,
+				isTemporary: temporaryTmp,
+				passive: passiveTmp,
+				img: img,
+				vid: vid,
+				type: img || vid,
+				itemid: lightHUDElement.id,
+				itemname: i18n(lightHUDElement.name),
+				effectid: effectidTmp,
+				effectname: i18n(effectnameTmp),
+				tokenid: tokenidTmp,
+				actorid: actoridTmp,
+				// Added for dfred panel
+				remainingSeconds: remainingSecondsTmp,
+				turns: turnsTmp,
+				isExpired: isExpiredTmp,
+				label: i18n(labelTmp),
+				_id: _idTmp,
+				flags: flagsTmp,
+				isflag: isFlagTmp,
+				isactoreffect: isActorEffectTmp,
+				isflaglight: isFlagLightTmp,
+			};
+		})
+	);
 
-  const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
-    return i.effectname;
-  });
-  return imagesParsedFilter;
+	const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
+		return i.effectname;
+	});
+	return imagesParsedFilter;
 }
 
 export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDataHud[]> {
-  const actor = token.actor;
-  if (!actor || !token) {
-    return [];
-  }
-  const lightItems: Item[] = [];
-  let imagesParsed: LightDataHud[] = [];
-  for (const im of actor.data.items.contents) {
-    if (game.settings.get(CONSTANTS.MODULE_NAME, 'applyOnFlagItem')) {
-      if (im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
-        lightItems.push(im);
-        continue;
-      }
-    }
-  }
-  // Convert item to LightHudData
-  imagesParsed = await Promise.all(
-    lightItems.map(async (item: Item) => {
-      const im = <string>item.img;
-      const split = im.split('/');
-      const extensions = im.split('.');
-      const extension = <string>extensions[extensions.length - 1];
-      const img = ['jpg', 'jpeg', 'png', 'svg', 'webp'].includes(extension);
-      const vid = ['webm', 'mp4', 'm4v'].includes(extension);
-      // TODO for now we check if at least one active effect has the atl/ate changes on him
-      // const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(actor, item) || [];
-      let appliedTmp = false;
-      let disabledTmp = false;
-      let suppressedTmp = false;
-      let temporaryTmp = false;
-      let passiveTmp = false;
-      let effectidTmp = '';
-      let effectnameTmp = '';
-      let turnsTmp = 0;
-      let isExpiredTmp = false;
-      let remainingSecondsTmp = -1;
-      let labelTmp = '';
-      let _idTmp = '';
-      let flagsTmp = {};
-      let tokenidTmp = '';
-      let actoridTmp = '';
-      let isFlagTmp = false;
-      const isActorEffectTmp = false;
-      const isFlagLightTmp = false;
-      // ========================================================
-      // WE CHECK THE FLAG
-      // ========================================================
-      if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
-        isFlagTmp = true;
-        const applied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) || false;
-        disabledTmp = !applied;
-        suppressedTmp = false; // always false
-        temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
-          ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) > 0
-          : false;
-        passiveTmp = !temporaryTmp;
-        if (applied && !disabledTmp && !suppressedTmp) {
-          appliedTmp = true;
-        }
-        effectidTmp = '';
-        effectnameTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
-        tokenidTmp = <string>token.id;
-        actoridTmp = <string>actor.id;
-        // ADDED
-        remainingSecondsTmp = _getSecondsRemaining(
-          temporaryTmp ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) : 0,
-        );
-        turnsTmp = 0;
-        isExpiredTmp = false;
-        labelTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
-        _idTmp = <string>item.id;
-        // TODO filter this
-        flagsTmp = item.data?.flags || {};
+	const actor = token.actor;
+	if (!actor || !token) {
+		return [];
+	}
+	const lightItems: Item[] = [];
+	let imagesParsed: LightDataHud[] = [];
+	for (const im of actor.data.items.contents) {
+		if (game.settings.get(CONSTANTS.MODULE_NAME, "applyOnFlagItem")) {
+			if (im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
+				lightItems.push(im);
+				continue;
+			}
+		}
+	}
+	// Convert item to LightHudData
+	imagesParsed = await Promise.all(
+		lightItems.map(async (item: Item) => {
+			const im = <string>item.img;
+			const split = im.split("/");
+			const extensions = im.split(".");
+			const extension = <string>extensions[extensions.length - 1];
+			const img = ["jpg", "jpeg", "png", "svg", "webp"].includes(extension);
+			const vid = ["webm", "mp4", "m4v"].includes(extension);
+			// TODO for now we check if at least one active effect has the atl/ate changes on him
+			// const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(actor, item) || [];
+			let appliedTmp = false;
+			let disabledTmp = false;
+			let suppressedTmp = false;
+			let temporaryTmp = false;
+			let passiveTmp = false;
+			let effectidTmp = "";
+			let effectnameTmp = "";
+			let turnsTmp = 0;
+			let isExpiredTmp = false;
+			let remainingSecondsTmp = -1;
+			let labelTmp = "";
+			let _idTmp = "";
+			let flagsTmp = {};
+			let tokenidTmp = "";
+			let actoridTmp = "";
+			let isFlagTmp = false;
+			const isActorEffectTmp = false;
+			const isFlagLightTmp = false;
+			// ========================================================
+			// WE CHECK THE FLAG
+			// ========================================================
+			if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE)) {
+				isFlagTmp = true;
+				const applied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) || false;
+				disabledTmp = !applied;
+				suppressedTmp = false; // always false
+				temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
+					? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) > 0
+					: false;
+				passiveTmp = !temporaryTmp;
+				if (applied && !disabledTmp && !suppressedTmp) {
+					appliedTmp = true;
+				}
+				effectidTmp = "";
+				effectnameTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
+				tokenidTmp = <string>token.id;
+				actoridTmp = <string>actor.id;
+				// ADDED
+				remainingSecondsTmp = _getSecondsRemaining(
+					temporaryTmp ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) : 0
+				);
+				turnsTmp = 0;
+				isExpiredTmp = false;
+				labelTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
+				_idTmp = <string>item.id;
+				// TODO filter this
+				flagsTmp = item.data?.flags || {};
 
-        if (!suppressedTmp) {
-          appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
-        } else {
-          appliedTmp = !appliedTmp;
-        }
-      }
-      // ========================================================
-      // DO NOTHING
-      // ========================================================
-      else {
-        return new LightDataHud();
-      }
+				if (!suppressedTmp) {
+					appliedTmp = appliedTmp || (passiveTmp && !disabledTmp);
+				} else {
+					appliedTmp = !appliedTmp;
+				}
+			}
+			// ========================================================
+			// DO NOTHING
+			// ========================================================
+			else {
+				return new LightDataHud();
+			}
 
-      return <LightDataHud>{
-        icon: im,
-        name: item.name,
-        applied: appliedTmp,
-        disabled: disabledTmp,
-        suppressed: suppressedTmp,
-        isTemporary: temporaryTmp,
-        passive: passiveTmp,
-        img: img,
-        vid: vid,
-        type: img || vid,
-        itemid: item.id,
-        itemname: item.name,
-        effectid: effectidTmp,
-        effectname: effectnameTmp,
-        tokenid: tokenidTmp,
-        actorid: actoridTmp,
-        // Added for dfred panel
-        remainingSeconds: remainingSecondsTmp,
-        turns: turnsTmp,
-        isExpired: isExpiredTmp,
-        label: labelTmp,
-        _id: _idTmp,
-        flags: flagsTmp,
-        isflag: isFlagTmp,
-        isactoreffect: isActorEffectTmp,
-        isflaglight: isFlagLightTmp,
-      };
-    }),
-  );
+			return <LightDataHud>{
+				icon: im,
+				name: item.name,
+				applied: appliedTmp,
+				disabled: disabledTmp,
+				suppressed: suppressedTmp,
+				isTemporary: temporaryTmp,
+				passive: passiveTmp,
+				img: img,
+				vid: vid,
+				type: img || vid,
+				itemid: item.id,
+				itemname: item.name,
+				effectid: effectidTmp,
+				effectname: effectnameTmp,
+				tokenid: tokenidTmp,
+				actorid: actoridTmp,
+				// Added for dfred panel
+				remainingSeconds: remainingSecondsTmp,
+				turns: turnsTmp,
+				isExpired: isExpiredTmp,
+				label: labelTmp,
+				_id: _idTmp,
+				flags: flagsTmp,
+				isflag: isFlagTmp,
+				isactoreffect: isActorEffectTmp,
+				isflaglight: isFlagLightTmp,
+			};
+		})
+	);
 
-  const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
-    return i.effectname;
-  });
-  return imagesParsedFilter;
+	const imagesParsedFilter = imagesParsed.filter((i: LightDataHud) => {
+		return i.effectname;
+	});
+	return imagesParsedFilter;
 }
 
 export function manageDist(feetInput: number, isPreset: boolean): number {
-  let valueDist = feetInput;
-  if (isPreset && game.ready && game.settings.get(CONSTANTS.MODULE_NAME, 'useMetricSystem')) {
-    valueDist = convertFeetToMeter(valueDist);
-  }
-  return valueDist;
+	let valueDist = feetInput;
+	if (isPreset && game.ready && game.settings.get(CONSTANTS.MODULE_NAME, "useMetricSystem")) {
+		valueDist = convertFeetToMeter(valueDist);
+	}
+	return valueDist;
 }
 
 export function convertFeetToMeter(feetInput: number): number {
-  return Math.floor(feetInput / 3.2808);
+	return Math.floor(feetInput / 3.2808);
 }
 
 export function convertMeterToFeet(meterInput: number): number {
-  return Math.floor(meterInput * 3.2808);
+	return Math.floor(meterInput * 3.2808);
 }
