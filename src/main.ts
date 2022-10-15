@@ -76,6 +76,11 @@ Hooks.once('ready', () => {
     if (game.modules.get('warpgate')) word = 'activate';
     throw error(`Requires the 'warpgate' module. Please ${word} it.`);
   }
+  if (!game.modules.get('warpgate')?.active && game.user?.isGM) {
+    let word = 'install and activate';
+    if (game.modules.get('warpgate')) word = 'activate';
+    throw error(`Requires the 'warpgate' module. Please ${word} it.`);
+  }
 
   readyHooks();
 });
