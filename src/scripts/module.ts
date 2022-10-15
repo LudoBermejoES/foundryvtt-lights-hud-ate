@@ -3,11 +3,13 @@ import { getApi, setApi } from '../main';
 import API from './api';
 import HandlebarHelpers from './app/lights-hud-ate-handlebar-helpers';
 import CONSTANTS from './constants';
-import EffectInterface from './effects/effect-interface';
 import HOOKS from './hooks';
 import { debug } from './lib/lib';
 import { addLightsHUDButtons } from './lights-hud-ate-config';
 import { registerSocket } from './socket';
+import type { ActiveEffectManagerLibApi } from './effects/effect-api';
+
+export let aemlApi: ActiveEffectManagerLibApi;
 
 export const initHooks = async (): Promise<void> => {
   // registerSettings();
@@ -17,20 +19,21 @@ export const initHooks = async (): Promise<void> => {
   new HandlebarHelpers().registerHelpers();
 
   Hooks.once('socketlib.ready', registerSocket);
+  registerSocket();
 
-  if (game.settings.get(CONSTANTS.MODULE_NAME, 'debugHooks')) {
-    for (const hook of Object.values(HOOKS)) {
-      if (typeof hook === 'string') {
-        Hooks.on(hook, (...args) => debug(`Hook called: ${hook}`, ...args));
-        debug(`Registered hook: ${hook}`);
-      } else {
-        for (const innerHook of Object.values(hook)) {
-          Hooks.on(<string>innerHook, (...args) => debug(`Hook called: ${innerHook}`, ...args));
-          debug(`Registered hook: ${innerHook}`);
-        }
-      }
-    }
-  }
+  // if (game.settings.get(CONSTANTS.MODULE_NAME, 'debugHooks')) {
+  //   for (const hook of Object.values(HOOKS)) {
+  //     if (typeof hook === 'string') {
+  //       Hooks.on(hook, (...args) => debug(`Hook called: ${hook}`, ...args));
+  //       debug(`Registered hook: ${hook}`);
+  //     } else {
+  //       for (const innerHook of Object.values(hook)) {
+  //         Hooks.on(<string>innerHook, (...args) => debug(`Hook called: ${innerHook}`, ...args));
+  //         debug(`Registered hook: ${innerHook}`);
+  //       }
+  //     }
+  //   }
+  // }
 
   // if (game.settings.get(CONSTANTS.MODULE_NAME, 'tempEffectsAsStatus')) {
   //   //@ts-ignore
@@ -39,10 +42,9 @@ export const initHooks = async (): Promise<void> => {
 };
 
 export const setupHooks = async (): Promise<void> => {
-  // setup all the hooks
-  API.effectInterface = new EffectInterface(CONSTANTS.MODULE_NAME) as unknown as typeof EffectInterface;
-  //@ts-ignore
-  API.effectInterface.initialize();
+	//@ts-ignore
+	aemlApi = <ActiveEffectManagerLibApi>game.modules.get("active-effect-manager-lib").api;
+	aemlApi.effectInterface.initialize(CONSTANTS.MODULE_NAME);
   setApi(API);
 };
 

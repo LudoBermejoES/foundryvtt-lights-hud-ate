@@ -5,13 +5,10 @@ import type {
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from '../api';
 import CONSTANTS from '../constants';
-import type Effect from '../effects/effect';
-import type { EffectActions } from '../effects/effect-models';
-import { EffectSupport } from '../effects/effect-support';
-import FoundryHelpers from '../effects/foundry-helpers';
 import { getATLEffectsFromItem } from '../lights-hud-ate-config';
 import { LightHUDAteEffectDefinitions } from '../lights-hud-ate-effect-definition';
 import { LightDataHud, LightHUDElement, LightHUDNoteFlags, LightHUDPreset } from '../lights-hud-ate-models';
+import { aemlApi } from '../module';
 
 // =============================
 // Module Generic function
@@ -403,7 +400,7 @@ export async function updateTokenLighting(
   isPreset: boolean,
 ) {
   if (applyAsAtlEffect) {
-    const efffectAtlToApply = EffectSupport.convertToATLEffect(
+    const efffectAtlToApply = await aemlApi.convertToATLEffect(
       //lockRotation,
       dimSight,
       brightSight,
@@ -439,7 +436,7 @@ export async function updateTokenLighting(
       scale,
     );
     (efffectAtlToApply.customId = <string>token.actor?.id),
-      await API.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
+      await aemlApi.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
   } else {
     // TODO FIND A BETTER WAY FOR THIS
     if (dimSight == null || dimSight == undefined) {
@@ -689,7 +686,7 @@ export async function dropTheToken(item: Item, data: { x; y }, type = 'character
     atlEffects.map(async (ae: ActiveEffect) => {
       // Make sure is enabled
       ae.data.disabled = false;
-      await API.addActiveEffectOnToken(<string>actor.token?.id, ae.data);
+      await aemlApi.addActiveEffectOnToken(<string>actor.token?.id, ae.data);
     }),
   );
 
@@ -1011,7 +1008,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
           activeEffectDataToUpdate.disabled = true;
           activeEffectDataToUpdate.origin =
             aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
-          await API.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
+          await aemlApi.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
           // ???
           effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
             return isStringEquals(nameToSearch, ae.data.label);
@@ -1026,7 +1023,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
         _idTmp = <string>effectFromActor.data._id;
 
-        const applied = await API.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
+        const applied = await aemlApi.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
         // If the active effect is disabled or is supressed
         // const isDisabled = aeAtl[0].data.disabled || false;
         // const isSuppressed = aeAtl[0].data.document.isSuppressed || false;
@@ -1184,7 +1181,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
         activeEffectDataToUpdate.disabled = true;
         activeEffectDataToUpdate.origin =
           aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
-        await API.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
+        await aemlApi.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
         // ???
         effectFromActor = <ActiveEffect>token.document.actor?.data.effects.find((ae: ActiveEffect) => {
           return isStringEquals(nameToSearch, ae.data.label);
@@ -1199,7 +1196,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
       effectnameTmp = <string>effectFromActor.name ?? effectFromActor.data.label;
       _idTmp = <string>effectFromActor.data._id;
 
-      const applied = await API.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
+      const applied = await aemlApi.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
       // If the active effect is disabled or is supressed
       // const isDisabled = aeAtl[0].data.disabled || false;
       // const isSuppressed = aeAtl[0].data.document.isSuppressed || false;

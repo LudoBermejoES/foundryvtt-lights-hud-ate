@@ -4,13 +4,15 @@
 
 [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Flights-hud-ate&colorB=006400&style=for-the-badge)](https://forge-vtt.com/bazaar#package=lights-hud-ate) 
 
-![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fp4535992%2Ffoundryvtt-lights-hud-ate%2Fmaster%2Fsrc%2Fmodule.json&label=Foundry%20Version&query=$.compatibleCoreVersion&colorB=orange&style=for-the-badge)
+![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fp4535992%2Ffoundryvtt-lights-hud-ate%2Fmaster%2Fsrc%2Fmodule.json&label=Foundry%20Version&query=$.compatibility.verified&colorB=orange&style=for-the-badge)
 
 ![Latest Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fp4535992%2Ffoundryvtt-lights-hud-ate%2Fmaster%2Fsrc%2Fmodule.json&label=Latest%20Release&prefix=v&query=$.version&colorB=red&style=for-the-badge)
 
 [![Foundry Hub Endorsements](https://img.shields.io/endpoint?logoColor=white&url=https%3A%2F%2Fwww.foundryvtt-hub.com%2Fwp-json%2Fhubapi%2Fv1%2Fpackage%2Flights-hud-ate%2Fshield%2Fendorsements&style=for-the-badge)](https://www.foundryvtt-hub.com/package/lights-hud-ate/)
 
 ![GitHub all releases](https://img.shields.io/github/downloads/p4535992/foundryvtt-lights-hud-ate/total?style=for-the-badge)
+
+[![Translation status](https://weblate.foundryvtt-hub.com/widgets/lights-hud-ate/-/287x66-black.png)](https://weblate.foundryvtt-hub.com/engage/lights-hud-ate/)
 
 ### If you want to buy me a coffee [![alt-text](https://img.shields.io/badge/-Patreon-%23ff424d?style=for-the-badge)](https://www.patreon.com/p4535992)
 
@@ -80,17 +82,6 @@ This module uses the [ATE](https://github.com/kandashi/Active-Token-Lighting) li
 
 This module uses the [warpgate](https://github.com/trioderegion/warpgate) library for wrapping methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
 
-## Suggested mdules to use with this module
-
-- [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) (need to be updated for 9)
-- [Times up](https://gitlab.com/tposney/times-up)
-- [Dae](https://gitlab.com/tposney/dae)
-
-## Compatibility modules
-
-- [Sense Walls Multisystem](https://github.com/p4535992/fvtt-sense-walls-multisystem/)
-- [About Time](https://gitlab.com/tposney/about-time)
-
 ## Known Issue\Limitation
 
 - Internazionalization of the labels (is coming after the bug fixing...)
@@ -98,7 +89,8 @@ This module uses the [warpgate](https://github.com/trioderegion/warpgate) librar
 - [CommunityLighting](https://github.com/BlitzKraig/fvtt-CommunityLighting) is not been updated for foundryvtt 9 so is not advisable to used right now.
 - The modules is not smart enough to distinct multiple ligthing effect on the same item and is not make sense ? Every item must have only one effect with _ATL changes_ on it (at least for me). If multiple effect with _ATL changes_ are founded on the same item only the first is analyzed from the module, you can use multiple item where each has is own lighting configuration.
 - The [warpgate](https://github.com/trioderegion/warpgate) function `spawnAt` should include a check distance of  spawn so no player drop torch on a very far point of the canvas.
-- The properties _height,width,scale,_ cna be modififed only with the ATL integration for my sanity
+- The properties _height,width,scale,_ can be modififed only with the ATL integration for my sanity
+- Some system like pf2e not support active effects...
 
 ## Supported Systems
 

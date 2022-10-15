@@ -212,13 +212,7 @@ export interface ActiveEffectManagerLibApi {
 	// ======================
 
 	onManageActiveEffectFromEffectId(
-		effectActions: {
-			create: "create";
-			edit: "edit";
-			delete: "delete";
-			toogle: "toggle";
-			update: "update";
-		},
+		effectActions: string,
 		owner: Actor | Item,
 		effectId: string,
 		alwaysDelete?: boolean | undefined,
@@ -229,13 +223,7 @@ export interface ActiveEffectManagerLibApi {
 	): Promise<Item | ActiveEffect | boolean | undefined>;
 
 	onManageActiveEffectFromEffect(
-		effectActions: {
-			create: "create";
-			edit: "edit";
-			delete: "delete";
-			toogle: "toggle";
-			update: "update";
-		},
+		effectActions: string,
 		owner: Actor | Item,
 		effect: Effect,
 		alwaysDelete?: boolean | undefined,
@@ -246,13 +234,7 @@ export interface ActiveEffectManagerLibApi {
 	): Promise<Item | ActiveEffect | boolean | undefined>;
 
 	onManageActiveEffectFromActiveEffect(
-		effectActions: {
-			create: "create";
-			edit: "edit";
-			delete: "delete";
-			toogle: "toggle";
-			update: "update";
-		},
+		effectActions: string,
 		owner: Actor | Item,
 		activeEffect: ActiveEffect | null | undefined,
 		alwaysDelete?: boolean | undefined,

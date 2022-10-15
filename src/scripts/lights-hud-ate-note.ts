@@ -1,10 +1,10 @@
-import { EffectOwnedItem } from './effects/effect-owned-item';
 import { checkNumberFromString, error, i18n } from './lib/lib';
 import CONSTANTS from './constants';
 import { LightHUDNoteFlags, OptionSelectData } from './lights-hud-ate-models';
 import API from './api';
 import type { ActiveEffectData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs';
-import { EffectSupport } from './effects/effect-support';
+import { aemlApi } from './module';
+
 export class LightHUDAteNote extends FormApplication {
   constructor(object, options) {
     super(object, options);
@@ -658,7 +658,7 @@ export class LightHUDAteNote extends FormApplication {
         const duration =
           <number>checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)) || 0;
 
-        const efffectAtlToApply = EffectSupport.convertToATLEffect(
+        const efffectAtlToApply = await aemlApi.convertToATLEffect(
           //lockRotation,
           dimSight,
           brightSight,

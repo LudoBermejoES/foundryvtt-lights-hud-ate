@@ -204,3 +204,11 @@ export enum LightHUDNoteFlags {
 //   "Reflective Water" : "#6dcab4",
 //   "Magma" : "#c27a29"
 // }
+
+export enum EffectActions {
+	create = "create",
+	edit = "edit",
+	delete = "delete",
+	toogle = "toggle",
+	update = "update",
+}

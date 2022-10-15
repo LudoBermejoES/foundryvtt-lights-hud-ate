@@ -79,7 +79,13 @@ Hooks.once('ready', () => {
   readyHooks();
 });
 
-// Add any additional hooks if necessary
+/* ------------------------------------ */
+/* Other Hooks							*/
+/* ------------------------------------ */
+
+Hooks.once("devModeReady", ({ registerPackageDebugFlag }) => {
+	registerPackageDebugFlag(CONSTANTS.MODULE_NAME);
+});
 
 export interface LigthsHudAteModuleData {
   api: typeof API;

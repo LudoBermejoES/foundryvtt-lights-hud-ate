@@ -5,8 +5,6 @@ import type {
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from './api';
 import CONSTANTS from './constants';
-import { EffectActions } from './effects/effect-models';
-import { EffectSupport } from './effects/effect-support';
 import {
   checkNumberFromString,
   i18n,
@@ -22,6 +20,7 @@ import {
   warn,
 } from './lib/lib';
 import {
+  EffectActions,
   LightDataDialog,
   LightHUDElement,
   LightHUDNoteFlags,
@@ -29,6 +28,7 @@ import {
   VisionHUDElement,
   VisionHUDPreset,
 } from './lights-hud-ate-models';
+import { aemlApi } from './module';
 
 export function presetDialog(applyChanges: boolean): Dialog {
   return new Dialog({
@@ -896,10 +896,10 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
     const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?.data?._id == effectId);
     if (isApplied) {
       // await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, false, true);
-      await API.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, false, true);
+      await aemlApi.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, false, true);
     } else {
       // await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, true, false);
-      await API.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, true, false);
+      await aemlApi.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, true, false);
     }
     return;
   }
@@ -924,10 +924,10 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
     const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?.data?._id == effectId);
     if (isApplied) {
       // await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, false, true);
-      await API.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, false, true);
+      await aemlApi.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, false, true);
     } else {
       // await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, true, false);
-      await API.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, true, false);
+      await aemlApi.onManageActiveEffectFromEffectId(EffectActions.toogle, token.actor, effectId, false, true, false);
     }
   }
 }
