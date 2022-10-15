@@ -714,8 +714,8 @@ const API = {
 		}
 		for (const token of tokens) {
 			if (token && token.document) {
-				if (getProperty(token.document, `data.flags.${CONSTANTS.MODULE_NAME}`)) {
-					const p = getProperty(token.document, `data.flags.${CONSTANTS.MODULE_NAME}`);
+				if (getProperty(token.document, `flags.${CONSTANTS.MODULE_NAME}`)) {
+					const p = getProperty(token.document, `flags.${CONSTANTS.MODULE_NAME}`);
 					for (const key in p) {
 						const senseOrConditionIdKey = key;
 						const senseOrConditionValue = <any>p[key];
@@ -725,7 +725,7 @@ const API = {
 				}
 				const items = <Item[]>token.actor?.items.contents;
 				for (const item of items) {
-					const p = getProperty(item, `data.flags.${CONSTANTS.MODULE_NAME}`);
+					const p = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}`);
 					for (const key in p) {
 						const senseOrConditionIdKey = key;
 						const senseOrConditionValue = <any>p[key];
@@ -739,8 +739,8 @@ const API = {
 		}
 		for (const token of tokens) {
 			if (token && token.actor) {
-				if (getProperty(token.actor, `data.flags.${CONSTANTS.MODULE_NAME}`)) {
-					const p = getProperty(token.actor, `data.flags.${CONSTANTS.MODULE_NAME}`);
+				if (getProperty(token.actor, `flags.${CONSTANTS.MODULE_NAME}`)) {
+					const p = getProperty(token.actor, `flags.${CONSTANTS.MODULE_NAME}`);
 					for (const key in p) {
 						const senseOrConditionIdKey = key;
 						const senseOrConditionValue = <any>p[key];
@@ -750,7 +750,7 @@ const API = {
 				}
 				const items = token.actor.items.contents;
 				for (const item of items) {
-					const p = getProperty(item, `data.flags.${CONSTANTS.MODULE_NAME}`);
+					const p = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}`);
 					for (const key in p) {
 						const senseOrConditionIdKey = key;
 						const senseOrConditionValue = <any>p[key];

@@ -21,34 +21,35 @@ import {
 import { LightDataDialog, LightHUDNoteFlags } from "./lights-hud-ate-models";
 
 // export function getATLEffectsFromItem(actor: Actor, item: Item): ActiveEffect[] {
-//   // const atlChanges = effect.data.changes.filter((changes) =>
+//   // const atlChanges = effect.changes.filter((changes) =>
 //   //     changes.key.startsWith('ATL')
 //   // );
-//   const im = <Item>actor.data.items.contents.find((i: Item) => {
+//   const im = <Item>actor.items.contents.find((i: Item) => {
 //     return i.id === item.id;
 //   });
 //   if (!im) {
 //     const atlEffects =
-//       item.effects.filter((entity) => !!entity.data.changes.find((effect) => effect.key.includes('ATL'))) ?? [];
+//       item.effects.filter((entity) => !!entity.changes.find((effect) => effect.key.includes('ATL'))) ?? [];
 //     return atlEffects;
 //   } else {
 //     const atlEffects = im.effects.filter((entity) => {
-//       return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+//       return entity.changes.find((effect) => effect.key.includes('ATL')) != undefined;
 //     });
 //     return atlEffects;
 //   }
 // }
 
 export function getATLEffectsFromItem(item: Item): ActiveEffect[] {
-	// const atlChanges = effect.data.changes.filter((changes) =>
+	// const atlChanges = effect.changes.filter((changes) =>
 	//     changes.key.startsWith('ATL')
 	// );
 	const atlEffects =
-		item.effects.filter((entity) => !!entity.data.changes.find((effect) => effect.key.includes("ATL"))) ?? [];
+		//@ts-ignore
+		item.effects.filter((entity) => !!entity.changes.find((effect) => effect.key.includes("ATL"))) ?? [];
 	return atlEffects;
 }
 
-export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) {
+export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, tokenData) {
 	if (
 		!game.settings.get(CONSTANTS.MODULE_NAME, "applyOnFlagItem") &&
 		!game.settings.get(CONSTANTS.MODULE_NAME, "applyOnATEItem") &&
@@ -58,14 +59,14 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
 		return;
 	}
 
-	const tokenInfoObject = app.object.data;
+	const tokenInfoObject = app.object;
 	// let tokenInfo = new tokenInformations(tokenInfoObject);
 	const token = <Token>app.object;
 	const tokenD = <TokenDocument>app.object.document;
-	const actorId = <string>data.actorData._id || <string>data.actorId;
+	const actorId = <string>tokenData.actorData?._id || <string>tokenData.actorId;
 	const actor = <Actor>game.actors?.get(actorId);
 	if (!actor) {
-		info(`No actor id ${data.actorId} founded for the light hud`);
+		info(`No actor id ${tokenData.actorId} founded for the light hud`);
 		return;
 	}
 
@@ -126,9 +127,12 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, data) 
 				if (settingHudColClass.toLowerCase() === "left") {
 					// (<HTMLElement>html.find('.lights-hud-ate-selector-wrap')[0]).style.left = token.width + 150 + 'px';
 					const offsetLeft =
-						token.width / token.data.scale +
-						token.width / (token.data.scale * 2) +
-						token.width / (token.data.scale * 2);
+						//@ts-ignore
+						token.width / token.document.texture.scaleX +
+						//@ts-ignore
+						token.width / (token.document.texture.scaleX * 2) +
+						//@ts-ignore
+						token.width / (token.document.texture.scaleX * 2);
 					(<HTMLElement>html.find(".lights-hud-ate-selector-wrap")[0]).style.left =
 						token.width / 2 + offsetLeft + "px";
 				}

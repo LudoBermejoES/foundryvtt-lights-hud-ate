@@ -95,7 +95,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
 					const lightIndex = <LightHUDElement>API.LIGHTS.find((e) => e.id == lightSource); // parseInt(html.find('[name="light-source"]')[0].value) || 0;
 					const duration = parseInt(html.find('[name="duration"]')[0].value) || 0;
 					const lockRotation =
-						html.find('[name="lock-rotation"]')[0].value == "true" ?? token.data.lockRotation;
+						html.find('[name="lock-rotation"]')[0].value == "true" ?? token.document.lockRotation;
 					const vision = visionType != VisionHUDPreset.NONE;
 					let alias: string | null = null;
 					if (actorId || tokenId) {
