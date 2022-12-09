@@ -95,6 +95,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
 					const lightIndex = <LightHUDElement>API.LIGHTS.find((e) => e.id == lightSource); // parseInt(html.find('[name="light-source"]')[0].value) || 0;
 					const duration = parseInt(html.find('[name="duration"]')[0].value) || 0;
 					const lockRotation =
+						//@ts-ignore
 						html.find('[name="lock-rotation"]')[0].value == "true" ?? token.document.lockRotation;
 					const vision = visionType != VisionHUDPreset.NONE;
 					let alias: string | null = null;
@@ -109,98 +110,26 @@ export function presetDialog(applyChanges: boolean): Dialog {
 					}
 					const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
 
-					// About time configuration
-					/*
-          if (duration > 0) {
-            if (game.modules.get('about-time')?.active != true) {
-              ui.notifications?.error("About Time isn't loaded");
-            } else {
-              ((backup) => {
-                //@ts-ignore
-                game.Gametime.doIn({ minutes: Math.floor((3 * duration) / 4) }, () => {
-                  dialogWarning(`The ${i18n(lightIndex.name)} burns low...`);
-                  ChatMessage.create(
-                    {
-                      user: game.user?.id,
-                      content: `The ${i18n(lightIndex.name)} burns low...`,
-                      speaker: speaker,
-                    },
-                    {},
-                  );
-                });
-              })(Object.assign({}, token.data));
-              ((backup) => {
-                //@ts-ignore
-                game.Gametime.doIn({ minutes: duration }, () => {
-                  dialogWarning(`The ${i18n(lightIndex.name)} burns low...`);
-                  ChatMessage.create(
-                    {
-                      user: game.user?.id,
-                      content: `The ${i18n(lightIndex.name)} goes out, leaving you in darkness.`,
-                      speaker: speaker,
-                    },
-                    {},
-                  );
-                  await updateTokenLighting(
-                    token,
-                    //backup.lockRotation,
-                    backup.dimSight,
-                    backup.brightSight,
-                    backup.sightAngle,
-                    backup.light.dim,
-                    backup.light.bright,
-                    <string>backup.light.color,
-                    backup.light.alpha,
-                    backup.light.angle,
-
-                    null, //coloration: coloration,
-                    null, //luminosity: luminosity,
-                    null, //gradual: gradual,
-                    null, //saturation: saturation,
-                    null, //contrast: contrast,
-                    null, //shadows: shadows,
-
-                    <string>backup.light.animation.type,
-                    backup.light.animation.speed,
-                    backup.light.animation.intensity,
-                    backup.light.animation.reverse,
-
-                    applyAsAtlAteEffect,
-                    lightIndex.name,
-                    lightIndex.img,
-                    duration,
-
-                    vision,
-                    //id,
-                    // backup.name,
-                    backup.height,
-                    backup.width,
-                    backup.scale,
-                  );
-                });
-              })(Object.assign({}, token.data));
-            }
-          }
-          */
-
 					// Configure new token vision
-					const dimSight = visionIndex.dimSight ?? token.data.dimSight;
-					const brightSight = visionIndex.brightSight ?? token.data.brightSight;
-					const sightAngle = visionIndex.sightAngle ?? token.data.sightAngle;
+					const tokenData = <any>token.document;
 
-					const dimLight = lightIndex.dimLight ?? token.data.light.dim;
-					const brightLight = lightIndex.brightLight ?? token.data.light.bright;
-					const lightAngle = lightIndex.lightAngle ?? token.data.light.angle;
+					const dimSight = visionIndex.dimSight ?? tokenData.dimSight;
+					const brightSight = visionIndex.brightSight ?? tokenData.brightSight;
+					const sightAngle = visionIndex.sightAngle ?? tokenData.sightAngle;
+
+					const dimLight = lightIndex.dimLight ?? tokenData.light.dim;
+					const brightLight = lightIndex.brightLight ?? tokenData.light.bright;
+					const lightAngle = lightIndex.lightAngle ?? tokenData.light.angle;
 
 					// Common settings for all 'torch-like' options
 					// Feel free to change the values to your liking
 					const lightAnimation = {
-						type: lightIndex.lightAnimationType ?? token.data.light.animation.type,
-						speed: lightIndex.lightAnimationSpeed ?? token.data.light.animation.speed,
-						intensity: lightIndex.lightAnimationIntensity ?? token.data.light.animation.intensity,
+						type: lightIndex.lightAnimationType ?? tokenData.light.animation.type,
+						speed: lightIndex.lightAnimationSpeed ?? tokenData.light.animation.speed,
+						intensity: lightIndex.lightAnimationIntensity ?? tokenData.light.animation.intensity,
 					};
-					const lightColor = lightIndex.lightColor ?? <string>token.data.light.color;
-					const lightAlpha = lightIndex.lightAlpha ?? <number>token.data.light.alpha;
+					const lightColor = lightIndex.lightColor ?? <string>tokenData.light.color;
+					const lightAlpha = lightIndex.lightAlpha ?? <number>tokenData.light.alpha;
 
 					const height = null;
 					const width = null;
@@ -607,7 +536,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
                     {},
                   );
                 });
-              })(Object.assign({}, token.data));
+              })(Object.assign({}, tokenData));
               ((backup) => {
                 //@ts-ignore
                 game.Gametime.doIn({ minutes: duration }, () => {
@@ -657,7 +586,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
                     backup.scale,
                   );
                 });
-              })(Object.assign({}, token.data));
+              })(Object.assign({}, tokenData));
             }
           }
           */
@@ -798,12 +727,13 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
 					let tokenDataDropTheTorch: TokenData | null = null;
 					// const tokenId = <string>randomID();
 					try {
-						const tokenDataDropTheTorchTmp = <TokenData>(
-							await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0)
+						const tokenDataDropTheTorchTmp = <TokenDocument>(
+							//@ts-ignore
+							await prepareTokenDataDropTheTorch(item, _token?.document?.elevation ?? 0)
 						);
 						// actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorchTmp.actorId);
 						tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorchTmp);
-						// actorDropTheTorch = <Actor>await prepareTokenDataDropTheTorch(item, tokenId, _token?.data?.elevation ?? 0);
+						// actorDropTheTorch = <Actor>await prepareTokenDataDropTheTorch(item, tokenId, _token?.document?.elevation ?? 0);
 						// tokenDataDropTheTorch = await actor.getTokenData();
 						//@ts-ignore
 						const posData = await warpgate.crosshairs.show({
@@ -836,13 +766,13 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
 						//   error(`No token is been created for the drop ATL item , this is probably a bug`)
 						// }else{
 						//   const atlEffects = item.effects.filter((entity) => {
-						//     return entity.data.changes.find((effect) => effect.key.includes('ATL')) != undefined;
+						//     return entity.changes.find((effect) => effect.key.includes('ATL')) != undefined;
 						//   });
 						//   atlEffects.forEach(async (ae: ActiveEffect) => {
 						//     // Make sure is enabled
-						//     ae.data.disabled = false;
-						//     ae.data.transfer = true;
-						//     await API.addActiveEffectOnToken(<string>token.id, ae.data);
+						//     ae.disabled = false;
+						//     ae.transfer = true;
+						//     await API.addActiveEffectOnToken(<string>token.id, ae);
 						//   });
 						// }
 
@@ -852,13 +782,13 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
 						// 3 = Owner
 
 						// Get the current permission level for the selected token.
-						// const currentPermissions = <number>(<Actor>actorDropTheTorch).data.permission.default;
+						// const currentPermissions = <number>(<Actor>actorDropTheTorch).document.ownership.default;
 						// (<Actor>actorDropTheTorch).update({ permission: { default: 3 } });
 
 						// const tokenPlaced = <Token>canvas.tokens?.placeables.find((t) => {
 						//   return t.id === tokenDataDropTheTorch?._id;
 						// });
-						// const currentPermissions = <number>tokenPlaced.actor?.data.permission.default;
+						// const currentPermissions = <number>tokenPlaced.actor?.document.ownership.default;
 						// tokenPlaced.actor?.update({ permission: { default: 3 } });
 
 						// If the current permission level is anything above 'None' then reset it to 'None'
@@ -909,11 +839,12 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
 		return;
 	}
 	if (!itemId && game.settings.get(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin")) {
-		const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.data.effects;
-		const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?.data?._id == effectId);
+		const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
+		//@ts-ignore
+		const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
 		if (isApplied) {
-			// await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, false, true);
 			await aemlApi.onManageActiveEffectFromEffectId(
+				//@ts-ignore
 				EffectActions.toogle,
 				token.actor,
 				effectId,
@@ -922,8 +853,8 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
 				true
 			);
 		} else {
-			// await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, true, false);
 			await aemlApi.onManageActiveEffectFromEffectId(
+				//@ts-ignore
 				EffectActions.toogle,
 				token.actor,
 				effectId,
@@ -951,11 +882,12 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
 			}
 		}
 	} finally {
-		const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.data.effects;
-		const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?.data?._id == effectId);
+		const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
+		//@ts-ignore
+		const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
 		if (isApplied) {
-			// await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, false, true);
 			await aemlApi.onManageActiveEffectFromEffectId(
+				//@ts-ignore
 				EffectActions.toogle,
 				token.actor,
 				effectId,
@@ -964,8 +896,8 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
 				true
 			);
 		} else {
-			// await API.toggleEffectFromIdOnToken(tokenId, <string>effectId, false, true, false);
 			await aemlApi.onManageActiveEffectFromEffectId(
+				//@ts-ignore
 				EffectActions.toogle,
 				token.actor,
 				effectId,
@@ -1039,13 +971,13 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
 		return <string>entity.id == itemId;
 	});
 
-	const tokenData = token.data;
+	const tokenData = <any>token.document;
 
 	// =======================================
 	await retrieveItemLightsWithFlagAndDisableThemLightsStatic(token, <string>lightHUDElement.id);
 
 	// Store the initial status of illumination for the token to restore if all light sources are extinguished
-	// const tokenData = token.data;
+	// const tokenData = tokenData;
 	if (game.settings.get(CONSTANTS.MODULE_NAME, "enableLightHUDOldInterface")) {
 		if (!token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
 			await token.actor?.setFlag(
@@ -1102,18 +1034,18 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
 	const id = <string>lightHUDElement.id;
 	const effectName = lightHUDElement.name || tokenData.name;
 	const height = tokenData.height;
-	const width = token.data.width;
+	const width = tokenData.width;
 	const scale = tokenData.scale;
 
-	const brightSight: number | null = tokenData.brightSight;
-	const dimSight: number | null = tokenData.dimSight;
-	const sightAngle: number | null = tokenData.sightAngle;
+	const brightSight: number= tokenData.brightSight;
+	const dimSight: number = tokenData.dimSight;
+	const sightAngle: number = tokenData.sightAngle;
 
-	const dimLight: number | null = lightHUDElement.dimLight || tokenData.light.dim;
-	const brightLight: number | null = lightHUDElement.brightLight || tokenData.light.bright;
-	const lightColor: string | null = lightHUDElement.lightColor || tokenData.light.color || "#000000";
-	const lightAlpha: number | null = lightHUDElement.lightAlpha || tokenData.light.angle;
-	const lightAngle: number | null = lightHUDElement.lightAngle;
+	const dimLight: number = lightHUDElement.dimLight || tokenData.light.dim;
+	const brightLight: number = lightHUDElement.brightLight || tokenData.light.bright;
+	const lightColor: string = lightHUDElement.lightColor || tokenData.light.color || "#000000";
+	const lightAlpha: number = lightHUDElement.lightAlpha || tokenData.light.angle;
+	const lightAngle: number = <number>lightHUDElement.lightAngle;
 	const lightAnimationType = lightHUDElement.lightAnimationType || tokenData.light.animation.type;
 	const lightAnimationSpeed = lightHUDElement.lightAnimationSpeed || tokenData.light.animation.speed;
 	const lightAnimationIntensity = lightHUDElement.lightAnimationIntensity || tokenData.light.animation.intensity;
@@ -1195,19 +1127,20 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
 		return <string>entity.id == itemId;
 	});
 
-	const tokenData = token.data;
+	const tokenData = <any>token.document;
 
 	// =======================================
 	await retrieveItemLightsWithFlagAndDisableThem(token, <string>item.id);
 
 	// Store the initial status of illumination for the token to restore if all light sources are extinguished
-	// const tokenData = token.data;
+	// const tokenData = tokenData;
 	if (game.settings.get(CONSTANTS.MODULE_NAME, "applyOnFlagItem")) {
 		if (!token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
 			await token.actor?.setFlag(
 				CONSTANTS.MODULE_NAME,
 				LightHUDNoteFlags.INITIAL_DATA,
-				await duplicate(tokenData)
+				//@ts-ignore
+				await duplicate(tokenData.document.toObject())
 			);
 		}
 	} else {
@@ -1250,9 +1183,10 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
 	const effectName = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || tokenData.name;
 	const height =
 		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT)) ||
+		//@ts-ignore
 		tokenData.height;
 	const width =
-		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH)) || token.data.width;
+		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH)) || tokenData.width;
 	const scale =
 		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE)) || tokenData.scale;
 
@@ -1387,7 +1321,7 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
 	const lightShadows =
 		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS)) ||
 		tokenData.light.shadows;
-	const vision = dimSight > 0 || brightSight > 0 ? true : false;
+	const vision = <number>dimSight > 0 || <number>brightSight > 0 ? true : false;
 
 	const duration =
 		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)) || 0;
@@ -1411,93 +1345,18 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
 		}
 	}
 
-	// About time configuration
-	/*
-  const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
-  if (duration > 0) {
-    if (game.modules.get('about-time')?.active != true) {
-      ui.notifications?.error("About Time isn't loaded");
-    } else {
-      ((backup) => {
-        //@ts-ignore
-        game.Gametime.doIn({ minutes: Math.floor((3 * duration) / 4) }, () => {
-          dialogWarning(`The ${effectName} burns low...`);
-          ChatMessage.create(
-            {
-              user: game.user?.id,
-              content: `The ${effectName} burns low...`,
-              speaker: speaker,
-            },
-            {},
-          );
-        });
-      })(Object.assign({}, token.data));
-      ((backup) => {
-        //@ts-ignore
-        game.Gametime.doIn({ minutes: duration }, () => {
-          dialogWarning(`The ${effectName} burns low...`);
-          ChatMessage.create(
-            {
-              user: game.user?.id,
-              content: `The ${effectName} goes out, leaving you in darkness.`,
-              speaker: speaker,
-            },
-            {},
-          );
-          await updateTokenLighting(
-            token,
-            //backup.lockRotation,
-            backup.dimSight,
-            backup.brightSight,
-            backup.sightAngle,
-            backup.light.dim,
-            backup.light.bright,
-            <string>backup.light.color,
-            backup.light.alpha,
-            backup.light.angle,
-
-            backup.light.coloration,
-            backup.light.luminosity,
-            backup.light.gradual,
-            backup.light.saturation,
-            backup.light.contrast,
-            backup.light.shadows,
-
-            <string>backup.light.animation.type,
-            backup.light.animation.speed,
-            backup.light.animation.intensity,
-            backup.light.animation.reverse,
-
-            applyAsAtlAteEffect,
-            effectName,
-            '',
-            duration,
-
-            backup.vision,
-            //id,
-            // backup.name,
-            backup.height,
-            backup.width,
-            backup.scale,
-          );
-        });
-      })(Object.assign({}, token.data));
-    }
-  }
-  */
-
 	// Update Token
 	await updateTokenLighting(
 		token,
 		//lockRotation,
-		dimSight,
-		brightSight,
-		sightAngle,
-		dimLight,
-		brightLight,
-		lightColor,
-		lightAlpha,
-		lightAngle,
+		<number>dimSight,
+		<number>brightSight,
+		<number>sightAngle,
+		<number>dimLight,
+		<number>brightLight,
+		<string>lightColor,
+		<number>lightAlpha,
+		<number>lightAngle,
 
 		coloration,
 		lightLuminosity,

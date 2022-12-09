@@ -1,4 +1,3 @@
-import type { TokenData } from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs";
 import CONSTANTS from "./constants";
 import {
 	error,
@@ -216,13 +215,13 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, tokenD
 
 					const duplicates = 1; // number od dropped light
 					const item = <Item>actor.items.get(lightDataDialog.itemId);
-					let tokenDataDropTheTorch: TokenData | null = null;
-					const tokenDataDropTheTorchTmp = <TokenData>(
-						await prepareTokenDataDropTheTorch(item, _token?.data?.elevation ?? 0)
-					);
+					let tokenDataDropTheTorch: any | null = null;
+					const tokenDataDropTheTorchTmp = <
+						TokenDocument //@ts-ignore
+					>await prepareTokenDataDropTheTorch(item, _token.document.elevation ?? 0);
 					// actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorchTmp.actorId);
-					tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorchTmp);
-					// actorDropTheTorch = <Actor>await prepareTokenDataDropTheTorch(item, tokenId, _token?.data?.elevation ?? 0);
+					tokenDataDropTheTorch = <any>await actor.getTokenData(tokenDataDropTheTorchTmp);
+					// actorDropTheTorch = <Actor>await prepareTokenDataDropTheTorch(item, tokenId, _token?.document?.elevation ?? 0);
 					// tokenDataDropTheTorch = await actor.getTokenData();
 					//@ts-ignore
 					const posData = await warpgate.crosshairs.show({

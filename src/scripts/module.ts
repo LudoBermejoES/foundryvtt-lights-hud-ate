@@ -86,7 +86,7 @@ const module = {
 
 		//   // filter out temporary effects from status icons
 		//   const filteredEffects = app.object.actor.temporaryEffects.filter((effect) => {
-		//     return !CONFIG.statusEffects.some((statusEffect) => statusEffect.id === effect.data.flags?.core?.statusId);
+		//     return !CONFIG.statusEffects.some((statusEffect) => statusEffect.id === effect.flags?.core?.statusId);
 		//   });
 
 		//   const newEffectIcons = `
@@ -95,8 +95,8 @@ const module = {
 		//       (effect) =>
 		//         `<img class="effect-control active"
 		//         data-effect-uuid="${effect.uuid}"
-		//         src="${effect.data.icon}"
-		//         title="${effect.data.label}"
+		//         src="${effect.icon}"
+		//         title="${effect.label}"
 		//         data-status-id="${effect.uuid}" />`,
 		//     )
 		//     .join('')}

@@ -37,7 +37,7 @@ export class LightHUDAteNote extends FormApplication {
 		const data = <any>super.getData();
 
 		// data.notes = this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.notes);
-		data.flags = this.entity.data.flags;
+		data.flags = this.entity.flags;
 		data.owner = game.user?.id;
 		data.isGM = game.user?.isGM;
 		data.imgitem = this.entity.img;
@@ -555,7 +555,7 @@ export class LightHUDAteNote extends FormApplication {
 			// ======================================================================================
 			// COMMON SETTING
 			// ======================================================================================
-			const effectIcon = this.entity.data.img || this.entity.data.data.img || "";
+			const effectIcon = this.entity.img || "";
 
 			let applyAsAtlAte = false;
 			if (game.settings.get(CONSTANTS.MODULE_NAME, "applyOnATEItem")) {
