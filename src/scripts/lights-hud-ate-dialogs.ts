@@ -6,6 +6,7 @@ import type {
 import API from "./api";
 import CONSTANTS from "./constants";
 import {
+	checkBooleanFromString,
 	checkNumberFromString,
 	i18n,
 	i18nFormat,
@@ -163,13 +164,24 @@ export function presetDialog(applyChanges: boolean): Dialog {
 						hasLight
 						? lightIndex.img
 						: tokenIcon;
+
+					// TODO
+					const alpha = null;
+					// TODO
+					const sightEnabled = null;
+					// TODO
+					const sightVisionMode = null;
+
 					// Update Token
 					await updateTokenLighting(
 						token,
 						//lockRotation,
+						sightEnabled,
 						dimSight,
 						brightSight,
 						sightAngle,
+						sightVisionMode,
+
 						dimLight,
 						brightLight,
 						lightColor,
@@ -199,6 +211,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
 						height,
 						width,
 						scale,
+						alpha,
 						isPreset
 					);
 				}
@@ -498,15 +511,23 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
 			if (applyChanges) {
 				const id = <string>html.find("#name")[0].name || randomID();
 				const effectName = <string>html.find("#name")[0].value || "";
+
 				const height = <number>checkNumberFromString(html.find("#height")[0].value);
 				const width = <number>checkNumberFromString(html.find("#width")[0].value);
 				const scale = <number>checkNumberFromString(html.find("#scale")[0].value);
-				const dimLight = <number>checkNumberFromString(html.find("#dim")[0].value);
-				const brightLight = <number>checkNumberFromString(html.find("#bright")[0].value);
+				// TODO
+				const alpha = <number>checkNumberFromString(html.find("#alpha")[0].value);
+				// TODO
+				const sightEnabled = <boolean>checkBooleanFromString(html.find("#enabled")[0].value);
+				// TODO
+				const sightVisionMode = <string>html.find("#visionMode")[0].value;
 				const dimSight = <number>checkNumberFromString(html.find("#dimSight")[0].value);
 				const brightSight = <number>checkNumberFromString(html.find("#brightSight")[0].value);
-				const lightColor = <string>html.find("#color")[0].value;
 				const sightAngle = <number>checkNumberFromString(html.find("#sightAngle")[0].value);
+
+				const dimLight = <number>checkNumberFromString(html.find("#dim")[0].value);
+				const brightLight = <number>checkNumberFromString(html.find("#bright")[0].value);
+				const lightColor = <string>html.find("#color")[0].value;
 				const lightAlpha = <number>checkNumberFromString(html.find("#alpha")[0].value);
 				const lightAngle = <number>checkNumberFromString(html.find("#angle")[0].value);
 				const lightAnimationType = <string>html.find("#animationType")[0].value;
@@ -545,87 +566,16 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
 					}
 					const speaker = { scene: game.scenes?.current?.id, actor: actorId, token: tokenId, alias: alias };
 
-					// About time configuration
-					/*
-          if (duration > 0) {
-            if (game.modules.get('about-time')?.active != true) {
-              ui.notifications?.error("About Time isn't loaded");
-            } else {
-              ((backup) => {
-                //@ts-ignore
-                game.Gametime.doIn({ minutes: Math.floor((3 * duration) / 4) }, () => {
-                  dialogWarning(`The ${effectName} burns low...`);
-                  ChatMessage.create(
-                    {
-                      user: game.user?.id,
-                      content: `The ${effectName} burns low...`,
-                      speaker: speaker,
-                    },
-                    {},
-                  );
-                });
-              })(Object.assign({}, tokenData));
-              ((backup) => {
-                //@ts-ignore
-                game.Gametime.doIn({ minutes: duration }, () => {
-                  dialogWarning(`The ${effectName} burns low...`);
-                  ChatMessage.create(
-                    {
-                      user: game.user?.id,
-                      content: `The ${effectName} goes out, leaving you in darkness.`,
-                      speaker: speaker,
-                    },
-                    {},
-                  );
-                  await updateTokenLighting(
-                    token,
-                    //backup.lockRotation,
-                    backup.dimSight,
-                    backup.brightSight,
-                    backup.sightAngle,
-                    backup.light.dim,
-                    backup.light.bright,
-                    <string>backup.light.color,
-                    backup.light.alpha,
-                    backup.light.angle,
-
-                    backup.light.coloration,
-                    backup.light.luminosity,
-                    backup.light.gradual,
-                    backup.light.saturation,
-                    backup.light.contrast,
-                    backup.light.shadows,
-
-                    <string>backup.light.animation.type,
-                    backup.light.animation.speed,
-                    backup.light.animation.intensity,
-                    backup.light.animation.reverse,
-
-                    applyAsAtlAteEffect,
-                    effectName,
-                    '',
-                    duration,
-
-                    backup.vision,
-                    //id,
-                    // backup.name,
-                    backup.height,
-                    backup.width,
-                    backup.texture.scaleX,
-                  );
-                });
-              })(Object.assign({}, tokenData));
-            }
-          }
-          */
-
 					// Update Token
 					await updateTokenLighting(
 						token,
 						//lockRotation,
+						sightEnabled,
 						dimSight,
 						brightSight,
 						sightAngle,
+						sightVisionMode,
+
 						dimLight,
 						brightLight,
 						lightColor,
@@ -655,6 +605,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
 						height,
 						width,
 						scale,
+						alpha,
 						isPreset
 					);
 				}
@@ -755,12 +706,12 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
 
 					try {
 						// let tokenDataDropTheTorch: any | null = null;
-						const newActorDropped = 
+						const newActorDropped =
 							//@ts-ignore
 							<any>await prepareTokenDataDropTheTorch(item, token.document.elevation ?? 0);
 
 						const tokenDataDropTheTorch = <any>await newActorDropped.getTokenDocument();
-						
+
 						//@ts-ignore
 						// actor.updateSource({ prototypeToken: tokenDataDropTheTorchTmp });
 
@@ -1111,13 +1062,23 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
 		}
 	}
 
+	// TODO
+	const alpha = null;
+	// TODO
+	const sightEnabled = null;
+	// TODO
+	const sightVisionMode = null;
+
 	// Update Token
 	await updateTokenLighting(
 		token,
 		//lockRotation,
+		sightEnabled,
 		dimSight,
 		brightSight,
 		sightAngle,
+		sightVisionMode,
+
 		dimLight,
 		brightLight,
 		lightColor,
@@ -1147,6 +1108,7 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
 		height,
 		width,
 		scale,
+		alpha,
 		isPreset
 	);
 }
@@ -1378,13 +1340,23 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
 		}
 	}
 
+	// TODO
+	const alpha = null;
+	// TODO
+	const sightEnabled = null;
+	// TODO
+	const sightVisionMode = null;
+
 	// Update Token
 	await updateTokenLighting(
 		token,
 		//lockRotation,
+		sightEnabled,
 		<number>dimSight,
 		<number>brightSight,
 		<number>sightAngle,
+		sightVisionMode,
+
 		<number>dimLight,
 		<number>brightLight,
 		<string>lightColor,
@@ -1414,6 +1386,7 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
 		height,
 		width,
 		scale,
+		alpha,
 		isPreset
 	);
 }

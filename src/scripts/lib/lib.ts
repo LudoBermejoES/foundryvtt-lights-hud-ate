@@ -371,9 +371,11 @@ export async function rollDependingOnSystem(item: Item) {
 export async function updateTokenLighting(
 	token: Token,
 	//lockRotation: boolean,
+	sightEnabled: boolean | null = null,
 	dimSight: number,
 	brightSight: number,
 	sightAngle: number,
+	sightVisionMode: string | null = null,
 	dimLight: number,
 	brightLight: number,
 	lightColor: string,
@@ -394,7 +396,7 @@ export async function updateTokenLighting(
 
 	applyAsAtlEffect = false,
 	effectName: string | null = "LightHUD+ATE Effect",
-	effectIcon: string | null = "modules/lights-hud-ate/assets/lightbulb-solid.svg",
+	effectIcon: string | null = `modules/${CONSTANTS.MODULE_NAME}/assets/lightbulb-solid.svg`,
 	duration: number | null = null,
 
 	vision = false,
@@ -403,15 +405,19 @@ export async function updateTokenLighting(
 	height: number | null = null,
 	width: number | null = null,
 	scale: number | null = null,
+	alpha: number | null = null,
 
 	isPreset: boolean
 ) {
 	if (applyAsAtlEffect) {
 		const efffectAtlToApply = await aemlApiLigthsHudAte.convertToATLEffect(
 			//lockRotation,
+			<boolean>sightEnabled,
 			dimSight,
 			brightSight,
 			sightAngle,
+			<string>sightVisionMode,
+
 			dimLight,
 			brightLight,
 			lightColor,
@@ -440,7 +446,8 @@ export async function updateTokenLighting(
 			// name,
 			height,
 			width,
-			scale
+			scale,
+			alpha
 		);
 		(efffectAtlToApply.customId = <string>token.actor?.id),
 			await aemlApiLigthsHudAte.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
@@ -730,7 +737,7 @@ export async function prepareTokenDataDropTheTorch(
 	item: Item,
 	elevation: number,
 	type = "character"
-): Promise<Actor|undefined> {
+): Promise<Actor | undefined> {
 	if (!type) {
 		error("No type is present for this option", true);
 		return undefined;
@@ -791,7 +798,7 @@ export async function prepareTokenDataDropTheTorch(
 		effects: actorDataEffects,
 		hidden: false,
 		elevation: elevation,
-		prototypeToken: undefined
+		prototypeToken: undefined,
 	});
 
 	const atlActorEffects = newActorDropped.effects.filter((entity) => {
@@ -856,6 +863,15 @@ export function checkNumberFromString(value) {
 		return Number(value);
 	}
 }
+
+export function checkBooleanFromString(value) {
+	if (value === null || value === undefined || value === "") {
+		return false;
+	} else {
+		return Boolean(value);
+	}
+}
+
 export async function retrieveItemLightsStatic(token: Token): Promise<LightDataHud[]> {
 	const actor = token.actor;
 	if (!actor || !token) {

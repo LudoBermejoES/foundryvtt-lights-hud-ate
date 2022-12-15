@@ -69,12 +69,12 @@
 		"maximum": 10
 	},
 	"manifestPlusVersion": "1.2.1",
-	"url": "https://github.com/p4535992/foundryvtt-lights-hud-ate-new",
-	"manifest": "https://github.com/p4535992/foundryvtt-lights-hud-ate-new/releases/latest/download/module.json",
-	"download": "https://github.com/p4535992/foundryvtt-lights-hud-ate-new/releases/latest/download/module.zip",
-	"readme": "https://github.com/p4535992/foundryvtt-lights-hud-ate-new/blob/v0.12.0/README.md",
-	"changelog": "https://github.com/p4535992/foundryvtt-lights-hud-ate-new/blob/v0.12.0/changelog.md",
-	"bugs": "https://github.com/p4535992/foundryvtt-lights-hud-ate-new/issues",
+	"url": "https://github.com/p4535992/foundryvtt-lights-hud-ate",
+	"manifest": "https://github.com/p4535992/foundryvtt-lights-hud-ate/releases/latest/download/module.json",
+	"download": "https://github.com/p4535992/foundryvtt-lights-hud-ate/releases/latest/download/module.zip",
+	"readme": "https://github.com/p4535992/foundryvtt-lights-hud-ate/blob/v0.12.0/README.md",
+	"changelog": "https://github.com/p4535992/foundryvtt-lights-hud-ate/blob/v0.12.0/changelog.md",
+	"bugs": "https://github.com/p4535992/foundryvtt-lights-hud-ate/issues",
 	"allowBugReporter": true,
 	"relationships": {
 		"systems": [],

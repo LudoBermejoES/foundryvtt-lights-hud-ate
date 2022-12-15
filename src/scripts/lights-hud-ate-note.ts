@@ -768,11 +768,21 @@ export class LightHUDAteNote extends FormApplication {
 						checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION))
 					) || 0;
 
+				// TODO
+				const alpha = null;
+				// TODO
+				const sightEnabled = true;
+				// TODO
+				const sightVisionMode = "";
+
 				const efffectAtlToApply = await aemlApiLigthsHudAte.convertToATLEffect(
 					//lockRotation,
+					sightEnabled,
 					dimSight,
 					brightSight,
 					sightAngle,
+					sightVisionMode,
+
 					dimLight,
 					brightLight,
 					lightColor,
@@ -791,17 +801,14 @@ export class LightHUDAteNote extends FormApplication {
 					lightAnimationIntensity,
 					lightAnimationReverse,
 
-					// applyAsAtlEffect,
 					effectName,
 					effectIcon,
 					duration,
 
-					// vision,
-					// id,
-					// name,
 					height,
 					width,
-					scale
+					scale,
+					alpha
 				);
 				efffectAtlToApply.customId = <string>this.entity?.id;
 
@@ -882,19 +889,5 @@ export class LightHUDAteNote extends FormApplication {
 
 	async close(...args) {
 		super.close(...args);
-		/*
-    if (this.editor) {
-      this.editor.destroy();
-    }
-    if (this.editorCondition) {
-      this.editorCondition.destroy();
-    }
-    if (this.editorSuccess) {
-      this.editorSuccess.destroy();
-    }
-    if (this.editorFailure) {
-      this.editorFailure.destroy();
-    }
-    */
 	}
 }

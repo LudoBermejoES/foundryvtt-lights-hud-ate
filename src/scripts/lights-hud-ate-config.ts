@@ -217,15 +217,15 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, tokenD
 					const duplicates = 1; // number od dropped light
 					const item = <Item>actor.items.get(lightDataDialog.itemId);
 					// let tokenDataDropTheTorch: any | null = null;
-					const newActorDropped = 
+					const newActorDropped =
 						//@ts-ignore
 						<any>await prepareTokenDataDropTheTorch(item, token.document.elevation ?? 0);
-					
+
 					const tokenDataDropTheTorch = <any>await newActorDropped.getTokenDocument();
 
 					//@ts-ignore
 					// actor.updateSource({ prototypeToken: tokenDataDropTheTorchTmp });
-					
+
 					// tokenDataDropTheTorch = <any>await actor.getTokenDocument(tokenDataDropTheTorchTmp);
 
 					//@ts-ignore
