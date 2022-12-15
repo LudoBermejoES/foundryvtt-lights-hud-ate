@@ -9,6 +9,7 @@ import {
 	checkNumberFromString,
 	i18n,
 	i18nFormat,
+	isStringEquals,
 	prepareTokenDataDropTheTorch,
 	retrieveItemLightsWithFlag,
 	retrieveItemLightsWithFlagAndDisableThem,
@@ -19,6 +20,7 @@ import {
 	updateTokenLightingFromData,
 	warn,
 } from "./lib/lib";
+import { getATLEffectsFromItem } from "./lights-hud-ate-config";
 import {
 	EffectActions,
 	LightDataDialog,
@@ -28,7 +30,7 @@ import {
 	VisionHUDElement,
 	VisionHUDPreset,
 } from "./lights-hud-ate-models";
-import { aemlApi } from "./module";
+import { aemlApiLigthsHudAte } from "./module";
 
 export function presetDialog(applyChanges: boolean): Dialog {
 	return new Dialog({
@@ -86,18 +88,21 @@ export function presetDialog(applyChanges: boolean): Dialog {
 		close: async (html: any) => {
 			if (applyChanges) {
 				for (const token of <Token[]>canvas.tokens?.controlled) {
+					//@ts-ignore
+					const tokenIcon = token.document.texture?.src;
 					const actorId = <string>token.actor?.id;
-					const tokenId = token.id;
-					const applyAsAtlAteEffect = html.find('[name="apply-as-atl-ate"]')[0].value == "true" ?? false;
-					const visionType = html.find('[name="vision-type"]')[0].value || VisionHUDPreset.NONE;
-					const lightSource = html.find('[name="light-source"]')[0].value || LightHUDPreset.NONE;
+					const tokenId = <string>token.id;
+					const applyAsAtlAteEffect =
+						String(html.find('[name="apply-as-atl-ate"]')[0].value) == "true" ? true : false;
+					const visionType = <string>html.find('[name="vision-type"]')[0].value || VisionHUDPreset.NONE;
+					const lightSource = <string>html.find('[name="light-source"]')[0].value || LightHUDPreset.NONE;
 					const visionIndex = <VisionHUDElement>API.VISIONS.find((e) => e.id == visionType); // parseInt(html.find('[name="vision-type"]')[0].value) || 0;
 					const lightIndex = <LightHUDElement>API.LIGHTS.find((e) => e.id == lightSource); // parseInt(html.find('[name="light-source"]')[0].value) || 0;
 					const duration = parseInt(html.find('[name="duration"]')[0].value) || 0;
 					const lockRotation =
 						//@ts-ignore
 						html.find('[name="lock-rotation"]')[0].value == "true" ?? token.document.lockRotation;
-					const vision = visionType != VisionHUDPreset.NONE;
+
 					let alias: string | null = null;
 					if (actorId || tokenId) {
 						if (!alias) {
@@ -135,6 +140,29 @@ export function presetDialog(applyChanges: boolean): Dialog {
 					const width = null;
 					const scale = null;
 					const isPreset = true;
+					const hasVision =
+						visionType != null &&
+						visionType != undefined &&
+						visionType != VisionHUDPreset.NONE &&
+						visionType != VisionHUDPreset.NO_CHANGE;
+
+					const hasLight =
+						lightSource != null &&
+						lightSource != undefined &&
+						lightSource != LightHUDPreset.NONE &&
+						lightSource != LightHUDPreset.NO_CHANGE;
+
+					const effectNameForVisionOrLight = hasVision
+						? visionIndex.name
+						: hasLight
+						? lightIndex.name
+						: "Unknown Vision";
+					const effectIconForVisionOrLight = hasVision
+						? visionIndex.img
+						: //@ts-ignore
+						hasLight
+						? lightIndex.img
+						: tokenIcon;
 					// Update Token
 					await updateTokenLighting(
 						token,
@@ -161,11 +189,11 @@ export function presetDialog(applyChanges: boolean): Dialog {
 						false, // <boolean>lightAnimation.reverse,
 
 						applyAsAtlAteEffect,
-						lightIndex.name,
-						lightIndex.img,
+						effectNameForVisionOrLight,
+						effectIconForVisionOrLight,
 						duration,
 
-						vision,
+						hasVision,
 						//id,
 						// name,
 						height,
@@ -583,7 +611,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
                     // backup.name,
                     backup.height,
                     backup.width,
-                    backup.scale,
+                    backup.texture.scaleX,
                   );
                 });
               })(Object.assign({}, tokenData));
@@ -658,6 +686,7 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
 							// lightDataDialog.actorId,
 							lightDataDialog.itemId,
 							lightDataDialog.effectId,
+							lightDataDialog.effectName,
 							lightDataDialog.isApplied
 						);
 					} else if (lightDataDialog.isflag) {
@@ -723,32 +752,55 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
 					const duplicates = 1; // number od dropped light
 
 					const item = <Item>actor.items.get(lightDataDialog.itemId);
-					// let actorDropTheTorch: Actor | null = null;
-					let tokenDataDropTheTorch: TokenData | null = null;
-					// const tokenId = <string>randomID();
+
 					try {
-						const tokenDataDropTheTorchTmp = <TokenDocument>(
+						// let tokenDataDropTheTorch: any | null = null;
+						const newActorDropped = 
 							//@ts-ignore
-							await prepareTokenDataDropTheTorch(item, _token?.document?.elevation ?? 0)
-						);
-						// actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorchTmp.actorId);
-						tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorchTmp);
-						// actorDropTheTorch = <Actor>await prepareTokenDataDropTheTorch(item, tokenId, _token?.document?.elevation ?? 0);
-						// tokenDataDropTheTorch = await actor.getTokenData();
+							<any>await prepareTokenDataDropTheTorch(item, token.document.elevation ?? 0);
+
+						const tokenDataDropTheTorch = <any>await newActorDropped.getTokenDocument();
+						
+						//@ts-ignore
+						// actor.updateSource({ prototypeToken: tokenDataDropTheTorchTmp });
+
+						// tokenDataDropTheTorch = await actor.getTokenDocument(tokenDataDropTheTorchTmp);
+
+						// //@ts-ignore
+						// await actor.update({
+						// 	//@ts-ignore
+						// 	effects: tokenDataDropTheTorchTmp.actorData.effects
+						// });
+
 						//@ts-ignore
 						const posData = await warpgate.crosshairs.show({
 							size:
-								Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height) *
-								tokenDataDropTheTorch.scale,
+								//@ts-ignore
+								Math.max(
+									(Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height) *
+										//@ts-ignore
+										(tokenDataDropTheTorch.texture.scaleX + tokenDataDropTheTorch.texture.scaleY)) /
+										2,
+									0.5
+								),
 							icon: `modules/${CONSTANTS.MODULE_NAME}/assets/black-hole-bolas.webp`,
 							label: `Drop the ${lightDataDialog.itemName}`,
 						});
 
 						//get custom data macro
 						const customTokenData = {};
-
 						//@ts-ignore
-						await warpgate.spawnAt(
+						customTokenData.elevation = posData.z ?? token?.document?.elevation ?? 0;
+
+						Hooks.on("preCreateToken", (tokenDoc, td) => {
+							td ??= {};
+							//@ts-ignore
+							td.elevation = customTokenData.elevation;
+							//@ts-ignore
+							tokenDoc.updateSource({ elevation: customTokenData.elevation });
+						});
+						//@ts-ignore
+						warpgate.spawnAt(
 							{ x: posData.x, y: posData.y },
 							tokenDataDropTheTorch,
 							customTokenData || {},
@@ -756,51 +808,7 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
 							{ duplicates }
 						);
 
-						// TODO find a way to add this on the creation onf the token
-						// Added atl effect to created token
-
-						// const token = <Token>canvas.tokens?.placeables.find((t:Token) => {
-						//   return t.id === tokenId;
-						// });
-						// if(!token){
-						//   error(`No token is been created for the drop ATL item , this is probably a bug`)
-						// }else{
-						//   const atlEffects = item.effects.filter((entity) => {
-						//     return entity.changes.find((effect) => effect.key.includes('ATL')) != undefined;
-						//   });
-						//   atlEffects.forEach(async (ae: ActiveEffect) => {
-						//     // Make sure is enabled
-						//     ae.disabled = false;
-						//     ae.transfer = true;
-						//     await API.addActiveEffectOnToken(<string>token.id, ae);
-						//   });
-						// }
-
-						// 0 = None
-						// 1 = Limited
-						// 2 = Observer
-						// 3 = Owner
-
-						// Get the current permission level for the selected token.
-						// const currentPermissions = <number>(<Actor>actorDropTheTorch).document.ownership.default;
-						// (<Actor>actorDropTheTorch).update({ permission: { default: 3 } });
-
-						// const tokenPlaced = <Token>canvas.tokens?.placeables.find((t) => {
-						//   return t.id === tokenDataDropTheTorch?._id;
-						// });
-						// const currentPermissions = <number>tokenPlaced.actor?.document.ownership.default;
-						// tokenPlaced.actor?.update({ permission: { default: 3 } });
-
-						// If the current permission level is anything above 'None' then reset it to 'None'
-						// if (currentPermissions > 0)
-						// {
-						//   (<Actor>actorDropTheTorch).update({permission:{default:0}});
-						// }
-						// // Otherwise, set it to 'Owner'
-						// else
-						// {
-						//   (<Actor>actorDropTheTorch).update({permission:{default:3}});
-						// }
+						// await newActorDropped.delete();
 					} finally {
 						// if (actorDropTheTorch) {
 						//   // Remove actor at the end
@@ -820,7 +828,7 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
 	});
 }
 
-export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied) {
+export async function manageActiveEffectATL(tokenId, itemId, effectId, effectName, isApplied) {
 	//const actor = <Actor>game.actors?.get(actorId);
 	// if (actor.getActiveTokens().length <= 0) {
 	//   warn(`No token found for the actor with id '${actorId}'`);
@@ -838,37 +846,38 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
 		warn(`No actor found for the token with id '${tokenId}'`, true);
 		return;
 	}
-	if (!itemId && game.settings.get(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin")) {
-		const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
-		//@ts-ignore
-		const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
-		if (isApplied) {
-			await aemlApi.onManageActiveEffectFromEffectId(
-				//@ts-ignore
-				EffectActions.toogle,
-				token.actor,
-				effectId,
-				false,
-				false,
-				true
-			);
-		} else {
-			await aemlApi.onManageActiveEffectFromEffectId(
-				//@ts-ignore
-				EffectActions.toogle,
-				token.actor,
-				effectId,
-				false,
-				true,
-				false
-			);
-		}
+	// TODO MADE A BETTER CODE THAN THIS
+	if (!itemId && !game.settings.get(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin")) {
+		// //const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
+		// //@ts-ignore
+		// //const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
+		// if (isApplied) {
+		// 	await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
+		// 		//@ts-ignore
+		// 		EffectActions.toogle,
+		// 		token.actor,
+		// 		effectId,
+		// 		false,
+		// 		false,
+		// 		true
+		// 	);
+		// } else {
+		// 	await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
+		// 		//@ts-ignore
+		// 		EffectActions.toogle,
+		// 		token.actor,
+		// 		effectId,
+		// 		false,
+		// 		true,
+		// 		false
+		// 	);
+		// }
 		return;
 	}
 	const item = <Item>token.actor?.items.find((entity: Item) => {
 		return <string>entity.id == itemId;
 	});
-	if (!item) {
+	if (!item && !game.settings.get(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin")) {
 		warn(`No valid item found for the token with id '${tokenId}'`, true);
 		return;
 	}
@@ -882,11 +891,8 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
 			}
 		}
 	} finally {
-		const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
-		//@ts-ignore
-		const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
 		if (isApplied) {
-			await aemlApi.onManageActiveEffectFromEffectId(
+			await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
 				//@ts-ignore
 				EffectActions.toogle,
 				token.actor,
@@ -896,15 +902,41 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
 				true
 			);
 		} else {
-			await aemlApi.onManageActiveEffectFromEffectId(
+			const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
+			//@ts-ignore
+			const effect = <ActiveEffect>actorEffects.find((activeEffect: ActiveEffect) =>
 				//@ts-ignore
-				EffectActions.toogle,
-				token.actor,
-				effectId,
-				false,
-				true,
-				false
+				isStringEquals(<string>activeEffect?.label == effectName)
 			);
+			if (!effect && itemId) {
+				const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(item) || [];
+				let aeAtl0: any | undefined = undefined;
+				if (aeAtl && aeAtl.length > 0) {
+					aeAtl0 = aeAtl[0];
+				} else {
+					warn(`No valid effect is found on item found for the token with id '${tokenId}'`, true);
+					return;
+				}
+				const activeEffectDataToUpdate = aeAtl0.toObject();
+				activeEffectDataToUpdate.transfer = true;
+				activeEffectDataToUpdate.disabled = false;
+				activeEffectDataToUpdate.origin =
+					aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
+				await aemlApiLigthsHudAte.addActiveEffectOnToken(
+					<string>token.document.id,
+					<any>activeEffectDataToUpdate
+				);
+			} else {
+				await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
+					//@ts-ignore
+					EffectActions.toogle,
+					token.actor,
+					effectId,
+					false,
+					true,
+					false
+				);
+			}
 		}
 	}
 }
@@ -1035,9 +1067,9 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
 	const effectName = lightHUDElement.name || tokenData.name;
 	const height = tokenData.height;
 	const width = tokenData.width;
-	const scale = tokenData.scale;
+	const scale = tokenData.texture.scaleX;
 
-	const brightSight: number= tokenData.brightSight;
+	const brightSight: number = tokenData.brightSight;
 	const dimSight: number = tokenData.dimSight;
 	const sightAngle: number = tokenData.sightAngle;
 
@@ -1188,7 +1220,8 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
 	const width =
 		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH)) || tokenData.width;
 	const scale =
-		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE)) || tokenData.scale;
+		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE)) ||
+		tokenData.texture.scaleX;
 
 	let brightSight: number | null = null;
 	if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {

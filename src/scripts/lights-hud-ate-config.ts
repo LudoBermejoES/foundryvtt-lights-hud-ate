@@ -166,6 +166,7 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, tokenD
 							// lightDataDialog.actorId,
 							lightDataDialog.itemId,
 							lightDataDialog.effectId,
+							lightDataDialog.effectName,
 							lightDataDialog.isApplied
 						);
 					} else if (lightDataDialog.isflag) {
@@ -215,34 +216,60 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, tokenD
 
 					const duplicates = 1; // number od dropped light
 					const item = <Item>actor.items.get(lightDataDialog.itemId);
-					let tokenDataDropTheTorch: any | null = null;
-					const tokenDataDropTheTorchTmp = <
-						TokenDocument //@ts-ignore
-					>await prepareTokenDataDropTheTorch(item, _token.document.elevation ?? 0);
-					// actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorchTmp.actorId);
-					tokenDataDropTheTorch = <any>await actor.getTokenData(tokenDataDropTheTorchTmp);
-					// actorDropTheTorch = <Actor>await prepareTokenDataDropTheTorch(item, tokenId, _token?.document?.elevation ?? 0);
-					// tokenDataDropTheTorch = await actor.getTokenData();
+					// let tokenDataDropTheTorch: any | null = null;
+					const newActorDropped = 
+						//@ts-ignore
+						<any>await prepareTokenDataDropTheTorch(item, token.document.elevation ?? 0);
+					
+					const tokenDataDropTheTorch = <any>await newActorDropped.getTokenDocument();
+
+					//@ts-ignore
+					// actor.updateSource({ prototypeToken: tokenDataDropTheTorchTmp });
+					
+					// tokenDataDropTheTorch = <any>await actor.getTokenDocument(tokenDataDropTheTorchTmp);
+
+					//@ts-ignore
+					// await actor.update({
+					// 	//@ts-ignore
+					// 	effects: tokenDataDropTheTorchTmp.actorData.effects
+					// });
+
 					//@ts-ignore
 					const posData = await warpgate.crosshairs.show({
 						size:
-							Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height) *
-							tokenDataDropTheTorch.scale,
+							//@ts-ignore
+							Math.max(
+								(Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height) *
+									(tokenDataDropTheTorch.texture.scaleX + tokenDataDropTheTorch.texture.scaleY)) /
+									2,
+								0.5
+							),
 						icon: `modules/${CONSTANTS.MODULE_NAME}/assets/black-hole-bolas.webp`,
 						label: `Drop the ${lightDataDialog.itemName}`,
 					});
 
 					//get custom data macro
 					const customTokenData = {};
-
 					//@ts-ignore
-					await warpgate.spawnAt(
+					customTokenData.elevation = posData.z ?? token?.document?.elevation ?? 0;
+
+					Hooks.on("preCreateToken", (tokenDoc, td) => {
+						td ??= {};
+						//@ts-ignore
+						td.elevation = customTokenData.elevation;
+						//@ts-ignore
+						tokenDoc.updateSource({ elevation: customTokenData.elevation });
+					});
+					//@ts-ignore
+					warpgate.spawnAt(
 						{ x: posData.x, y: posData.y },
 						tokenDataDropTheTorch,
 						customTokenData || {},
 						{},
 						{ duplicates }
 					);
+
+					// await newActorDropped.delete();
 				} else {
 					confirmDialogDropTheTorch(lightDataDialog).render(true);
 				}

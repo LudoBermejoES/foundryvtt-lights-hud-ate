@@ -9,7 +9,7 @@ import { addLightsHUDButtons } from "./lights-hud-ate-config";
 import { registerSocket } from "./socket";
 import type { ActiveEffectManagerLibApi } from "./effects/effect-api";
 
-export let aemlApi: ActiveEffectManagerLibApi;
+export let aemlApiLigthsHudAte: ActiveEffectManagerLibApi;
 
 export const initHooks = async (): Promise<void> => {
 	// registerSettings();
@@ -43,8 +43,8 @@ export const initHooks = async (): Promise<void> => {
 
 export const setupHooks = async (): Promise<void> => {
 	//@ts-ignore
-	aemlApi = <ActiveEffectManagerLibApi>game.modules.get("active-effect-manager-lib").api;
-	aemlApi.effectInterface.initialize(CONSTANTS.MODULE_NAME);
+	aemlApiLigthsHudAte = <ActiveEffectManagerLibApi>game.modules.get("active-effect-manager-lib").api;
+	aemlApiLigthsHudAte.effectInterface.initialize(CONSTANTS.MODULE_NAME);
 	setApi(API);
 };
 

@@ -8,7 +8,7 @@ import CONSTANTS from "../constants";
 import { getATLEffectsFromItem } from "../lights-hud-ate-config";
 import { LightHUDAteEffectDefinitions } from "../lights-hud-ate-effect-definition";
 import { LightDataHud, LightHUDElement, LightHUDNoteFlags, LightHUDPreset } from "../lights-hud-ate-models";
-import { aemlApi } from "../module";
+import { aemlApiLigthsHudAte } from "../module";
 
 // =============================
 // Module Generic function
@@ -289,8 +289,9 @@ export function getFirstPlayerToken(): Token | null {
 	if (!token) {
 		if (!controlled.length || controlled.length == 0) {
 			// If no token is selected use the token of the users character
-			token = <Token>//@ts-ignore
-			canvas.tokens?.placeables.find((token) => token.document._id === game.user?.character?.document?._id);
+			token = <
+				Token //@ts-ignore
+			>canvas.tokens?.placeables.find((token) => token.document._id === game.user?.character?.document?._id);
 		}
 		// If no token is selected use the first owned token of the users character you found
 		if (!token) {
@@ -347,7 +348,7 @@ export function firstGM() {
 }
 
 /**
- * TODO if i need to manage the roll for specific system usually is enough item.roll()
+ * TODO if i need to manage the roll for specific system usually is enough item.use()
  * @href https://github.com/itamarcu/roll-from-compendium/blob/master/scripts/roll-from-compendium.js
  */
 export async function rollDependingOnSystem(item: Item) {
@@ -363,7 +364,7 @@ export async function rollDependingOnSystem(item: Item) {
 	//   return dnd5eRollItem(item, actor, actorHasItem)
 	// }
 	//@ts-ignore
-	return item.roll();
+	return item.use();
 }
 
 // Update the relevant light parameters of a token
@@ -392,8 +393,8 @@ export async function updateTokenLighting(
 	lightAnimationReverse: boolean | null,
 
 	applyAsAtlEffect = false,
-	effectName: string | null = null,
-	effectIcon: string | null = null,
+	effectName: string | null = "LightHUD+ATE Effect",
+	effectIcon: string | null = "modules/lights-hud-ate/assets/lightbulb-solid.svg",
 	duration: number | null = null,
 
 	vision = false,
@@ -406,7 +407,7 @@ export async function updateTokenLighting(
 	isPreset: boolean
 ) {
 	if (applyAsAtlEffect) {
-		const efffectAtlToApply = await aemlApi.convertToATLEffect(
+		const efffectAtlToApply = await aemlApiLigthsHudAte.convertToATLEffect(
 			//lockRotation,
 			dimSight,
 			brightSight,
@@ -442,7 +443,7 @@ export async function updateTokenLighting(
 			scale
 		);
 		(efffectAtlToApply.customId = <string>token.actor?.id),
-			await aemlApi.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
+			await aemlApiLigthsHudAte.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
 	} else {
 		const tokenData = <any>token.document;
 		// TODO FIND A BETTER WAY FOR THIS
@@ -515,7 +516,7 @@ export async function updateTokenLighting(
 			width = tokenData.width;
 		}
 		if (scale == null || scale == undefined) {
-			scale = tokenData.scale;
+			scale = tokenData.texture.scaleX;
 		}
 
 		token.document.update({
@@ -552,13 +553,14 @@ export async function updateTokenLighting(
 	}
 }
 
-export async function updateTokenLightingFromData(token: Token, tokenData: TokenData, isPreset: boolean) {
+export async function updateTokenLightingFromData(token: Token, tokenData: any, isPreset: boolean) {
 	await token.document.update({
 		// lockRotation: lockRotation,
 		vision: tokenData.vision,
 		height: tokenData.height,
 		width: tokenData.width,
-		scale: tokenData.scale,
+		//@ts-ignore
+		scale: tokenData.texture.scaleX,
 		light: {
 			dim: manageDist(tokenData.light.dim, isPreset),
 			bright: manageDist(tokenData.light.bright, isPreset),
@@ -682,7 +684,7 @@ export async function dropTheToken(item: Item, data: { x; y }, type = "character
 
 	// Merge Token data with the default for the Actor
 	//@ts-ignore
-	const tokenData2: TokenData = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
+	const tokenData2: any = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
 	tokenData2.actorId = <string>actor.id;
 	tokenData2.actorLink = true;
 
@@ -696,7 +698,7 @@ export async function dropTheToken(item: Item, data: { x; y }, type = "character
 			//@ts-ignore
 			ae.disabled = false;
 			//@ts-ignore
-			await aemlApi.addActiveEffectOnToken(<string>actor.token?.id, ae);
+			await aemlApiLigthsHudAte.addActiveEffectOnToken(<string>actor.token?.id, ae);
 		})
 	);
 
@@ -728,9 +730,13 @@ export async function prepareTokenDataDropTheTorch(
 	item: Item,
 	elevation: number,
 	type = "character"
-): Promise<any | undefined> {
+): Promise<Actor|undefined> {
 	if (!type) {
-		error("No type is present");
+		error("No type is present for this option", true);
+		return undefined;
+	}
+	if (!item) {
+		error("No item is present for this option", true);
 		return undefined;
 	}
 	// START CREATION
@@ -744,31 +750,51 @@ export async function prepareTokenDataDropTheTorch(
 		actorName = <string>actorName.split(".")[0];
 	}
 
-	const actorDataEffects: any[] = [];
+	let actorDataEffects: any[] = [];
 	const atlEffects = item.effects.filter((entity) => {
 		//@ts-ignore
 		return entity.changes.find((effect) => effect.key.includes("ATL")) != undefined;
 	});
-	for (const ae of atlEffects) {
-		// Make sure is enabled
-		//@ts-ignore
-		ae.disabled = false;
-		//@ts-ignore
-		ae.transfer = true;
-		//await API.addActiveEffectOnToken(<string>actor.token?.id, ae);
-		actorDataEffects.push(ae);
-	}
+	// for (const ae of atlEffects) {
+	// 	// Make sure is enabled
+	// 	//@ts-ignore
+	// 	ae.disabled = false;
+	// 	//@ts-ignore
+	// 	ae.transfer = true;
+	// 	//await API.addActiveEffectOnToken(<string>actor.token?.id, ae);
+	// 	// Strange bug fix
+	// 	//@ts-ignore
+	// 	delete ae._id
+	// 	actorDataEffects.push(ae);
+	// }
 
-	const actor = <Actor>await Actor.create({
+	// Strange bug with fvtt10
+
+	const tokenEffectsCleaned: any[] = [];
+	for (const effect of atlEffects) {
+		let effectTmp: any | undefined = undefined;
+		try {
+			effectTmp = effect.toObject(false);
+		} catch (e) {
+			effectTmp = effect.toJSON();
+		}
+		//@ts-ignore
+		delete effectTmp._id;
+		tokenEffectsCleaned.push(effectTmp);
+	}
+	actorDataEffects = tokenEffectsCleaned;
+
+	const newActorDropped = <Actor>await Actor.create({
 		name: actorName,
 		type: createdType,
 		img: item.img,
 		effects: actorDataEffects,
 		hidden: false,
 		elevation: elevation,
+		prototypeToken: undefined
 	});
 
-	const atlActorEffects = actor.effects.filter((entity) => {
+	const atlActorEffects = newActorDropped.effects.filter((entity) => {
 		//@ts-ignore
 		return entity.changes.find((effect) => effect.key.includes("ATL")) != undefined;
 	});
@@ -781,7 +807,7 @@ export async function prepareTokenDataDropTheTorch(
 		//@ts-ignore
 		if (!ae.origin) {
 			//@ts-ignore
-			ae.origin = `Actor.${actor.id}`;
+			ae.origin = `Actor.${newActorDropped.id}`;
 		}
 		// await actor.createEmbeddedDocuments('ActiveEffect', [<Record<string, any>>ae]);
 		await ae.update({
@@ -796,27 +822,31 @@ export async function prepareTokenDataDropTheTorch(
 
 	// WTF ???? THIS CONVERT SOME FALSE TO TRUE ????
 	//const actorData = foundry.utils.duplicate(actor);
-	const actorData = actor;
-	await actorData.update({ permission: { default: 3 } });
-
+	// const actorData = newActorDropped;
+	// SET ALL PLAYERS HAS OWNER
+	await newActorDropped.update({ permission: { default: 3 } });
+	/*
 	const tokenData = {
 		hidden: false,
-		img: actor.img,
+		img: newActorDropped.img,
 		elevation: elevation,
-		actorData: actorData,
+		actorData: newActorDropped,
 		// effects: actorDataEffects
 		actorLink: false,
 	};
 
 	// Merge Token data with the default for the Actor
 	//@ts-ignore
-	const tokenData2 = foundry.utils.mergeObject(actorData.token.document, tokenData, { inplace: true });
+	const tokenData2 = foundry.utils.mergeObject(actorData.prototypeToken, tokenData, { inplace: true });
 	// tokenData2.actorId = <string>actor._id;
 	// tokenData2.actorLink = false; // if actorless is false
 	// tokenData2.name = actorName;
 	// tokenData2._id = tokenId;
-
-	return <any>tokenData2;
+	*/
+	//@ts-ignore
+	// const tokenDataDropTheTorch = <any>await newActorDropped.getTokenDocument();
+	// return <any>tokenDataDropTheTorch;
+	return newActorDropped;
 }
 
 export function checkNumberFromString(value) {
@@ -839,7 +869,7 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (lightHUDElement: LightHUDElement) => {
-			const im = <string>lightHUDElement.img;
+			const im = <string>lightHUDElement.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
@@ -984,7 +1014,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (item: Item) => {
-			const im = <string>item.img;
+			const im = <string>item.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
@@ -1034,12 +1064,26 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 					activeEffectDataToUpdate.disabled = true;
 					activeEffectDataToUpdate.origin =
 						aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
-					await aemlApi.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
+					await aemlApiLigthsHudAte.addActiveEffectOnToken(
+						<string>token.document.id,
+						<any>activeEffectDataToUpdate
+					);
 					//@ts-ignore
 					effectFromActor = <any>token.document.actor?.effects.find((ae: ActiveEffect) => {
 						//@ts-ignore
 						return isStringEquals(nameToSearch, ae.label);
 					});
+				}
+				// TRY TO GET FROM ITEM
+				if (!effectFromActor) {
+					const atlEffects = item.effects.filter((entity) => {
+						//@ts-ignore
+						return entity.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+					});
+					// FOR MY OWN SANITY ONLY THE FIRST
+					if (atlEffects.length > 0) {
+						effectFromActor = atlEffects[0];
+					}
 				}
 				if (!effectFromActor) {
 					warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
@@ -1049,11 +1093,15 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				effectnameTmp = <string>effectFromActor.name ?? effectFromActor.label;
 				_idTmp = <string>effectFromActor._id;
 
-				const applied = await aemlApi.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
+				const applied = await aemlApiLigthsHudAte.hasEffectAppliedOnToken(
+					<string>token.document.id,
+					nameToSearch,
+					true
+				);
 				// If the active effect is disabled or is supressed
 				disabledTmp = effectFromActor.disabled || false;
 				//@ts-ignore
-				suppressedTmp = effectFromActor.document.isSuppressed || false;
+				suppressedTmp = effectFromActor.isSuppressed || false;
 				temporaryTmp = aeAtl0.isTemporary || false;
 				passiveTmp = !temporaryTmp;
 				if (applied && !disabledTmp && !suppressedTmp) {
@@ -1164,8 +1212,15 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 
 	if (actorAtlEffects.length > 0) {
 		for (const aeAtl0 of <any[]>actorAtlEffects) {
+			let effectFromActorToIgnore = imagesParsed.find((ldu: LightDataHud) => {
+				//@ts-ignore
+				return isStringEquals(ldu._id, aeAtl0._id);
+			});
+			if (effectFromActorToIgnore) {
+				continue;
+			}
 			//@ts-ignore
-			const im = <string>aeAtl0.icon || token.img || "";
+			const im = <string>aeAtl0.icon || token.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
@@ -1206,7 +1261,10 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				activeEffectDataToUpdate.disabled = true;
 				activeEffectDataToUpdate.origin =
 					aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
-				await aemlApi.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
+				await aemlApiLigthsHudAte.addActiveEffectOnToken(
+					<string>token.document.id,
+					<any>activeEffectDataToUpdate
+				);
 				// ???
 				effectFromActor = <ActiveEffect>token.document.actor?.effects.find((ae: ActiveEffect) => {
 					//@ts-ignore
@@ -1224,12 +1282,16 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 			//@ts-ignore
 			_idTmp = <string>effectFromActor._id;
 
-			const applied = await aemlApi.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
+			const applied = await aemlApiLigthsHudAte.hasEffectAppliedOnToken(
+				<string>token.document.id,
+				nameToSearch,
+				true
+			);
 			// If the active effect is disabled or is supressed
 			//@ts-ignore
 			disabledTmp = effectFromActor.disabled || false;
 			//@ts-ignore
-			suppressedTmp = effectFromActor.document.isSuppressed || false;
+			suppressedTmp = effectFromActor.isSuppressed || false;
 			temporaryTmp = aeAtl0.isTemporary || false;
 			passiveTmp = !temporaryTmp;
 			if (applied && !disabledTmp && !suppressedTmp) {
@@ -1364,7 +1426,7 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Prom
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (lightHUDElement: LightHUDElement) => {
-			const im = <string>lightHUDElement.img;
+			const im = <string>lightHUDElement.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
@@ -1477,7 +1539,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (item: Item) => {
-			const im = <string>item.img;
+			const im = <string>item.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];

@@ -21,10 +21,10 @@ export class LightHUDAteEffectDefinitions {
 	}
 
 	static effect(name: string): Effect | undefined {
-		const effect = <Effect>LightHUDAteEffectDefinitions.all().find((effect: Effect) => {
+		const effectDefinition = <Effect>LightHUDAteEffectDefinitions.all().find((effect: Effect) => {
 			return effect.name.toLowerCase() === name.toLowerCase();
 		});
-		// if (effect?.customId == LightHUDPreset.TORCH) {
+		// if (effectDefinition?.customId == LightHUDPreset.TORCH) {
 		//   return EffectDefinitions.torch();
 		// }
 		return undefined;
