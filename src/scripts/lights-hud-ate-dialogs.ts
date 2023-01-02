@@ -831,7 +831,7 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, effectNam
 			//@ts-ignore
 			const effect = <ActiveEffect>actorEffects.find((activeEffect: ActiveEffect) =>
 				//@ts-ignore
-				isStringEquals(<string>activeEffect?.label == effectName)
+				isStringEquals(<string>activeEffect?.label, effectName)
 			);
 			if (!effect && itemId) {
 				const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(item) || [];

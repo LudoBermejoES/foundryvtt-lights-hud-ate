@@ -891,7 +891,7 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (lightHUDElement: LightHUDElement) => {
-			const im = <string>lightHUDElement.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
+			const im = <string>lightHUDElement.img || `modules/${CONSTANTS.MODULE_NAME}/assets/lightbulb-solid.svg`;
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
@@ -1049,7 +1049,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (item: Item) => {
-			const im = <string>item.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
+			const im = <string>item.img || `modules/${CONSTANTS.MODULE_NAME}/assets/lightbulb-solid.svg`;
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
@@ -1258,13 +1258,16 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 		for (const aeAtl0 of <any[]>actorAtlEffects) {
 			let effectFromActorToIgnore = imagesParsed.find((ldu: LightDataHud) => {
 				//@ts-ignore
-				return isStringEquals(ldu._id, aeAtl0._id);
+				return isStringEquals(ldu._id, aeAtl0._id) || isStringEquals(ldu.label, aeAtl0.label);
 			});
 			if (effectFromActorToIgnore) {
+				aemlApiLigthsHudAte.removeEffectFromIdOnActor(<string>actor.id, aeAtl0.id);
 				continue;
 			}
-			//@ts-ignore
-			const im = <string>aeAtl0.icon || token.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
+
+			const im =
+				//@ts-ignore
+				aeAtl0.icon || token.img || `modules/${CONSTANTS.MODULE_NAME}/assets/lightbulb-solid.svg`;
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
@@ -1477,7 +1480,7 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Prom
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (lightHUDElement: LightHUDElement) => {
-			const im = <string>lightHUDElement.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
+			const im = <string>lightHUDElement.img || `modules/${CONSTANTS.MODULE_NAME}/assets/lightbulb-solid.svg`;
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
@@ -1604,7 +1607,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (item: Item) => {
-			const im = <string>item.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
+			const im = <string>item.img || `modules/${CONSTANTS.MODULE_NAME}/assets/lightbulb-solid.svg`;
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
