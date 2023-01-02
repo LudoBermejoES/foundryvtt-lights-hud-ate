@@ -1,5 +1,5 @@
 import type { LightHUDElement, VisionHUDElement } from "../lights-hud-ate-models";
-import GenericItemSystem from "../lib/item-system/item-system-generic";
+import Toolkit13ItemSystem from "../lib/item-system/item-system-archmage";
 import type { CalculatedUsesData } from "../lib/calculated-uses-data";
 
 export default {
@@ -15,7 +15,7 @@ export default {
 				available: 0,
 				showZeroUses: true,
 			};
-			let thisItemUses = await GenericItemSystem.calculateUsesForItem(item);
+			let thisItemUses = await Toolkit13ItemSystem.calculateUsesForItem(item);
 			if (thisItemUses === null) {
 				// uses = null;
 				uses = uses;

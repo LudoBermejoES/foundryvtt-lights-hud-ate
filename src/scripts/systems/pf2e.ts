@@ -1,5 +1,7 @@
 import CONSTANTS from "../constants";
 import { LightHUDElement, LightHUDPreset, VisionHUDElement, VisionHUDPreset } from "../lights-hud-ate-models";
+import Pf2eItemSystem from "../lib/item-system/item-system-pf2e";
+import type { CalculatedUsesData } from "../lib/calculated-uses-data";
 
 export default {
 	LIGHTS: <LightHUDElement[]>[
