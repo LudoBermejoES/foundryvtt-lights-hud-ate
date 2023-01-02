@@ -812,8 +812,9 @@ export class LightHUDAteNote extends FormApplication {
 				);
 				efffectAtlToApply.customId = <string>this.entity?.id;
 
-				const origin = `Item.${this.entity.id}`;
-				efffectAtlToApply.origin = origin;
+				efffectAtlToApply.origin = await aemlApiLigthsHudAte.prepareOriginFromEntity(this.entity);
+				// const origin = `Item.${this.entity.id}`;
+				// efffectAtlToApply.origin = origin;
 				efffectAtlToApply.overlay = false;
 				//@ts-ignore
 				const activeEffectData = <ActiveEffectData>EffectSupport.convertToActiveEffectData(efffectAtlToApply);

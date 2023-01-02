@@ -814,7 +814,7 @@ export async function prepareTokenDataDropTheTorch(
 		//@ts-ignore
 		if (!ae.origin) {
 			//@ts-ignore
-			ae.origin = `Actor.${newActorDropped.id}`;
+			ae.origin = await aemlApiLigthsHudAte.prepareOriginForActor(newActorDropped.id);
 		}
 		// await actor.createEmbeddedDocuments('ActiveEffect', [<Record<string, any>>ae]);
 		await ae.update({
@@ -1097,8 +1097,9 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 					const activeEffectDataToUpdate = aeAtl0.toObject();
 					activeEffectDataToUpdate.transfer = false;
 					activeEffectDataToUpdate.disabled = true;
-					activeEffectDataToUpdate.origin =
-						aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
+					activeEffectDataToUpdate.origin = await aemlApiLigthsHudAte.prepareOriginFromEntity(aeAtl0);
+					// activeEffectDataToUpdate.origin =
+					// 	aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent.id}` : `Actor.${aeAtl0.parent.id}`;
 					await aemlApiLigthsHudAte.addActiveEffectOnToken(
 						<string>token.document.id,
 						<any>activeEffectDataToUpdate
@@ -1302,8 +1303,9 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				const activeEffectDataToUpdate = aeAtl0.toObject();
 				activeEffectDataToUpdate.transfer = false;
 				activeEffectDataToUpdate.disabled = true;
-				activeEffectDataToUpdate.origin =
-					aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
+				activeEffectDataToUpdate.origin = await aemlApiLigthsHudAte.prepareOriginFromEntity(aeAtl0);
+				// activeEffectDataToUpdate.origin =
+				// 	aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent.id}` : `Actor.${aeAtl0.parent.id}`;
 				await aemlApiLigthsHudAte.addActiveEffectOnToken(
 					<string>token.document.id,
 					<any>activeEffectDataToUpdate

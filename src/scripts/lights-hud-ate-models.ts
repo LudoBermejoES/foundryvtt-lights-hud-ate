@@ -209,6 +209,6 @@ export enum LightHUDNoteFlags {
 // 	create = "create",
 // 	edit = "edit",
 // 	delete = "delete",
-// 	toogle = "toggle",
+// 	toggle = "toggle",
 // 	update = "update",
 // }

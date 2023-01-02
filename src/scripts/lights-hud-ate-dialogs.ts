@@ -819,8 +819,7 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, effectNam
 	} finally {
 		if (isApplied) {
 			await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
-				//@ts-ignore
-				EffectActions.toogle,
+				"toggle",
 				token.actor,
 				effectId,
 				false,
@@ -846,16 +845,16 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, effectNam
 				const activeEffectDataToUpdate = aeAtl0.toObject();
 				activeEffectDataToUpdate.transfer = true;
 				activeEffectDataToUpdate.disabled = false;
-				activeEffectDataToUpdate.origin =
-					aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
+				activeEffectDataToUpdate.origin = await aemlApiLigthsHudAte.prepareOriginFromEntity(aeAtl0);
+				// activeEffectDataToUpdate.origin =
+				// 	aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent.id}` : `Actor.${aeAtl0.parent.id}`;
 				await aemlApiLigthsHudAte.addActiveEffectOnToken(
 					<string>token.document.id,
 					<any>activeEffectDataToUpdate
 				);
 			} else {
 				await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
-					//@ts-ignore
-					EffectActions.toogle,
+					"toggle",
 					token.actor,
 					effectId,
 					false,
