@@ -1,6 +1,7 @@
 import { VisionHUDElement, VisionHUDPreset } from "./../lights-hud-ate-models";
 import CONSTANTS from "../constants";
 import { LightHUDElement, LightHUDPreset } from "../lights-hud-ate-models";
+import { is_real_number } from "../lib/lib";
 
 export default {
 	LIGHTS: <LightHUDElement[]>[
@@ -277,4 +278,40 @@ export default {
 			duration: -1,
 		},
 	],
+	retrieveAllItemsYouCanUseFromActor(actor): Item[] {
+		const weaponsItems = ["weapon", "spell", "tool"];
+		// let totalWeight: number = actorEntity.items.reduce((weight, item) => {
+		let aviableItems = <Item[]>[];
+		for (let im of <Item[]>actor.items.contents) {
+			if (im && weaponsItems.includes(im.type)) {
+				//CHECK FOR SLOTS AND AMMUNITION
+				const usesForItem = calculateUsesForItem(im);
+				const available = usesForItem.available;
+				const maximum = usesForItem.maximum;
+				const isAmmunition = usesForItem.isAmmunition;
+				if (is_real_number(available) && available > 0) {
+					aviableItems.push(im);
+				}
+			}
+		}
+		return aviableItems;
+	},
+	retrieveAllItemsYouCanUseFromItems(items: Item[]): Item[] {
+		const weaponsItems = ["weapon", "spell", "tool"];
+		// let totalWeight: number = actorEntity.items.reduce((weight, item) => {
+		let aviableItems = <Item[]>[];
+		for (let im of items) {
+			if (im && weaponsItems.includes(im.type)) {
+				//CHECK FOR SLOTS AND AMMUNITION
+				const usesForItem = calculateUsesForItem(im);
+				const available = usesForItem.available;
+				const maximum = usesForItem.maximum;
+				const isAmmunition = usesForItem.isAmmunition;
+				if (is_real_number(available) && available > 0) {
+					aviableItems.push(im);
+				}
+			}
+		}
+		return aviableItems;
+	},
 };
