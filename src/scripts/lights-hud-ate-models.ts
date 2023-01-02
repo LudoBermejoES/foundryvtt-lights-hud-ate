@@ -205,10 +205,10 @@ export enum LightHUDNoteFlags {
 //   "Magma" : "#c27a29"
 // }
 
-export enum EffectActions {
-	create = "create",
-	edit = "edit",
-	delete = "delete",
-	toogle = "toggle",
-	update = "update",
-}
+// export enum EffectActions {
+// 	create = "create",
+// 	edit = "edit",
+// 	delete = "delete",
+// 	toogle = "toggle",
+// 	update = "update",
+// }

@@ -2,6 +2,12 @@ import CONSTANTS from "./constants";
 import { dialogWarning, error, i18n, info, warn } from "./lib/lib";
 import type { LightHUDElement, VisionHUDElement } from "./lights-hud-ate-models";
 import type Effect from "./effects/effect";
+import dnd5e from "./systems/dnd5e";
+import generic from "./systems/generic";
+import archmage from "./systems/archmage";
+import demonlord from "./systems/demonlord";
+import pf2e from "./systems/pf2e";
+import pf1 from "./systems/pf1";
 
 const API = {
 	// effectInterface: EffectInterface,
@@ -134,6 +140,28 @@ const API = {
 				}
 			} else {
 				warn(`No token found on the canvas for id '${token.id}'`, true);
+			}
+		}
+	},
+	async retrieveAllItemsYouCanUseFromItems(items: Item[]): Promise<Item[]> {
+		switch (game.system.id) {
+			case "dnd5e": {
+				return await dnd5e.retrieveAllItemsYouCanUseFromItems(items);
+			}
+			case "pf1": {
+				return await pf1.retrieveAllItemsYouCanUseFromItems(items);
+			}
+			case "pf2e": {
+				return await pf2e.retrieveAllItemsYouCanUseFromItems(items);
+			}
+			case "demonlord": {
+				return await demonlord.retrieveAllItemsYouCanUseFromItems(items);
+			}
+			case "archmage": {
+				return await archmage.retrieveAllItemsYouCanUseFromItems(items);
+			}
+			default: {
+				return await generic.retrieveAllItemsYouCanUseFromItems(items);
 			}
 		}
 	},

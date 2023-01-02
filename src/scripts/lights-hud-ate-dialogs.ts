@@ -23,7 +23,6 @@ import {
 } from "./lib/lib";
 import { getATLEffectsFromItem } from "./lights-hud-ate-config";
 import {
-	EffectActions,
 	LightDataDialog,
 	LightHUDElement,
 	LightHUDNoteFlags,

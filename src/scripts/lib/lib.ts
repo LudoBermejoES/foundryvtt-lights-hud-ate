@@ -880,6 +880,12 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
 	const lightItems: LightHUDElement[] = API.LIGHTS.filter((light) => {
 		return light.id != LightHUDPreset.NONE && light.id != LightHUDPreset.NO_CHANGE;
 	});
+
+	// let lightItemsYouCanUse = <Item[]>[];
+	// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
+	// 	lightItemsYouCanUse = await API.retrieveAllItemsYouCanUseFromItems(lightItems);
+	// }
+
 	let imagesParsed: LightDataHud[] = [];
 
 	// Convert item to LightHudData
@@ -945,6 +951,14 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
 				appliedTmp = !appliedTmp;
 			}
 
+			// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
+			// 	if (lightItemsYouCanUse.filter(e => e.id === item.id).length > 0) {
+			// 		if(!appliedTmp){
+			// 			return new LightDataHud();
+			// 		}
+			// 	}
+			// }
+
 			return <LightDataHud>{
 				icon: im,
 				name: i18n(lightHUDElement.name),
@@ -991,7 +1005,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 	if (!actor || !token) {
 		return [];
 	}
-	const lightItems: Item[] = [];
+	let lightItems: Item[] = [];
 	let imagesParsed: LightDataHud[] = [];
 
 	//const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
@@ -1016,6 +1030,11 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				continue;
 			}
 		}
+	}
+
+	let lightItemsYouCanUse = <Item[]>[];
+	if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
+		lightItemsYouCanUse = await API.retrieveAllItemsYouCanUseFromItems(lightItems);
 	}
 
 	// Strange case no item with ATL but we have some active effect
@@ -1193,6 +1212,14 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 			// ========================================================
 			else {
 				return new LightDataHud();
+			}
+
+			if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
+				if (lightItemsYouCanUse.filter((e) => e.id === item.id).length > 0) {
+					if (!appliedTmp) {
+						return new LightDataHud();
+					}
+				}
 			}
 
 			return <LightDataHud>{
@@ -1438,6 +1465,12 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Prom
 	const lightItems: LightHUDElement[] = API.LIGHTS.filter((light) => {
 		return light.id != LightHUDPreset.NONE && light.id != LightHUDPreset.NO_CHANGE;
 	});
+
+	// let lightItemsYouCanUse = <Item[]>[];
+	// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
+	// 	lightItemsYouCanUse = await API.retrieveAllItemsYouCanUseFromItems(lightItems);
+	// }
+
 	let imagesParsed: LightDataHud[] = [];
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
@@ -1500,6 +1533,14 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Prom
 				appliedTmp = !appliedTmp;
 			}
 
+			// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
+			// 	if (lightItemsYouCanUse.filter(e => e.id === item.id).length > 0) {
+			// 		if(!appliedTmp){
+			// 			return new LightDataHud();
+			// 		}
+			// 	}
+			// }
+
 			return <LightDataHud>{
 				icon: im,
 				name: i18n(lightHUDElement.name),
@@ -1552,6 +1593,12 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
 			}
 		}
 	}
+
+	// let lightItemsYouCanUse = <Item[]>[];
+	// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
+	// 	lightItemsYouCanUse = await API.retrieveAllItemsYouCanUseFromItems(lightItems);
+	// }
+
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (item: Item) => {
@@ -1624,6 +1671,14 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
 			else {
 				return new LightDataHud();
 			}
+
+			// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
+			// 	if (lightItemsYouCanUse.filter(e => e.id === item.id).length > 0) {
+			// 		if(!appliedTmp){
+			// 			return new LightDataHud();
+			// 		}
+			// 	}
+			// }
 
 			return <LightDataHud>{
 				icon: im,
