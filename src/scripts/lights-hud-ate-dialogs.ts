@@ -798,30 +798,6 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, effectNam
 	}
 	// TODO MADE A BETTER CODE THAN THIS
 	if (!itemId && !game.settings.get(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin")) {
-		// //const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
-		// //@ts-ignore
-		// //const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
-		// if (isApplied) {
-		// 	await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
-		// 		//@ts-ignore
-		// 		EffectActions.toogle,
-		// 		token.actor,
-		// 		effectId,
-		// 		false,
-		// 		false,
-		// 		true
-		// 	);
-		// } else {
-		// 	await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
-		// 		//@ts-ignore
-		// 		EffectActions.toogle,
-		// 		token.actor,
-		// 		effectId,
-		// 		false,
-		// 		true,
-		// 		false
-		// 	);
-		// }
 		return;
 	}
 	const item = <Item>token.actor?.items.find((entity: Item) => {
@@ -903,6 +879,10 @@ export async function manageFlaggedItem(tokenId, itemId) {
 		warn(`No actor found for the token with id '${tokenId}'`, true);
 		return;
 	}
+	// TODO MADE A BETTER CODE THAN THIS
+	if (!itemId && !game.settings.get(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin")) {
+		return;
+	}
 	const item = <Item>token.actor?.items.find((entity: Item) => {
 		return <string>entity.id == itemId;
 	});
@@ -914,9 +894,6 @@ export async function manageFlaggedItem(tokenId, itemId) {
 	// We roll the item ???
 	try {
 		if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem") && !isApplied) {
-			const item = <Item>token.actor?.items.find((entity: Item) => {
-				return <string>entity.id == itemId;
-			});
 			if (item) {
 				rollDependingOnSystem(item);
 			} else {

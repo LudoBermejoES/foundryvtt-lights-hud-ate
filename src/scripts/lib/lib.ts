@@ -952,7 +952,7 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
 			}
 
 			// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
-			// 	if (lightItemsYouCanUse.filter(e => e.id === item.id).length > 0) {
+			// 	if (!(lightItemsYouCanUse.filter(e => e.id === item.id).length > 0)) {
 			// 		if(!appliedTmp){
 			// 			return new LightDataHud();
 			// 		}
@@ -1215,7 +1215,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 			}
 
 			if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
-				if (lightItemsYouCanUse.filter((e) => e.id === item.id).length > 0) {
+				if (!(lightItemsYouCanUse.filter((e) => e.id === item.id).length > 0)) {
 					if (!appliedTmp) {
 						return new LightDataHud();
 					}
@@ -1534,7 +1534,7 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Prom
 			}
 
 			// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
-			// 	if (lightItemsYouCanUse.filter(e => e.id === item.id).length > 0) {
+			// 	if (!(lightItemsYouCanUse.filter(e => e.id === item.id).length > 0)) {
 			// 		if(!appliedTmp){
 			// 			return new LightDataHud();
 			// 		}
@@ -1673,7 +1673,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
 			}
 
 			// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
-			// 	if (lightItemsYouCanUse.filter(e => e.id === item.id).length > 0) {
+			// 	if (!(lightItemsYouCanUse.filter(e => e.id === item.id).length > 0)) {
 			// 		if(!appliedTmp){
 			// 			return new LightDataHud();
 			// 		}
