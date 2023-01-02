@@ -22,12 +22,14 @@
 	"lights-hud-ate.setting.hudTopBottom.name": "HUD Top/Bottom",
 	"lights-hud-ate.setting.hudTopBottom.hint": "Where to place the button in the column",
 
-	"lights-hud-ate.setting.applyOnATEItem.name": "Apply HUD interface on ATE Items",
+	"lights-hud-ate.setting.applyOnATEItem.name": "[Option 1] Apply HUD interface on ATE Items",
 	"lights-hud-ate.setting.applyOnATEItem.hint": "Show all actor items with ATE active effect in the HUD interface",
+	"lights-hud-ate.setting.applyOnFlagItem.name": "[Option 2] Apply HUD interface on flagged Items",
+	"lights-hud-ate.setting.applyOnFlagItem.hint": "Show all actor items flagged from this module active effect in the HUD interface",
+	"lights-hud-ate.setting.enableLightHUDOldInterface.name": "[Option 3] Enable LightHUD Old Interface",
+	"lights-hud-ate.setting.enableLightHUDOldInterface.hint": "For people who want the literally 1:1 same interface of the old LightsHUD you can enable this. Usually this will work better with 'Apply HUD interface on ATE Items' and 'Apply HUD interface on flagged Items' module setting disabled, but they can kind work together",
 	"lights-hud-ate.setting.showATEFromNoItemOrigin.name": "Show ATE from no item",
 	"lights-hud-ate.setting.showATEFromNoItemOrigin.hint": "Show all ATE active effect applied on the actor with no item on the origin in the HUD interface. Attention this can made show duplicate lights and vision",
-	"lights-hud-ate.setting.applyOnFlagItem.name": "Apply HUD interface on flagged Items",
-	"lights-hud-ate.setting.applyOnFlagItem.hint": "Show all actor items flagged from this module active effect in the HUD interface",
 	"lights-hud-ate.setting.useMetricSystem.name": "Use metric system on preset light and vision",
 	"lights-hud-ate.setting.useMetricSystem.hint": "If enabled the unit distance used on the preset light and vision is converted to metric system",
 	"lights-hud-ate.setting.skipDialogLightHUD.name": "Skip confirmation dialog from LightHUD",
@@ -37,9 +39,6 @@
 	"lights-hud-ate.setting.tempEffectsAsStatus.hint": "When a token has a temporary active effect active, display that active effect icon in the Status Effects HUD element.",
 	"lights-hud-ate.setting.tempEffectsAsStatusToggleDelete.name": "Temporary Effects as Token Statuses: Always delete instead of disable",
 	"lights-hud-ate.setting.tempEffectsAsStatusToggleDelete.hint": "If 'Temporary Effects as Token Statuses' is enabled, instead of disabling some effects and deleting others, always delete a temporary effect toggled from the status menu.",
-
-	"lights-hud-ate.setting.enableLightHUDOldInterface.name": "Enable LightHUD Old Interface",
-	"lights-hud-ate.setting.enableLightHUDOldInterface.hint": "For people who want the literally 1:1 same interface of the old LightsHUD you can enable this. Usually this will work better with 'Apply HUD interface on ATE Items' and 'Apply HUD interface on flagged Items' module setting disabled, but they can kind work together",
 
 	"lights-hud-ate.setting.autoApplyEffectIfNotPresentOnActor.name": "Auto apply effect if not present on actor",
 	"lights-hud-ate.setting.autoApplyEffectIfNotPresentOnActor.hint": "If enabled this setting will automatically applied a retrieve effect on a item but absent on the actor, this is usually useful for force the player to not remove some effect and force the gm to go every time to apply the 'transferToActor' feature on the item",

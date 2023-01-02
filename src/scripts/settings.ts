@@ -34,18 +34,27 @@ export const registerSettings = function (): void {
 		default: true,
 	});
 
-	game.settings.register(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin", {
-		name: i18n(`${CONSTANTS.MODULE_NAME}.setting.showATEFromNoItemOrigin.name`),
-		hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.showATEFromNoItemOrigin.hint`),
+	game.settings.register(CONSTANTS.MODULE_NAME, "applyOnFlagItem", {
+		name: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnFlagItem.name`),
+		hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnFlagItem.hint`),
 		scope: "world",
 		config: true,
 		type: Boolean,
 		default: false,
 	});
 
-	game.settings.register(CONSTANTS.MODULE_NAME, "applyOnFlagItem", {
-		name: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnFlagItem.name`),
-		hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.applyOnFlagItem.hint`),
+	game.settings.register(CONSTANTS.MODULE_NAME, "enableLightHUDOldInterface", {
+		name: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.name`,
+		hint: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.hint`,
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
+	});
+
+	game.settings.register(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin", {
+		name: i18n(`${CONSTANTS.MODULE_NAME}.setting.showATEFromNoItemOrigin.name`),
+		hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.showATEFromNoItemOrigin.hint`),
 		scope: "world",
 		config: true,
 		type: Boolean,
@@ -165,15 +174,6 @@ export const registerSettings = function (): void {
 	game.settings.register(CONSTANTS.MODULE_NAME, "autoApplyEffectIfNotPresentOnActor", {
 		name: `${CONSTANTS.MODULE_NAME}.setting.autoApplyEffectIfNotPresentOnActor.name`,
 		hint: `${CONSTANTS.MODULE_NAME}.setting.autoApplyEffectIfNotPresentOnActor.hint`,
-		scope: "world",
-		config: true,
-		default: false,
-		type: Boolean,
-	});
-
-	game.settings.register(CONSTANTS.MODULE_NAME, "enableLightHUDOldInterface", {
-		name: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.name`,
-		hint: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.hint`,
 		scope: "world",
 		config: true,
 		default: false,
@@ -358,6 +358,15 @@ function otherSettings(apply = false) {
 			default: false,
 		},
 
+		enableLightHUDOldInterface: {
+			name: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.name`,
+			hint: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.hint`,
+			scope: "world",
+			config: true,
+			default: false,
+			type: Boolean,
+		},
+
 		imageDisplay: {
 			name: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.name`),
 			hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.hint`),
@@ -475,14 +484,6 @@ function otherSettings(apply = false) {
 			type: Boolean,
 		},
 
-		enableLightHUDOldInterface: {
-			name: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.name`,
-			hint: `${CONSTANTS.MODULE_NAME}.setting.enableLightHUDOldInterface.hint`,
-			scope: "world",
-			config: true,
-			default: false,
-			type: Boolean,
-		},
 	};
 }
 
