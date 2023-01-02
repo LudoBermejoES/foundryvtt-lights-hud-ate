@@ -19,6 +19,8 @@
 
 This project is born like a fusion of the features of these modules [LightsHUD](https://github.com/Malekal4699/LightsHUD/), [ATE](https://github.com/kandashi/Active-Token-Lighting) and [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects), but after the initial code i rewriting everything so many times now is just a new module inspired form these other modules.
 
+A special ty go to [Illandril](https://github.com/illandril) for the module [Illandril's Hotbar Uses](https://github.com/illandril/FoundryVTT-hotbar-uses), from which taken the code for the analysis of the number of slots left on the object.
+
 Remember to support these authors if you feel generous on their patreon or kofi account.
 
 A Foundry VTT module that displays on the HUD config of the token all the available lighting and visions items on the token/actor with two modality:
@@ -259,6 +261,7 @@ Any issues, bugs, or feature requests are always welcome to be reported directly
 - [Image dropdown](https://github.com/marghoobsuleman/ms-Dropdown) with [MIT](https://github.com/marghoobsuleman/ms-Dropdown/blob/master/MIT-LICENSE.txt)
 - Some icons are retrieve from the [Dnd5e system](https://gitlab.com/foundrynet/dnd5e) with [MIT](https://gitlab.com/foundrynet/dnd5e/-/blob/master/LICENSE.txt)
 - Some icons are retrieve from the [Pf2 system](https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/) with [GPLv2](https://gitlab.com/hooking/foundry-vtt---pathfinder-2e/-/blob/master/LICENSE)
+- [Illandril's Hotbar Uses](https://github.com/illandril/FoundryVTT-hotbar-uses) th [MIT](https://github.com/illandril/FoundryVTT-hotbar-uses/blob/main/LICENSE)
 
 This package is under an [MIT license](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
 
@@ -282,3 +285,4 @@ Thanks to anyone who helps me with this code! I appreciate the user community's 
 - [Adjustable Vision](https://github.com/nevets0423/adjustable-vision) ty to [nevets0423](https://github.com/nevets0423)
 - [DFreds Convenient Effects](https://github.com/DFreds/dfreds-convenient-effects) ty to [DFreds](https://github.com/DFreds)
 - [DFreds Effects Panel](https://github.com/DFreds/dfreds-effects-panel) ty to [DFreds](https://github.com/DFreds)
+- [Illandril's Hotbar Uses](https://github.com/illandril/FoundryVTT-hotbar-uses) ty to [Illandril](https://github.com/illandril) for the module 
