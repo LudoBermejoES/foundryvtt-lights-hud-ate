@@ -1,3 +1,4 @@
+import type { CalculatedUsesData } from "../calculated-uses-data.js";
 import ItemSystem from "./item-system.js";
 
 const SYSTEM_ID = "pf2e";
@@ -20,7 +21,7 @@ class PF2eItemSystem extends ItemSystem {
 		super(SYSTEM_ID, DEFAULT_MACRO_REGEX_ARRAY);
 	}
 
-	async calculateUsesForItem(item) {
+	async calculateUsesForItem(item): Promise<CalculatedUsesData | null> {
 		return calculateUsesForItem(item);
 	}
 }

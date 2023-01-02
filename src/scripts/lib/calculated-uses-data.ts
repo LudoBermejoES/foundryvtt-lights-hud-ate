@@ -1,4 +1,4 @@
-export interface calculatedUsesData {
+export interface CalculatedUsesData {
 	available: number;
 	maximum?: number | null;
 	isAmmunition?: boolean;

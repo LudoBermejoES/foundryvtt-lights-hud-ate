@@ -1,4 +1,5 @@
 // archmage is "Toolkit13 (13th Age Compatible)"
+import type { CalculatedUsesData } from "../calculated-uses-data.js";
 import ItemSystem from "./item-system.js";
 
 const SYSTEM_ID = "archmage";
@@ -12,7 +13,7 @@ class Toolkit13ItemSystem extends ItemSystem {
 		super(SYSTEM_ID, DEFAULT_MACRO_REGEX_ARRAY);
 	}
 
-	async calculateUsesForItem(item) {
+	async calculateUsesForItem(item): Promise<CalculatedUsesData | null> {
 		return calculateUsesForItem(item);
 	}
 }

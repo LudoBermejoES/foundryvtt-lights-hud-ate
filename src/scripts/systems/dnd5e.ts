@@ -278,40 +278,7 @@ export default {
 			duration: -1,
 		},
 	],
-	retrieveAllItemsYouCanUseFromActor(actor): Item[] {
-		const weaponsItems = ["weapon", "spell", "tool"];
-		// let totalWeight: number = actorEntity.items.reduce((weight, item) => {
-		let aviableItems = <Item[]>[];
-		for (let im of <Item[]>actor.items.contents) {
-			if (im && weaponsItems.includes(im.type)) {
-				//CHECK FOR SLOTS AND AMMUNITION
-				const usesForItem = calculateUsesForItem(im);
-				const available = usesForItem.available;
-				const maximum = usesForItem.maximum;
-				const isAmmunition = usesForItem.isAmmunition;
-				if (is_real_number(available) && available > 0) {
-					aviableItems.push(im);
-				}
-			}
-		}
-		return aviableItems;
-	},
 	retrieveAllItemsYouCanUseFromItems(items: Item[]): Item[] {
-		const weaponsItems = ["weapon", "spell", "tool"];
-		// let totalWeight: number = actorEntity.items.reduce((weight, item) => {
-		let aviableItems = <Item[]>[];
-		for (let im of items) {
-			if (im && weaponsItems.includes(im.type)) {
-				//CHECK FOR SLOTS AND AMMUNITION
-				const usesForItem = calculateUsesForItem(im);
-				const available = usesForItem.available;
-				const maximum = usesForItem.maximum;
-				const isAmmunition = usesForItem.isAmmunition;
-				if (is_real_number(available) && available > 0) {
-					aviableItems.push(im);
-				}
-			}
-		}
-		return aviableItems;
+		new DnD5eItemSystem().
 	},
 };

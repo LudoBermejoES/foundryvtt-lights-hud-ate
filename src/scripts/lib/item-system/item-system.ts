@@ -1,4 +1,4 @@
-import type { calculatedUsesData } from "../calculated-uses-data";
+import type { CalculatedUsesData } from "../calculated-uses-data";
 
 export default class ItemSystem {
 	_systemID: string;
@@ -30,11 +30,11 @@ export default class ItemSystem {
 	// 	return this.calculateUsesForItems(items);
 	// }
 
-	async calculateUsesForItems(items): Promise<calculatedUsesData | null> {
+	async calculateUsesForItems(items): Promise<CalculatedUsesData | null> {
 		if (!items || items.length === 0) {
 			return { available: 0 };
 		}
-		let uses: calculatedUsesData | null = {
+		let uses: CalculatedUsesData | null = {
 			available: 0,
 			showZeroUses: true,
 		};
@@ -75,7 +75,7 @@ export default class ItemSystem {
 		return uses;
 	}
 
-	async calculateUsesForItem(item): Promise<calculatedUsesData | null> {
+	async calculateUsesForItem(item): Promise<CalculatedUsesData | null> {
 		throw new Error("ItemSystem for " + this._systemID + " did not implement calculateUsesForItem");
 	}
 

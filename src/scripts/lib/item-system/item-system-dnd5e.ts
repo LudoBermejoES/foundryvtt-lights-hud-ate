@@ -1,4 +1,4 @@
-import type { calculatedUsesData } from "../calculated-uses-data.js";
+import type { CalculatedUsesData } from "../calculated-uses-data.js";
 import ItemSystem from "./item-system.js";
 
 const SYSTEM_ID = "dnd5e";
@@ -42,7 +42,7 @@ class DnD5eItemSystem extends ItemSystem {
 		super(SYSTEM_ID, DEFAULT_MACRO_REGEX_ARRAY);
 	}
 
-	async calculateUsesForItem(item): Promise<calculatedUsesData | null> {
+	async calculateUsesForItem(item): Promise<CalculatedUsesData | null> {
 		const itemData = item.system;
 		const consume = itemData.consume;
 		if (consume && consume.target) {
@@ -70,7 +70,7 @@ class DnD5eItemSystem extends ItemSystem {
 }
 export default new DnD5eItemSystem();
 
-function calculateConsumeUses(actor, consume): calculatedUsesData | null {
+function calculateConsumeUses(actor, consume): CalculatedUsesData | null {
   let available: number | null = null;
   let maximum: number | null = null;
   if (consume.type === "attribute") {
@@ -111,7 +111,7 @@ function calculateConsumeUses(actor, consume): calculatedUsesData | null {
   return null;
 }
 
-function calculateLimitedUses(itemData): calculatedUsesData | null {
+function calculateLimitedUses(itemData): CalculatedUsesData | null {
   let available = itemData.uses.value;
   let maximum = itemData.uses.max;
   const quantity = itemData.quantity;
@@ -122,14 +122,14 @@ function calculateLimitedUses(itemData): calculatedUsesData | null {
   return { available, maximum };
 }
 
-function calculateFeatUses(itemData): calculatedUsesData | null {
+function calculateFeatUses(itemData): CalculatedUsesData | null {
   if (itemData.recharge && itemData.recharge.value) {
     return { available: itemData.recharge.charged ? 1 : 0, maximum: 1 };
   }
   return null;
 }
 
-function calculateSpellUses(item): calculatedUsesData | null {
+function calculateSpellUses(item): CalculatedUsesData | null {
   const itemData = item.system;
   const actorData = item.actor.system;
   let available = null;
@@ -154,7 +154,7 @@ function calculateSpellUses(item): calculatedUsesData | null {
   }
 }
 
-function calculateWeaponUses(itemData): calculatedUsesData | null {
+function calculateWeaponUses(itemData): CalculatedUsesData | null {
   // If the weapon is a thrown weapon, but not a returning weapon, show quantity
   if (itemData.properties.thr && !itemData.properties.ret) {
     return { available: itemData.quantity, maximum: null };

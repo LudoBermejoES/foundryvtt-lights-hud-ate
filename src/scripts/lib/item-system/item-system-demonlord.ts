@@ -1,4 +1,5 @@
 // Support for the Shadow of the Demon Lord system was initially added by Xacus
+import type { CalculatedUsesData } from "../calculated-uses-data.js";
 import ItemSystem from "./item-system.js";
 
 const SYSTEM_ID = "demonlord";
@@ -21,7 +22,7 @@ class DemonLordItemSystem extends ItemSystem {
 		super(SYSTEM_ID, DEFAULT_MACRO_REGEX_ARRAY);
 	}
 
-	async calculateUsesForItem(item) {
+	async calculateUsesForItem(item): Promise<CalculatedUsesData | null> {
 		return calculateUsesForItem(item);
 	}
 }
@@ -42,8 +43,9 @@ function consumedValueMax(uses) {
 	if (uses) {
 		const consumed = parseInt(uses.value, 10) || 0;
 		const maximum = parseInt(uses.max, 10) || 0;
+		const available = parseInt(uses.value, 10) || 0;
 		if (consumed > 0 || maximum > 0) {
-			return { consumed, maximum };
+			return { available, consumed, maximum };
 		}
 	}
 	return null;

@@ -1,3 +1,4 @@
+import type { CalculatedUsesData } from "../calculated-uses-data.js";
 import ItemSystem from "./item-system.js";
 
 const SYSTEM_ID = "GENERIC";
@@ -7,7 +8,7 @@ class GenericSystem extends ItemSystem {
 		super(SYSTEM_ID, []);
 	}
 
-	async calculateUsesForItem(item) {
+	async calculateUsesForItem(item): Promise<CalculatedUsesData | null> {
 		// Everything that this system supports is handled by the base ItemSystem
 		return null;
 	}
