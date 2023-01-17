@@ -1,0 +1,171 @@
+<div class="control-icon" data-action="lights-hud-ate-selector" >
+    <img src="modules/lights-hud-ate/assets/lightbulb-solid.svg"
+        style="color: aliceblue; background: aliceblue;"
+        width="36" height="36" title="{{localize 'lights-hud-ate.windows.art-select.title' }}" />
+
+    <div class="lights-hud-ate-selector-wrap {{#unless imageDisplay}}list{{/unless}}">
+    {{!-- {{#if imagesParsed}} --}}
+    {{#each imagesParsed as |effect|}}
+        {{#if effect.type}}
+            <button oncontextmenu="javascript:return false;" class="lights-hud-ate-button-select control-icon {{#unless ../imageDisplay}}list{{/unless}}
+                {{#if effect.applied}}
+                    {{#if effect.passive}}
+                        {{#if effect.applied}}
+                        lights-hud-ate-button-disabled-passive active
+                        {{else}}
+                        lights-hud-ate-button-disabled-passive
+                        {{/if}}
+                    {{else}}
+                        {{#if effect.applied}}
+                        lights-hud-ate-button-disabled active
+                        {{else}}
+                        lights-hud-ate-button-disabled
+                        {{/if}}
+                    {{/if}}
+                {{/if}}" >
+
+                {{#if ../imageDisplay}}
+                    {{#if effect.img}}
+                        <img class="lights-hud-ate-button-image" src="{{effect.icon}}"
+                            alt="{{effect.name}}"
+                            data-token-id="{{effect.tokenid}}"
+                            data-actor-id="{{effect.actorid}}"
+                            data-icon="{{effect.icon}}"
+                            data-item-id="{{effect.itemid}}"
+                            data-item-name="{{effect.itemname}}"
+                            data-effect-id="{{effect.effectid}}"
+                            data-effect-name="{{effect.effectname}}"
+                            data-applied="{{effect.applied}}"
+                            data-disabled="{{effect.disabled}}"
+                            data-suppressed="{{effect.suppressed}}"
+                            data-temporary="{{effect.isTemporary}}"
+                            data-passive="{{effect.passive}}"
+                            style="opacity:{{../imageOpacity}};" />
+
+                    {{/if}}
+                    {{#if effect.vid}}
+                        <video class="lights-hud-ate-button-image" src="{{effect.icon}}"
+                            alt="{{effect.name}}"
+                            data-token-id="{{effect.tokenid}}"
+                            data-actor-id="{{effect.actorid}}"
+                            data-icon="{{effect.icon}}"
+                            data-item-id="{{effect.itemid}}"
+                            data-item-name="{{effect.itemname}}"
+                            data-effect-id="{{effect.effectid}}"
+                            data-effect-name="{{effect.effectname}}"
+                            data-applied="{{effect.applied}}"
+                            data-disabled="{{effect.disabled}}"
+                            data-suppressed="{{effect.suppressed}}"
+                            data-temporary="{{effect.isTemporary}}"
+                            data-passive="{{effect.passive}}"
+                            style="opacity:{{../imageOpacity}};" autoplay loop>
+                        </video>
+                    {{/if}}
+                    {{#unless effect.type}}
+                        <span class="lights-hud-ate-button-image"
+                            alt="{{effect.name}}"
+                            data-token-id="{{effect.tokenid}}"
+                            data-actor-id="{{effect.actorid}}"
+                            data-icon="{{effect.icon}}"
+                            data-item-id="{{effect.itemid}}"
+                            data-item-name="{{effect.itemname}}"
+                            data-effect-id="{{effect.effectid}}"
+                            data-effect-name="{{effect.effectname}}"
+                            data-applied="{{effect.applied}}"
+                            data-disabled="{{effect.disabled}}"
+                            data-suppressed="{{effect.suppressed}}"
+                            data-temporary="{{effect.isTemporary}}"
+                            data-passive="{{effect.passive}}">{{effect.icon}}</span>
+                    {{/unless}}
+
+                    {{#if effect.suppressed}}
+                    <i class="lights-hud-ate-button-icon badge fas fa-exclamation-triangle"></i>
+                    {{/if}}
+                    {{#if effect.passive}}
+                    <i class="lights-hud-ate-button-icon badge fas fa-eye"></i>
+                    {{/if}}
+
+                    {{#if effect.isExpired}}
+                    <i class="lights-hud-ate-button-icon badge expired fas fa-clock"></i>
+                    {{else if effect.isTemporary}}
+                    <i class="lights-hud-ate-button-icon badge fas fa-clock"></i>
+                    {{else}}
+                    <i class="lights-hud-ate-button-icon badge unlimited fas fa-infinity"></i>
+                    {{/if}}
+
+                    {{#if effect.applied}}
+                    <i class="lights-hud-ate-button-icon badge applied fas fa-lightbulb"></i>
+                    {{else}}
+                    <i class="lights-hud-ate-button-icon badge fas fa-lightbulb"></i>
+                    {{/if}}
+                {{else}}
+                    <span class="lights-hud-ate-button-image-text"
+                        alt="{{effect.label}}"
+                        data-token-id="{{effect.tokenid}}"
+                        data-actor-id="{{effect.actorid}}"
+                        data-icon="{{effect.icon}}"
+                        data-item-id="{{effect.itemid}}"
+                        data-item-name="{{effect.itemname}}"
+                        data-effect-id="{{effect.effectid}}"
+                        data-effect-name="{{effect.effectname}}"
+                        data-applied="{{effect.applied}}"
+                        data-disabled="{{effect.disabled}}"
+                        data-suppressed="{{effect.suppressed}}"
+                        data-temporary="{{effect.isTemporary}}"
+                        data-passive="{{effect.passive}}">{{effect.name}}</span>
+                    <!--
+                    {{#if effect.suppressed}}
+                    <i class="lights-hud-ate-button-icon-text badge fas fa-exclamation-triangle"></i>
+                    {{/if}}
+                    {{#if effect.passive}}
+                    <i class="lights-hud-ate-button-icon-text badge fas fa-eye"></i>
+                    {{/if}}
+
+                    {{#if effect.isExpired}}
+                    <i class="lights-hud-ate-button-icon-text badge expired fas fa-clock"></i>
+                    {{else if effect.isTemporary}}
+                    <i class="lights-hud-ate-button-icon-text badge fas fa-clock"></i>
+                    {{else}}
+                    <i class="lights-hud-ate-button-icon-text badge unlimited fas fa-infinity"></i>
+                    {{/if}}
+
+                    {{#if effect.applied}}
+                    <i class="lights-hud-ate-button-icon-text badge applied fas fa-lightbulb"></i>
+                    {{else}}
+                    <i class="lights-hud-ate-button-icon-text badge fas fa-lightbulb"></i>
+                    {{/if}}
+                    -->
+                {{/if}}
+                <!--
+                <div class="effect-info">
+                    <h1>{{effect.label}}</h1>
+                    {{#if (canViewEffectDetails)}}
+                    <div class="effect-info-details">
+                    {{#if effect.flags.convenientDescription}}
+                    <h2>{{effect.flags.convenientDescription}}</h2>
+                    {{/if}}
+                    <div class="lights-hud-ate-tags">
+                        <div class="tag tag_primary">{{#if effect.isTemporary}} temporary {{else}} passive {{/if}}</div>
+                        <div class="tag tag_secondary">{{remainingTimeLabel effect}}</div>
+                    </div>
+                </div>
+                -->
+            </button>
+        {{/if}}
+    {{/each}}
+    {{!-- {{else}}
+    <div>
+        <span data-name="">{{localize "lights-hud-ate.windows.art-select.no-art-found"}}</span>
+    </div>
+    {{/if}} --}}
+    {{#if isGM}}
+    <button class="lights-hud-ate-button-macro-preset"
+        data-token-id="{{tokenId}}"
+        data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-preset"}}</button>
+    <button class="lights-hud-ate-button-macro-custom"
+        data-token-id="{{tokenId}}"
+        data-actor-id="{{actorId}}">{{localize "lights-hud-ate.windows.art-select.call-macro-custom"}}</button>
+    {{/if}}
+    </div>
+</div>
+

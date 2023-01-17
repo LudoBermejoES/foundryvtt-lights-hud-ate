@@ -1,13 +1,5 @@
-CHANGELOG
-===================================
+### 0.2.0
 
-0.10.3
-----
-- Module name Changed.
-- Added debug option. (It's verbose, don't check unless there is a need to or it is requested.)
-- Console Module Name in Ascii art.
+- Fvtt 10 Initial Release
 
-----
-0.10.2
-----
-- Script upgraded to work with Foundry 0.9.x
+### 0.12.0
