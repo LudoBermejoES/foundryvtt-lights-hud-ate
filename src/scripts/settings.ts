@@ -483,7 +483,6 @@ function otherSettings(apply = false) {
 			default: false,
 			type: Boolean,
 		},
-
 	};
 }
 

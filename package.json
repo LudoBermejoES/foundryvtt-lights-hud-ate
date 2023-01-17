@@ -2,7 +2,7 @@
   "name": "lights-hud-ate",
   "title": "LightsHUD+ATE",
   "description": "Lights HUD Control + Active Token Effect",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "main.js",
   "scripts": {
     "publish": "gulp publish --update",
