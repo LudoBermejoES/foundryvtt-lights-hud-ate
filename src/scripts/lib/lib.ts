@@ -14,12 +14,20 @@ import { aemlApiLigthsHudAte } from "../module";
 // Module Generic function
 // =============================
 
+/**
+ *
+ * @param documentUuid
+ */
 export async function getToken(documentUuid) {
 	const document = await fromUuid(documentUuid);
-	//@ts-ignore
+	// @ts-ignore
 	return document?.token ?? document;
 }
 
+/**
+ *
+ * @param priorityToControlledIfGM
+ */
 export function getOwnedTokens(priorityToControlledIfGM: boolean): Token[] {
 	const gm = game.user?.isGM;
 	if (gm) {
@@ -53,10 +61,18 @@ export function getOwnedTokens(priorityToControlledIfGM: boolean): Token[] {
 	return ownedTokens;
 }
 
+/**
+ *
+ * @param inId
+ */
 export function is_UUID(inId) {
 	return typeof inId === "string" && (inId.match(/\./g) || []).length && !inId.endsWith(".");
 }
 
+/**
+ *
+ * @param target
+ */
 export function getUuid(target) {
 	// If it's an actor, get its TokenDocument
 	// If it's a token, get its Document
@@ -66,38 +82,66 @@ export function getUuid(target) {
 	return document?.uuid ?? false;
 }
 
+/**
+ *
+ * @param target
+ */
 export function getDocument(target) {
 	if (target instanceof foundry.abstract.Document) return target;
 	return target?.document;
 }
 
+/**
+ *
+ * @param inNumber
+ */
 export function is_real_number(inNumber) {
 	return !isNaN(inNumber) && typeof inNumber === "number" && isFinite(inNumber);
 }
 
+/**
+ *
+ */
 export function isGMConnected() {
 	return !!Array.from(<Users>game.users).find((user) => user.isGM && user.active);
 }
 
+/**
+ *
+ */
 export function isGMConnectedAndSocketLibEnable() {
 	return isGMConnected(); // && !game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature');
 }
 
+/**
+ *
+ * @param ms
+ */
 export function wait(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/**
+ *
+ * @param user
+ */
 export function isActiveGM(user) {
 	return user.active && user.isGM;
 }
 
+/**
+ *
+ */
 export function getActiveGMs() {
 	return game.users?.filter(isActiveGM);
 }
 
+/**
+ *
+ */
 export function isResponsibleGM() {
 	if (!game.user?.isGM) return false;
-	//@ts-ignore
+	// @ts-ignore
 	return !getActiveGMs()?.some((other) => other.document._id < <string>game.user?.document._id);
 }
 
@@ -108,6 +152,11 @@ export function isResponsibleGM() {
 // export let debugEnabled = 0;
 // 0 = none, warnings = 1, debug = 2, all = 3
 
+/**
+ *
+ * @param msg
+ * @param args
+ */
 export function debug(msg, args = "") {
 	if (game.settings.get(CONSTANTS.MODULE_NAME, "debug")) {
 		console.log(`DEBUG | ${CONSTANTS.MODULE_NAME} | ${msg}`, args);
@@ -115,12 +164,20 @@ export function debug(msg, args = "") {
 	return msg;
 }
 
+/**
+ *
+ * @param message
+ */
 export function log(message) {
 	message = `${CONSTANTS.MODULE_NAME} | ${message}`;
 	console.log(message.replace("<br>", "\n"));
 	return message;
 }
 
+/**
+ *
+ * @param message
+ */
 export function notify(message) {
 	message = `${CONSTANTS.MODULE_NAME} | ${message}`;
 	ui.notifications?.notify(message);
@@ -128,6 +185,11 @@ export function notify(message) {
 	return message;
 }
 
+/**
+ *
+ * @param info
+ * @param notify
+ */
 export function info(info, notify = false) {
 	info = `${CONSTANTS.MODULE_NAME} | ${info}`;
 	if (notify) ui.notifications?.info(info);
@@ -135,6 +197,11 @@ export function info(info, notify = false) {
 	return info;
 }
 
+/**
+ *
+ * @param warning
+ * @param notify
+ */
 export function warn(warning, notify = false) {
 	warning = `${CONSTANTS.MODULE_NAME} | ${warning}`;
 	if (notify) ui.notifications?.warn(warning);
@@ -142,12 +209,21 @@ export function warn(warning, notify = false) {
 	return warning;
 }
 
+/**
+ *
+ * @param error
+ * @param notify
+ */
 export function error(error, notify = true) {
 	error = `${CONSTANTS.MODULE_NAME} | ${error}`;
 	if (notify) ui.notifications?.error(error);
 	return new Error(error.replace("<br>", "\n"));
 }
 
+/**
+ *
+ * @param message
+ */
 export function timelog(message): void {
 	warn(Date.now(), message);
 }
@@ -160,12 +236,17 @@ export const i18nFormat = (key: string, data = {}): string => {
 	return game.i18n.format(key, data)?.trim();
 };
 
-// export const setDebugLevel = (debugText: string): void => {
+// Export const setDebugLevel = (debugText: string): void => {
 //   debugEnabled = { none: 0, warn: 1, debug: 2, all: 3 }[debugText] || 0;
 //   // 0 = none, warnings = 1, debug = 2, all = 3
 //   if (debugEnabled >= 3) CONFIG.debug.hooks = true;
 // };
 
+/**
+ *
+ * @param message
+ * @param icon
+ */
 export function dialogWarning(message, icon = "fas fa-exclamation-triangle") {
 	return `<p class="${CONSTANTS.MODULE_NAME}-dialog">
         <i style="font-size:3rem;" class="${icon}"></i><br><br>
@@ -176,8 +257,12 @@ export function dialogWarning(message, icon = "fas fa-exclamation-triangle") {
 
 // =========================================================================================
 
+/**
+ *
+ * @param stringToCleanUp
+ */
 export function cleanUpString(stringToCleanUp: string) {
-	// regex expression to match all non-alphanumeric characters in string
+	// Regex expression to match all non-alphanumeric characters in string
 	const regex = /[^A-Za-z0-9]/g;
 	if (stringToCleanUp) {
 		return i18n(stringToCleanUp).replace(regex, "").toLowerCase();
@@ -186,6 +271,12 @@ export function cleanUpString(stringToCleanUp: string) {
 	}
 }
 
+/**
+ *
+ * @param stringToCheck1
+ * @param stringToCheck2
+ * @param startsWith
+ */
 export function isStringEquals(stringToCheck1: string, stringToCheck2: string, startsWith = false): boolean {
 	if (stringToCheck1 && stringToCheck2) {
 		const s1 = cleanUpString(stringToCheck1) ?? "";
@@ -203,12 +294,13 @@ export function isStringEquals(stringToCheck1: string, stringToCheck2: string, s
 /**
  * The duplicate function of foundry keep converting my stirng value to "0"
  * i don't know why this methos is a brute force solution for avoid that problem
+ * @param obj
  */
 export function duplicateExtended(obj: any): any {
 	try {
-		//@ts-ignore
+		// @ts-ignore
 		if (structuredClone) {
-			//@ts-ignore
+			// @ts-ignore
 			return structuredClone(obj);
 		} else {
 			// Shallow copy
@@ -231,7 +323,7 @@ export function duplicateExtended(obj: any): any {
  * @returns
  */
 export function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O): K[] {
-	return Object.keys(obj).filter((k) => Number.isNaN(+k)) as K[];
+	return Object.keys(obj).filter((k) => Number.isNaN(Number(k))) as K[];
 }
 
 /**
@@ -257,16 +349,16 @@ export function getFirstPlayerTokenSelected(): Token | null {
 	// Get first token ownted by the player
 	const selectedTokens = <Token[]>canvas.tokens?.controlled;
 	if (selectedTokens.length > 1) {
-		//iteractionFailNotification(i18n("foundryvtt-arms-reach.warningNoSelectMoreThanOneToken"));
+		// IteractionFailNotification(i18n("foundryvtt-arms-reach.warningNoSelectMoreThanOneToken"));
 		return null;
 	}
-	if (!selectedTokens || selectedTokens.length == 0) {
-		//if(game.user.character.token){
+	if (!selectedTokens || selectedTokens.length === 0) {
+		// If(game.user.character.token){
 		//  //@ts-ignore
 		//  return game.user.character.token;
-		//}else{
+		// }else{
 		return null;
-		//}
+		// }
 	}
 	return <Token>selectedTokens[0];
 }
@@ -281,16 +373,16 @@ export function getFirstPlayerToken(): Token | null {
 	const controlled: Token[] = <Token[]>canvas.tokens?.controlled;
 	// Do nothing if multiple tokens are selected
 	if (controlled.length && controlled.length > 1) {
-		//iteractionFailNotification(i18n("foundryvtt-arms-reach.warningNoSelectMoreThanOneToken"));
+		// IteractionFailNotification(i18n("foundryvtt-arms-reach.warningNoSelectMoreThanOneToken"));
 		return null;
 	}
 	// If exactly one token is selected, take that
 	token = <Token>controlled[0];
 	if (!token) {
-		if (!controlled.length || controlled.length == 0) {
+		if (!controlled.length || controlled.length === 0) {
 			// If no token is selected use the token of the users character
 			token = <
-				Token //@ts-ignore
+				Token // @ts-ignore
 			>canvas.tokens?.placeables.find((token) => token.document._id === game.user?.character?.document?._id);
 		}
 		// If no token is selected use the first owned token of the users character you found
@@ -301,33 +393,45 @@ export function getFirstPlayerToken(): Token | null {
 	return token;
 }
 
+/**
+ *
+ * @param token
+ */
 function getElevationToken(token: Token): number {
 	const base = token.document;
 	return getElevationPlaceableObject(base);
 }
 
+/**
+ *
+ * @param wall
+ */
 function getElevationWall(wall: Wall): number {
 	const base = wall.document;
 	return getElevationPlaceableObject(base);
 }
 
+/**
+ *
+ * @param placeableObject
+ */
 function getElevationPlaceableObject(placeableObject: any): number {
 	let base = placeableObject;
 	if (base.document) {
 		base = base.document;
 	}
 	const base_elevation =
-		//@ts-ignore
+		// @ts-ignore
 		typeof _levels !== "undefined" &&
-		//@ts-ignore
+		// @ts-ignore
 		_levels?.advancedLOS &&
 		(placeableObject instanceof Token || placeableObject instanceof TokenDocument)
-			? //@ts-ignore
+			? // @ts-ignore
 			  _levels.getTokenLOSheight(placeableObject)
 			: base.elevation ??
-			  base.flags["levels"]?.elevation ??
-			  base.flags["levels"]?.rangeBottom ??
-			  base.flags["wallHeight"]?.wallHeightBottom ??
+			  base.flags.levels?.elevation ??
+			  base.flags.levels?.rangeBottom ??
+			  base.flags.wallHeight?.wallHeightBottom ??
 			  0;
 	return base_elevation;
 }
@@ -339,6 +443,9 @@ function getElevationPlaceableObject(placeableObject: any): number {
 /*
  * Returns the first GM id.
  */
+/**
+ *
+ */
 export function firstGM() {
 	const gmId = Array.from(<Users>game.users).find((user) => user.isGM && user.active)?.id;
 	if (!gmId) {
@@ -349,10 +456,11 @@ export function firstGM() {
 
 /**
  * TODO if i need to manage the roll for specific system usually is enough item.use()
+ * @param item
  * @href https://github.com/itamarcu/roll-from-compendium/blob/master/scripts/roll-from-compendium.js
  */
 export async function rollDependingOnSystem(item: Item) {
-	// if (game.system.id === 'pf2e') {
+	// If (game.system.id === 'pf2e') {
 	//   if (item.type === 'spell') {
 	//     return pf2eCastSpell(item, actor, dummyActor)
 	//   } else {
@@ -363,14 +471,48 @@ export async function rollDependingOnSystem(item: Item) {
 	//   const actorHasItem = !!actor.items.get(item.id)
 	//   return dnd5eRollItem(item, actor, actorHasItem)
 	// }
-	//@ts-ignore
-	return item.use();
+	// @ts-ignore
+	if (item.use) return item.use();
 }
 
 // Update the relevant light parameters of a token
+/**
+ *
+ * @param token
+ * @param sightEnabled
+ * @param dimSight
+ * @param brightSight
+ * @param sightAngle
+ * @param sightVisionMode
+ * @param dimLight
+ * @param brightLight
+ * @param lightColor
+ * @param lightAlpha
+ * @param lightAngle
+ * @param lightColoration
+ * @param lightLuminosity
+ * @param lightGradual
+ * @param lightSaturation
+ * @param lightContrast
+ * @param lightShadows
+ * @param lightAnimationType
+ * @param lightAnimationSpeed
+ * @param lightAnimationIntensity
+ * @param lightAnimationReverse
+ * @param applyAsAtlEffect
+ * @param effectName
+ * @param effectIcon
+ * @param duration
+ * @param vision
+ * @param height
+ * @param width
+ * @param scale
+ * @param alpha
+ * @param isPreset
+ */
 export async function updateTokenLighting(
 	token: Token,
-	//lockRotation: boolean,
+	// LockRotation: boolean,
 	sightEnabled: boolean | null = null,
 	dimSight: number,
 	brightSight: number,
@@ -381,37 +523,32 @@ export async function updateTokenLighting(
 	lightColor: string,
 	lightAlpha: number,
 	lightAngle: number,
-
 	lightColoration: number | null = null,
 	lightLuminosity: number | null = null,
 	lightGradual: boolean | null = null,
 	lightSaturation: number | null = null,
 	lightContrast: number | null = null,
 	lightShadows: number | null = null,
-
 	lightAnimationType: string | null,
 	lightAnimationSpeed: number | null,
 	lightAnimationIntensity: number | null,
 	lightAnimationReverse: boolean | null,
-
 	applyAsAtlEffect = false,
 	effectName: string | null = "LightHUD+ATE Effect",
 	effectIcon: string | null = `modules/${CONSTANTS.MODULE_NAME}/assets/lightbulb-solid.svg`,
 	duration: number | null = null,
-
 	vision = false,
-	// id: string | null = null,
+	// Id: string | null = null,
 	// name: string | null = null,
 	height: number | null = null,
 	width: number | null = null,
 	scale: number | null = null,
 	alpha: number | null = null,
-
 	isPreset: boolean
 ) {
 	if (applyAsAtlEffect) {
 		const efffectAtlToApply = await aemlApiLigthsHudAte.convertToATLEffect(
-			//lockRotation,
+			// LockRotation,
 			<boolean>sightEnabled,
 			dimSight,
 			brightSight,
@@ -436,12 +573,12 @@ export async function updateTokenLighting(
 			lightAnimationIntensity,
 			lightAnimationReverse,
 
-			// applyAsAtlEffect,
+			// ApplyAsAtlEffect,
 			effectName,
 			effectIcon,
 			duration,
 
-			// vision,
+			// Vision,
 			// id,
 			// name,
 			height,
@@ -454,80 +591,80 @@ export async function updateTokenLighting(
 	} else {
 		const tokenData = <any>token.document;
 		// TODO FIND A BETTER WAY FOR THIS
-		if (dimSight == null || dimSight == undefined) {
+		if (dimSight === null || dimSight === undefined) {
 			dimSight = tokenData.dimSight;
 		}
-		if (brightSight == null || brightSight == undefined) {
+		if (brightSight === null || brightSight === undefined) {
 			brightSight = tokenData.brightSight;
 		}
-		if (sightAngle == null || sightAngle == undefined) {
+		if (sightAngle === null || sightAngle === undefined) {
 			sightAngle = tokenData.sightAngle;
 		}
 
-		// if (lockRotation == null || lockRotation == undefined) {
+		// If (lockRotation === null || lockRotation === undefined) {
 		//   lockRotation = tokenData.lockRotation;
 		// }
 
-		if (dimLight == null || dimLight == undefined) {
+		if (dimLight === null || dimLight === undefined) {
 			dimLight = tokenData.light.dim;
 		}
-		if (brightLight == null || brightLight == undefined) {
+		if (brightLight === null || brightLight === undefined) {
 			brightLight = tokenData.light.bright;
 		}
-		if (lightColor == null || lightColor == undefined) {
+		if (lightColor === null || lightColor === undefined) {
 			lightColor = <string>tokenData.light.color;
 		}
-		if (lightAlpha == null || lightAlpha == undefined) {
+		if (lightAlpha === null || lightAlpha === undefined) {
 			lightAlpha = tokenData.light.alpha;
 		}
-		if (lightAngle == null || lightAngle == undefined) {
+		if (lightAngle === null || lightAngle === undefined) {
 			lightAngle = tokenData.light.angle;
 		}
 
-		if (lightColoration == null || lightColoration == undefined) {
+		if (lightColoration === null || lightColoration === undefined) {
 			lightColoration = tokenData.light.angle;
 		}
-		if (lightLuminosity == null || lightLuminosity == undefined) {
+		if (lightLuminosity === null || lightLuminosity === undefined) {
 			lightLuminosity = tokenData.light.angle;
 		}
-		if (lightGradual == null || lightGradual == undefined) {
+		if (lightGradual === null || lightGradual === undefined) {
 			lightGradual = tokenData.light.gradual;
 		}
-		if (lightSaturation == null || lightSaturation == undefined) {
+		if (lightSaturation === null || lightSaturation === undefined) {
 			lightSaturation = tokenData.light.saturation;
 		}
-		if (lightContrast == null || lightContrast == undefined) {
+		if (lightContrast === null || lightContrast === undefined) {
 			lightContrast = tokenData.light.contrast;
 		}
-		if (lightShadows == null || lightShadows == undefined) {
+		if (lightShadows === null || lightShadows === undefined) {
 			lightShadows = tokenData.light.shadows;
 		}
 
-		if (lightAnimationType == null || lightAnimationType == undefined) {
+		if (lightAnimationType === null || lightAnimationType === undefined) {
 			lightAnimationType = <string>tokenData.light.animation.type;
 		}
-		if (lightAnimationSpeed == null || lightAnimationSpeed == undefined) {
+		if (lightAnimationSpeed === null || lightAnimationSpeed === undefined) {
 			lightAnimationSpeed = tokenData.light.animation.speed;
 		}
-		if (lightAnimationIntensity == null || lightAnimationIntensity == undefined) {
+		if (lightAnimationIntensity === null || lightAnimationIntensity === undefined) {
 			lightAnimationIntensity = tokenData.light.animation.intensity;
 		}
-		if (lightAnimationReverse == null || lightAnimationReverse == undefined) {
+		if (lightAnimationReverse === null || lightAnimationReverse === undefined) {
 			lightAnimationReverse = tokenData.light.animation.reverse;
 		}
 
-		if (height == null || height == undefined) {
+		if (height === null || height === undefined) {
 			height = tokenData.height;
 		}
-		if (width == null || width == undefined) {
+		if (width === null || width === undefined) {
 			width = tokenData.width;
 		}
-		if (scale == null || scale == undefined) {
+		if (scale === null || scale === undefined) {
 			scale = tokenData.texture.scaleX;
 		}
 
 		token.document.update({
-			// lockRotation: lockRotation,
+			// LockRotation: lockRotation,
 			vision: vision,
 			// REMOVED ONLY ATL CAN CHANGE THESE
 			// height: height,
@@ -537,7 +674,7 @@ export async function updateTokenLighting(
 				dim: manageDist(dimLight, isPreset),
 				bright: manageDist(brightLight, isPreset),
 				color: lightColor,
-				//@ts-ignore
+				// @ts-ignore
 				animation: {
 					type: lightAnimationType,
 					speed: lightAnimationSpeed,
@@ -560,19 +697,25 @@ export async function updateTokenLighting(
 	}
 }
 
+/**
+ *
+ * @param token
+ * @param tokenData
+ * @param isPreset
+ */
 export async function updateTokenLightingFromData(token: Token, tokenData: any, isPreset: boolean) {
 	await token.document.update({
-		// lockRotation: lockRotation,
+		// LockRotation: lockRotation,
 		vision: tokenData.vision,
 		height: tokenData.height,
 		width: tokenData.width,
-		//@ts-ignore
+		// @ts-ignore
 		scale: tokenData.texture.scaleX,
 		light: {
 			dim: manageDist(tokenData.light.dim, isPreset),
 			bright: manageDist(tokenData.light.bright, isPreset),
 			color: tokenData.light.color,
-			//@ts-ignore
+			// @ts-ignore
 			animation: {
 				type: tokenData.light.animation.type,
 				speed: tokenData.light.animation.speed,
@@ -595,12 +738,17 @@ export async function updateTokenLightingFromData(token: Token, tokenData: any, 
 }
 
 /**
- * actor: Actor, di solito quello collegato al player `game.user.character`
+ * Actor: Actor, di solito quello collegato al player `game.user.character`
  * data : {x, y} , le coordinate dove costruire il token
  * type : string , di solito `character` ,lista dei tipi accettati da Dnd5e [actorless,character,npc,vehicle]
+ * @param item
+ * @param data
+ * @param data.x
+ * @param data.y
+ * @param type
  */
 export async function dropTheToken(item: Item, data: { x; y }, type = "character") {
-	// if (!Array.isArray(inAttributes)) {
+	// If (!Array.isArray(inAttributes)) {
 	//   throw Error('deleteAndcreateToken | inAttributes must be of type array');
 	// }
 	// const [actor, data, type, scene] = inAttributes;
@@ -620,11 +768,11 @@ export async function dropTheToken(item: Item, data: { x; y }, type = "character
 		error("No data is present");
 		return;
 	}
-	if (data.x == undefined || data.x == null || isNaN(data.x)) {
+	if (data.x === undefined || data.x === null || isNaN(data.x)) {
 		error("No data.x is present");
 		return;
 	}
-	if (data.y == undefined || data.y == null || isNaN(data.y)) {
+	if (data.y === undefined || data.y === null || isNaN(data.y)) {
 		error("No data.y is present");
 		return;
 	}
@@ -632,7 +780,7 @@ export async function dropTheToken(item: Item, data: { x; y }, type = "character
 	// from the scene currenlty loaded
 	// BE AWARE IF YOU PUT THE WRONG ACTOR YOU REMOVE ALL THE TOKEN ASSOCIATED
 	// TO THAT ACTOR AND WHERE THE CURRENT USER IS OWNER
-	//const tokensToDelete = canvas.tokens.controlled.filter(token => token.owner).map(token => ({
+	// const tokensToDelete = canvas.tokens.controlled.filter(token => token.owner).map(token => ({
 	// const tokensToDelete = scene.tokens.contents
 	//   .filter((token) => token.isOwner)
 	//   .map((token) => ({
@@ -678,7 +826,7 @@ export async function dropTheToken(item: Item, data: { x; y }, type = "character
 	// Snap to grid
 	foundry.utils.mergeObject(tokenData, canvas.grid?.getSnappedPosition(data.x, data.y, 1));
 	if (!canvas.grid?.hitArea.contains(tokenData.x, tokenData.y)) {
-		// warn('End scene:' + scene.name);
+		// Warn('End scene:' + scene.name);
 		return undefined;
 	}
 	// Get the Token image
@@ -690,30 +838,30 @@ export async function dropTheToken(item: Item, data: { x; y }, type = "character
 	// }
 
 	// Merge Token data with the default for the Actor
-	//@ts-ignore
+	// @ts-ignore
 	const tokenData2: any = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
 	tokenData2.actorId = <string>actor.id;
 	tokenData2.actorLink = true;
 
 	const atlEffects = item.effects.filter((entity) => {
-		//@ts-ignore
-		return entity.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+		// @ts-ignore
+		return entity.changes.find((effect) => effect.key.includes("ATL")) !== undefined;
 	});
 	await Promise.all(
 		atlEffects.map(async (ae: ActiveEffect) => {
 			// Make sure is enabled
-			//@ts-ignore
+			// @ts-ignore
 			ae.disabled = false;
-			//@ts-ignore
+			// @ts-ignore
 			await aemlApiLigthsHudAte.addActiveEffectOnToken(<string>actor.token?.id, ae);
 		})
 	);
 
 	// Submit the Token creation request and activate the Tokens layer (if not already active)
 	canvas.getLayerByEmbeddedName("Token")?.activate();
-	//@ts-ignore
+	// @ts-ignore
 	await canvas.scene?.createEmbeddedDocuments("Token", [tokenData2], {});
-	// await scene?.createEmbeddedDocuments('Token', [tokenData2], {});
+	// Await scene?.createEmbeddedDocuments('Token', [tokenData2], {});
 
 	// delete actor if it's actorless
 	if (type === "actorless") {
@@ -724,14 +872,17 @@ export async function dropTheToken(item: Item, data: { x; y }, type = "character
 	const token = canvas.tokens?.placeables.find((token) => {
 		return token.document.actor?.id === actor.id;
 	});
-	// warn('End scene:' + scene.name);
+	// Warn('End scene:' + scene.name);
 	return token;
 }
 
 /**
- * actor: Actor, di solito quello collegato al player `game.user.character`
+ * Actor: Actor, di solito quello collegato al player `game.user.character`
  * data : {x, y} , le coordinate dove costruire il token
  * type : string , di solito `character` ,lista dei tipi accettati da Dnd5e [actorless,character,npc,vehicle]
+ * @param item
+ * @param elevation
+ * @param type
  */
 export async function prepareTokenDataDropTheTorch(
 	item: Item,
@@ -759,10 +910,10 @@ export async function prepareTokenDataDropTheTorch(
 
 	let actorDataEffects: any[] = [];
 	const atlEffects = item.effects.filter((entity) => {
-		//@ts-ignore
-		return entity.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+		// @ts-ignore
+		return entity.changes.find((effect) => effect.key.includes("ATL")) !== undefined;
 	});
-	// for (const ae of atlEffects) {
+	// For (const ae of atlEffects) {
 	// 	// Make sure is enabled
 	// 	//@ts-ignore
 	// 	ae.disabled = false;
@@ -785,7 +936,7 @@ export async function prepareTokenDataDropTheTorch(
 		} catch (e) {
 			effectTmp = effect.toJSON();
 		}
-		//@ts-ignore
+		// @ts-ignore
 		delete effectTmp._id;
 		tokenEffectsCleaned.push(effectTmp);
 	}
@@ -802,21 +953,21 @@ export async function prepareTokenDataDropTheTorch(
 	});
 
 	const atlActorEffects = newActorDropped.effects.filter((entity) => {
-		//@ts-ignore
-		return entity.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+		// @ts-ignore
+		return entity.changes.find((effect) => effect.key.includes("ATL")) !== undefined;
 	});
 	for (const ae of atlActorEffects) {
 		// Make sure is enabled
-		//@ts-ignore
+		// @ts-ignore
 		ae.disabled = false;
-		//@ts-ignore
+		// @ts-ignore
 		ae.transfer = true;
-		//@ts-ignore
+		// @ts-ignore
 		if (!ae.origin) {
-			//@ts-ignore
+			// @ts-ignore
 			ae.origin = await aemlApiLigthsHudAte.prepareOriginForActor(newActorDropped.id);
 		}
-		// await actor.createEmbeddedDocuments('ActiveEffect', [<Record<string, any>>ae]);
+		// Await actor.createEmbeddedDocuments('ActiveEffect', [<Record<string, any>>ae]);
 		await ae.update({
 			disabled: false,
 			transfer: true,
@@ -828,34 +979,38 @@ export async function prepareTokenDataDropTheTorch(
 	}
 
 	// WTF ???? THIS CONVERT SOME FALSE TO TRUE ????
-	//const actorData = foundry.utils.duplicate(actor);
+	// const actorData = foundry.utils.duplicate(actor);
 	// const actorData = newActorDropped;
 	// SET ALL PLAYERS HAS OWNER
 	await newActorDropped.update({ permission: { default: 3 } });
 	/*
-	const tokenData = {
-		hidden: false,
-		img: newActorDropped.img,
-		elevation: elevation,
-		actorData: newActorDropped,
-		// effects: actorDataEffects
-		actorLink: false,
-	};
+    Const tokenData = {
+        hidden: false,
+        img: newActorDropped.img,
+        elevation: elevation,
+        actorData: newActorDropped,
+        // effects: actorDataEffects
+        actorLink: false,
+    };
 
-	// Merge Token data with the default for the Actor
-	//@ts-ignore
-	const tokenData2 = foundry.utils.mergeObject(actorData.prototypeToken, tokenData, { inplace: true });
-	// tokenData2.actorId = <string>actor._id;
-	// tokenData2.actorLink = false; // if actorless is false
-	// tokenData2.name = actorName;
-	// tokenData2._id = tokenId;
-	*/
-	//@ts-ignore
+    // Merge Token data with the default for the Actor
+    //@ts-ignore
+    const tokenData2 = foundry.utils.mergeObject(actorData.prototypeToken, tokenData, { inplace: true });
+    // tokenData2.actorId = <string>actor._id;
+    // tokenData2.actorLink = false; // if actorless is false
+    // tokenData2.name = actorName;
+    // tokenData2._id = tokenId;
+    */
+	// @ts-ignore
 	// const tokenDataDropTheTorch = <any>await newActorDropped.getTokenDocument();
 	// return <any>tokenDataDropTheTorch;
 	return newActorDropped;
 }
 
+/**
+ *
+ * @param value
+ */
 export function checkNumberFromString(value) {
 	if (value === null || value === undefined || value === "") {
 		return "";
@@ -864,6 +1019,10 @@ export function checkNumberFromString(value) {
 	}
 }
 
+/**
+ *
+ * @param value
+ */
 export function checkBooleanFromString(value) {
 	if (value === null || value === undefined || value === "") {
 		return false;
@@ -872,16 +1031,20 @@ export function checkBooleanFromString(value) {
 	}
 }
 
+/**
+ *
+ * @param token
+ */
 export async function retrieveItemLightsStatic(token: Token): Promise<LightDataHud[]> {
 	const actor = token.actor;
 	if (!actor || !token) {
 		return [];
 	}
 	const lightItems: LightHUDElement[] = API.LIGHTS.filter((light) => {
-		return light.id != LightHUDPreset.NONE && light.id != LightHUDPreset.NO_CHANGE;
+		return light.id !== LightHUDPreset.NONE && light.id !== LightHUDPreset.NO_CHANGE;
 	});
 
-	// let lightItemsYouCanUse = <Item[]>[];
+	// Let lightItemsYouCanUse = <Item[]>[];
 	// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
 	// 	lightItemsYouCanUse = await API.retrieveAllItemsYouCanUseFromItems(lightItems);
 	// }
@@ -917,9 +1080,9 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
 			const isFlagLightTmp = true;
 
 			const applied =
-				actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + "_" + lightHUDElement.id) || false;
+				actor.getFlag(CONSTANTS.MODULE_NAME, `${LightHUDNoteFlags.HUD_ENABLED}_${lightHUDElement.id}`) || false;
 			disabledTmp = !applied;
-			suppressedTmp = false; // always false
+			suppressedTmp = false; // Always false
 			// temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
 			//   ? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) > 0
 			//   : false;
@@ -942,7 +1105,7 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
 			labelTmp = lightHUDElement.name;
 			_idTmp = <string>lightHUDElement.id;
 			// TODO filter this
-			//@ts-ignore
+			// @ts-ignore
 			flagsTmp = actor?.flags || {};
 
 			if (!suppressedTmp) {
@@ -951,7 +1114,7 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
 				appliedTmp = !appliedTmp;
 			}
 
-			// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
+			// If (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
 			// 	if (!(lightItemsYouCanUse.filter(e => e.id === item.id).length > 0)) {
 			// 		if(!appliedTmp){
 			// 			return new LightDataHud();
@@ -995,20 +1158,24 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
 	return imagesParsedFilter;
 }
 
+/**
+ *
+ * @param token
+ */
 export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> {
-	// const actor = <Actor>this._actor;
+	// Const actor = <Actor>this._actor;
 	// const token = <Token>this._token;
 	const actor = token.actor;
-	//const actor = <Actor>canvas.tokens?.controlled[0]?.actor ?? game.user?.character ?? null;
-	//const token = <Token>canvas.tokens?.controlled[0] ?? null;
+	// Const actor = <Actor>canvas.tokens?.controlled[0]?.actor ?? game.user?.character ?? null;
+	// const token = <Token>canvas.tokens?.controlled[0] ?? null;
 
 	if (!actor || !token) {
 		return [];
 	}
-	let lightItems: Item[] = [];
+	const lightItems: Item[] = [];
 	let imagesParsed: LightDataHud[] = [];
 
-	//const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+	// Const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
 	// const spellsItems = ['spell','feat'];
 	// For every itemwith a ATL/ATE effect
 	for (const im of actor.items.contents) {
@@ -1016,8 +1183,8 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 		// if (im && physicalItems.includes(im.type)) {}
 		if (game.settings.get(CONSTANTS.MODULE_NAME, "applyOnATEItem")) {
 			const atlEffects = im.effects.filter((entity) => {
-				//@ts-ignore
-				return entity.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+				// @ts-ignore
+				return entity.changes.find((effect) => effect.key.includes("ATL")) !== undefined;
 			});
 			if (atlEffects.length > 0) {
 				lightItems.push(im);
@@ -1041,8 +1208,8 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 	let actorAtlEffects = <ActiveEffect[]>[];
 	if (game.settings.get(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin")) {
 		actorAtlEffects = (<Actor>token.actor).effects.filter((entity) => {
-			//@ts-ignore
-			return entity.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+			// @ts-ignore
+			return entity.changes.find((effect) => effect.key.includes("ATL")) !== undefined;
 		});
 	}
 
@@ -1083,9 +1250,9 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				isActorEffectTmp = true;
 				const aeAtl0 = <any>aeAtl[0];
 				const nameToSearch = <string>aeAtl0.name || aeAtl0.label;
-				//@ts-ignore
+				// @ts-ignore
 				let effectFromActor = <any>actor.effects.find((ae: ActiveEffect) => {
-					//@ts-ignore
+					// @ts-ignore
 					return isStringEquals(nameToSearch, ae.label);
 				});
 				// Check if someone has delete the active effect but the item with the ATL changes is still on inventory
@@ -1098,23 +1265,23 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 					activeEffectDataToUpdate.transfer = false;
 					activeEffectDataToUpdate.disabled = true;
 					activeEffectDataToUpdate.origin = await aemlApiLigthsHudAte.prepareOriginFromEntity(aeAtl0);
-					// activeEffectDataToUpdate.origin =
+					// ActiveEffectDataToUpdate.origin =
 					// 	aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent.id}` : `Actor.${aeAtl0.parent.id}`;
 					await aemlApiLigthsHudAte.addActiveEffectOnToken(
 						<string>token.document.id,
 						<any>activeEffectDataToUpdate
 					);
-					//@ts-ignore
+					// @ts-ignore
 					effectFromActor = <any>token.document.actor?.effects.find((ae: ActiveEffect) => {
-						//@ts-ignore
+						// @ts-ignore
 						return isStringEquals(nameToSearch, ae.label);
 					});
 				}
 				// TRY TO GET FROM ITEM
 				if (!effectFromActor) {
 					const atlEffects = item.effects.filter((entity) => {
-						//@ts-ignore
-						return entity.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+						// @ts-ignore
+						return entity.changes.find((effect) => effect.key.includes("ATL")) !== undefined;
 					});
 					// FOR MY OWN SANITY ONLY THE FIRST
 					if (atlEffects.length > 0) {
@@ -1136,7 +1303,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				);
 				// If the active effect is disabled or is supressed
 				disabledTmp = effectFromActor.disabled || false;
-				//@ts-ignore
+				// @ts-ignore
 				suppressedTmp = effectFromActor.isSuppressed || false;
 				temporaryTmp = aeAtl0.isTemporary || false;
 				passiveTmp = !temporaryTmp;
@@ -1153,10 +1320,12 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				flagsTmp = aeAtl0?.flags || {};
 				// Little trick if
 				if (!aeAtl0?.flags?.convenientDescription) {
-					flagsTmp["convenientDescription"] = item.name;
+					// @ts-ignore
+					flagsTmp.convenientDescription = item.name;
 				}
 				if (!effectFromActor?.flags?.convenientDescription) {
-					flagsTmp["convenientDescription"] = item.name;
+					// @ts-ignore
+					flagsTmp.convenientDescription = item.name;
 				}
 
 				if (!suppressedTmp) {
@@ -1178,7 +1347,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				isActorEffectTmp = false;
 				const applied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) || false;
 				disabledTmp = !applied;
-				suppressedTmp = false; // always false
+				suppressedTmp = false; // Always false
 				temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
 					? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) > 0
 					: false;
@@ -1199,7 +1368,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				labelTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
 				_idTmp = <string>item.id;
 				// TODO filter this
-				//@ts-ignore
+				// @ts-ignore
 				flagsTmp = item?.flags || {};
 
 				if (!suppressedTmp) {
@@ -1256,8 +1425,8 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 
 	if (actorAtlEffects.length > 0) {
 		for (const aeAtl0 of <any[]>actorAtlEffects) {
-			let effectFromActorToIgnore = imagesParsed.find((ldu: LightDataHud) => {
-				//@ts-ignore
+			const effectFromActorToIgnore = imagesParsed.find((ldu: LightDataHud) => {
+				// @ts-ignore
 				return isStringEquals(ldu._id, aeAtl0._id) || isStringEquals(ldu.label, aeAtl0.label);
 			});
 			if (effectFromActorToIgnore) {
@@ -1266,7 +1435,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 			}
 
 			const im =
-				//@ts-ignore
+				// @ts-ignore
 				aeAtl0.icon || token.img || `modules/${CONSTANTS.MODULE_NAME}/assets/lightbulb-solid.svg`;
 			const split = im.split("/");
 			const extensions = im.split(".");
@@ -1292,12 +1461,12 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 			const isFlagTmp = false;
 			const isActorEffectTmp = true;
 			const isFlagLightTmp = false;
-			// const aeAtl0 = <ActiveEffect>aeAtl[0];
+			// Const aeAtl0 = <ActiveEffect>aeAtl[0];
 			const nameToSearch = <string>aeAtl0.name || aeAtl0.label;
 			// TODO How this is work ???
 			// let effectFromActor = aeAtl0;
 			let effectFromActor = <ActiveEffect>actor.effects.find((ae: ActiveEffect) => {
-				//@ts-ignore
+				// @ts-ignore
 				return isStringEquals(nameToSearch, ae.label);
 			});
 			// Check if someone has delete the active effect but the item with the ATL changes is still on inventory
@@ -1307,7 +1476,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				activeEffectDataToUpdate.transfer = false;
 				activeEffectDataToUpdate.disabled = true;
 				activeEffectDataToUpdate.origin = await aemlApiLigthsHudAte.prepareOriginFromEntity(aeAtl0);
-				// activeEffectDataToUpdate.origin =
+				// ActiveEffectDataToUpdate.origin =
 				// 	aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent.id}` : `Actor.${aeAtl0.parent.id}`;
 				await aemlApiLigthsHudAte.addActiveEffectOnToken(
 					<string>token.document.id,
@@ -1315,19 +1484,19 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				);
 				// ???
 				effectFromActor = <ActiveEffect>token.document.actor?.effects.find((ae: ActiveEffect) => {
-					//@ts-ignore
+					// @ts-ignore
 					return isStringEquals(nameToSearch, ae.label);
 				});
-				// await API.toggleEffectFromIdOnToken(<string>token.document.id, <string>effectFromActor.id, false, false, true);
+				// Await API.toggleEffectFromIdOnToken(<string>token.document.id, <string>effectFromActor.id, false, false, true);
 			}
 			if (!effectFromActor) {
 				warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
 				continue;
 			}
 			effectidTmp = <string>effectFromActor.id;
-			//@ts-ignore
+			// @ts-ignore
 			effectnameTmp = <string>effectFromActor.name ?? effectFromActor.label;
-			//@ts-ignore
+			// @ts-ignore
 			_idTmp = <string>effectFromActor._id;
 
 			const applied = await aemlApiLigthsHudAte.hasEffectAppliedOnToken(
@@ -1336,9 +1505,9 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				true
 			);
 			// If the active effect is disabled or is supressed
-			//@ts-ignore
+			// @ts-ignore
 			disabledTmp = effectFromActor.disabled || false;
-			//@ts-ignore
+			// @ts-ignore
 			suppressedTmp = effectFromActor.isSuppressed || false;
 			temporaryTmp = aeAtl0.isTemporary || false;
 			passiveTmp = !temporaryTmp;
@@ -1355,12 +1524,13 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 			flagsTmp = aeAtl0?.flags || {};
 			// Little trick if
 			if (!aeAtl0?.flags?.convenientDescription) {
-				flagsTmp["convenientDescription"] = aeAtl0.label;
+				// @ts-ignore
+				flagsTmp.convenientDescription = aeAtl0.label;
 			}
-			//@ts-ignore
+			// @ts-ignore
 			if (!effectFromActor?.flags?.convenientDescription) {
-				//@ts-ignore
-				flagsTmp["convenientDescription"] = effectFromActor.label;
+				// @ts-ignore
+				flagsTmp.convenientDescription = effectFromActor.label;
 			}
 
 			if (!suppressedTmp) {
@@ -1407,20 +1577,27 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 }
 
 // TODO consider handling rounds/seconds/turns based on whatever is defined for the effect rather than do conversions
+/**
+ *
+ * @param duration
+ */
 function _getSecondsRemaining(duration) {
 	if (duration.seconds || duration.rounds) {
 		const seconds = duration.seconds ?? duration.rounds * (CONFIG.time?.roundTime ?? 6);
 		return duration.startTime + seconds - game.time.worldTime;
+	} else if (is_real_number(duration)) {
+		const seconds = duration;
+		return game.time.worldTime + seconds - game.time.worldTime;
 	} else {
-		if (is_real_number(duration)) {
-			const seconds = duration;
-			return game.time.worldTime + seconds - game.time.worldTime;
-		} else {
-			return Infinity;
-		}
+		return Infinity;
 	}
 }
 
+/**
+ *
+ * @param token
+ * @param itemId
+ */
 export async function retrieveItemLightsWithFlagAndDisableThemLightsStatic(
 	token: Token,
 	itemId: string
@@ -1434,14 +1611,19 @@ export async function retrieveItemLightsWithFlagAndDisableThemLightsStatic(
 		const senseOrConditionIdKey = key;
 		const senseOrConditionValue = <any>p[key];
 		if (
-			senseOrConditionIdKey.startsWith(LightHUDNoteFlags.HUD_ENABLED + "_") &&
-			senseOrConditionIdKey != LightHUDNoteFlags.HUD_ENABLED + "_" + itemId
+			senseOrConditionIdKey.startsWith(`${LightHUDNoteFlags.HUD_ENABLED}_`) &&
+			senseOrConditionIdKey !== `${LightHUDNoteFlags.HUD_ENABLED}_${itemId}`
 		) {
 			await actor.unsetFlag(CONSTANTS.MODULE_NAME, senseOrConditionIdKey);
 		}
 	}
 }
 
+/**
+ *
+ * @param token
+ * @param itemId
+ */
 export async function retrieveItemLightsWithFlagAndDisableThem(token: Token, itemId: string): Promise<void> {
 	const actor = token.actor;
 	if (!actor || !token) {
@@ -1453,7 +1635,7 @@ export async function retrieveItemLightsWithFlagAndDisableThem(token: Token, ite
 			if (
 				im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ENABLE) &&
 				im.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) &&
-				im.id != itemId
+				im.id !== itemId
 			) {
 				await im.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED, false);
 			}
@@ -1461,6 +1643,10 @@ export async function retrieveItemLightsWithFlagAndDisableThem(token: Token, ite
 	}
 }
 
+/**
+ *
+ * @param token
+ */
 export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Promise<LightDataHud[]> {
 	const actor = token.actor;
 	if (!actor || !token) {
@@ -1468,10 +1654,10 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Prom
 	}
 
 	const lightItems: LightHUDElement[] = API.LIGHTS.filter((light) => {
-		return light.id != LightHUDPreset.NONE && light.id != LightHUDPreset.NO_CHANGE;
+		return light.id !== LightHUDPreset.NONE && light.id !== LightHUDPreset.NO_CHANGE;
 	});
 
-	// let lightItemsYouCanUse = <Item[]>[];
+	// Let lightItemsYouCanUse = <Item[]>[];
 	// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
 	// 	lightItemsYouCanUse = await API.retrieveAllItemsYouCanUseFromItems(lightItems);
 	// }
@@ -1507,11 +1693,11 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Prom
 			const isActorEffectTmp = false;
 			const isFlagLightTmp = true;
 			const isApplied = <boolean>(
-				actor.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED + "_" + lightHUDElement.id)
+				actor.getFlag(CONSTANTS.MODULE_NAME, `${LightHUDNoteFlags.HUD_ENABLED}_${lightHUDElement.id}`)
 			);
 			const applied = isApplied || false;
 			disabledTmp = !applied;
-			suppressedTmp = false; // always false
+			suppressedTmp = false; // Always false
 			temporaryTmp = lightHUDElement.isTemporary;
 			passiveTmp = !temporaryTmp;
 			if (applied && !disabledTmp && !suppressedTmp) {
@@ -1529,7 +1715,7 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Prom
 			labelTmp = lightHUDElement.name;
 			_idTmp = <string>lightHUDElement.id;
 			// TODO filter this
-			//@ts-ignore
+			// @ts-ignore
 			flagsTmp = token.actor?.flags || {};
 
 			if (!suppressedTmp) {
@@ -1538,7 +1724,7 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Prom
 				appliedTmp = !appliedTmp;
 			}
 
-			// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
+			// If (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
 			// 	if (!(lightItemsYouCanUse.filter(e => e.id === item.id).length > 0)) {
 			// 		if(!appliedTmp){
 			// 			return new LightDataHud();
@@ -1583,6 +1769,10 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Prom
 	return imagesParsedFilter;
 }
 
+/**
+ *
+ * @param token
+ */
 export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDataHud[]> {
 	const actor = token.actor;
 	if (!actor || !token) {
@@ -1599,7 +1789,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
 		}
 	}
 
-	// let lightItemsYouCanUse = <Item[]>[];
+	// Let lightItemsYouCanUse = <Item[]>[];
 	// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
 	// 	lightItemsYouCanUse = await API.retrieveAllItemsYouCanUseFromItems(lightItems);
 	// }
@@ -1640,7 +1830,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
 				isFlagTmp = true;
 				const applied = item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HUD_ENABLED) || false;
 				disabledTmp = !applied;
-				suppressedTmp = false; // always false
+				suppressedTmp = false; // Always false
 				temporaryTmp = <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)
 					? <number>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION) > 0
 					: false;
@@ -1661,7 +1851,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
 				labelTmp = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) ?? item.name;
 				_idTmp = <string>item.id;
 				// TODO filter this
-				//@ts-ignore
+				// @ts-ignore
 				flagsTmp = item?.flags || {};
 
 				if (!suppressedTmp) {
@@ -1677,7 +1867,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
 				return new LightDataHud();
 			}
 
-			// if (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
+			// If (game.settings.get(CONSTANTS.MODULE_NAME, "rollItem")) {
 			// 	if (!(lightItemsYouCanUse.filter(e => e.id === item.id).length > 0)) {
 			// 		if(!appliedTmp){
 			// 			return new LightDataHud();
@@ -1722,6 +1912,11 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
 	return imagesParsedFilter;
 }
 
+/**
+ *
+ * @param feetInput
+ * @param isPreset
+ */
 export function manageDist(feetInput: number, isPreset: boolean): number {
 	let valueDist = feetInput;
 	if (isPreset && game.ready && game.settings.get(CONSTANTS.MODULE_NAME, "useMetricSystem")) {
@@ -1730,10 +1925,18 @@ export function manageDist(feetInput: number, isPreset: boolean): number {
 	return valueDist;
 }
 
+/**
+ *
+ * @param feetInput
+ */
 export function convertFeetToMeter(feetInput: number): number {
 	return Math.floor(feetInput / 3.2808);
 }
 
+/**
+ *
+ * @param meterInput
+ */
 export function convertMeterToFeet(meterInput: number): number {
 	return Math.floor(meterInput * 3.2808);
 }

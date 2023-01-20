@@ -31,8 +31,8 @@ Hooks.once("init", async () => {
 	// Assign custom classes and constants here
 
 	// Register custom module settings
-	//registerSettings();
-	//fetchParams();
+	// registerSettings();
+	// fetchParams();
 
 	// Preload Handlebars templates
 	// await preloadTemplates();
@@ -44,11 +44,11 @@ Hooks.once("init", async () => {
 /* ------------------------------------ */
 Hooks.once("setup", function () {
 	// Do anything after initialization but before ready
-	//setupModules();
+	// setupModules();
 
 	setupHooks();
 
-	//registerSettings();
+	// RegisterSettings();
 });
 
 /* ------------------------------------ */
@@ -119,9 +119,12 @@ export function setSocket(socket: any): void {
 	data.socket = socket;
 }
 
-/*
+/**
  * Returns the set socket.
  * @returns Socket from games module.
+ */
+/**
+ *
  */
 export function getSocket() {
 	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as LigthsHudAteModuleData;

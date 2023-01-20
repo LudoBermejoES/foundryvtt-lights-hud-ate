@@ -1,5 +1,5 @@
 {
-  "dataPath": "/absolute/path/to/your/FoundryVTT/Data",
+  "dataPath": "C:/Rol/FoundryVTT",
   "foundryUri": "http://localhost:30001",
   "repository": "",
   "rawURL": ""

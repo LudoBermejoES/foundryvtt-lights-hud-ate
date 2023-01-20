@@ -10,7 +10,7 @@
     "ecmaVersion": 2018,
     "requireConfigFile": false,
     "sourceType": "module",
-    "project": "./tsconfig.json",
+    "project": "./tsconfig.json"
   },
   "plugins": [
     "jsdoc"
@@ -19,8 +19,7 @@
         "prettier",
         "plugin:import/errors",
         "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:json/recommended"
+        "plugin:@typescript-eslint/recommended"
     ],
   "ignorePatterns": ["dist/"],
   "rules": {
@@ -224,7 +223,7 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-unused-vars": "off", // Handled by tsconfig
-    "@typescript-eslint/array-type": ["error", { "default": "array" }],
+    "@typescript-eslint/array-type": ["error", { "default": "array" }]
   },
   "settings": {
     "jsdoc": {
@@ -238,13 +237,13 @@
     "import/resolver": {
         "node": {
             "paths": ["src", "types", "", "dist"],
-            "extensions": [".css", ".js", ".mjs", ".json", ".jsx", ".scss", ".ts", ".tsx"],
+            "extensions": [".css", ".js", ".mjs", ".json", ".jsx", ".scss", ".ts", ".tsx"]
         },
         "eslint-import-resolver-typescript": true,
         "typescript": {
-            "alwaysTryTypes": true,
-        },
+            "alwaysTryTypes": true
+        }
     },
-    "import/parsers": { "@typescript-eslint/parser": [".ts"] },
+    "import/parsers": { "@typescript-eslint/parser": [".ts"] }
   }
 }
