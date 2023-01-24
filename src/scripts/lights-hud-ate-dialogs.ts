@@ -1,7 +1,7 @@
 import type EmbeddedCollection from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs";
 import type {
   ActorData,
-  TokenData
+  TokenData,
 } from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs";
 import API from "./api";
 import CONSTANTS from "./constants";
@@ -19,7 +19,7 @@ import {
   rollDependingOnSystem,
   updateTokenLighting,
   updateTokenLightingFromData,
-  warn
+  warn,
 } from "./lib/lib";
 import { getATLEffectsFromItem } from "./lights-hud-ate-config";
 import {
@@ -28,7 +28,7 @@ import {
   LightHUDNoteFlags,
   LightHUDPreset,
   VisionHUDElement,
-  VisionHUDPreset
+  VisionHUDPreset,
 } from "./lights-hud-ate-models";
 import { aemlApiLigthsHudAte } from "./module";
 
@@ -56,19 +56,19 @@ export function presetDialog(applyChanges: boolean): Dialog {
       <div class="form-group">
         <label>Vision Type:</label>
         <select id="vision-type" name="vision-type" is="ms-dropdown-ligthhudate">
-          ${API.VISIONS.map(vision => {
-    return `\t<option data-image="${vision.img}" value=${vision.id}>${i18n(vision.name)}</option>`;
-  }).join("\n")}
+          ${API.VISIONS.map((vision) => {
+            return `\t<option data-image="${vision.img}" value=${vision.id}>${i18n(vision.name)}</option>`;
+          }).join("\n")}
         </select>
       </div>
       <div class="form-group">
         <label>Light Source:</label>
         <select id="light-source" name="light-source" is="ms-dropdown-ligthhudate">
-          ${API.LIGHTS.map(lightSource => {
-    return `\t<option data-image="${lightSource.img}" value=${lightSource.id}>${i18n(
-      lightSource.name
-    )}</option>`;
-  }).join("\n")}
+          ${API.LIGHTS.map((lightSource) => {
+            return `\t<option data-image="${lightSource.img}" value=${lightSource.id}>${i18n(
+              lightSource.name
+            )}</option>`;
+          }).join("\n")}
         </select>
       </div>
       <div class="form-group">
@@ -81,12 +81,12 @@ export function presetDialog(applyChanges: boolean): Dialog {
       yes: {
         icon: "<i class='fas fa-check'></i>",
         label: "Apply Changes",
-        callback: () => (applyChanges = true)
+        callback: () => (applyChanges = true),
       },
       no: {
         icon: "<i class='fas fa-times'></i>",
-        label: "Cancel Changes"
-      }
+        label: "Cancel Changes",
+      },
     },
     default: "yes",
     close: async (html: any) => {
@@ -99,12 +99,12 @@ export function presetDialog(applyChanges: boolean): Dialog {
           const applyAsAtlAteEffect = String(html.find('[name="apply-as-atl-ate"]')[0].value) === "true";
           const visionType = <string>html.find('[name="vision-type"]')[0].value || VisionHUDPreset.NONE;
           const lightSource = <string>html.find('[name="light-source"]')[0].value || LightHUDPreset.NONE;
-          const visionIndex = <VisionHUDElement>API.VISIONS.find(e => e.id === visionType); // ParseInt(html.find('[name="vision-type"]')[0].value) || 0;
-          const lightIndex = <LightHUDElement>API.LIGHTS.find(e => e.id === lightSource); // ParseInt(html.find('[name="light-source"]')[0].value) || 0;
+          const visionIndex = <VisionHUDElement>API.VISIONS.find((e) => e.id === visionType); // ParseInt(html.find('[name="vision-type"]')[0].value) || 0;
+          const lightIndex = <LightHUDElement>API.LIGHTS.find((e) => e.id === lightSource); // ParseInt(html.find('[name="light-source"]')[0].value) || 0;
           const duration = parseInt(html.find('[name="duration"]')[0].value) || 0;
           const lockRotation =
-						// @ts-ignore
-						html.find('[name="lock-rotation"]')[0].value === "true" ?? token.document.lockRotation;
+            // @ts-ignore
+            html.find('[name="lock-rotation"]')[0].value === "true" ?? token.document.lockRotation;
 
           let alias: string | null = null;
           if (actorId || tokenId) {
@@ -134,7 +134,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
           const lightAnimation = {
             type: lightIndex.lightAnimationType ?? tokenData.light.animation.type,
             speed: lightIndex.lightAnimationSpeed ?? tokenData.light.animation.speed,
-            intensity: lightIndex.lightAnimationIntensity ?? tokenData.light.animation.intensity
+            intensity: lightIndex.lightAnimationIntensity ?? tokenData.light.animation.intensity,
           };
           const lightColor = lightIndex.lightColor ?? <string>tokenData.light.color;
           const lightAlpha = lightIndex.lightAlpha ?? <number>tokenData.light.alpha;
@@ -144,28 +144,28 @@ export function presetDialog(applyChanges: boolean): Dialog {
           const scale = null;
           const isPreset = true;
           const hasVision =
-						visionType !== null
-						&& visionType !== undefined
-						&& visionType !== VisionHUDPreset.NONE
-						&& visionType !== VisionHUDPreset.NO_CHANGE;
+            visionType !== null &&
+            visionType !== undefined &&
+            visionType !== VisionHUDPreset.NONE &&
+            visionType !== VisionHUDPreset.NO_CHANGE;
 
           const hasLight =
-						lightSource !== null
-						&& lightSource !== undefined
-						&& lightSource !== LightHUDPreset.NONE
-						&& lightSource !== LightHUDPreset.NO_CHANGE;
+            lightSource !== null &&
+            lightSource !== undefined &&
+            lightSource !== LightHUDPreset.NONE &&
+            lightSource !== LightHUDPreset.NO_CHANGE;
 
           const effectNameForVisionOrLight = hasVision
             ? visionIndex.name
             : hasLight
-              ? lightIndex.name
-              : "Unknown Vision";
+            ? lightIndex.name
+            : "Unknown Vision";
           const effectIconForVisionOrLight = hasVision
             ? visionIndex.img
             : // @ts-ignore
             hasLight
-              ? lightIndex.img
-              : tokenIcon;
+            ? lightIndex.img
+            : tokenIcon;
 
           // TODO
           const alpha = null;
@@ -197,28 +197,28 @@ export function presetDialog(applyChanges: boolean): Dialog {
             null, // Contrast: contrast,
             null, // Shadows: shadows,
 
-						<string>lightAnimation.type,
-						<number>lightAnimation.speed,
-						<number>lightAnimation.intensity,
-						false, // <boolean>lightAnimation.reverse,
+            <string>lightAnimation.type,
+            <number>lightAnimation.speed,
+            <number>lightAnimation.intensity,
+            false, // <boolean>lightAnimation.reverse,
 
-						applyAsAtlAteEffect,
-						effectNameForVisionOrLight,
-						effectIconForVisionOrLight,
-						duration,
+            applyAsAtlAteEffect,
+            effectNameForVisionOrLight,
+            effectIconForVisionOrLight,
+            duration,
 
-						hasVision,
-						// Id,
-						// name,
-						height,
-						width,
-						scale,
-						alpha,
-						isPreset
+            hasVision,
+            // Id,
+            // name,
+            height,
+            width,
+            scale,
+            alpha,
+            isPreset
           );
         }
       }
-    }
+    },
   });
 }
 
@@ -230,20 +230,8 @@ export function presetDialog(applyChanges: boolean): Dialog {
  */
 export function customATLDialog(applyChanges: boolean, preset: any = undefined, copy = false): Dialog {
   let { light, dimSight, brightSight, sightAngle, name, height, width, scale, id } = preset ? preset : 0;
-  let {
-    dim,
-    bright,
-    color,
-    animation,
-    alpha,
-    angle,
-    coloration,
-    contrast,
-    gradual,
-    luminosity,
-    saturation,
-    shadows
-  } = light ? light : 0;
+  let { dim, bright, color, animation, alpha, angle, coloration, contrast, gradual, luminosity, saturation, shadows } =
+    light ? light : 0;
   switch (copy) {
     case true: {
       name = `${name} (copy)`;
@@ -510,12 +498,12 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
       yes: {
         icon: "<i class='fas fa-check'></i>",
         label: "Apply Changes",
-        callback: () => (applyChanges = true)
+        callback: () => (applyChanges = true),
       },
       no: {
         icon: "<i class='fas fa-times'></i>",
-        label: "Cancel Changes"
-      }
+        label: "Cancel Changes",
+      },
     },
     default: "no",
     close: async (html: any) => {
@@ -543,9 +531,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
         const lightAngle = <number>checkNumberFromString(html.find("#angle")[0].value);
         const lightAnimationType = <string>html.find("#animationType")[0].value;
         const lightAnimationSpeed = <number>checkNumberFromString(html.find("#animationSpeed")[0].value);
-        const lightAnimationIntensity = <number>(
-					checkNumberFromString(html.find("#animationIntensity")[0].value)
-				);
+        const lightAnimationIntensity = <number>checkNumberFromString(html.find("#animationIntensity")[0].value);
         const lightAnimationReverse = <boolean>html.find("#animationIntensity").is(":checked");
         const coloration = <number>checkNumberFromString(html.find("#lightColoration")[0].value);
         const luminosity = <number>checkNumberFromString(html.find("#lightLuminosity")[0].value);
@@ -553,7 +539,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
         const saturation = <number>checkNumberFromString(html.find("#lightSaturation")[0].value);
         const contrast = <number>checkNumberFromString(html.find("#lightContrast")[0].value);
         const shadows = <number>checkNumberFromString(html.find("#lightShadows")[0].value);
-        const vision = !!(dimSight > 0 || brightSight > 0);
+        const vision = true; // !!(dimSight > 0 || brightSight > 0);
 
         const isPreset = false;
 
@@ -600,28 +586,28 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
             contrast,
             shadows,
 
-						<string>lightAnimationType,
-						<number>lightAnimationSpeed,
-						<number>lightAnimationIntensity,
-						lightAnimationReverse,
+            <string>lightAnimationType,
+            <number>lightAnimationSpeed,
+            <number>lightAnimationIntensity,
+            lightAnimationReverse,
 
-						applyAsAtlAteEffect,
-						effectName,
-						"",
-						duration,
+            applyAsAtlAteEffect,
+            effectName,
+            "",
+            duration,
 
-						vision,
-						// Token.id,
-						// alias,
-						height,
-						width,
-						scale,
-						alpha,
-						isPreset
+            vision,
+            // Token.id,
+            // alias,
+            height,
+            width,
+            scale,
+            alpha,
+            isPreset
           );
         }
       }
-    }
+    },
   });
 }
 
@@ -640,12 +626,12 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
       effectName: i18n(lightDataDialog.effectName),
       itemName: i18n(lightDataDialog.itemName),
       actorName: lightDataDialog.actorName,
-      tokenName: lightDataDialog.tokenName
+      tokenName: lightDataDialog.tokenName,
     })}</h2><div>`,
     buttons: {
       yes: {
         label: i18n("lights-hud-ate.windows.dialogs.confirm.apply.choice.yes"),
-        callback: async html => {
+        callback: async (html) => {
           if (lightDataDialog.isactoreffect) {
             await manageActiveEffectATL(
               lightDataDialog.tokenId,
@@ -664,20 +650,20 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
           // $('.lights-hud-ate-selector-wrap').remove();
           // $('.lights-hud-ate-selector-wrap')[0]?.classList.remove('active');
           // $('[data-action=lights-hud-ate-selector]')[0]?.classList.remove('active');
-          const token = canvas.tokens?.placeables.find(t => {
+          const token = canvas.tokens?.placeables.find((t) => {
             return t.id === lightDataDialog.tokenId;
           });
           token?.release();
-        }
+        },
       },
       no: {
         label: i18n("lights-hud-ate.windows.dialogs.confirm.apply.choice.no"),
-        callback: html => {
+        callback: (html) => {
           // Do nothing
-        }
-      }
+        },
+      },
     },
-    default: "no"
+    default: "no",
   });
 }
 
@@ -693,14 +679,14 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
       effectName: lightDataDialog.effectName,
       itemName: lightDataDialog.itemName,
       actorName: lightDataDialog.actorName,
-      tokenName: lightDataDialog.tokenName
+      tokenName: lightDataDialog.tokenName,
     })}</h2><div>`,
     buttons: {
       yes: {
         label: i18n("lights-hud-ate.windows.dialogs.confirm.dropthetorch.choice.yes"),
-        callback: async html => {
+        callback: async (html) => {
           // Const actor = <Actor>game.actors?.get(lightDataDialog.actorId);
-          const token = canvas.tokens?.placeables.find(t => {
+          const token = canvas.tokens?.placeables.find((t) => {
             return t.id === lightDataDialog.tokenId;
           });
           if (!token) {
@@ -726,10 +712,10 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
           try {
             // Let tokenDataDropTheTorch: any | null = null;
             const newActorDropped =
-							// @ts-ignore
-							<any> await prepareTokenDataDropTheTorch(item, token.document.elevation ?? 0);
+              // @ts-ignore
+              <any>await prepareTokenDataDropTheTorch(item, token.document.elevation ?? 0);
 
-            const tokenDataDropTheTorch = <any> await newActorDropped.getTokenDocument();
+            const tokenDataDropTheTorch = <any>await newActorDropped.getTokenDocument();
 
             // @ts-ignore
             // actor.updateSource({ prototypeToken: tokenDataDropTheTorchTmp });
@@ -745,16 +731,16 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
             // @ts-ignore
             const posData = await warpgate.crosshairs.show({
               size:
-								// @ts-ignore
-								Math.max(
-								  (Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height)
-										// @ts-ignore
-										* (tokenDataDropTheTorch.texture.scaleX + tokenDataDropTheTorch.texture.scaleY))
-										/ 2,
-								  0.5
-								),
+                // @ts-ignore
+                Math.max(
+                  (Math.max(tokenDataDropTheTorch.width, tokenDataDropTheTorch.height) *
+                    // @ts-ignore
+                    (tokenDataDropTheTorch.texture.scaleX + tokenDataDropTheTorch.texture.scaleY)) /
+                    2,
+                  0.5
+                ),
               icon: `modules/${CONSTANTS.MODULE_NAME}/assets/black-hole-bolas.webp`,
-              label: `Drop the ${lightDataDialog.itemName}`
+              label: `Drop the ${lightDataDialog.itemName}`,
             });
 
             // Get custom data macro
@@ -785,16 +771,16 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
             //   await (<Actor>actorDropTheTorch).delete();
             // }
           }
-        }
+        },
       },
       no: {
         label: i18n("lights-hud-ate.windows.dialogs.confirm.dropthetorch.choice.no"),
-        callback: html => {
+        callback: (html) => {
           // Do nothing
-        }
-      }
+        },
+      },
     },
-    default: "no"
+    default: "no",
   });
 }
 
@@ -813,7 +799,7 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, effectNam
   //   return;
   // }
   // const tokenId = <string>actor.getActiveTokens()[0]?.id;
-  const token = <Token>canvas.tokens?.placeables.find(t => {
+  const token = <Token>canvas.tokens?.placeables.find((t) => {
     return t.id === tokenId;
   });
   if (!token) {
@@ -846,19 +832,12 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, effectNam
     }
   } finally {
     if (isApplied) {
-      await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
-        "toggle",
-        token.actor,
-        effectId,
-        false,
-        false,
-        true
-      );
+      await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId("toggle", token.actor, effectId, false, false, true);
     } else {
       const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
       // @ts-ignore
       const effect = <ActiveEffect>actorEffects.find((activeEffect: ActiveEffect) =>
-      // @ts-ignore
+        // @ts-ignore
         isStringEquals(<string>activeEffect?.label, effectName)
       );
       if (!effect && itemId) {
@@ -876,19 +855,9 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, effectNam
         activeEffectDataToUpdate.origin = await aemlApiLigthsHudAte.prepareOriginFromEntity(aeAtl0);
         // ActiveEffectDataToUpdate.origin =
         // 	aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent.id}` : `Actor.${aeAtl0.parent.id}`;
-        await aemlApiLigthsHudAte.addActiveEffectOnToken(
-					<string>token.document.id,
-					<any>activeEffectDataToUpdate
-        );
+        await aemlApiLigthsHudAte.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
       } else {
-        await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
-          "toggle",
-          token.actor,
-          effectId,
-          false,
-          true,
-          false
-        );
+        await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId("toggle", token.actor, effectId, false, true, false);
       }
     }
   }
@@ -900,7 +869,7 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, effectNam
  * @param itemId
  */
 export async function manageFlaggedItem(tokenId, itemId) {
-  const token = <Token>canvas.tokens?.placeables.find(t => {
+  const token = <Token>canvas.tokens?.placeables.find((t) => {
     return t.id === tokenId;
   });
   if (!token) {
@@ -943,7 +912,7 @@ export async function manageFlaggedItem(tokenId, itemId) {
  * @param itemId
  */
 export async function manageFlaggedActorLightsStatic(tokenId, itemId) {
-  const token = <Token>canvas.tokens?.placeables.find(t => {
+  const token = <Token>canvas.tokens?.placeables.find((t) => {
     return t.id === tokenId;
   });
   if (!token) {
@@ -955,7 +924,7 @@ export async function manageFlaggedActorLightsStatic(tokenId, itemId) {
     return;
   }
   const isApplied =
-		<boolean>token.actor.getFlag(CONSTANTS.MODULE_NAME, `${LightHUDNoteFlags.HUD_ENABLED}_${itemId}`) ?? false;
+    <boolean>token.actor.getFlag(CONSTANTS.MODULE_NAME, `${LightHUDNoteFlags.HUD_ENABLED}_${itemId}`) ?? false;
   applyFlagsOnTokenLightsStatic(tokenId, itemId, isApplied);
 }
 
@@ -966,7 +935,7 @@ export async function manageFlaggedActorLightsStatic(tokenId, itemId) {
  * @param isApplied
  */
 async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, isApplied: boolean) {
-  const token = <Token>canvas.tokens?.placeables.find(t => {
+  const token = <Token>canvas.tokens?.placeables.find((t) => {
     return t.id === tokenId;
   });
   const lightHUDElement = <LightHUDElement>API.LIGHTS.find((entity: LightHUDElement) => {
@@ -982,11 +951,7 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
   // const tokenData = tokenData;
   if (game.settings.get(CONSTANTS.MODULE_NAME, "enableLightHUDOldInterface")) {
     if (!token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
-      await token.actor?.setFlag(
-        CONSTANTS.MODULE_NAME,
-        LightHUDNoteFlags.INITIAL_DATA,
-        await duplicate(tokenData)
-      );
+      await token.actor?.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA, await duplicate(tokenData));
     }
   } else if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
     await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
@@ -1011,15 +976,15 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
   }
 
   if (
-    !atLeastOneLightIsApplied
-		&& isApplied
-		&& game.settings.get(CONSTANTS.MODULE_NAME, "enableLightHUDOldInterface")
+    !atLeastOneLightIsApplied &&
+    isApplied &&
+    game.settings.get(CONSTANTS.MODULE_NAME, "enableLightHUDOldInterface")
   ) {
     if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
       await updateTokenLightingFromData(
         token,
-				<TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA),
-				false // TODO is preset is always false ?
+        <TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA),
+        false // TODO is preset is always false ?
       );
       await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
       return;
@@ -1057,7 +1022,7 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
   const saturation = tokenData.light.saturation;
   const lightContrast = tokenData.light.contrast;
   const lightShadows = tokenData.light.shadows;
-  const vision = !!(dimSight > 0 || brightSight > 0);
+  const vision = true; // !!(dimSight > 0 || brightSight > 0);
 
   const duration = lightHUDElement.duration || 0;
 
@@ -1100,33 +1065,33 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
     brightLight,
     lightColor,
     lightAlpha,
-		<number>lightAngle,
+    <number>lightAngle,
 
-		coloration,
-		lightLuminosity,
-		lightGradual,
-		saturation,
-		lightContrast,
-		lightShadows,
+    coloration,
+    lightLuminosity,
+    lightGradual,
+    saturation,
+    lightContrast,
+    lightShadows,
 
-		<string>lightAnimationType,
-		<number>lightAnimationSpeed,
-		<number>lightAnimationIntensity,
-		lightAnimationReverse,
+    <string>lightAnimationType,
+    <number>lightAnimationSpeed,
+    <number>lightAnimationIntensity,
+    lightAnimationReverse,
 
-		applyAsAtlAteEffect,
-		effectName,
-		"",
-		duration,
+    applyAsAtlAteEffect,
+    effectName,
+    "",
+    duration,
 
-		vision,
-		// Token.id,
-		// alias,
-		height,
-		width,
-		scale,
-		alpha,
-		isPreset
+    vision,
+    // Token.id,
+    // alias,
+    height,
+    width,
+    scale,
+    alpha,
+    isPreset
   );
 }
 
@@ -1137,7 +1102,7 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
  * @param isApplied
  */
 async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boolean) {
-  const token = <Token>canvas.tokens?.placeables.find(t => {
+  const token = <Token>canvas.tokens?.placeables.find((t) => {
     return t.id === tokenId;
   });
   const item = <Item>token.actor?.items.find((entity: Item) => {
@@ -1182,8 +1147,8 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
     if (token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA)) {
       await updateTokenLightingFromData(
         token,
-				<TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA),
-				false // TODO is preset is always false ?
+        <TokenData>token.actor?.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA),
+        false // TODO is preset is always false ?
       );
       await token.actor?.unsetFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.INITIAL_DATA);
       return;
@@ -1198,24 +1163,22 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
   const id = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME);
   const effectName = <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.NAME) || tokenData.name;
   const height =
-		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT))
-		// @ts-ignore
-		|| tokenData.height;
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.HEIGHT)) ||
+    // @ts-ignore
+    tokenData.height;
   const width =
-		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH)) || tokenData.width;
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH)) || tokenData.width;
   const scale =
-		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE))
-		|| tokenData.texture.scaleX;
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE)) ||
+    tokenData.texture.scaleX;
 
   let brightSight: number | null = null;
   if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
     brightSight = <number>(
-			checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT_BASIC))
-		);
+      checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT_BASIC))
+    );
   } else {
-    brightSight = <number>(
-			checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT))
-		);
+    brightSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_BRIGHT));
   }
   if (!brightSight || brightSight === 0) {
     brightSight = tokenData.brightSight;
@@ -1223,9 +1186,7 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
 
   let dimSight: number | null = null;
   if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
-    dimSight = <number>(
-			checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM_BASIC))
-		);
+    dimSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM_BASIC));
   } else {
     dimSight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_DIM));
   }
@@ -1236,8 +1197,8 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
   let sightAngle: number | null = null;
   if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
     sightAngle = <number>(
-			checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE_BASIC))
-		);
+      checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE_BASIC))
+    );
   } else {
     sightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE));
   }
@@ -1247,9 +1208,7 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
 
   let dimLight: number | null = null;
   if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
-    dimLight = <number>(
-			checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM_BASIC))
-		);
+    dimLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM_BASIC));
   } else {
     dimLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_DIM));
   }
@@ -1260,12 +1219,10 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
   let brightLight: number | null = null;
   if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
     brightLight = <number>(
-			checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT_BASIC))
-		);
+      checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT_BASIC))
+    );
   } else {
-    brightLight = <number>(
-			checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT))
-		);
+    brightLight = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_BRIGHT));
   }
   if (!brightLight || brightLight === 0) {
     brightLight = tokenData.light.bright;
@@ -1284,8 +1241,8 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
   let lightAlpha: number | null = null;
   if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
     lightAlpha = <number>(
-			checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA_BASIC))
-		);
+      checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA_BASIC))
+    );
   } else {
     lightAlpha = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ALPHA));
   }
@@ -1296,8 +1253,8 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
   let lightAngle: number | null = null;
   if (item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC)) {
     lightAngle = <number>(
-			checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE_BASIC))
-		);
+      checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE_BASIC))
+    );
   } else {
     lightAngle = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_ANGLE));
   }
@@ -1306,47 +1263,45 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
   }
 
   const lightAnimationType =
-		<string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_TYPE) || tokenData.light.animation.type;
+    <string>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_TYPE) || tokenData.light.animation.type;
   const lightAnimationSpeed = <number>(
-		(checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED))
-			|| tokenData.light.animation.speed)
-	);
+    (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_SPEED)) ||
+      tokenData.light.animation.speed)
+  );
   const lightAnimationIntensity = <number>(
-		(checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY))
-			|| tokenData.light.animation.intensity)
-	);
+    (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_INTENSITY)) ||
+      tokenData.light.animation.intensity)
+  );
   const lightAnimationReverse =
-		<boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_REVERSE)
-		|| tokenData.light.animation.reverse;
+    <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ANIMATION_REVERSE) ||
+    tokenData.light.animation.reverse;
   const coloration = <number>(
-		(checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION))
-			|| tokenData.light.coloration)
-	);
+    (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_COLORATION)) ||
+      tokenData.light.coloration)
+  );
   const lightLuminosity = <number>(
-		(checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY))
-			|| tokenData.light.luminosity)
-	);
+    (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_LUMINOSITY)) ||
+      tokenData.light.luminosity)
+  );
   const lightGradual =
-		<boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL) || tokenData.light.gradual;
+    <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_GRADUAL) || tokenData.light.gradual;
   const saturation = <number>(
-		(checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION))
-			|| tokenData.light.saturation)
-	);
+    (checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SATURATION)) ||
+      tokenData.light.saturation)
+  );
   const lightContrast =
-		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST))
-		|| tokenData.light.contrast;
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_CONTRAST)) ||
+    tokenData.light.contrast;
   const lightShadows =
-		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS))
-		|| tokenData.light.shadows;
-  const vision = !!(<number>dimSight > 0 || <number>brightSight > 0);
+    <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.LIGHT_SHADOWS)) ||
+    tokenData.light.shadows;
+  const vision = true; // !!(<number>dimSight > 0 || <number>brightSight > 0);
 
-  const duration =
-		<number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)) || 0;
+  const duration = <number>checkNumberFromString(item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION)) || 0;
 
   // Support values
   const isPreset = !!item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.USE_BASIC);
-  const applyAsAtlAteEffect =
-		<boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE) ?? false;
+  const applyAsAtlAteEffect = <boolean>item.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.APPLY_AS_ATL_ATE) ?? false;
 
   const actorId = <string>token.actor?.id;
   // Const tokenId = token.id;
@@ -1374,41 +1329,41 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
     token,
     // LockRotation,
     sightEnabled,
-		<number>dimSight,
-		<number>brightSight,
-		<number>sightAngle,
-		sightVisionMode,
+    <number>dimSight,
+    <number>brightSight,
+    <number>sightAngle,
+    sightVisionMode,
 
-		<number>dimLight,
-		<number>brightLight,
-		<string>lightColor,
-		<number>lightAlpha,
-		<number>lightAngle,
+    <number>dimLight,
+    <number>brightLight,
+    <string>lightColor,
+    <number>lightAlpha,
+    <number>lightAngle,
 
-		coloration,
-		lightLuminosity,
-		lightGradual,
-		saturation,
-		lightContrast,
-		lightShadows,
+    coloration,
+    lightLuminosity,
+    lightGradual,
+    saturation,
+    lightContrast,
+    lightShadows,
 
-		<string>lightAnimationType,
-		<number>lightAnimationSpeed,
-		<number>lightAnimationIntensity,
-		lightAnimationReverse,
+    <string>lightAnimationType,
+    <number>lightAnimationSpeed,
+    <number>lightAnimationIntensity,
+    lightAnimationReverse,
 
-		applyAsAtlAteEffect,
-		effectName,
-		"",
-		duration,
+    applyAsAtlAteEffect,
+    effectName,
+    "",
+    duration,
 
-		vision,
-		// Token.id,
-		// alias,
-		height,
-		width,
-		scale,
-		alpha,
-		isPreset
+    vision,
+    // Token.id,
+    // alias,
+    height,
+    width,
+    scale,
+    alpha,
+    isPreset
   );
 }
